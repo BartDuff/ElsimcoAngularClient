@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {UserModel} from './models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ElsimcoAngularClient';
+  currentUser: UserModel;
 }

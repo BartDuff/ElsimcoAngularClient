@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {MissionModel} from '../models/mission.model';
+import {Observable} from 'rxjs';
+import {MissionService} from '../services/mission.service';
 
 @Component({
   selector: 'app-mission-list',
@@ -7,9 +10,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MissionListComponent implements OnInit {
 
-  constructor() { }
+  missions: Observable<MissionModel[]>;
+  selectedMission: MissionModel;
 
-  ngOnInit() {
+  constructor(private missionService: MissionService) {
   }
 
+  ngOnInit() {
+    this.getMissions();
+  }
+
+  getMissions() {
+    this.missions = this.missionService.getMissions();
+  }
+
+  selectMission(missionSelected: MissionModel) {
+    this.selectedMission = missionSelected;
+  }
+
+  deleteMission(missionToDelete: MissionModel) {
+    this.missionService.deleteMission(missionToDelete).subscribe(
+      () => this.getMissions()
+    );
+  }
 }

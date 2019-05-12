@@ -1,3 +1,8 @@
-<p>
-  mission-list works!
-</p>
+<h2>Missions:</h2>
+<ul>
+  <app-mission-item *ngFor="let mission of missions | async"
+                    [mission]="mission"
+                    (missionSelected)="selectMission($event)"
+                    (missionDeleted)="deleteMission($event)">
+  </app-mission-item>
+</ul>

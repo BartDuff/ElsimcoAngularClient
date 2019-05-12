@@ -11,7 +11,7 @@ import {UserDetailsComponent} from '../user-details/user-details.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
-  { path: 'missions', canActivate: [AuthGuardService], component: MissionListComponent },
+  { path: 'missions', component: MissionListComponent },
   { path: 'missions/:id', canActivate: [AuthGuardService], component: MissionDetailsComponent },
   { path: 'users', canActivate: [AuthGuardService], component: UserListComponent },
   { path: 'users/:id', canActivate: [AuthGuardService], component: UserDetailsComponent },

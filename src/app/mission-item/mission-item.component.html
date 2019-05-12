@@ -1,3 +1,10 @@
-<p>
-  mission-item works!
-</p>
+<li>
+  <h4>Mission : {{ mission.intitule }}</h4>
+  <p> Mis à jour : {{ lastUpdate | async | date: 'short' }} </p>
+  -- Client : {{ mission.client }}
+  -- Date: : {{ mission.datePublication | date: 'short' }}
+  -- Durée : {{ mission.duree }}
+  -- Desc: : {{ mission.JobDesc }}
+    -- Statut : {{ mission.status }}
+  <a [routerLink]="['/missions/', mission._id]">Détail</a>
+</li>

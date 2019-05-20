@@ -1,0 +1,30 @@
+<div class="col-md-6">
+  <h2 class="text-center">Ajouter une mission</h2>
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="intitule">Intitulé:</label>
+      <input type="intitule" formControlName="intitule" placeholder="Intitulé" name="intitule" class="form-control" id="intitule">
+    </div>
+
+    <div class="form-group">
+      <label for="client">Client:</label>
+      <input formControlName="client" placeholder="Client" name="client" class="form-control" id="client">
+    </div>
+
+    <div class="form-group">
+      <label for="resume">Résumé:</label>
+      <input formControlName="resume" placeholder="resume" name="resume" class="form-control" id="resume">
+    </div>
+
+    <div class="form-group">
+      <label for="duree">Durée:</label>
+      <input type="number" formControlName="duree" placeholder="0" name="duree" class="form-control" id="duree">
+    </div>
+
+    <div class="form-group">
+      <label for="jobDesc">Job Description:</label>
+      <input formControlName="jobDesc" placeholder="Job Description" name="jobDesc" class="form-control" id="jobDesc">
+    </div>
+    <button class="btn btn-success">Ajouter</button>
+  </form>
+</div>

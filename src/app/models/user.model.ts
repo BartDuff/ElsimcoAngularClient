@@ -1,6 +1,9 @@
 export class UserModel {
-  _id: any;
-  isAdmin?: boolean;
-  login: string;
-  mdp: string;
+  id: any;
+  nom: String;
+  prenom: String;
+  email: String;
+  dateInscription: Date;
+  role: String;
+
 }

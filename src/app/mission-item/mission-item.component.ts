@@ -36,5 +36,13 @@ export class MissionItemComponent implements OnInit {
     this.missionService.emitMissionSubject();
   }
 
+  selectMission() {
+    this.missionSelected.emit(this.mission);
+  }
+
+  deleteMission() {
+    this.missionDeleted.emit(this.mission);
+  }
+
 
 }

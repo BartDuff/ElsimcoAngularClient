@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AuthenticationService} from '../services/authentication.service';
 import {Router} from '@angular/router';
@@ -10,41 +10,26 @@ import {UserModel} from '../models/user.model';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  authSubscription: Subscription;
-  userSubscription: Subscription;
+  currentUserSubscription: Subscription;
   currentUser: UserModel;
-  isAuth: boolean;
-  isAdmin: boolean;
+  token: any;
 
-  constructor(private authService: AuthenticationService,
-              private router: Router) {}
+  constructor(private authService: AuthenticationService) {
+    this.currentUser = null;
+  }
 
   ngOnInit() {
-    this.authSubscription = this.authService.isAuthChange.subscribe(
-      (status) => {
-        this.isAuth = status;
-      }
-    );
-    this.authSubscription = this.authService.isAdminChange.subscribe(
-      (status) => {
-        this.isAdmin = status; }
-    );
-
-    this.userSubscription = this.authService.isCurrentUser.subscribe(
+    this.currentUserSubscription = this.authService.currentUserSubject.subscribe(
       (user) => {
-        this.currentUser = user;
-        if (this.currentUser && this.currentUser.isAdmin) {
-          this.isAdmin = true;
-        }
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.token = localStorage.getItem('token');
       }
     );
-    this.authService.emitCredentials();
+    this.authService.emitCurrentUserSubject();
   }
 
   onLogout() {
-    this.authService.logout().subscribe(
-      () => this.authService.emitCredentials(),
-      (err) => console.log(err),
-      () => this.router.navigate(['/login']));
+    this.authService.logout();
+    location.reload(true);
   }
 }

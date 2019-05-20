@@ -1,3 +1,9 @@
-<p>
-  user-details works!
-</p>
+<p *ngIf="!user">Chargement en cours...</p>
+<div *ngIf="user">
+<h4>Email : {{ user.email }}</h4>
+-- Nom : {{ user.nom }}
+-- Prénom: : {{ user.prenom }}
+-- Status : {{ user.role }}
+-- Date d'inscription : {{ user.dateInscription | date: 'short' }}
+<a routerLink="/users">Retour</a>
+</div>

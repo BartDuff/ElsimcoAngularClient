@@ -4,7 +4,10 @@
   -- Client : {{ mission.client }}
   -- Date: : {{ mission.datePublication | date: 'short' }}
   -- Durée : {{ mission.duree }}
-  -- Desc: : {{ mission.JobDesc }}
+  -- Desc: : {{ mission.jobDesc }}
     -- Statut : {{ mission.status }}
-  <a [routerLink]="['/missions/', mission._id]">Détail</a>
+  <a [routerLink]="['/missions/', mission.id]">Détail</a>
+  <button type="button"
+          (click)="deleteMission()"
+          class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
 </li>

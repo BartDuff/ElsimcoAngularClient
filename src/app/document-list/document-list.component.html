@@ -1,3 +1,9 @@
-<p>
-  document-list works!
-</p>
+<h2>Documents:</h2>
+<button>Ajouter Document</button>
+<ul>
+  <app-document-item *ngFor="let document of documents | async"
+                 [document]="document"
+                 (documentSelected)="selectDocument($event)"
+                 (documentDeleted)="deleteDocument($event)">
+  </app-document-item>
+</ul>

@@ -1,3 +1,11 @@
-<p>
-  user-item works!
-</p>
+<li>
+  <h4>Email : {{ user.email }}</h4>
+  -- Nom : {{ user.nom }}
+  -- Prénom: : {{ user.prenom }}
+  -- Status : {{ user.role }}
+  -- Date d'inscription : {{ user.dateInscription | date: 'short' }}
+  <a [routerLink]="['/users/', user.id]">Détail</a>
+  <button type="button"
+          (click)="deleteUser()"
+          class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
+</li>

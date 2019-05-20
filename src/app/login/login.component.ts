@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {UserService} from '../services/user.service';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AuthenticationService} from '../services/authentication.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs';
 import {UserModel} from '../models/user.model';
 
 @Component({
@@ -11,39 +11,53 @@ import {UserModel} from '../models/user.model';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  isAuth: boolean;
-  credentials: any;
-  user: UserModel;
-  userForm: FormGroup;
+  credentials: any = {email: '', password: ''};
+  loginForm: FormGroup;
+  message: string;
+  returnUrl: string;
+  submitted: boolean;
 
-  constructor(public userService: UserService,
-              public authenticationService: AuthenticationService,
-              private formBuilder: FormBuilder,
-              private route: Router) { }
+  constructor(private formBuilder: FormBuilder,
+              private router: Router,
+              private route: ActivatedRoute,
+              public authService: AuthenticationService) {
+  }
 
   ngOnInit() {
-    this.initializeForm();
-    this.authenticationService.emitCredentials();
+    this.loginForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/missions';
+    this.authService.logout();
   }
 
-  initializeForm() {
-    this.userForm = this.formBuilder.group({
-      login: ['', Validators.required],
-      mdp: ['', Validators.required],
-    });
+  // convenience getter for easy access to form fields
+  get f() {
+    return this.loginForm.controls;
   }
+
 
   login() {
-    const formValues = this.userForm.value;
-    this.credentials = {
-      login: formValues.login,
-      mdp: formValues.mdp
-    };
-    this.authenticationService.login(this.credentials).subscribe((result) => {
-      this.user = result;
-      this.authenticationService.currentUser = this.user;
-      this.authenticationService.emitCredentials();
-      this.route.navigate(['/missions']);
-    });
+    this.submitted = true;
+    // stop here if form is invalid
+    if (this.loginForm.invalid) {
+      return;
+    } else {
+      this.credentials = { email: this.f.email.value, password: this.f.password.value }
+      this.authService.login(this.credentials).subscribe(user => {
+        // login successful if there's a user in the response
+        if (user) {
+          // store user details and basic auth credentials in local storage
+          localStorage.setItem('token', window.btoa(`${this.credentials.email}:${this.credentials.password}`));
+          this.authService.currentUser = user;
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.authService.emitCurrentUserSubject();
+          this.router.navigate([this.returnUrl]);
+      }}, error => {
+        this.message = error;
+      });
+    }
   }
+
 }

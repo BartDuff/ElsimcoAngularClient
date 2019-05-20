@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {UserModel} from '../models/user.model';
+import {UserService} from '../services/user.service';
+import {DocumentModel} from '../models/document.model';
+import {DocumentService} from '../services/document.service';
 
 @Component({
   selector: 'app-document-item',
@@ -7,9 +12,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DocumentItemComponent implements OnInit {
 
-  constructor() { }
+  documents: any[];
+  documentSubscription: Subscription;
+  @Input() document: DocumentModel;
+  @Output() documentSelected = new EventEmitter<DocumentModel>();
+  @Output() documentDeleted = new EventEmitter<DocumentModel>();
+
+  constructor(private documentService: DocumentService) { }
 
   ngOnInit() {
+    this.documentSubscription = this.documentService.documentSubject.subscribe(
+      (documents: any[]) => {
+        this.documents = documents;
+      }
+    );
+    this.documentService.emitDocumentSubject();
   }
 
+  selectDocument() {
+    this.documentSelected.emit(this.document);
+  }
+
+  deleteDocument() {
+    this.documentDeleted.emit(this.document);
+  }
 }

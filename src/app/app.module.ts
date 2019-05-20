@@ -13,7 +13,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
 import { MissionDetailsComponent } from './mission-details/mission-details.component';
 import { DocumentDetailsComponent } from './document-details/document-details.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthenticationService} from './services/authentication.service';
 import {AuthGuardService} from './services/auth-guard.service';
@@ -23,6 +23,12 @@ import {MissionService} from './services/mission.service';
 import { MissionItemComponent } from './mission-item/mission-item.component';
 import { UserItemComponent } from './user-item/user-item.component';
 import { DocumentItemComponent } from './document-item/document-item.component';
+import {BasicAuthInterceptor} from './helpers/basic-auth.interceptor';
+import {ErrorInterceptor} from './helpers/error.interceptor';
+import { UserAddComponent } from './user-add/user-add.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { MissionAddComponent } from './mission-add/mission-add.component';
+import { MissionEditComponent } from './mission-edit/mission-edit.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +44,11 @@ import { DocumentItemComponent } from './document-item/document-item.component';
     DocumentDetailsComponent,
     MissionItemComponent,
     UserItemComponent,
-    DocumentItemComponent
+    DocumentItemComponent,
+    UserAddComponent,
+    UserEditComponent,
+    MissionAddComponent,
+    MissionEditComponent
   ],
   imports: [
     AppRoutingModule,
@@ -48,7 +58,10 @@ import { DocumentItemComponent } from './document-item/document-item.component';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService],
+  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService,
+     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,43 +1,35 @@
 import { Injectable } from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {map} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
+import {environment} from '../../environments/environment';
 import {UserModel} from '../models/user.model';
-import {HttpClient} from '@angular/common/http';
+
+const API_URL = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  isAuth: boolean;
-  isAdmin: boolean;
-  isAdminChange: Subject<boolean> = new Subject<boolean>();
-  isAuthChange: Subject<boolean> = new Subject<boolean>();
+  currentUserSubject = new Subject<UserModel>();
   currentUser: UserModel;
-  isCurrentUser: Subject<UserModel> = new Subject<UserModel>();
+  constructor(private http: HttpClient) { }
 
-  private apiLogin = '/login';
-  private apiLogout = '/logout';
-  constructor(private http: HttpClient) {
-    this.currentUser = null;
-    this.isAuth = false;
-    this.isAdmin = false;
+  emitCurrentUserSubject() {
+    this.currentUserSubject.next(this.currentUser);
   }
 
-  emitCredentials() {
-    this.isAuthChange.next(this.isAuth);
-    this.isCurrentUser.next(this.currentUser);
-  }
-
-  login(body: any): Observable<any> {
-    this.isAuth = true;
-    if (body.isAdmin) {this.isAdmin = true; }
-    this.emitCredentials();
-    return this.http.post(`${this.apiLogin}`, body);
+  login(credentials: any): Observable<any> {
+    const headers = new HttpHeaders(credentials ? {
+      authorization : 'Basic ' + btoa(credentials.email + ':' + credentials.password)
+    } : {});
+    return this.http.get<any>(`${API_URL}/users/authenticate`, { headers: headers});
   }
 
   logout() {
-    this.isAuth = false;
-    this.currentUser = null;
-    this.emitCredentials();
-    return this.http.get(`${this.apiLogout}`);
+    // remove user from local storage to log user out
+    localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
   }
+
 }

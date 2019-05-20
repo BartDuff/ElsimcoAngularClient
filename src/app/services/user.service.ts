@@ -1,9 +1,49 @@
 import { Injectable } from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {MissionModel} from '../models/mission.model';
+import {UserModel} from '../models/user.model';
+import {environment} from '../../environments/environment';
+import {stringify} from 'querystring';
+
+const API_URL = environment.apiUrl;
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor() { }
+  userSubject = new Subject<any[]>();
+
+  private users = [];
+
+  emitUserSubject() {
+    this.userSubject.next(this.users.slice());
+  }
+
+  constructor(private http: HttpClient) { }
+
+  getUsers(): Observable<UserModel[]> {
+    return this.http.get<UserModel[]>(`${API_URL}/users`, { withCredentials : true});
+  }
+
+  addUser(newUser: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.post(`${API_URL}/users/`, newUser, { headers: headers});
+  }
+
+  editUser(updatedUser: UserModel): Observable<UserModel> {
+    return this.http.put<UserModel>(`${API_URL}/users/${updatedUser.id}`, updatedUser);
+  }
+
+  getUser(idRecherche: string): Observable<UserModel> {
+    return this.http.get<UserModel>(`${API_URL}/users/${idRecherche}`);
+  }
+
+  deleteUser(user: UserModel): Observable<any> {
+    const idASupprimer = user.id;
+    return this.http.delete(`${API_URL}/users/${idASupprimer}`);
+  }
 }

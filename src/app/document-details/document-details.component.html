@@ -1,3 +1,7 @@
-<p>
-  document-details works!
-</p>
+<p *ngIf="!document">Chargement en cours...</p>
+<div *ngIf="document">
+  <h4>Nom : {{ document.nom }}</h4>
+  -- Année : {{ document.annee }}
+  -- Path: : {{ document.path }}
+  <a routerLink="/documents">Retour</a>
+</div>

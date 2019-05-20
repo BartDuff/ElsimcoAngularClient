@@ -1,3 +1,11 @@
-<p>
-  mission-details works!
-</p>
+<p *ngIf="!mission">Chargement en cours...</p>
+<div *ngIf="mission">
+  <h4>Mission : {{ mission.intitule }}</h4>
+  -- Client : {{ mission.client }}
+  -- Date: : {{ mission.datePublication | date: 'short' }}
+  -- Durée : {{ mission.duree }}
+  -- Desc: : {{ mission.jobDesc }}
+  -- Desc: : {{ mission.resume }}
+  -- Statut : {{ mission.status }}
+  <a routerLink="/missions">Retour</a>
+</div>

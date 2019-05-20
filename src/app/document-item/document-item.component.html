@@ -1,3 +1,9 @@
-<p>
-  document-item works!
-</p>
+<li>
+  <h4>Nom : {{ document.nom }}</h4>
+  -- Année : {{ document.annee }}
+  -- Path: : {{ document.path }}
+  <a [routerLink]="['/documents/', document.id]">Détail</a>
+  <button type="button"
+          (click)="deleteDocument()"
+          class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
+</li>

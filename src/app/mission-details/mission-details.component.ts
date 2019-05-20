@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {MissionModel} from '../models/mission.model';
+import {MissionService} from '../services/mission.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-mission-details',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MissionDetailsComponent implements OnInit {
 
-  constructor() { }
+  @Input() mission: MissionModel;
+
+  constructor(private missionService: MissionService,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.route.params.subscribe(
+      params => this.missionService.getMission(params['id']).subscribe(
+        data => {this.mission = data;
+        console.log(this.mission);
+        }
+      )
+    );
   }
-
 }

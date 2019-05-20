@@ -1,3 +1,9 @@
-<p>
-  user-list works!
-</p>
+<h2>Utilisateurs:</h2>
+<a lass="right btn-floating btn-large waves-effect waves-light blue scale-transition" routerLink="/add_users">Nouvel utilisateur</a>
+<ul>
+  <app-user-item *ngFor="let user of users | async"
+                    [user]="user"
+                    (userSelected)="selectUser($event)"
+                    (userDeleted)="deleteUser($event)">
+  </app-user-item>
+</ul>

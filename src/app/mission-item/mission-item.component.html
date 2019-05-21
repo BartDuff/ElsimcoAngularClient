@@ -7,6 +7,7 @@
   -- Desc: : {{ mission.jobDesc }}
     -- Statut : {{ mission.status }}
   <a [routerLink]="['/missions/', mission.id]">Détail</a>
+  <a [routerLink]="['/edit_mission/', mission.id]">Editer</a>
   <button type="button"
           (click)="deleteMission()"
           class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>

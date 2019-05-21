@@ -19,7 +19,6 @@ export class MissionDetailsComponent implements OnInit {
     this.route.params.subscribe(
       params => this.missionService.getMission(params['id']).subscribe(
         data => {this.mission = data;
-        console.log(this.mission);
         }
       )
     );

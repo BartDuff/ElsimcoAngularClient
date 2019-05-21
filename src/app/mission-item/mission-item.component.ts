@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {Subscription} from 'rxjs';
 import {MissionService} from '../services/mission.service';
 import {MissionModel} from '../models/mission.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-mission-item',
@@ -25,7 +26,8 @@ export class MissionItemComponent implements OnInit {
     );
   });
 
-  constructor(private missionService: MissionService) { }
+  constructor(private missionService: MissionService,
+              private router: Router) { }
 
   ngOnInit() {
     this.missionSubscription = this.missionService.missionSubject.subscribe(
@@ -34,10 +36,6 @@ export class MissionItemComponent implements OnInit {
       }
     );
     this.missionService.emitMissionSubject();
-  }
-
-  selectMission() {
-    this.missionSelected.emit(this.mission);
   }
 
   deleteMission() {

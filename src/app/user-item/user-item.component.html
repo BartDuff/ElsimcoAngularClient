@@ -5,6 +5,7 @@
   -- Status : {{ user.role }}
   -- Date d'inscription : {{ user.dateInscription | date: 'short' }}
   <a [routerLink]="['/users/', user.id]">Détail</a>
+  <a [routerLink]="['/edit_user/', user.id]">Editer</a>
   <button type="button"
           (click)="deleteUser()"
           class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>

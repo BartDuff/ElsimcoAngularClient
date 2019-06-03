@@ -17,6 +17,7 @@ export class MissionItemComponent implements OnInit {
   @Output() missionSelected = new EventEmitter<MissionModel>();
   @Output() missionDeleted = new EventEmitter<MissionModel>();
 
+
   lastUpdate = new Promise((resolve, reject) => {
     const date = new Date();
     setTimeout(
@@ -42,5 +43,8 @@ export class MissionItemComponent implements OnInit {
     this.missionDeleted.emit(this.mission);
   }
 
+  addMissionToList() {
+    this.missionSelected.emit(this.mission);
+  }
 
 }

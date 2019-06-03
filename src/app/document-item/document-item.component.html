@@ -1,9 +1,17 @@
-<li>
-  <h4>Nom : {{ document.nom }}</h4>
-  -- Année : {{ document.annee }}
-  -- Path: : {{ document.path }}
-  <a [routerLink]="['/documents/', document.id]">Détail</a>
-  <button type="button"
-          (click)="deleteDocument()"
-          class="btn btn-danger"><i class="fas fa-trash-alt"></i> Supprimer</button>
-</li>
+<div class="row">
+  <div class="col s12 m6">
+    <div class="card #1976d2 blue darken-2">
+      <div class="card-content white-text">
+        <span class="card-title">Nom : {{ document.nom }}</span>
+        <p>-- Année : {{ document.annee }}
+          -- Path: : {{ document.path }}
+        </p>
+      </div>
+      <div class="card-action">
+        <a [routerLink]="['/documents/', document.id]">Détail</a>
+        <button type="button"
+                (click)="deleteDocument()"><i class="material-icons">delete</i></button>
+      </div>
+    </div>
+  </div>
+</div>

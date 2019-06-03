@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MissionModel} from '../models/mission.model';
 import {Observable} from 'rxjs';
 import {MissionService} from '../services/mission.service';
+import {UserService} from '../services/user.service';
 
 @Component({
   selector: 'app-mission-list',
@@ -13,7 +14,8 @@ export class MissionListComponent implements OnInit {
   missions: Observable<MissionModel[]>;
   selectedMission: MissionModel;
 
-  constructor(private missionService: MissionService) {
+  constructor(private missionService: MissionService,
+              private userService: UserService) {
   }
 
   ngOnInit() {
@@ -24,8 +26,9 @@ export class MissionListComponent implements OnInit {
     this.missions = this.missionService.getMissions();
   }
 
-  selectMission(missionSelected: MissionModel) {
-    this.selectedMission = missionSelected;
+  addMissionToList(addedMission: MissionModel) {
+    this.userService.addMissionInterestToUser(JSON.parse(localStorage.getItem('currentUser')), addedMission).subscribe(
+      () => this.getMissions());
   }
 
   deleteMission(missionToDelete: MissionModel) {

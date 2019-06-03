@@ -46,4 +46,11 @@ export class UserService {
     const idASupprimer = user.id;
     return this.http.delete(`${API_URL}/users/${idASupprimer}`);
   }
+
+  addMissionInterestToUser(user: UserModel, mission: MissionModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    const idAAjouter = mission.id;
+    return this.http.post(`${API_URL}/users/${user.id}/missions/${idAAjouter}`, mission, { headers: headers});
+  }
 }

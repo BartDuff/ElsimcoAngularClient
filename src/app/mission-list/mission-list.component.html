@@ -1,9 +1,9 @@
 <h2>Missions:</h2>
-<a lass="right btn-floating btn-large waves-effect waves-light blue scale-transition" routerLink="/add_missions">Nouvelle mission</a>
+<a class="right btn-floating btn-large waves-effect waves-light blue scale-transition" routerLink="/add_missions"><i class="material-icons">add</i></a>
 <ul>
   <app-mission-item *ngFor="let mission of missions | async"
                     [mission]="mission"
-                    (missionSelected)="selectMission($event)"
+                    (missionSelected)="addMissionToList($event)"
                     (missionDeleted)="deleteMission($event)">
   </app-mission-item>
 </ul>

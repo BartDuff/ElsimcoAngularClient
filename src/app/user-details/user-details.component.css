@@ -1,0 +1,30 @@
+.card .card-image img {
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+}
+
+#profile-card .card-profile-image {
+  position: center;
+  z-index: 1;
+  top: 110px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.card .activator {
+  cursor: pointer;
+}
+
+#profile-card .card-image {
+  height: 150px;
+}
+
+.card .card-image {
+  position: relative;
+}

@@ -4,7 +4,7 @@ import {DocumentModel} from '../models/document.model';
 import {DocumentService} from '../services/document.service';
 
 @Component({
-  selector: 'app-document-item',
+  selector: 'tr[app-document-item]',
   templateUrl: './document-item.component.html',
   styleUrls: ['./document-item.component.css']
 })

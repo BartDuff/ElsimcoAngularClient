@@ -1,9 +1,27 @@
 <h2>Missions:</h2>
-<a class="right btn-floating btn-large waves-effect waves-light blue scale-transition" routerLink="/add_missions"><i class="material-icons">add</i></a>
-<ul>
-  <app-mission-item *ngFor="let mission of missions | async"
-                    [mission]="mission"
-                    (missionSelected)="addMissionToList($event)"
-                    (missionDeleted)="deleteMission($event)">
-  </app-mission-item>
-</ul>
+<a class="right btn-floating btn-large waves-effect waves-light blue scale-transition" routerLink="/add_missions"><i
+  class="material-icons">add</i></a>
+<table class="bordered" style="table-layout:fixed">
+  <thead>
+  <tr>
+    <th>Mission</th>
+    <th>Mis à jour</th>
+    <th>Client</th>
+    <th>Date</th>
+    <th>Durée</th>
+    <th>Description</th>
+    <th>Détails</th>
+    <th>Éditer</th>
+    <th>Supprimer</th>
+    <th>Intérêt</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr app-mission-item *ngFor="let mission of missions | async"
+      [mission]="mission"
+      [hidden]="mission.status == 0"
+      (missionSelected)="addMissionToList($event)"
+      (missionDeleted)="deleteMission($event)">
+  </tr>
+  </tbody>
+</table>

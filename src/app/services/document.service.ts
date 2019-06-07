@@ -3,7 +3,6 @@ import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {DocumentModel} from '../models/document.model';
 import {environment} from '../../environments/environment';
-import {RequestOptions} from '@angular/http';
 
 const API_URL = environment.apiUrl;
 

@@ -1,11 +1,30 @@
-<h2>Documents:</h2>
-<button class="right btn-floating btn-large waves-effect waves-light blue scale-transition"><i class="material-icons">add</i>
-</button>
-<ul>
-  <app-document-item *ngFor="let document of documents | async"
+<h2>Pack Collaborateurs:</h2>
+<div>
+  <input #fileInput type="file" ng2FileSelect [uploader]="uploader"/>
+  <div class="drop-box" ng2FileDrop
+       [ngClass]="{'dragover': isDropOver}"
+       [uploader]="uploader"
+       (fileOver)="fileOverAnother($event)"
+       (click)="fileClicked()">
+    <span class="drag-in-title">Cliquer ou déposer un fichier ici</span>
+    <span class="drag-over-title">Déposer le fichier</span>
+  </div>
+</div>
+<table class="bordered" style="table-layout:fixed">
+  <thead>
+  <tr>
+    <th>Nom</th>
+    <th>Annee</th>
+    <th>Télécharger</th>
+    <th>Supprimer</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr app-document-item *ngFor="let document of documents | async"
                      [document]="document"
                      (documentSelected)="selectDocument($event)"
                      (documentDeleted)="deleteDocument($event)"
                      (documentDownloaded)="downloadDocument($event)">
-  </app-document-item>
-</ul>
+  </tr>
+  </tbody>
+</table>

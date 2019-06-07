@@ -1,12 +1,22 @@
-<p *ngIf="!user">Chargement en cours...</p>
-<div *ngIf="user">
-<h4>Email : {{ user.email }}</h4>
--- Nom : {{ user.nom }}
--- Prénom: : {{ user.prenom }}
--- Status : {{ user.role }}
--- Date d'inscription : {{ user.dateInscription | date: 'short' }}
-  <ul *ngFor="let mission of user.missions">
-    <li>{{ mission.intitule }}</li>
-  </ul>
-<a routerLink="/users"><i class="material-icons">arrow_back</i></a>
+<p class="loading" *ngIf="!user">Chargement en cours...</p>
+<div  *ngIf="user" id="profile-card" class="card">
+  <div class="card-image waves-effect waves-block waves-light">
+    <img class="activator" src="../../assets/images/success-2081167_1280.jpg" alt="user bg">
+  </div>
+  <div class="card-content">
+    <img src="/../../assets/images/moi.png" alt=""
+         class="circle responsive-img activator card-profile-image cyan lighten-1 padding-2">
+    <a class="btn-floating activator btn-move-up waves-effect waves-light red accent-2 z-depth-4 right">
+      <i class="material-icons">edit</i>
+    </a>
+    <h5 class="card-title activator grey-text text-darken-4"> {{ user.nom }} {{ user.prenom }}</h5>
+    <p><i class="material-icons profile-card-i">perm_identity</i> {{ user.role }}</p>
+    <p>Date d'inscription: {{ user.dateInscription | date: 'short' }}</p>
+    <p><i class="material-icons profile-card-i">email</i> {{ user.email }}</p>
+    Cette utilisateur s'intéresse aux missions suivantes:
+    <ul class="collection" *ngFor="let mission of user.missions">
+      <li class="collection-item">{{ mission.intitule }}</li>
+    </ul>
+  </div>
 </div>
+<a routerLink="/users"><i class="material-icons">arrow_back</i></a>

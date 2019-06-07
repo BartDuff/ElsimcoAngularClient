@@ -29,6 +29,9 @@ import { UserAddComponent } from './user-add/user-add.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { MissionAddComponent } from './mission-add/mission-add.component';
 import { MissionEditComponent } from './mission-edit/mission-edit.component';
+import {FileUploadModule} from 'ng2-file-upload';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CookieLawModule} from 'angular2-cookie-law';
 
 @NgModule({
   declarations: [
@@ -52,7 +55,10 @@ import { MissionEditComponent } from './mission-edit/mission-edit.component';
   ],
   imports: [
     AppRoutingModule,
+    FileUploadModule,
     BrowserModule,
+    BrowserAnimationsModule, // BrowserAnimationsModule is required
+    CookieLawModule, // import Angular's CookieLaw modules
     RouterModule,
     FormsModule,
     ReactiveFormsModule,

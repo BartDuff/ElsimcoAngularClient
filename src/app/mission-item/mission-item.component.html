@@ -1,25 +1,18 @@
-<div class="row" *ngIf="mission.status == 1">
-  <div class="col s12 m6">
-    <div class="card #1976d2 blue darken-2">
-      <div class="card-content white-text">
-        <span class="card-title">Mission : {{ mission.intitule }}</span>
-        <p>  <p> Mis à jour : {{ lastUpdate | async | date: 'short' }} </p>
-        -- Client : {{ mission.client }}
-        -- Date: : {{ mission.datePublication | date: 'short' }}
-        -- Durée : {{ mission.duree }}
-        -- Desc: : {{ mission.jobDesc }}
-        -- Statut : {{ mission.status }}
-      </div>
-      <div class="card-action">
-        <a [routerLink]="['/missions/', mission.id]">Détail</a>
-        <a [routerLink]="['/edit_mission/', mission.id]">Editer</a>
-        <button type="button"
-                (click)="deleteMission()"><i class="material-icons">delete</i></button>
-        <button *ngIf="!isFavorite" type="button"
-                (click)="addMissionToList()"><i class="material-icons">favorite_border</i></button>
-        <button *ngIf="isFavorite" type="button"
-                ><i class="material-icons">favorite</i></button>
-      </div>
-    </div>
-  </div>
-</div>
+<td>{{ mission.intitule }}</td>
+<td>{{ lastUpdate | async | date: 'short' }} </td>
+<td>{{ mission.client }}</td>
+<td>{{ mission.datePublication | date: 'short' }}</td>
+<td>{{ mission.duree }}</td>
+<td>{{ mission.jobDesc }}</td>
+<td><a [routerLink]="['/missions/', mission.id]">Détail</a></td>
+<td><a [routerLink]="['/edit_mission/', mission.id]">Editer</a></td>
+<td>
+  <button type="button"
+          (click)="deleteMission()"><i class="material-icons">delete</i></button>
+</td>
+<td>
+  <button *ngIf="!isFavorite" type="button"
+          (click)="addMissionToList()"><i class="material-icons">favorite_border</i></button>
+  <button *ngIf="isFavorite" type="button"
+  ><i class="material-icons">favorite</i></button>
+</td>

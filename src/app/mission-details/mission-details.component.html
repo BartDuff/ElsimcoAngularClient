@@ -1,15 +1,24 @@
-<p *ngIf="!mission">Chargement en cours...</p>
-<div *ngIf="mission">
-  <h4>Mission : {{ mission.intitule }}</h4>
-  -- Client : {{ mission.client }}
-  -- Date: : {{ mission.datePublication | date: 'short' }}
-  -- Durée : {{ mission.duree }}
-  -- Desc: : {{ mission.jobDesc }}
-  -- Desc: : {{ mission.resume }}
-  -- Statut : {{ mission.status }}
-  <ul *ngFor="let user of mission.users">
-    <li>{{ user.nom }}
-      {{ user.prenom }}</li>
-  </ul>
-  <a routerLink="/missions"><i class="material-icons">arrow_back</i></a>
+<p class="loading" *ngIf="!mission">Chargement en cours...</p>
+<div class="col s12 m7" *ngIf="mission">
+  <h2 class="header">Mission : {{ mission.intitule }}</h2>
+  <div class="card horizontal">
+    <div class="card-image">
+      <img src="../../assets/images/resume.jpg">
+    </div>
+    <div class="card-stacked">
+      <div class="card-content">
+        <h3>Client : {{ mission.client }}</h3>
+        <p>Date: : {{ mission.datePublication | date: 'short' }}</p>
+        <p>Durée : {{ mission.duree }} </p>
+        <p>Desc: : {{ mission.jobDesc }}</p>
+        <p>Résumé: : {{ mission.resume }}</p>
+        <ul class="collection" *ngFor="let user of mission.users">
+          <li class="collection-item">{{ user.nom }} {{ user.prenom }}</li>
+        </ul>
+      </div>
+      <div class="card-action">
+        <a routerLink="/missions"><i class="material-icons">arrow_back</i></a>
+      </div>
+    </div>
+  </div>
 </div>

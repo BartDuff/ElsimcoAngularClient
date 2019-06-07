@@ -8,7 +8,7 @@ import {UserService} from '../services/user.service';
 import {AuthenticationService} from '../services/authentication.service';
 
 @Component({
-  selector: 'app-mission-item',
+  selector: 'tr[app-mission-item]',
   templateUrl: './mission-item.component.html',
   styleUrls: ['./mission-item.component.css']
 })

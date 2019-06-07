@@ -1,3 +1,5 @@
+import {MissionModel} from './mission.model';
+
 export class UserModel {
   id: any;
   nom: String;
@@ -5,5 +7,5 @@ export class UserModel {
   email: String;
   dateInscription: Date;
   role: String;
-
+  missions: MissionModel[];
 }

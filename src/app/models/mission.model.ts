@@ -1,3 +1,5 @@
+import {UserModel} from './user.model';
+
 export class MissionModel {
   id: any;
   intitule: String;
@@ -7,4 +9,5 @@ export class MissionModel {
   datePublication: Date;
   status: number;
   jobDesc: String;
+  users: UserModel[];
 }

@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {UserModel} from '../models/user.model';
-import {UserService} from '../services/user.service';
 import {DocumentModel} from '../models/document.model';
 import {DocumentService} from '../services/document.service';
 
@@ -17,6 +15,7 @@ export class DocumentItemComponent implements OnInit {
   @Input() document: DocumentModel;
   @Output() documentSelected = new EventEmitter<DocumentModel>();
   @Output() documentDeleted = new EventEmitter<DocumentModel>();
+  @Output() documentDownloaded = new EventEmitter<DocumentModel>();
 
   constructor(private documentService: DocumentService) { }
 
@@ -35,5 +34,9 @@ export class DocumentItemComponent implements OnInit {
 
   deleteDocument() {
     this.documentDeleted.emit(this.document);
+  }
+
+  downloadDocument() {
+    this.documentDownloaded.emit(this.document);
   }
 }

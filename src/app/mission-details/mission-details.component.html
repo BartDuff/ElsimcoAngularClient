@@ -7,5 +7,9 @@
   -- Desc: : {{ mission.jobDesc }}
   -- Desc: : {{ mission.resume }}
   -- Statut : {{ mission.status }}
+  <ul *ngFor="let user of mission.users">
+    <li>{{ user.nom }}
+      {{ user.prenom }}</li>
+  </ul>
   <a routerLink="/missions"><i class="material-icons">arrow_back</i></a>
 </div>

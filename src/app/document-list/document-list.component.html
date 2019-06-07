@@ -1,9 +1,11 @@
 <h2>Documents:</h2>
-<button class="right btn-floating btn-large waves-effect waves-light blue scale-transition"><i class="material-icons">add</i></button>
+<button class="right btn-floating btn-large waves-effect waves-light blue scale-transition"><i class="material-icons">add</i>
+</button>
 <ul>
   <app-document-item *ngFor="let document of documents | async"
-                 [document]="document"
-                 (documentSelected)="selectDocument($event)"
-                 (documentDeleted)="deleteDocument($event)">
+                     [document]="document"
+                     (documentSelected)="selectDocument($event)"
+                     (documentDeleted)="deleteDocument($event)"
+                     (documentDownloaded)="downloadDocument($event)">
   </app-document-item>
 </ul>

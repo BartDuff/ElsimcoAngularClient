@@ -3,6 +3,7 @@ import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {DocumentModel} from '../models/document.model';
 import {environment} from '../../environments/environment';
+import {RequestOptions} from '@angular/http';
 
 const API_URL = environment.apiUrl;
 
@@ -40,5 +41,9 @@ export class DocumentService {
   deleteDocument(document: DocumentModel): Observable<any> {
     const idASupprimer = document.id;
     return this.http.delete(`${API_URL}/documents/${idASupprimer}`);
+  }
+
+  downloadDocument() {
+    return this.http.get(`${API_URL}/documents/download`, {responseType: 'arraybuffer'});
   }
 }

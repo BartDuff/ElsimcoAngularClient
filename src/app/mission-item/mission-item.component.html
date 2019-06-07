@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="mission.status == 1">
   <div class="col s12 m6">
     <div class="card #1976d2 blue darken-2">
       <div class="card-content white-text">
@@ -15,8 +15,10 @@
         <a [routerLink]="['/edit_mission/', mission.id]">Editer</a>
         <button type="button"
                 (click)="deleteMission()"><i class="material-icons">delete</i></button>
-        <button type="button"
-                (click)="addMissionToList()"><i class="material-icons">favorite</i></button>
+        <button *ngIf="!isFavorite" type="button"
+                (click)="addMissionToList()"><i class="material-icons">favorite_border</i></button>
+        <button *ngIf="isFavorite" type="button"
+                ><i class="material-icons">favorite</i></button>
       </div>
     </div>
   </div>

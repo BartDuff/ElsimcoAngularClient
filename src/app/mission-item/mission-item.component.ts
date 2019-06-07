@@ -3,6 +3,9 @@ import {Subscription} from 'rxjs';
 import {MissionService} from '../services/mission.service';
 import {MissionModel} from '../models/mission.model';
 import {Router} from '@angular/router';
+import {UserModel} from '../models/user.model';
+import {UserService} from '../services/user.service';
+import {AuthenticationService} from '../services/authentication.service';
 
 @Component({
   selector: 'app-mission-item',
@@ -13,6 +16,9 @@ export class MissionItemComponent implements OnInit {
 
   missions: any[];
   missionSubscription: Subscription;
+  currentUserSubscription: Subscription;
+  currentUser: UserModel;
+  isFavorite: boolean;
   @Input() mission: MissionModel;
   @Output() missionSelected = new EventEmitter<MissionModel>();
   @Output() missionDeleted = new EventEmitter<MissionModel>();
@@ -28,6 +34,8 @@ export class MissionItemComponent implements OnInit {
   });
 
   constructor(private missionService: MissionService,
+              private userService: UserService,
+              private authService: AuthenticationService,
               private router: Router) { }
 
   ngOnInit() {
@@ -36,7 +44,14 @@ export class MissionItemComponent implements OnInit {
         this.missions = missions;
       }
     );
+    this.currentUserSubscription = this.authService.currentUserSubject.subscribe(
+      (user) => {
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      }
+    );
+    this.authService.emitCurrentUserSubject();
     this.missionService.emitMissionSubject();
+    this.isFavorite = this.currentUser.missions.find(x => x.id === this.mission.id) !== undefined;
   }
 
   deleteMission() {

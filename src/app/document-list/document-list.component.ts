@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs';
-import {MissionModel} from '../models/mission.model';
-import {MissionService} from '../services/mission.service';
 import {DocumentModel} from '../models/document.model';
 import {DocumentService} from '../services/document.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-document-list',
@@ -34,5 +33,12 @@ export class DocumentListComponent implements OnInit {
     this.documentService.deleteDocument(documentToDelete).subscribe(
       () => this.getDocuments()
     );
+  }
+
+  downloadDocument(documentToDownload: DocumentModel) {
+    this.documentService.downloadDocument().subscribe(
+      (res) => {
+        saveAs(new Blob([res], { type: 'application/octet-stream' }), 'FP_2017_Elsimco.xlsx');
+      });
   }
 }

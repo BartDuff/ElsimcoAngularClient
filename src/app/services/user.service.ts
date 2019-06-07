@@ -4,7 +4,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MissionModel} from '../models/mission.model';
 import {UserModel} from '../models/user.model';
 import {environment} from '../../environments/environment';
-import {stringify} from 'querystring';
 
 const API_URL = environment.apiUrl;
 
@@ -50,7 +49,6 @@ export class UserService {
   addMissionInterestToUser(user: UserModel, mission: MissionModel): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type'  : 'application/json'});
-    const idAAjouter = mission.id;
-    return this.http.post(`${API_URL}/users/${user.id}/missions/${idAAjouter}`, mission, { headers: headers});
+    return this.http.post(`${API_URL}/users/${user.id}/missions`, mission, { headers: headers});
   }
 }

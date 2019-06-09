@@ -13,7 +13,7 @@
     <p><i class="material-icons profile-card-i">perm_identity</i> {{ user.role }}</p>
     <p>Date d'inscription: {{ user.dateInscription | date: 'short' }}</p>
     <p><i class="material-icons profile-card-i">email</i> {{ user.email }}</p>
-    Cette utilisateur s'intéresse aux missions suivantes:
+    Cet utilisateur s'intéresse aux missions suivantes:
     <ul class="collection" *ngFor="let mission of user.missions">
       <li class="collection-item">{{ mission.intitule }}</li>
     </ul>

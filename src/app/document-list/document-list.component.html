@@ -1,15 +1,21 @@
 <h2>Pack Collaborateurs:</h2>
 <div>
+<!--
   <input #fileInput type="file" ng2FileSelect [uploader]="uploader"/>
-  <div class="drop-box" ng2FileDrop
-       [ngClass]="{'dragover': isDropOver}"
-       [uploader]="uploader"
-       (fileOver)="fileOverAnother($event)"
-       (click)="fileClicked()">
-    <span class="drag-in-title">Cliquer ou déposer un fichier ici</span>
-    <span class="drag-over-title">Déposer le fichier</span>
-  </div>
+-->
+  <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="selectedFiles" (ngModelChange)="handleFile()" [ngModelOptions]="{standalone: true}"></input-file>
+<!--  <div class="drop-box" ng2FileDrop-->
+<!--       [ngClass]="{'dragover': isDropOver}"-->
+<!--       [uploader]="uploader"-->
+<!--       (fileOver)="fileOverAnother($event)"-->
+<!--       (click)="fileClicked()">-->
+<!--    <span class="drag-in-title">Cliquer ou déposer un fichier ici</span>-->
+<!--    <span class="drag-over-title">Déposer le fichier</span>-->
+<!--  </div>-->
 </div>
+
+Normal:
+
 <table class="bordered" style="table-layout:fixed">
   <thead>
   <tr>
@@ -20,11 +26,12 @@
   </tr>
   </thead>
   <tbody>
-  <tr app-document-item *ngFor="let document of documents | async"
-                     [document]="document"
-                     (documentSelected)="selectDocument($event)"
-                     (documentDeleted)="deleteDocument($event)"
-                     (documentDownloaded)="downloadDocument($event)">
+  <tr app-document-item *ngFor="let document of docs"
+      [document]="document"
+      (documentSelected)="selectDocument($event)"
+      (documentDeleted)="deleteDocument($event)"
+      (documentDownloaded)="getDocument($event)">
   </tr>
   </tbody>
 </table>
+

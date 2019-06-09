@@ -25,10 +25,6 @@ export class DocumentService {
     return this.http.get<DocumentModel[]>(`${API_URL}/documents`, { withCredentials : true});
   }
 
-  addDocument(newDocument: any): Observable<any> {
-    return this.http.post(`${API_URL}/documents/`, newDocument);
-  }
-
   editDocument(updatedDocument: DocumentModel): Observable<DocumentModel> {
     return this.http.put<DocumentModel>(`${API_URL}/documents/${updatedDocument.id}`, updatedDocument);
   }
@@ -42,7 +38,11 @@ export class DocumentService {
     return this.http.delete(`${API_URL}/documents/${idASupprimer}`);
   }
 
-  downloadDocument() {
-    return this.http.get(`${API_URL}/documents/download`, {responseType: 'arraybuffer'});
+  downloadDocument(document: DocumentModel) {
+    return this.http.get(`${API_URL}/documents/download?=${document.originalFileName}`, {responseType: 'arraybuffer'});
+  }
+
+  uploadDocument(file: any, filename: String) {
+    return this.http.post(`${API_URL}/documents`, {"fileBase64": file, "originalFileName": filename});
   }
 }

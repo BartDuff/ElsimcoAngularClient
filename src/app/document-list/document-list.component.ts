@@ -1,10 +1,10 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs';
 import {DocumentModel} from '../models/document.model';
 import {DocumentService} from '../services/document.service';
 import { saveAs } from 'file-saver';
-import {FileUploader} from 'ng2-file-upload';
 import {environment} from '../../environments/environment';
+import { InputFileComponent } from 'ngx-input-file';
 
 const API_URL = environment.apiUrl;
 @Component({
@@ -15,50 +15,129 @@ const API_URL = environment.apiUrl;
 
 export class DocumentListComponent implements OnInit {
 
+  docs: DocumentModel[];
   documents: Observable<DocumentModel[]>;
   selectedDocument: DocumentModel;
-  @ViewChild('fileInput') fileInput: ElementRef;
-
-  uploader: FileUploader;
-  isDropOver: boolean;
+  selectedFiles;
+  //@ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild(InputFileComponent)
+  private inputFileComponent: InputFileComponent;
+  // uploader: FileUploader;
+  // isDropOver: boolean;
 
   constructor(private documentService: DocumentService) {
   }
 
   ngOnInit() {
     this.getDocuments();
-    const headers = [{name: 'Accept', value: 'application/json'}];
-    this.uploader = new FileUploader({url: API_URL + '/documents/upload', autoUpload: true, headers: headers});
-    this.uploader.onCompleteAll = () => alert('File uploaded');
+    // const headers = [{name: 'Accept', value: 'application/json'}];
+    // this.uploader = new FileUploader({url: API_URL + '/documents/upload', autoUpload: true, headers: headers});
+    // this.uploader.onCompleteAll = () => alert('File uploaded');
+  }
+  getDocuments() {
+    this.documentService.getDocuments().subscribe(r=>this.docs=r);
   }
 
-  getDocuments() {
-    this.documents = this.documentService.getDocuments();
+  deleteDocument(documentToDelete) {
+    console.log(documentToDelete)
+    this.documentService.deleteDocument(documentToDelete).subscribe(
+      ()=> {
+        this.docs.splice(this.docs.indexOf(documentToDelete), 1);
+      }
+    );
   }
+
 
   selectDocument(documentSelected: DocumentModel) {
     this.selectedDocument = documentSelected;
   }
 
-  deleteDocument(documentToDelete: DocumentModel) {
-    this.documentService.deleteDocument(documentToDelete).subscribe(
-      () => this.getDocuments()
-    );
+  public base64ToBlob(b64Data, contentType='', sliceSize=512) {
+    b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+    let byteCharacters = atob(b64Data);
+    let byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
+      let byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, {type: contentType});
   }
 
-  downloadDocument(documentToDownload: DocumentModel) {
-    this.documentService.downloadDocument().subscribe(
+  getDocument(documentToDownload: DocumentModel) {
+    this.documentService.getDocument(documentToDownload.id).subscribe(
       (res) => {
-        saveAs(new Blob([res], { type: 'application/octet-stream' }), documentToDownload.nom);
+        let d : DocumentModel = res ;
+        if (d.fileBase64) {
+          var blob = this.base64ToBlob(d.fileBase64, 'text/plain');
+          saveAs(blob, d.originalFileName);
+        }
       });
   }
 
-  fileOverAnother(e: any): void {
-    this.isDropOver = e;
+  // fileOverAnother(e: any): void {
+  //   this.isDropOver = e;
+  // }
+  //
+  // fileClicked() {
+  //   this.fileInput.nativeElement.click();
+  // }
+
+  handleFiles
+
+  filename;
+  handleFile(){
+    console.log("handleFile");
+    for(let i=0; i < this.inputFileComponent.files.length;i++) {
+      var file = this.inputFileComponent.files[i];
+      console.log (file.file.name,i);
+      this.filename=file.file.name;
+      if (file) {
+        var reader = new FileReader();
+
+        if (reader.readAsBinaryString === undefined) {
+          reader.onload = this._handleReaderLoadedIE.bind(this);
+          reader.readAsArrayBuffer(file.file);
+        } else {
+          reader.onload = this._handleReaderLoaded.bind(this);
+          reader.readAsBinaryString(file.file);
+        }
+        this.selectedFiles.splice(i,1)
+        i--
+      }
+    }
   }
 
-  fileClicked() {
-    this.fileInput.nativeElement.click();
-  }
+  _handleReaderLoadedIE(readerEvt) {
+    console.log("_handleReaderLoadedIE");
 
+    var bytes = new Uint8Array(readerEvt.target.result);
+    var binary = "";
+    var length = bytes.byteLength;
+    for (var i = 0; i < length; i++)
+      binary += String.fromCharCode(bytes[i]);
+    this.documentService.uploadDocument(btoa(binary), this.filename);
+  }
+  _handleReaderLoaded(readerEvt) {
+    //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
+console.log(readerEvt)
+    console.log("_handleReaderLoaded");
+    console.log(this.s(this.selectedFiles));
+    this.documentService.uploadDocument(btoa(readerEvt.target.result), this.filename).subscribe(
+      ()=>{this.getDocuments();
+                this.getDocuments()
+                }
+      )
+  }
+  s(s){
+    JSON.stringify(s)
+  }
+  upload(arr){
+
+
+  }
 }

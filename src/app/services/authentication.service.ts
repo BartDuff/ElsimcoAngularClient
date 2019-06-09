@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {map} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {UserModel} from '../models/user.model';
@@ -21,9 +20,9 @@ export class AuthenticationService {
 
   login(credentials: any): Observable<any> {
     const headers = new HttpHeaders(credentials ? {
-      authorization : 'Basic ' + btoa(credentials.email + ':' + credentials.password)
+      Authorization : 'Basic ' + btoa(credentials.email + ':' + credentials.password)
     } : {});
-    return this.http.get<any>(`${API_URL}/users/authenticate`, { headers: headers});
+    return this.http.get<any>(`${API_URL}/users/authenticate`, { headers: headers, withCredentials: true});
   }
 
   logout() {

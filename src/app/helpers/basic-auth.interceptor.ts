@@ -11,11 +11,11 @@ export class BasicAuthInterceptor implements HttpInterceptor {
     // request = request.clone({
     //   url: request.url.replace('http://localhost:4200', 'http://localhost:9091')
     // });
-    if (token) {
+    if (token && !request.headers.get('Authorization')) {
       request = request.clone({
         setHeaders: {
           Authorization: `Basic ${token}`
-        }
+        }, withCredentials: true
       });
     }
     return next.handle(request);

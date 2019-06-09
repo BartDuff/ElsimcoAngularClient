@@ -1,6 +1,6 @@
 export class DocumentModel {
   id: any;
-  nom: String;
+  originalFileName: String;
   annee: number;
-  path: String;
+  fileBase64: String;
 }

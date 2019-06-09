@@ -32,6 +32,9 @@ import { MissionEditComponent } from './mission-edit/mission-edit.component';
 import {FileUploadModule} from 'ng2-file-upload';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CookieLawModule} from 'angular2-cookie-law';
+import { InputFileConfig, InputFileModule } from 'ngx-input-file';
+const config: InputFileConfig = {};
+
 
 @NgModule({
   declarations: [
@@ -62,7 +65,9 @@ import {CookieLawModule} from 'angular2-cookie-law';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    InputFileModule.forRoot(config),
+
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

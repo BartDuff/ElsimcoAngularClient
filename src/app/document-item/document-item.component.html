@@ -4,7 +4,7 @@
   <button type="button"
           (click)="downloadDocument()"><i class="material-icons">file_download</i></button>
 </td>
-<td>
+<td *ngIf="currentUser.role=='ADMIN'">
   <button type="button"
           (click)="deleteDocument()"><i class="material-icons">delete</i></button>
 </td>

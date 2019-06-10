@@ -1,5 +1,5 @@
 <h2>Missions:</h2>
-<a class="right btn-floating btn-large waves-effect waves-light blue scale-transition" routerLink="/add_missions"><i
+<a *ngIf="this.currentUser.role == 'ADMIN'" class="right btn-floating btn-large waves-effect waves-light scale-transition" routerLink="/add_missions"><i
   class="material-icons">add</i></a>
 <table class="bordered" style="table-layout:fixed">
   <thead>
@@ -11,16 +11,17 @@
     <th>Durée</th>
     <th>Description</th>
     <th>Détails</th>
-    <th>Éditer</th>
-    <th>Supprimer</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Éditer</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
     <th>Intérêt</th>
   </tr>
   </thead>
   <tbody>
-  <tr app-mission-item *ngFor="let mission of missions | async"
+  <tr app-mission-item *ngFor="let mission of missions"
       [mission]="mission"
       [hidden]="mission.status == 0"
       (missionSelected)="addMissionToList($event)"
+      (missionToDeleteInList)="deleteMissionFromList($event)"
       (missionDeleted)="deleteMission($event)">
   </tr>
   </tbody>

@@ -51,4 +51,16 @@ export class UserService {
       'Content-Type'  : 'application/json'});
     return this.http.post(`${API_URL}/users/${user.id}/missions`, mission, { headers: headers});
   }
+
+  removeMissionInterestFromUser(user: UserModel, mission: MissionModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.delete(`${API_URL}/users/${user.id}/missions/${mission.id}`, { headers: headers});
+  }
+
+  getMissionInterestsForUser(user: UserModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.get(`${API_URL}/users/${user.id}/missions`, { headers: headers});
+  }
 }

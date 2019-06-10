@@ -5,8 +5,8 @@
 <td>{{ mission.duree }}</td>
 <td>{{ mission.jobDesc }}</td>
 <td><a [routerLink]="['/missions/', mission.id]">Détail</a></td>
-<td><a [routerLink]="['/edit_mission/', mission.id]">Editer</a></td>
-<td>
+<td *ngIf="currentUser.role=='ADMIN'"><a [routerLink]="['/edit_mission/', mission.id]">Editer</a></td>
+<td *ngIf="currentUser.role=='ADMIN'">
   <button type="button"
           (click)="deleteMission()"><i class="material-icons">delete</i></button>
 </td>
@@ -14,5 +14,5 @@
   <button *ngIf="!isFavorite" type="button"
           (click)="addMissionToList()"><i class="material-icons">favorite_border</i></button>
   <button *ngIf="isFavorite" type="button"
-  ><i class="material-icons">favorite</i></button>
+          (click)="deleteMissionFromList()"><i class="material-icons">favorite</i></button>
 </td>

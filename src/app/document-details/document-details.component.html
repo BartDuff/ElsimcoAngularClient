@@ -1,6 +1,6 @@
 <p *ngIf="!document">Chargement en cours...</p>
 <div *ngIf="document">
-  <h4>Nom : {{ document.nom }}</h4>
+  <h4>Nom : {{ document.originalFileName }}</h4>
   -- Année : {{ document.annee }}
   <a routerLink="/documents"><i class="material-icons">arrow_back</i></a>
 </div>

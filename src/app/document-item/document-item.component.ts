@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {DocumentModel} from '../models/document.model';
 import {DocumentService} from '../services/document.service';
+import {UserModel} from '../models/user.model';
 
 @Component({
   selector: 'tr[app-document-item]',
@@ -9,7 +10,7 @@ import {DocumentService} from '../services/document.service';
   styleUrls: ['./document-item.component.css']
 })
 export class DocumentItemComponent implements OnInit {
-
+  currentUser: UserModel;
   documents: any[];
   documentSubscription: Subscription;
   @Input() document: DocumentModel;
@@ -25,6 +26,7 @@ export class DocumentItemComponent implements OnInit {
         this.documents = documents;
       }
     );
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.documentService.emitDocumentSubject();
   }
 

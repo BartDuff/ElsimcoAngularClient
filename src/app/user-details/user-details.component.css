@@ -28,3 +28,7 @@
 .card .card-image {
   position: relative;
 }
+
+.btn-floating {
+  background-color: #4384BB;
+}

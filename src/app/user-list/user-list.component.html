@@ -1,9 +1,23 @@
 <h2>Utilisateurs:</h2>
-<a class="right btn-floating btn-large waves-effect waves-light blue scale-transition" routerLink="/add_users"><i class="material-icons">add</i></a>
-<ul>
-  <app-user-item *ngFor="let user of users | async"
+<a *ngIf="currentUser.role=='ADMIN'" class="right btn-floating btn-large waves-effect waves-light scale-transition" routerLink="/add_users"><i class="material-icons">add</i></a>
+<table class="bordered">
+  <thead>
+  <tr>
+    <th>Email</th>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Status</th>
+    <th>Date d'inscription</th>
+    <th>Détails</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Éditer</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr app-user-item *ngFor="let user of users"
                     [user]="user"
                     (userSelected)="selectUser($event)"
                     (userDeleted)="deleteUser($event)">
-  </app-user-item>
-</ul>
+    </tr>
+  </tbody>
+</table>

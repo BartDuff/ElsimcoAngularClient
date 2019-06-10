@@ -11,16 +11,20 @@ import {UserService} from '../services/user.service';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  users: Observable<UserModel[]>;
+  users: UserModel[];
+  currentUser: UserModel;
   selectedUser: UserModel;
   constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.getUsers();
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   getUsers() {
-    this.users = this.userService.getUsers();
+    this.userService.getUsers().subscribe(
+      (data) => this.users = data
+    );
   }
 
   selectUser(userSelected: UserModel) {
@@ -29,7 +33,9 @@ export class UserListComponent implements OnInit {
 
   deleteUser(userToDelete: UserModel) {
     this.userService.deleteUser(userToDelete).subscribe(
-      () => this.getUsers()
+      ()=> {
+        this.users.splice(this.users.indexOf(userToDelete), 1);
+      }
     );
   }
 

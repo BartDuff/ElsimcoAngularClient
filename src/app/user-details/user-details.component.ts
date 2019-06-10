@@ -11,7 +11,7 @@ import {UserService} from '../services/user.service';
   styleUrls: ['./user-details.component.css']
 })
 export class UserDetailsComponent implements OnInit {
-
+  currentUser: UserModel;
   @Input() user: UserModel;
 
   constructor(private userService: UserService,
@@ -23,5 +23,6 @@ export class UserDetailsComponent implements OnInit {
         data => this.user = data
       )
     );
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 }

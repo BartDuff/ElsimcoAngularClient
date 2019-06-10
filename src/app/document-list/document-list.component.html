@@ -22,11 +22,11 @@ Normal:
     <th>Nom</th>
     <th>Annee</th>
     <th>Télécharger</th>
-    <th>Supprimer</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
   </tr>
   </thead>
   <tbody>
-  <tr app-document-item *ngFor="let document of docs"
+  <tr app-document-item *ngFor="let document of documents"
       [document]="document"
       (documentSelected)="selectDocument($event)"
       (documentDeleted)="deleteDocument($event)"

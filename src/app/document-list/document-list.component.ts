@@ -5,6 +5,7 @@ import {DocumentService} from '../services/document.service';
 import { saveAs } from 'file-saver';
 import {environment} from '../../environments/environment';
 import { InputFileComponent } from 'ngx-input-file';
+import {UserModel} from '../models/user.model';
 
 const API_URL = environment.apiUrl;
 @Component({
@@ -14,9 +15,8 @@ const API_URL = environment.apiUrl;
 })
 
 export class DocumentListComponent implements OnInit {
-
-  docs: DocumentModel[];
-  documents: Observable<DocumentModel[]>;
+  currentUser: UserModel;
+  documents: DocumentModel[];
   selectedDocument: DocumentModel;
   selectedFiles;
   //@ViewChild('fileInput') fileInput: ElementRef;
@@ -30,19 +30,19 @@ export class DocumentListComponent implements OnInit {
 
   ngOnInit() {
     this.getDocuments();
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     // const headers = [{name: 'Accept', value: 'application/json'}];
     // this.uploader = new FileUploader({url: API_URL + '/documents/upload', autoUpload: true, headers: headers});
     // this.uploader.onCompleteAll = () => alert('File uploaded');
   }
   getDocuments() {
-    this.documentService.getDocuments().subscribe(r=>this.docs=r);
+    this.documentService.getDocuments().subscribe(r=>this.documents=r);
   }
 
   deleteDocument(documentToDelete) {
-    console.log(documentToDelete)
     this.documentService.deleteDocument(documentToDelete).subscribe(
       ()=> {
-        this.docs.splice(this.docs.indexOf(documentToDelete), 1);
+        this.documents.splice(this.documents.indexOf(documentToDelete), 1);
       }
     );
   }

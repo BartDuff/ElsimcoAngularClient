@@ -14,14 +14,14 @@ import {AuthenticationService} from '../services/authentication.service';
 })
 export class MissionItemComponent implements OnInit {
 
-  missions: any[];
-  missionSubscription: Subscription;
   currentUserSubscription: Subscription;
   currentUser: UserModel;
   isFavorite: boolean;
+  favorites : MissionModel[];
   @Input() mission: MissionModel;
   @Output() missionSelected = new EventEmitter<MissionModel>();
   @Output() missionDeleted = new EventEmitter<MissionModel>();
+  @Output() missionToDeleteInList = new EventEmitter<MissionModel>();
 
 
   lastUpdate = new Promise((resolve, reject) => {
@@ -39,11 +39,6 @@ export class MissionItemComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    this.missionSubscription = this.missionService.missionSubject.subscribe(
-      (missions: any[]) => {
-        this.missions = missions;
-      }
-    );
     this.currentUserSubscription = this.authService.currentUserSubject.subscribe(
       (user) => {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -51,7 +46,16 @@ export class MissionItemComponent implements OnInit {
     );
     this.authService.emitCurrentUserSubject();
     this.missionService.emitMissionSubject();
-    this.isFavorite = this.currentUser.missions.find(x => x.id === this.mission.id) !== undefined;
+    this.getFavorites();
+  }
+
+  getFavorites() {
+    this.userService.getMissionInterestsForUser(this.currentUser).subscribe(
+      (data)  => {
+        this.favorites = data;
+        this.isFavorite = this.favorites.find(x => x.id === this.mission.id) !== undefined;
+      }
+    )
   }
 
   deleteMission() {
@@ -60,6 +64,12 @@ export class MissionItemComponent implements OnInit {
 
   addMissionToList() {
     this.missionSelected.emit(this.mission);
+    this.getFavorites();
+  }
+
+  deleteMissionFromList() {
+    this.missionToDeleteInList.emit(this.mission);
+    this.getFavorites();
   }
 
 }

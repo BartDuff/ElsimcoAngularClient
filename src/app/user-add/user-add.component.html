@@ -1,28 +1,37 @@
-<div class="col-md-6">
-  <h2 class="text-center">Add User</h2>
-  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" formControlName="email" placeholder="Email" name="email" class="form-control" id="email">
+<div class="col s12 m12 l6">
+  <div class="card-panel">
+    <h4 class="text-center">Ajouter un utilisateur</h4>
+    <div class="row">
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="col s12">
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="email" class="active">Email:</label>
+            <input type="email" formControlName="email" placeholder="Email" name="email" class="validate" id="email">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="prenom" class="active">Prénom:</label>
+            <input formControlName="prenom" placeholder="Prénom" name="prenom" class="validate" id="prenom">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="nom" class="active">Nom:</label>
+            <input formControlName="nom" placeholder="Nom" name="lastName" class="validate" id="nom">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="role" class="active">Role:</label>
+            <select formControlName="role" name="role" class="browser-default" id="role">
+              <option value="ADMIN">ADMIN</option>
+              <option value="USER" selected>UTILISATEUR</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-success">Ajouter</button>
+      </form>
     </div>
-
-    <div class="form-group">
-      <label for="prenom">Prénom:</label>
-      <input formControlName="prenom" placeholder="Prénom" name="prenom" class="form-control" id="prenom">
-    </div>
-
-    <div class="form-group">
-      <label for="nom">Nom:</label>
-      <input formControlName="nom" placeholder="Nom" name="lastName" class="form-control" id="nom">
-    </div>
-
-    <div class="form-group">
-      <label for="role">Role:</label>
-      <select formControlName="role" name="role" class="browser-default" id="role">
-        <option value="ADMIN" >ADMIN</option>
-        <option value="USER" selected>UTILISATEUR</option>
-      </select>
-    </div>
-    <button class="btn btn-success #1976d2 blue darken-2">Ajouter</button>
-  </form>
+  </div>
 </div>

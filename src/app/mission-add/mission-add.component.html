@@ -1,30 +1,46 @@
-<div class="col-md-6">
-  <h2 class="text-center">Ajouter une mission</h2>
-  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="intitule">Intitulé:</label>
-      <input type="intitule" formControlName="intitule" placeholder="Intitulé" name="intitule" class="form-control" id="intitule">
+<div class="col s12 m12 l6">
+  <div class="card-panel">
+    <h4 class="text-center">Ajouter une mission</h4>
+    <div class="row">
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="col s12">
+        <div class="row">
+          <div class="input-field col s12" style="display:none;">
+            <label for="id" class="active">Id:</label>
+            <input disabled formControlName="id" placeholder="id" name="id" class="validate" id="id">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="intitule" class="active">Intitulé:</label>
+            <input formControlName="intitule" placeholder="Intitulé" name="intitule" class="validate" id="intitule">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="client" class="active">Client:</label>
+            <input formControlName="client" placeholder="Client" name="client" class="validate" id="client">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="resume" class="active">Résumé:</label>
+            <input formControlName="resume" placeholder="resume" name="resume" class="validate" id="resume">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="duree" class="active">Durée:</label>
+            <input type="number" formControlName="duree" placeholder="0" name="duree" class="validate" id="duree">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="jobDesc" class="active">Job Description:</label>
+            <textarea formControlName="jobDesc" placeholder="Job Description" name="jobDesc" class="materialize-textarea" id="jobDesc"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-success">Ajouter</button>
+      </form>
     </div>
-
-    <div class="form-group">
-      <label for="client">Client:</label>
-      <input formControlName="client" placeholder="Client" name="client" class="form-control" id="client">
-    </div>
-
-    <div class="form-group">
-      <label for="resume">Résumé:</label>
-      <input formControlName="resume" placeholder="resume" name="resume" class="form-control" id="resume">
-    </div>
-
-    <div class="form-group">
-      <label for="duree">Durée:</label>
-      <input type="number" formControlName="duree" placeholder="0" name="duree" class="form-control" id="duree">
-    </div>
-
-    <div class="form-group">
-      <label for="jobDesc">Job Description:</label>
-      <input formControlName="jobDesc" placeholder="Job Description" name="jobDesc" class="form-control" id="jobDesc">
-    </div>
-    <button class="btn btn-success #1976d2 blue darken-2">Ajouter</button>
-  </form>
+  </div>
 </div>

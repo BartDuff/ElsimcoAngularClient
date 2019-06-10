@@ -6,12 +6,13 @@ import {UserModel} from '../models/user.model';
 import {UserService} from '../services/user.service';
 
 @Component({
-  selector: 'app-user-item',
+  selector: 'tr[app-user-item]',
   templateUrl: './user-item.component.html',
   styleUrls: ['./user-item.component.css']
 })
 export class UserItemComponent implements OnInit {
   users: any[];
+  currentUser: UserModel;
   userSubscription: Subscription;
   @Input() user: UserModel;
   @Output() userSelected = new EventEmitter<UserModel>();
@@ -25,6 +26,7 @@ export class UserItemComponent implements OnInit {
         this.users = users;
       }
     );
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.userService.emitUserSubject();
   }
 

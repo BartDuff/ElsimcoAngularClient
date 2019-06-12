@@ -1,5 +1,14 @@
-<a ref="#!" class="brand-logo"><img class="logo "src="../../assets/images/New%20logo%20elsimco%20slogan%202016.png"/></a>
-<ul class="right hide-on-med-and-down ">
+<a ref="#!" class="brand-logo"><img class="logo "src="../../assets/images/elsimco-black.PNG" alt="Brand logo"/></a>
+<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+<ul class="right hide-on-med-and-down">
+  <li><a routerLink="/login" *ngIf="!token">Login</a></li>
+  <li><a (click)="onLogout()" *ngIf="token">Logout</a></li>
+  <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token">{{currentUser.email}}</a></li>
+  <li><a routerLink="/documents" *ngIf="token">Documents</a></li>
+  <li><a routerLink="/missions" *ngIf="token">Missions</a></li>
+  <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
+</ul>
+<ul class="sidenav" id="mobile-demo">
   <li><a routerLink="/login" *ngIf="!token">Login</a></li>
   <li><a (click)="onLogout()" *ngIf="token">Logout</a></li>
   <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token">{{currentUser.email}}</a></li>

@@ -22,6 +22,7 @@ export class MissionItemComponent implements OnInit {
   @Output() missionSelected = new EventEmitter<MissionModel>();
   @Output() missionDeleted = new EventEmitter<MissionModel>();
   @Output() missionToDeleteInList = new EventEmitter<MissionModel>();
+  @Output() missionToArchive = new EventEmitter<MissionModel>();
 
 
   lastUpdate = new Promise((resolve, reject) => {
@@ -70,6 +71,10 @@ export class MissionItemComponent implements OnInit {
   deleteMissionFromList() {
     this.missionToDeleteInList.emit(this.mission);
     this.getFavorites();
+  }
+
+  archiveMission() {
+    this.missionToArchive.emit(this.mission);
   }
 
 }

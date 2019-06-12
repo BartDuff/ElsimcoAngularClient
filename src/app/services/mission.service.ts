@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MissionModel} from '../models/mission.model';
 import {environment} from '../../environments/environment';
+import {UserModel} from '../models/user.model';
 
 
 const API_URL = environment.apiUrl;
@@ -41,5 +42,11 @@ export class MissionService {
   deleteMission(mission: MissionModel): Observable<any> {
     const idASupprimer = mission.id;
     return this.http.delete(`${API_URL}/missions/${idASupprimer}`);
+  }
+
+  getUsersInterestedInMission(mission: MissionModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.get(`${API_URL}/missions/${mission.id}/users`, { headers: headers});
   }
 }

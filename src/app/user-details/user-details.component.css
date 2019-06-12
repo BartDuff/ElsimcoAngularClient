@@ -7,6 +7,7 @@
   display: block;
   width: 100%;
   border-radius: 2px 2px 0 0;
+  margin: -10% 0%;
 }
 
 #profile-card .card-profile-image {
@@ -22,7 +23,7 @@
 }
 
 #profile-card .card-image {
-  height: 150px;
+  height: 200px;
 }
 
 .card .card-image {
@@ -30,5 +31,6 @@
 }
 
 .btn-floating {
-  background-color: #4384BB;
+  background-color: black;
+  color: white;
 }

@@ -14,6 +14,8 @@ import {UserModel} from '../models/user.model';
 export class MissionListComponent implements OnInit {
 
   missions: MissionModel[];
+  archivedMission: MissionModel[];
+  toggleArchives: boolean;
   currentUser: UserModel;
   selectedMission: MissionModel;
 
@@ -24,12 +26,20 @@ export class MissionListComponent implements OnInit {
 
   ngOnInit() {
     this.getMissions();
+    this.getArchivedMissions();
+    this.toggleArchives = true;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   getMissions() {
     this.missionService.getMissions().subscribe(
       (data) => this.missions = data
+    );
+  }
+
+  getArchivedMissions() {
+    this.missionService.getMissions().subscribe(
+      (data) => this.archivedMission = data.filter(x => x.status == 0)
     );
   }
 
@@ -55,5 +65,27 @@ export class MissionListComponent implements OnInit {
         this.missions.splice(this.missions.indexOf(missionToDelete), 1);
       }
     );
+  }
+
+  toggleArchivesClick() {
+    this.toggleArchives = !this.toggleArchives;
+  }
+  toggleArchiveMission(missionToArchive: MissionModel) {
+    if (missionToArchive.status == 1) {
+      missionToArchive.status = 0;
+    } else {
+      missionToArchive.status = 1;
+    }
+    this.missionService.editMission(missionToArchive).subscribe(
+      () => {
+        if(missionToArchive.status == 1){
+          this.archivedMission.splice(this.archivedMission.indexOf(missionToArchive),1)
+          this.getMissions();
+        } else {
+          this.missions.splice(this.missions.indexOf(missionToArchive), 1);
+          this.getArchivedMissions();
+        }
+      }
+    )
   }
 }

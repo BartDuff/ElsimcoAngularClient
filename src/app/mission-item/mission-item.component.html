@@ -1,8 +1,8 @@
 <td>{{ mission.intitule }}</td>
-<td>{{ lastUpdate | async | date: 'short' }} </td>
+<td>{{ lastUpdate | async | date: 'dd/MM/yyyy, HH:mm' }} </td>
 <td>{{ mission.client }}</td>
-<td>{{ mission.datePublication | date: 'short' }}</td>
-<td>{{ mission.duree }}</td>
+<td>{{ mission.datePublication | date: 'dd/MM/yyyy, HH:mm' }}</td>
+<td>{{ mission.duree }} mois</td>
 <td>{{ mission.jobDesc }}</td>
 <td><a [routerLink]="['/missions/', mission.id]">Détail</a></td>
 <td *ngIf="currentUser.role=='ADMIN'"><a [routerLink]="['/edit_mission/', mission.id]">Editer</a></td>
@@ -11,8 +11,12 @@
           (click)="deleteMission()"><i class="material-icons">delete</i></button>
 </td>
 <td>
-  <button *ngIf="!isFavorite" type="button"
+  <button *ngIf="!isFavorite && mission.status ==1" type="button"
           (click)="addMissionToList()"><i class="material-icons">favorite_border</i></button>
-  <button *ngIf="isFavorite" type="button"
+  <button *ngIf="isFavorite && mission.status ==1" type="button"
           (click)="deleteMissionFromList()"><i class="material-icons">favorite</i></button>
+</td>
+<td>
+  <button type="button"
+          (click)="archiveMission()"><i class="material-icons">archive</i></button>
 </td>

@@ -1,7 +1,5 @@
-.row {
-  margin-top: 10%;
-}
-
-h4 {
-  padding: 10px;
+.card {
+  width: 50em;
+  margin-left: auto;
+  margin-right: auto;
 }

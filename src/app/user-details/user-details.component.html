@@ -1,22 +1,27 @@
 <p class="loading" *ngIf="!user">Chargement en cours...</p>
 <div  *ngIf="user" id="profile-card" class="card">
   <div class="card-image waves-effect waves-block waves-light">
-    <img class="activator" src="../../assets/images/success-2081167_1280.jpg" alt="user bg">
+    <img class="activator" src="../../assets/images/179317.jpg" alt="user bg">
   </div>
   <div class="card-content">
-    <img src="/../../assets/images/moi.png" alt=""
+    <img src="/../../assets/images/profile.png" alt=""
          class="circle responsive-img activator card-profile-image cyan lighten-1 padding-2">
     <a class="btn-floating activator btn-move-up waves-effect waves-light z-depth-4 right" [routerLink]="['/edit_user/', user.id]">
       <i class="material-icons">edit</i>
     </a>
     <h5 class="card-title activator grey-text text-darken-4"> {{ user.nom }} {{ user.prenom }}</h5>
     <p><i class="material-icons profile-card-i">perm_identity</i> {{ user.role }}</p>
-    <p>Date d'inscription: {{ user.dateInscription | date: 'short' }}</p>
+    <p>Date d'inscription: {{ user.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
     <p><i class="material-icons profile-card-i">email</i> {{ user.email }}</p>
-    Cet utilisateur s'intéresse aux missions suivantes:
-    <ul class="collection" *ngFor="let mission of user.missions">
-      <li class="collection-item">{{ mission.intitule }}</li>
-    </ul>
+
+    <p class="mat-dialog-title">Cet utilisateur s'intéresse aux missions suivantes:</p>
+    <div class="row">
+        <div class="card-panel col s6" *ngFor="let mission of user.missions">
+          <p><b>Intitulé:</b> {{ mission.intitule }}</p>
+          <p><b>Client:</b> {{ mission.client }}</p>
+          <p><b>Id:</b> {{ mission.id }}</p>
+        </div>
+    </div>
   </div>
 </div>
 <a *ngIf="user.id != currentUser.id" routerLink="/users"><i class="material-icons">arrow_back</i></a>

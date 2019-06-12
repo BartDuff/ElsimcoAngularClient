@@ -1,7 +1,36 @@
 <h2>Missions:</h2>
 <a *ngIf="this.currentUser.role == 'ADMIN'" class="right btn-floating btn-large waves-effect waves-light scale-transition" routerLink="/add_missions"><i
   class="material-icons">add</i></a>
+<button (click)="toggleArchivesClick()" *ngIf="currentUser.role=='ADMIN'"><span *ngIf="toggleArchives">Afficher les missions archivées</span><span *ngIf="!toggleArchives">Cacher les missions archivées</span></button>
 <table class="bordered" style="table-layout:fixed">
+  <thead>
+  <tr>
+    <th>Mission</th>
+    <th>Mis à jour</th>
+    <th>Client</th>
+    <th>Date de publication</th>
+    <th>Durée</th>
+    <th>Description</th>
+    <th>Détails</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Éditer</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
+    <th>Intérêt</th>
+    <th>Archiver</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr app-mission-item *ngFor="let mission of missions"
+      [mission]="mission"
+      [hidden]="mission.status == 0"
+      (missionSelected)="addMissionToList($event)"
+      (missionToDeleteInList)="deleteMissionFromList($event)"
+      (missionDeleted)="deleteMission($event)"
+      (missionToArchive)="toggleArchiveMission($event)">
+  </tr>
+  </tbody>
+</table>
+
+<table class="bordered" style="table-layout:fixed" [hidden]="toggleArchives">
   <thead>
   <tr>
     <th>Mission</th>
@@ -13,16 +42,18 @@
     <th>Détails</th>
     <th *ngIf="currentUser.role=='ADMIN'">Éditer</th>
     <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
-    <th>Intérêt</th>
+    <th></th>
+    <th>Sortir des archives</th>
   </tr>
   </thead>
   <tbody>
-  <tr app-mission-item *ngFor="let mission of missions"
+  <tr app-mission-item *ngFor="let mission of archivedMission"
       [mission]="mission"
-      [hidden]="mission.status == 0"
+      [hidden]="toggleArchives"
       (missionSelected)="addMissionToList($event)"
       (missionToDeleteInList)="deleteMissionFromList($event)"
-      (missionDeleted)="deleteMission($event)">
+      (missionDeleted)="deleteMission($event)"
+      (missionToArchive)="toggleArchiveMission($event)">
   </tr>
   </tbody>
 </table>

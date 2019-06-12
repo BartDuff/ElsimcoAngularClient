@@ -8,17 +8,19 @@
     <div class="card-stacked">
       <div class="card-content">
         <h3>Client : {{ mission.client }}</h3>
-        <p>Date: : {{ mission.datePublication | date: 'short' }}</p>
-        <p>Durée : {{ mission.duree }} </p>
-        <p>Desc: : {{ mission.jobDesc }}</p>
+        <p>Date de publication : {{ mission.datePublication | date: 'dd/MM/yyyy, HH:mm' }}</p>
+        <p>Durée : {{ mission.duree }} mois</p>
+        <p>Description : {{ mission.jobDesc }}</p>
         <p>Résumé: : {{ mission.resume }}</p>
-        <ul class="collection" *ngFor="let user of mission.users">
-          <li class="collection-item">{{ user.nom }} {{ user.prenom }}</li>
+      </div>
+        <div class="card-content">Utilisateurs intéressés par cette mission:
+        <ul class="collection" *ngFor="let user of users">
+          <li class="collection-item">{{ user.nom }} {{ user.prenom }}<br/>{{ user.email }}</li>
         </ul>
+        </div>
       </div>
       <div class="card-action">
         <a routerLink="/missions"><i class="material-icons">arrow_back</i></a>
       </div>
     </div>
   </div>
-</div>

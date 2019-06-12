@@ -1,7 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AuthenticationService} from '../services/authentication.service';
-import {Router} from '@angular/router';
 import {UserModel} from '../models/user.model';
 
 @Component({

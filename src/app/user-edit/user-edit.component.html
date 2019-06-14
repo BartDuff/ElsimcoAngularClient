@@ -21,7 +21,7 @@
             <input formControlName="nom" placeholder="Nom" name="lastName" class="validate" id="nom">
           </div>
         </div>
-        <div class="row">
+        <div *ngIf="currentUser.role=='ADMIN'" class="row">
           <div class="input-field col s12">
             <label for="role" class="active">Role:</label>
             <select formControlName="role" name="role" class="browser-default" id="role">

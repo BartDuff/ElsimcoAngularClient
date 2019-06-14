@@ -49,4 +49,9 @@ export class MissionService {
       'Content-Type'  : 'application/json'});
     return this.http.get(`${API_URL}/missions/${mission.id}/users`, { headers: headers});
   }
+
+  sendMissionByEmail(recipient:String, mission:MissionModel) {
+    return this.http.post(`${API_URL}/emails/${mission.id}`, recipient);
+  }
+
 }

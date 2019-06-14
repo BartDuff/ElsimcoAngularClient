@@ -17,6 +17,7 @@ export class DocumentItemComponent implements OnInit {
   @Output() documentSelected = new EventEmitter<DocumentModel>();
   @Output() documentDeleted = new EventEmitter<DocumentModel>();
   @Output() documentDownloaded = new EventEmitter<DocumentModel>();
+  @Output() documentToSend = new EventEmitter<DocumentModel>();
 
   constructor(private documentService: DocumentService) { }
 
@@ -40,5 +41,9 @@ export class DocumentItemComponent implements OnInit {
 
   downloadDocument() {
     this.documentDownloaded.emit(this.document);
+  }
+
+  sendDocumentByEmail() {
+    this.documentToSend.emit(this.document);
   }
 }

@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MissionModel} from '../models/mission.model';
 import {Observable} from 'rxjs';
 import {MissionService} from '../services/mission.service';
 import {UserService} from '../services/user.service';
 import {AuthenticationService} from '../services/authentication.service';
 import {UserModel} from '../models/user.model';
+import {DocumentModel} from '../models/document.model';
+import {MatDialogConfig} from '@angular/material';
+import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-mission-list',
@@ -21,7 +25,8 @@ export class MissionListComponent implements OnInit {
 
   constructor(private missionService: MissionService,
               private userService: UserService,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -51,7 +56,7 @@ export class MissionListComponent implements OnInit {
     );
   }
 
-  deleteMissionFromList(deletedMission: MissionModel){
+  deleteMissionFromList(deletedMission: MissionModel) {
     this.userService.removeMissionInterestFromUser(JSON.parse(localStorage.getItem('currentUser')), deletedMission).subscribe(
       () => {
         this.getMissions();
@@ -60,16 +65,26 @@ export class MissionListComponent implements OnInit {
   }
 
   deleteMission(missionToDelete: MissionModel) {
-    this.missionService.deleteMission(missionToDelete).subscribe(
-      ()=> {
-        this.missions.splice(this.missions.indexOf(missionToDelete), 1);
-      }
-    );
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        if (data) {
+          this.missionService.deleteMission(missionToDelete).subscribe(
+            () => {
+              this.missions.splice(this.missions.indexOf(missionToDelete), 1);
+            }
+          );
+        }
+      });
   }
 
   toggleArchivesClick() {
     this.toggleArchives = !this.toggleArchives;
   }
+
   toggleArchiveMission(missionToArchive: MissionModel) {
     if (missionToArchive.status == 1) {
       missionToArchive.status = 0;
@@ -78,14 +93,14 @@ export class MissionListComponent implements OnInit {
     }
     this.missionService.editMission(missionToArchive).subscribe(
       () => {
-        if(missionToArchive.status == 1){
-          this.archivedMission.splice(this.archivedMission.indexOf(missionToArchive),1)
+        if (missionToArchive.status == 1) {
+          this.archivedMission.splice(this.archivedMission.indexOf(missionToArchive), 1);
           this.getMissions();
         } else {
           this.missions.splice(this.missions.indexOf(missionToArchive), 1);
           this.getArchivedMissions();
         }
       }
-    )
+    );
   }
 }

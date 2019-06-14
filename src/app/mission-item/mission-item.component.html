@@ -1,5 +1,4 @@
 <td>{{ mission.intitule }}</td>
-<td>{{ lastUpdate | async | date: 'dd/MM/yyyy, HH:mm' }} </td>
 <td>{{ mission.client }}</td>
 <td>{{ mission.datePublication | date: 'dd/MM/yyyy, HH:mm' }}</td>
 <td>{{ mission.duree }} mois</td>
@@ -17,6 +16,6 @@
           (click)="deleteMissionFromList()"><i class="material-icons">favorite</i></button>
 </td>
 <td>
-  <button type="button"
+  <button *ngIf="currentUser.role=='ADMIN'" type="button"
           (click)="archiveMission()"><i class="material-icons">archive</i></button>
 </td>

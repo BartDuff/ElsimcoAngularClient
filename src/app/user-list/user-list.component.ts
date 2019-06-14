@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {MissionModel} from '../models/mission.model';
 import {MissionService} from '../services/mission.service';
 import {UserModel} from '../models/user.model';
 import {UserService} from '../services/user.service';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-list',
@@ -14,7 +16,10 @@ export class UserListComponent implements OnInit {
   users: UserModel[];
   currentUser: UserModel;
   selectedUser: UserModel;
-  constructor(private userService: UserService) { }
+
+  constructor(private userService: UserService,
+              private dialog: MatDialog) {
+  }
 
   ngOnInit() {
     this.getUsers();
@@ -32,11 +37,19 @@ export class UserListComponent implements OnInit {
   }
 
   deleteUser(userToDelete: UserModel) {
-    this.userService.deleteUser(userToDelete).subscribe(
-      ()=> {
-        this.users.splice(this.users.indexOf(userToDelete), 1);
-      }
-    );
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        if (data) {
+          this.userService.deleteUser(userToDelete).subscribe(
+            () => {
+              this.users.splice(this.users.indexOf(userToDelete), 1);
+            }
+          );
+        }
+      });
   }
-
 }

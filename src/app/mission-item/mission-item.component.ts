@@ -24,16 +24,6 @@ export class MissionItemComponent implements OnInit {
   @Output() missionToDeleteInList = new EventEmitter<MissionModel>();
   @Output() missionToArchive = new EventEmitter<MissionModel>();
 
-
-  lastUpdate = new Promise((resolve, reject) => {
-    const date = new Date();
-    setTimeout(
-      () => {
-        resolve(date);
-      }, 2000
-    );
-  });
-
   constructor(private missionService: MissionService,
               private userService: UserService,
               private authService: AuthenticationService,

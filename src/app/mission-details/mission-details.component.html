@@ -21,6 +21,12 @@
       </div>
       <div class="card-action">
         <a routerLink="/missions"><i class="material-icons">arrow_back</i></a>
+        <button type="button"
+                  (click)="sendByEmail()"><i class="material-icons">mail</i></button>
+        <button *ngIf="!isFavorite && mission.status ==1" type="button"
+                (click)="addMissionToList()"><i class="material-icons">favorite_border</i></button>
+        <button *ngIf="isFavorite && mission.status ==1" type="button"
+                (click)="deleteMissionFromList()"><i class="material-icons">favorite</i></button>
       </div>
     </div>
   </div>

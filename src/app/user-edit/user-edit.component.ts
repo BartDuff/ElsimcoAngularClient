@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../services/user.service';
@@ -14,13 +14,14 @@ export class UserEditComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private userService: UserService) { }
-
+              private userService: UserService) {
+  }
   editForm: FormGroup;
+  currentUser: UserModel;
   user: UserModel;
 
   ngOnInit() {
-
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.editForm = this.formBuilder.group({
       id: [],
       email: ['', Validators.required],
@@ -30,7 +31,8 @@ export class UserEditComponent implements OnInit {
     });
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
-        data => {this.editForm.setValue(data);
+        data => {
+          this.editForm.setValue(data);
         }
       )
     );
@@ -38,8 +40,11 @@ export class UserEditComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.editForm.get('role').value == '') {
+      this.editForm.get('role').setValue(this.user.role);
+    }
     this.userService.editUser(this.editForm.value)
-      .subscribe( data => {
+      .subscribe(data => {
         this.router.navigate(['users']);
       });
   }

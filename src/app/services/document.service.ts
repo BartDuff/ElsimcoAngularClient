@@ -3,6 +3,7 @@ import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {DocumentModel} from '../models/document.model';
 import {environment} from '../../environments/environment';
+import {UserModel} from '../models/user.model';
 
 const API_URL = environment.apiUrl;
 
@@ -44,5 +45,9 @@ export class DocumentService {
 
   uploadDocument(file: any, filename: String) {
     return this.http.post(`${API_URL}/documents`, {"fileBase64": file, "originalFileName": filename});
+  }
+
+  sendDocumentByEmail(user:UserModel, document:DocumentModel) {
+    return this.http.post(`${API_URL}/emails/${user.id}/${document.id}`, null);
   }
 }

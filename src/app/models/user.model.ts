@@ -6,6 +6,7 @@ export class UserModel {
   prenom: String;
   email: String;
   dateInscription: Date;
+  derniereConnexion: Date;
   role: String;
   missions: MissionModel[];
 }

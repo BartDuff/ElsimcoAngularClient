@@ -6,6 +6,9 @@ import { saveAs } from 'file-saver';
 import {environment} from '../../environments/environment';
 import { InputFileComponent } from 'ngx-input-file';
 import {UserModel} from '../models/user.model';
+import {MatDialog} from '@angular/material';
+import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
+import {MatDialogConfig} from '@angular/material';
 
 const API_URL = environment.apiUrl;
 @Component({
@@ -25,7 +28,8 @@ export class DocumentListComponent implements OnInit {
   // uploader: FileUploader;
   // isDropOver: boolean;
 
-  constructor(private documentService: DocumentService) {
+  constructor(private documentService: DocumentService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -40,13 +44,22 @@ export class DocumentListComponent implements OnInit {
   }
 
   deleteDocument(documentToDelete) {
-    this.documentService.deleteDocument(documentToDelete).subscribe(
-      ()=> {
-        this.documents.splice(this.documents.indexOf(documentToDelete), 1);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data)=>{
+        if(data) {
+          this.documentService.deleteDocument(documentToDelete).subscribe(
+            ()=> {
+              this.documents.splice(this.documents.indexOf(documentToDelete), 1);
+            }
+          );
+        }
       }
-    );
+    )
   }
-
 
   selectDocument(documentSelected: DocumentModel) {
     this.selectedDocument = documentSelected;
@@ -77,6 +90,12 @@ export class DocumentListComponent implements OnInit {
           saveAs(blob, d.originalFileName);
         }
       });
+  }
+
+  sendDocumentByEmail(documentToSend: DocumentModel) {
+    this.documentService.sendDocumentByEmail(this.currentUser,documentToSend).subscribe(
+      (res) => console.log(res)
+    );
   }
 
   // fileOverAnother(e: any): void {

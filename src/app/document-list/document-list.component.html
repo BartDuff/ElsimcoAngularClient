@@ -1,5 +1,5 @@
 <h2>Pack Collaborateurs:</h2>
-<div>
+<div *ngIf="currentUser.role=='ADMIN'">
 <!--
   <input #fileInput type="file" ng2FileSelect [uploader]="uploader"/>
 -->
@@ -13,9 +13,6 @@
 <!--    <span class="drag-over-title">Déposer le fichier</span>-->
 <!--  </div>-->
 </div>
-
-Normal:
-
 <table class="bordered" style="table-layout:fixed">
   <thead>
   <tr>
@@ -23,6 +20,7 @@ Normal:
     <th>Annee</th>
     <th>Télécharger</th>
     <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
+    <th>Recevoir par mail</th>
   </tr>
   </thead>
   <tbody>
@@ -30,7 +28,8 @@ Normal:
       [document]="document"
       (documentSelected)="selectDocument($event)"
       (documentDeleted)="deleteDocument($event)"
-      (documentDownloaded)="getDocument($event)">
+      (documentDownloaded)="getDocument($event)"
+      (documentToSend)="sendDocumentByEmail($event)">
   </tr>
   </tbody>
 </table>

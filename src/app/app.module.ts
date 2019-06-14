@@ -33,6 +33,9 @@ import {FileUploadModule} from 'ng2-file-upload';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CookieLawModule} from 'angular2-cookie-law';
 import { InputFileConfig, InputFileModule } from 'ngx-input-file';
+import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.component';
+import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import {MatDialogModule, MatInputModule} from '@angular/material';
 const config: InputFileConfig = {};
 
 
@@ -54,7 +57,9 @@ const config: InputFileConfig = {};
     UserAddComponent,
     UserEditComponent,
     MissionAddComponent,
-    MissionEditComponent
+    MissionEditComponent,
+    EmailDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -65,14 +70,17 @@ const config: InputFileConfig = {};
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule,
     HttpClientModule,
     InputFileModule.forRoot(config),
+    MatInputModule,
 
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmDialogComponent, EmailDialogComponent]
 })
 export class AppModule { }

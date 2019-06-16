@@ -27,6 +27,7 @@
     "file-saver": "^2.0.2",
     "ng2-file-upload": "^1.3.0",
     "ngx-input-file": "^7.0.4",
+    "ngx-toastr": "^10.0.4",
     "rxjs": "~6.2.0",
     "zone.js": "~0.8.26"
   },

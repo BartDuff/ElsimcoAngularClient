@@ -36,6 +36,11 @@ import { InputFileConfig, InputFileModule } from 'ngx-input-file';
 import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import {MatDialogModule, MatInputModule} from '@angular/material';
+import { AddContactComponent } from './add-contact/add-contact.component';
+import {CommonModule} from '@angular/common';
+import {ToastrModule} from 'ngx-toastr';
+import { ContactListComponent } from './contact-list/contact-list.component';
+import { ContactItemComponent } from './contact-item/contact-item.component';
 const config: InputFileConfig = {};
 
 
@@ -59,12 +64,16 @@ const config: InputFileConfig = {};
     MissionAddComponent,
     MissionEditComponent,
     EmailDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    AddContactComponent,
+    ContactListComponent,
+    ContactItemComponent
   ],
   imports: [
     AppRoutingModule,
     FileUploadModule,
     BrowserModule,
+    CommonModule,
     BrowserAnimationsModule, // BrowserAnimationsModule is required
     CookieLawModule, // import Angular's CookieLaw modules
     RouterModule,
@@ -73,6 +82,7 @@ const config: InputFileConfig = {};
     MatDialogModule,
     HttpClientModule,
     InputFileModule.forRoot(config),
+    ToastrModule.forRoot(),
     MatInputModule,
 
   ],

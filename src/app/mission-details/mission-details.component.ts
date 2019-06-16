@@ -15,14 +15,16 @@ import {UserService} from '../services/user.service';
 export class MissionDetailsComponent implements OnInit {
 
   @Input() mission: MissionModel;
-  users:UserModel[];
+  users: UserModel[];
   currentUser: UserModel;
   isFavorite: boolean;
-  favorites : MissionModel[];
+  favorites: MissionModel[];
+
   constructor(private missionService: MissionService,
               private userService: UserService,
               private route: ActivatedRoute,
-              private emailDialog: MatDialog) { }
+              private emailDialog: MatDialog) {
+  }
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -31,20 +33,28 @@ export class MissionDetailsComponent implements OnInit {
           this.mission = data;
           this.missionService.getUsersInterestedInMission(data).subscribe(
             (res) => this.users = res
-          )
+          );
           this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
           this.getFavorites();
+          this.markAsRead();
         }
-      ))
+      ));
+  }
+
+  markAsRead() {
+    this.mission.lu = true;
+    this.missionService.editMission(this.mission).subscribe(
+      (data) => this.mission = data
+    );
   }
 
   getFavorites() {
     this.userService.getMissionInterestsForUser(this.currentUser).subscribe(
-      (data)  => {
+      (data) => {
         this.favorites = data;
         this.isFavorite = this.favorites.find(x => x.id === this.mission.id) !== undefined;
       }
-    )
+    );
   }
 
   sendByEmail() {
@@ -54,10 +64,10 @@ export class MissionDetailsComponent implements OnInit {
     const dialogRef = this.emailDialog.open(EmailDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
       data => {
-        if (data != undefined){
-          this.missionService.sendMissionByEmail(data.email,this.mission).subscribe(
+        if (data != undefined) {
+          this.missionService.sendMissionByEmail(data.email, this.mission).subscribe(
             (data) => console.log(data)
-          )
+          );
         }
       }
     );
@@ -71,7 +81,7 @@ export class MissionDetailsComponent implements OnInit {
     );
   }
 
-  deleteMissionFromList(){
+  deleteMissionFromList() {
     this.userService.removeMissionInterestFromUser(this.currentUser, this.mission).subscribe(
       () => {
         this.getFavorites();

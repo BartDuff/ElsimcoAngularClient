@@ -8,6 +8,7 @@ export class MissionModel {
   duree: number;
   datePublication: Date;
   status: number;
+  lu:boolean;
   jobDesc: String;
   users: UserModel[];
 }

@@ -1,8 +1,7 @@
 <h2>Missions:</h2>
 <a *ngIf="this.currentUser.role == 'ADMIN'" class="right btn-floating btn-large waves-effect waves-light scale-transition" routerLink="/add_missions"><i
   class="material-icons">add</i></a>
-<button (click)="toggleArchivesClick()" *ngIf="currentUser.role=='ADMIN'"><span *ngIf="toggleArchives">Afficher les missions archivées</span><span *ngIf="!toggleArchives">Cacher les missions archivées</span></button>
-<table class="bordered" style="table-layout:fixed">
+<table class="bordered" >
   <thead>
   <tr>
     <th>Mission</th>
@@ -19,6 +18,7 @@
   </thead>
   <tbody>
   <tr app-mission-item *ngFor="let mission of missions"
+      [ngStyle]="{'background-color':!mission.lu?'#fbb900':''}"
       [mission]="mission"
       [hidden]="mission.status == 0"
       (missionSelected)="addMissionToList($event)"
@@ -28,8 +28,10 @@
   </tr>
   </tbody>
 </table>
-
-<table class="bordered" style="table-layout:fixed" [hidden]="toggleArchives">
+<div style="margin-top: 15px;">
+  <button (click)="toggleArchivesClick()" *ngIf="currentUser.role=='ADMIN'"><span *ngIf="toggleArchives">Afficher les missions archivées</span><span *ngIf="!toggleArchives">Cacher les missions archivées</span></button>
+</div>
+<table class="bordered" [hidden]="toggleArchives">
   <thead>
   <tr>
     <th>Mission</th>
@@ -46,6 +48,7 @@
   </thead>
   <tbody>
   <tr app-mission-item *ngFor="let mission of archivedMission"
+      [ngStyle]="{'background-color':!mission.lu?'#fbb900':''}"
       [mission]="mission"
       [hidden]="toggleArchives"
       (missionSelected)="addMissionToList($event)"

@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
       this.credentials = { email: this.f.email.value, password: this.f.password.value }
       this.authService.login(this.credentials).subscribe(user => {
         // login successful if there's a user in the response
+        console.log(user);
         if (user) {
           // store user details and basic auth credentials in local storage
           localStorage.setItem('token', window.btoa(`${this.credentials.email}:${this.credentials.password}`));

@@ -13,9 +13,13 @@ import {MissionAddComponent} from '../mission-add/mission-add.component';
 import {MissionEditComponent} from '../mission-edit/mission-edit.component';
 import {UserAddComponent} from '../user-add/user-add.component';
 import {UserEditComponent} from '../user-edit/user-edit.component';
+import {AddContactComponent} from '../add-contact/add-contact.component';
+import {ContactListComponent} from '../contact-list/contact-list.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
+  { path: 'contact_form', component: AddContactComponent},
+  { path: 'contacts', canActivate: [AuthGuardService], component: ContactListComponent},
   { path: 'missions', canActivate: [AuthGuardService], component: MissionListComponent },
   { path: 'missions/:id', canActivate: [AuthGuardService], component: MissionDetailsComponent },
   { path: 'add_missions', canActivate: [AuthGuardService], component: MissionAddComponent },

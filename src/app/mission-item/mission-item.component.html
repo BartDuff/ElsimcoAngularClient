@@ -10,10 +10,10 @@
           (click)="deleteMission()"><i class="material-icons">delete</i></button>
 </td>
 <td>
-  <button *ngIf="!isFavorite && mission.status ==1" type="button"
-          (click)="addMissionToList()"><i class="material-icons">favorite_border</i></button>
-  <button *ngIf="isFavorite && mission.status ==1" type="button"
-          (click)="deleteMissionFromList()"><i class="material-icons">favorite</i></button>
+  <button style="text-transform: none!important;color: black!important"   (click)="(isFavorite)?deleteMissionFromList():addMissionToList();"
+          class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect">
+    <i class="material-icons">{{(isFavorite)?'favorite':'favorite_border'}}</i>
+  </button>
 </td>
 <td>
   <button *ngIf="currentUser.role=='ADMIN'" type="button"

@@ -10,6 +10,7 @@ const API_URL = environment.apiUrl;
   providedIn: 'root'
 })
 export class AuthenticationService {
+
   currentUserSubject = new Subject<UserModel>();
   currentUser: UserModel;
   constructor(private http: HttpClient) { }
@@ -25,10 +26,12 @@ export class AuthenticationService {
     return this.http.get<any>(`${API_URL}/users/authenticate`, { headers: headers, withCredentials: true});
   }
 
-  logout() {
+  logout():Observable<any> {
+    const headers = new HttpHeaders(localStorage.getItem("token") ? {
+      Authorization : 'Basic ' + localStorage.getItem("token")
+    } : {});
     // remove user from local storage to log user out
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
-  }
 
+    return this.http.get(`${API_URL}/users/logout`, { headers: headers, withCredentials: true});
+  }
 }

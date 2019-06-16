@@ -1,7 +1,7 @@
 <td>{{ user.email }}</td>
 <td>{{ user.nom }}</td>
 <td>{{ user.prenom }}</td>
-<td>{{ user.role }}</td>
+<td [ngStyle]="{'color':user.role=='ADMIN'?'red':''}">{{ user.role }}</td>
 <td>{{ user.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</td>
 <td>
   <a [routerLink]="['/users/', user.id]">Détail</a></td>

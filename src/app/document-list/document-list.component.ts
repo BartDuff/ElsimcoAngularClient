@@ -22,11 +22,10 @@ export class DocumentListComponent implements OnInit {
   documents: DocumentModel[];
   selectedDocument: DocumentModel;
   selectedFiles;
-  //@ViewChild('fileInput') fileInput: ElementRef;
+  filename;
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
-  // uploader: FileUploader;
-  // isDropOver: boolean;
+
 
   constructor(private documentService: DocumentService,
               private dialog: MatDialog) {
@@ -98,17 +97,6 @@ export class DocumentListComponent implements OnInit {
     );
   }
 
-  // fileOverAnother(e: any): void {
-  //   this.isDropOver = e;
-  // }
-  //
-  // fileClicked() {
-  //   this.fileInput.nativeElement.click();
-  // }
-
-  handleFiles
-
-  filename;
   handleFile(){
     console.log("handleFile");
     for(let i=0; i < this.inputFileComponent.files.length;i++) {
@@ -152,11 +140,9 @@ console.log(readerEvt)
                 }
       )
   }
+
   s(s){
     JSON.stringify(s)
   }
-  upload(arr){
 
-
-  }
 }

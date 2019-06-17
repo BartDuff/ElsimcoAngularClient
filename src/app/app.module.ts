@@ -41,6 +41,10 @@ import {CommonModule} from '@angular/common';
 import {ToastrModule} from 'ngx-toastr';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { ContactItemComponent } from './contact-item/contact-item.component';
+import { NewsListComponent } from './news-list/news-list.component';
+import { NewsItemComponent } from './news-item/news-item.component';
+import { NewsAddComponent } from './news-add/news-add.component';
+import { NewsEditComponent } from './news-edit/news-edit.component';
 const config: InputFileConfig = {};
 
 
@@ -67,7 +71,11 @@ const config: InputFileConfig = {};
     ConfirmDialogComponent,
     AddContactComponent,
     ContactListComponent,
-    ContactItemComponent
+    ContactItemComponent,
+    NewsListComponent,
+    NewsItemComponent,
+    NewsAddComponent,
+    NewsEditComponent
   ],
   imports: [
     AppRoutingModule,

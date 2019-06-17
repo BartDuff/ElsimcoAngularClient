@@ -32,6 +32,7 @@ export class UserEditComponent implements OnInit {
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
         data => {
+          this.editForm.controls.role.setValue(data.role);
           this.editForm.setValue(data);
         }
       )

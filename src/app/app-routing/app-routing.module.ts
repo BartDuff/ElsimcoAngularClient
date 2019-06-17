@@ -15,6 +15,9 @@ import {UserAddComponent} from '../user-add/user-add.component';
 import {UserEditComponent} from '../user-edit/user-edit.component';
 import {AddContactComponent} from '../add-contact/add-contact.component';
 import {ContactListComponent} from '../contact-list/contact-list.component';
+import {NewsListComponent} from '../news-list/news-list.component';
+import {NewsEditComponent} from '../news-edit/news-edit.component';
+import {NewsAddComponent} from '../news-add/news-add.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -24,6 +27,9 @@ const routes: Routes = [
   { path: 'missions/:id', canActivate: [AuthGuardService], component: MissionDetailsComponent },
   { path: 'add_missions', canActivate: [AuthGuardService], component: MissionAddComponent },
   { path: 'edit_mission/:id', canActivate: [AuthGuardService], component: MissionEditComponent },
+  { path: 'news', canActivate: [AuthGuardService], component: NewsListComponent },
+  { path: 'add_news', canActivate: [AuthGuardService], component: NewsAddComponent },
+  { path: 'edit_news/:id', canActivate: [AuthGuardService], component: NewsEditComponent },
   { path: 'users', canActivate: [AuthGuardService], component: UserListComponent },
   { path: 'users/:id', canActivate: [AuthGuardService], component: UserDetailsComponent },
   { path: 'add_users', canActivate: [AuthGuardService], component: UserAddComponent },

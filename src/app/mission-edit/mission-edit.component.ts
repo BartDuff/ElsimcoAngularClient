@@ -32,7 +32,9 @@ export class MissionEditComponent implements OnInit {
     });
     this.route.params.subscribe(
       params => this.missionService.getMission(params['id']).subscribe(
-        data => {this.editForm.setValue(data);
+        data => {
+          this.editForm.controls.jobDesc.setValue(data.jobDesc);
+          this.editForm.setValue(data);
         }
       )
     );

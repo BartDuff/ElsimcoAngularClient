@@ -4,6 +4,7 @@
   <li><a routerLink="/contact_form" *ngIf="!token">Candidature</a></li>
   <li><a routerLink="/login" *ngIf="!token">Login</a></li>
   <li><a (click)="onLogout()" *ngIf="token">Logout</a></li>
+  <li><a routerLink="/news" *ngIf="token">Actualités</a></li>
   <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token">{{currentUser.email}}</a></li>
   <li><a routerLink="/documents" *ngIf="token">Documents</a></li>
   <li><a routerLink="/missions" *ngIf="token">Missions</a></li>
@@ -13,6 +14,7 @@
 <ul class="sidenav" id="mobile-demo">
   <li><a routerLink="/login" *ngIf="!token">Login</a></li>
   <li><a (click)="onLogout()" *ngIf="token">Logout</a></li>
+  <li><a routerLink="/news" *ngIf="token">Actualités</a></li>
   <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token">{{currentUser.email}}</a></li>
   <li><a routerLink="/documents" *ngIf="token">Documents</a></li>
   <li><a routerLink="/missions" *ngIf="token">Missions</a></li>

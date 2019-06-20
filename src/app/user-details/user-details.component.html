@@ -1,10 +1,10 @@
 <p class="loading" *ngIf="!user">Chargement en cours...</p>
 <div  *ngIf="user" id="profile-card" class="card">
   <div class="card-image waves-effect waves-block waves-light">
-    <img class="activator" src="../../assets/images/179317.jpg" alt="user bg">
+    <img class="activator" [src]=img_bgd alt="user bg">
   </div>
   <div class="card-content">
-    <img src="/../../assets/images/profile.png" alt=""
+    <img [src]=img alt=""
          class="circle responsive-img activator card-profile-image cyan lighten-1 padding-2">
     <a class="btn-floating activator btn-move-up waves-effect waves-light z-depth-4 right" [routerLink]="['/edit_user/', user.id]">
       <i class="material-icons">edit</i>

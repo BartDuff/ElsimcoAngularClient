@@ -35,7 +35,7 @@ import {CookieLawModule} from 'angular2-cookie-law';
 import { InputFileConfig, InputFileModule } from 'ngx-input-file';
 import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
-import {MatDialogModule, MatInputModule} from '@angular/material';
+import {MatDialogModule, MatInputModule, MatProgressSpinnerModule, MatSortModule, MatTableModule} from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
 import {ToastrModule} from 'ngx-toastr';
@@ -45,6 +45,7 @@ import { NewsListComponent } from './news-list/news-list.component';
 import { NewsItemComponent } from './news-item/news-item.component';
 import { NewsAddComponent } from './news-add/news-add.component';
 import { NewsEditComponent } from './news-edit/news-edit.component';
+import { CandidatListComponent } from './candidat-list/candidat-list.component';
 const config: InputFileConfig = {};
 
 
@@ -75,7 +76,8 @@ const config: InputFileConfig = {};
     NewsListComponent,
     NewsItemComponent,
     NewsAddComponent,
-    NewsEditComponent
+    NewsEditComponent,
+    CandidatListComponent
   ],
   imports: [
     AppRoutingModule,
@@ -88,10 +90,13 @@ const config: InputFileConfig = {};
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MatTableModule,
+    MatSortModule,
     HttpClientModule,
     InputFileModule.forRoot(config),
     ToastrModule.forRoot(),
     MatInputModule,
+    MatProgressSpinnerModule,
 
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService,

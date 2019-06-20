@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {UserModel} from '../models/user.model';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,7 @@ import {UserModel} from '../models/user.model';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  img = `/../../${environment.base}/assets/images/home.svg`;
   credentials: any = {email: '', password: ''};
   loginForm: FormGroup;
   message: string;
@@ -56,7 +58,9 @@ export class LoginComponent implements OnInit {
           this.authService.emitCurrentUserSubject();
           this.router.navigate([this.returnUrl]);
       }}, error => {
+        console.log(error);
         this.message = error;
+        this.router.navigate(['']);
       });
     }
   }

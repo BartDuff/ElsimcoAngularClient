@@ -1,7 +1,7 @@
 <h2>Missions:</h2>
 <a *ngIf="this.currentUser.role == 'ADMIN'" class="right btn-floating btn-large waves-effect waves-light scale-transition" routerLink="/add_missions"><i
   class="material-icons">add</i></a>
-<table class="bordered" >
+<table class="bordered mat-elevation-z8" >
   <thead>
   <tr>
     <th>Mission</th>
@@ -31,12 +31,12 @@
 <div style="margin-top: 15px;">
   <button (click)="toggleArchivesClick()" *ngIf="currentUser.role=='ADMIN'"><span *ngIf="toggleArchives">Afficher les missions archivées</span><span *ngIf="!toggleArchives">Cacher les missions archivées</span></button>
 </div>
-<table class="bordered" [hidden]="toggleArchives">
+<table class="bordered mat-elevation-z8" [hidden]="toggleArchives">
   <thead>
   <tr>
     <th>Mission</th>
     <th>Client</th>
-    <th>Date</th>
+    <th>Date de publication</th>
     <th>Durée</th>
     <th>Description</th>
     <th>Détails</th>

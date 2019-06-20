@@ -1,9 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MissionModel} from '../models/mission.model';
-import {MissionService} from '../services/mission.service';
 import {ActivatedRoute} from '@angular/router';
 import {UserModel} from '../models/user.model';
 import {UserService} from '../services/user.service';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-user-details',
@@ -11,6 +10,8 @@ import {UserService} from '../services/user.service';
   styleUrls: ['./user-details.component.css']
 })
 export class UserDetailsComponent implements OnInit {
+  img = `/../../${environment.base}/assets/images/profile.png`;
+  img_bgd = `../../${environment.base}/assets/images/179317.jpg`;
   currentUser: UserModel;
   @Input() user: UserModel;
 

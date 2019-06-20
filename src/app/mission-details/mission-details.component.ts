@@ -6,6 +6,7 @@ import {UserModel} from '../models/user.model';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {EmailDialogComponent} from '../dialog/email-dialog/email-dialog.component';
 import {UserService} from '../services/user.service';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-mission-details',
@@ -13,7 +14,7 @@ import {UserService} from '../services/user.service';
   styleUrls: ['./mission-details.component.css']
 })
 export class MissionDetailsComponent implements OnInit {
-
+  img = `/../../${environment.base}/assets/images/resume.jpg`;
   @Input() mission: MissionModel;
   users: UserModel[];
   currentUser: UserModel;

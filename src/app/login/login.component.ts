@@ -1,9 +1,7 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../services/authentication.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {UserModel} from '../models/user.model';
 import {environment} from '../../environments/environment';
 
 @Component({

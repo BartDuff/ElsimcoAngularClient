@@ -11,7 +11,7 @@
         <div class="col-md-9 col-sm-7 col-xs-12">
           <input type="text" class="form-control" formControlName="email" id="email" />
           <div *ngIf="submitted && f.email.errors" class="help-block">
-            <div *ngIf="f.email.errors.required">Email is required</div>
+            <div *ngIf="f.email.errors.required">Email requis</div>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
         <div class="col-md-9 col-sm-7 col-xs-12">
           <input type="password" class="form-control" formControlName="password" id="password"/>
           <div *ngIf="submitted && f.password.errors" class="help-block">
-            <div *ngIf="f.password.errors.required">Password is required</div>
+            <div *ngIf="f.password.errors.required">Mot de passe requis</div>
           </div>
         </div>
       </div>

@@ -1,0 +1,12 @@
+.card {
+  width: 40em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.card-image {
+  width: 20em;
+  margin-left: auto;
+  margin-right: auto;
+}

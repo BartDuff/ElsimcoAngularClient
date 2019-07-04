@@ -1,0 +1,82 @@
+<div class="card">
+  <div class="card-title black white-text">Candidature:</div>
+  <div class="card-image">
+    <img class="activator" src="../../assets/images/resume2.png" alt="user bg">
+  </div>
+  <div class="card-content">
+    <div class="mat-card-content">
+      <p>Vous souhaitez nous envoyer votre candiature spontanée pour rejoindre nos collaborateurs?</p>
+      <p>Renseignez les champs ci-dessous et nous reprendrons contact avec vous dans les plus brefs délais.</p>
+      <br>
+    </div>
+    <p *ngIf="message" class="text-center error">{{message}}</p>
+    <form [formGroup]="contactForm" (ngSubmit)="sendInfos()">
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.nom.errors }">
+      <label for="nom" class="col-md-3 col-sm-5 col-xs-12">Nom:</label>
+      <div class="col-md-9 col-sm-7 col-xs-12">
+        <input type="text" class="form-control" formControlName="nom" id="nom" />
+        <div *ngIf="submitted && f.email.errors" class="help-block">
+          <div *ngIf="f.email.errors.required">Nom est requis</div>
+        </div>
+      </div>
+    </div>
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.prenom.errors }">
+        <label for="prenom" class="col-md-3 col-sm-5 col-xs-12">Prénom:</label>
+        <div class="col-md-9 col-sm-7 col-xs-12">
+          <input type="text" class="form-control" formControlName="prenom" id="prenom" />
+          <div *ngIf="submitted && f.email.errors" class="help-block">
+            <div *ngIf="f.email.errors.required">Prénom est requis</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.email.errors }">
+        <label for="email" class="col-md-3 col-sm-5 col-xs-12">Email:</label>
+        <div class="col-md-9 col-sm-7 col-xs-12">
+          <input type="email" class="form-control" formControlName="email" id="email" />
+          <div *ngIf="submitted && f.email.errors" class="help-block">
+            <div *ngIf="f.email.errors.required">Email est requis</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.adresse.errors }">
+        <label for="adresse" class="col-md-3 col-sm-5 col-xs-12">Adresse:</label>
+        <div class="col-md-9 col-sm-7 col-xs-12">
+          <input type="text" class="form-control" formControlName="adresse" id="adresse" />
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.codePostal.errors }">
+        <label for="codePostal" class="col-md-3 col-sm-5 col-xs-12">Code Postal:</label>
+        <div class="col-md-9 col-sm-7 col-xs-12">
+          <input type="text" class="form-control" formControlName="codePostal" id="codePostal" />
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.ville.errors }">
+        <label for="ville" class="col-md-3 col-sm-5 col-xs-12">Ville:</label>
+        <div class="col-md-9 col-sm-7 col-xs-12">
+          <input type="text" class="form-control" formControlName="ville" id="ville" />
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.mobile.errors }">
+        <label for="mobile" class="col-md-3 col-sm-5 col-xs-12">Mobile:</label>
+        <div class="col-md-9 col-sm-7 col-xs-12">
+          <input type="text" class="form-control" formControlName="mobile" id="mobile" />
+          <div *ngIf="submitted && f.email.errors" class="help-block">
+            <div *ngIf="f.email.errors.required">Votre numéro de mobile est requis pour pouvoir vous recontacter</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{ 'has-error': submitted && f.fileBase64.errors }">
+        <label class="col-md-3 col-sm-5 col-xs-12">CV:</label>
+        <div class="col-md-9 col-sm-7 col-xs-12">
+          <input-file id="fileBase64" placeholder="Fichier en PDF" formControlName="fileBase64" (change)="onFileChange()"></input-file>
+          <div *ngIf="submitted && f.fileBase64.errors" class="help-block">
+            <div *ngIf="f.fileBase64.errors.required">Votre CV est requis pour pouvoir vous recontacter</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group center">
+        <button class="btn btn-success black" type="submit" [disabled]="loading || contactForm.invalid">Envoyer</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<td>{{ contact.nom }}</td>
+<td>{{ contact.prenom }}</td>
+<td>{{ contact.email }}</td>
+<td>{{ contact.adresse }}</td>
+<td>{{ contact.codePostal }}</td>
+<td>{{ contact.ville }}</td>
+<td>{{ contact.mobile }}</td>
+<td>{{ contact.dateEnvoi | date: 'dd/MM/yyyy, HH:mm' }}</td>
+<td>
+  <button type="button"
+          (click)="downloadCV()"><i class="material-icons">file_download</i></button>
+</td>
+<td>
+  <button type="button"
+          (click)="deleteContact()"><i class="material-icons">cancel</i></button>
+</td>
+<td>
+  <button type="button"
+          (click)="acceptContact()"><i class="material-icons">check_circle</i></button>
+</td>

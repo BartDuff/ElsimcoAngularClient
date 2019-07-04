@@ -1,0 +1,107 @@
+<div class="center">
+  <h2>Candidathèque:</h2>
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Rechercher">
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 center">
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.nom}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="prenom">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.prenom}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="adresse">
+      <th mat-header-cell *matHeaderCellDef>Adresse</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.adresse}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codePostal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code Postal</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.codePostal}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ville">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ville</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.ville}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="mobile">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.mobile}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dateEnvoi">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Candidature envoyée:</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.dateEnvoi | date }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fileBase64">
+      <th mat-header-cell *matHeaderCellDef>CV:</th>
+      <td mat-cell *matCellDef="let candidat">
+        <button type="button" (click)="downloadCV(candidat)"><i class="material-icons">file_download</i></button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="mobilite">
+      <th mat-header-cell *matHeaderCellDef>Mobilité</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.mobilite}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="competences">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Compétences</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.competences}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="diplome">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Diplôme</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.diplome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="disponibilite">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Diponibilité</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.disponibilite}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="domaine">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Domaine</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.domaine}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numSecu">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Numéro de sécurité Sociale</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.numeroSecu}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="salaireActuelBrut">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Salaire actuel brut</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.salaireActuelBrut}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="situationActuelle">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Situation actuelle</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.situationActuelle}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="experience">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Expérience</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.experience}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="echangesEffectues">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Échanges effectués</th>
+      <td mat-cell *matCellDef="let candidat"> {{candidat.echangesEffectues}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+  </table>
+</div>

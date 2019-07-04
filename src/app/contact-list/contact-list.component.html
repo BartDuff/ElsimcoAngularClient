@@ -1,0 +1,25 @@
+<h2>Candidatures reçues:</h2>
+<table class="bordered mat-elevation-z8">
+  <thead>
+  <tr>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Email</th>
+    <th>Adresse</th>
+    <th>Code Postal</th>
+    <th>Ville</th>
+    <th>Mobile</th>
+    <th>Candidature envoyée:</th>
+    <th>CV:</th>
+    <th colspan="2">Accepter/Refuser?</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr app-contact-item *ngFor="let contact of contacts"
+      [contact]="contact"
+      (contactAccepted)="AcceptContact($event)"
+      (contactDeleted)="RefuseContact($event)"
+      (contactCV)="downloadCV($event)">
+  </tr>
+  </tbody>
+</table>

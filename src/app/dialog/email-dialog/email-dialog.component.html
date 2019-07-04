@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Envoyer par mail</h2>
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field>
+    <input matInput
+           placeholder="Adresse e-mail"
+           formControlName="email"
+           type="email">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="mat-raised-button"(click)="envoyer()">Envoyer</button>
+  <button class="mat-raised-button mat-primary"(click)="fermer()">Annuler</button>
+</mat-dialog-actions>

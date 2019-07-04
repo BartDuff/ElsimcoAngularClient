@@ -1,0 +1,28 @@
+<div class="col s12 m12 l6">
+  <div class="card-panel">
+    <h4 class="text-center">Publier une actualité</h4>
+    <div class="row">
+      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="col s12">
+        <div class="row">
+          <div class="input-field col s12" style="display:none;">
+            <label for="id" class="active">Id:</label>
+            <input disabled formControlName="id" placeholder="id" name="id" class="validate" id="id">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="titre" class="active">Titre:</label>
+            <input formControlName="titre" placeholder="Titre" name="titre" class="validate" id="titre">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <label for="contenu" class="active">Contenu:</label>
+            <textarea formControlName="contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..." name="contenu" class="materialize-textarea" id="contenu"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-success">Publier</button>
+      </form>
+    </div>
+  </div>
+</div>

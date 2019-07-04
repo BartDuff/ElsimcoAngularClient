@@ -1,0 +1,8 @@
+<h2>Actualités:</h2>
+<a *ngIf="currentUser.role == 'ADMIN'" class="right btn-floating btn-large waves-effect waves-light scale-transition" routerLink="/add_news"><i
+  class="material-icons">add</i></a>
+<div class="row" *ngFor="let newsitem of news">
+  <div class="col s12">
+    <app-news-item [newsitem]="newsitem" class="mat-elevation-z8"></app-news-item>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+table {
+  width: 100vw;
+  margin-left: -25vw;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 50vw;
+}

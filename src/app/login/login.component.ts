@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/missions';
-    this.authService.logout();
+    //this.authService.logout();
   }
 
   // convenience getter for easy access to form fields
@@ -54,11 +54,15 @@ export class LoginComponent implements OnInit {
           this.authService.currentUser = user;
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.authService.emitCurrentUserSubject();
-          this.router.navigate([this.returnUrl]);
+          this.router.navigate([this.returnUrl]).then(
+            ()=>console.log("Connecté")
+          );
       }}, error => {
         console.log(error);
         this.message = error;
-        this.router.navigate(['']);
+        this.router.navigate(['']).then(
+          ()=> console.log(this.message)
+        );
       });
     }
   }

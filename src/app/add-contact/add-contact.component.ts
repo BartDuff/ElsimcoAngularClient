@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {InputFileComponent} from 'ngx-input-file';
 import {ContactModel} from '../models/contact.model';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-add-contact',
@@ -12,6 +13,7 @@ import {ContactModel} from '../models/contact.model';
   styleUrls: ['./add-contact.component.css']
 })
 export class AddContactComponent implements OnInit {
+  envBase = environment.base;
   contactForm: FormGroup;
   message: string;
   submitted: boolean;

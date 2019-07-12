@@ -3,6 +3,7 @@
   <mat-form-field>
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Rechercher">
   </mat-form-field>
+  <div class="table-container">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 center">
     <ng-container matColumnDef="nom">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
@@ -104,4 +105,5 @@
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
   </table>
+  </div>
 </div>

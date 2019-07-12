@@ -38,8 +38,8 @@ const routes: Routes = [
   { path: 'edit_user/:id', canActivate: [AuthGuardService], component: UserEditComponent },
   { path: 'documents', canActivate: [AuthGuardService], component: DocumentListComponent },
   { path: 'documents/:id', canActivate: [AuthGuardService], component: DocumentDetailsComponent },
-  { path: '', redirectTo: 'news', pathMatch: 'full'},
-  { path: 'error', redirectTo: '', pathMatch: 'full'},
+  { path: '', redirectTo: 'login', pathMatch: 'full'},
+  { path: 'error', redirectTo: 'login', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }
 ];
 

@@ -13,13 +13,14 @@
   <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>
 </ul>
 <ul class="sidenav" id="mobile-demo">
-  <li><a routerLink="/login" *ngIf="!token">Login</a></li>
-  <li><a (click)="onLogout()" *ngIf="token">Logout</a></li>
-  <li><a routerLink="/news" *ngIf="token">Actualités</a></li>
-  <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token">{{currentUser.email}}</a></li>
-  <li><a routerLink="/documents" *ngIf="token">Documents</a></li>
-  <li><a routerLink="/missions" *ngIf="token">Missions</a></li>
-  <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
-  <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures</a></li>
-  <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>
+  <li><a routerLink="/contact_form" *ngIf="!token" class="white-text">Candidature</a></li>
+  <li><a routerLink="/login" *ngIf="!token" class="white-text">Login</a></li>
+  <li><a (click)="onLogout()" *ngIf="token" class="white-text">Logout</a></li>
+  <li><a routerLink="/news" *ngIf="token" class="white-text">Actualités</a></li>
+  <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token" class="white-text">{{currentUser.email}}</a></li>
+  <li><a routerLink="/documents" *ngIf="token" class="white-text">Documents</a></li>
+  <li><a routerLink="/missions" *ngIf="token" class="white-text">Missions</a></li>
+  <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Utilisateurs</a></li>
+  <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidatures</a></li>
+  <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidathèque</a></li>
 </ul>

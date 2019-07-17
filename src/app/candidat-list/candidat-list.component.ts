@@ -16,7 +16,7 @@ export class CandidatListComponent implements OnInit {
   editField: String;
   candidats: CandidatModel[];
   dataSource:any;
-  columnsToDisplay = ['nom', 'prenom', 'email', 'adresse', 'codePostal', 'ville', 'mobile', 'dateEnvoi', 'fileBase64',
+  columnsToDisplay = ['nom', 'prenom','dateNaissance', 'email', 'adresse', 'codePostal', 'ville', 'mobile', 'dateEnvoi', 'fileBase64',
     'mobilite', 'competences', 'diplome', 'disponibilite','domaine', 'numSecu', 'salaireActuelBrut', 'situationActuelle','experience','echangesEffectues']
   constructor(private candidatService: CandidatService,
               private toastrService:ToastrService) { }

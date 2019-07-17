@@ -35,7 +35,15 @@ import {CookieLawModule} from 'angular2-cookie-law';
 import { InputFileConfig, InputFileModule } from 'ngx-input-file';
 import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
-import {MatDialogModule, MatInputModule, MatProgressSpinnerModule, MatSortModule, MatTableModule} from '@angular/material';
+import {
+  MatButtonModule, MatCheckboxModule,
+  MatDialogModule,
+  MatInputModule,
+  MatProgressSpinnerModule, MatSelectModule,
+  MatSortModule,
+  MatStepperModule,
+  MatTableModule
+} from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
 import {ToastrModule} from 'ngx-toastr';
@@ -97,6 +105,10 @@ const config: InputFileConfig = {};
     ToastrModule.forRoot(),
     MatInputModule,
     MatProgressSpinnerModule,
+    MatStepperModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatSelectModule,
 
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService,

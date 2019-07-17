@@ -1,11 +1,39 @@
 <td>{{ contact.nom }}</td>
 <td>{{ contact.prenom }}</td>
+<td>{{ contact.dateNaissance | date: 'dd/MM/yyyy' }}</td>
 <td>{{ contact.email }}</td>
 <td>{{ contact.adresse }}</td>
 <td>{{ contact.codePostal }}</td>
 <td>{{ contact.ville }}</td>
 <td>{{ contact.mobile }}</td>
+<td>{{ contact.telDomicile }}</td>
+<td>{{ contact.nationalite }}</td>
+<td>{{ contact.villeNaissance }} ({{contact.departementNaissance}})</td>
+<td>{{ contact.numSecu }}</td>
+<td>{{ contact.skype }}</td>
+<td>{{ contact.permisB }}</td>
+<td>{{ contact.voiture }}</td>
+<td>{{ contact.permis2roues }}</td>
+<td>{{ contact.deuxRoues }}</td>
+<td>{{ contact.diplome.intitule }} {{contact.diplome.annee }} {{ contact.diplome.etablissement }} {{contact.diplome.obtenu}} </td>
+<td>{{ contact.anglais }} {{ contact.allemand }} {{ contact.italien}} {{contact.espagnol}} {{contact.autreLangue}}:{{contact.niveauAutrelangue}}</td>
+<td>{{ contact.mobiliteParis }} {{contact.mobiliteFrance}} {{contact.mobiliteEurope}} {{ contact.mobiliteIntl }}</td>
+<td>{{contact.references[0].nomEntreprise }} {{contact.references[0].nomResponsable }} {{contact.references[0].fonction }} {{contact.references[0].telephone }} {{contact.references[0].adresseMail }}</td>
+<td>{{contact.references[1].nomEntreprise }} {{contact.references[1].nomResponsable }} {{contact.references[1].fonction }} {{contact.references[1].telephone }} {{contact.references[1].adresseMail }}</td>
+<td>{{ contact.enPoste }}</td>
+<td>{{ contact.contrat }}</td>
+<td>{{ contact.preavisNegociable }}</td>
+<td>{{ contact.delai }}</td>
+<td>{{ contact.raisonDispo }}</td>
+<td>{{ contact.posteSouhaite }}</td>
+<td>{{ contact.evolution5ans }}</td>
+<td>{{ contact.dateDispo | date: 'dd/MM/yyyy'}}</td>
+<td>{{ contact.fixeDernierSalaireBrut }}</td>
+<td>{{ contact.varDernierSalaireBrut }}</td>
+<td>{{ contact.pretentionSalaireBrut }}</td>
+<td>{{ contact.faitA }}</td>
 <td>{{ contact.dateEnvoi | date: 'dd/MM/yyyy, HH:mm' }}</td>
+
 <td>
   <button type="button"
           (click)="downloadCV()"><i class="material-icons">file_download</i></button>

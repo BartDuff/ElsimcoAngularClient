@@ -6,14 +6,5 @@ export class CandidatModel extends ContactModel {
     super();
   }
 
-  private numeroSecu:String;
-  private diplome:String;
-  private domaine:String;
-  private experience:number;
-  private salaireActuelBrut:number;
-  private competences:String;
-  private situationActuelle:String;
-  private disponibilite:Date;
-  private mobilite:boolean;
   private echangesEffectues:String;
 }

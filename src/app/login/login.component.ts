@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../services/authentication.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {environment} from '../../environments/environment';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -21,14 +22,18 @@ export class LoginComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               public authService: AuthenticationService) {
+    // redirect to home if already logged in
+    if (localStorage.getItem("currentUser")) {
+      this.router.navigate(['']).then(() => console.log("Déjà connecté"));
+    }
   }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/missions';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/news';
     //this.authService.logout();
   }
 

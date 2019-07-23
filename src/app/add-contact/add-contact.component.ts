@@ -39,26 +39,26 @@ export class AddContactComponent implements OnInit {
 
   ngOnInit() {
     this.contactForm1 = this.formBuilder.group({
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
+      nom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
+      prenom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
       dateNaissance: [''],
-      nationalite:[''],
-      villeNaissance:[''],
+      nationalite:['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
+      villeNaissance:['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
       departementNaissance:[''],
-      telDomicile:[''],
-      numSecu:[''],
+      telDomicile:['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
+      numSecu:['', Validators.pattern('^([1278])([0-9]{2})(0[1-9]|1[0-2]|20)([02][1-9]|2[AB]|[1345678][0-9]|9[012345789])([0-9]{3})(00[1-9]|0[1-9][0-9]|[1-9][0-9]{2})(0[1-9]|[1-8][0-9]|9[1-7])?$')],
       skype:[''],
       email: ['', [Validators.email, Validators.required]],
       adresse: ['', Validators.required],
-      codePostal: ['', Validators.required],
-      ville: ['', Validators.required],
-      mobile: ['', Validators.required],
+      codePostal: ['', [Validators.required, Validators.pattern('^(([0-8][0-9])|(9[0-5]))[0-9]{3}$')]],
+      ville: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
+      mobile: ['',[Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
       transport: [''],
       fileBase64: ['']
     });
     this.contactForm2 = this.formBuilder.group({
       Id:[''],
-      annee: [''],
+      annee: ['', Validators.pattern('^[0-9]{4}$')],
       intitule: [''],
       etablissement: [''],
       obtenu: ['', Validators.required]
@@ -68,7 +68,7 @@ export class AddContactComponent implements OnInit {
       italien: [''],
       allemand: [''],
       espagnol: [''],
-      autreLangue: [''],
+      autreLangue: ['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
       niveauAutreLangue: ['']
     });
     this.contactForm4 = this.formBuilder.group({
@@ -80,14 +80,14 @@ export class AddContactComponent implements OnInit {
     this.contactForm5 = this.formBuilder.group({
       nomEntreprise1: [''],
       nomEntreprise2: [''],
-      nomResponsable1: [''],
-      nomResponsable2: [''],
-      fonction1: [''],
-      fonction2: [''],
-      telephone1: [''],
-      telephone2: [''],
-      adresseMail1: [''],
-      adresseMail2: ['']
+      nomResponsable1: ['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
+      nomResponsable2: ['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
+      fonction1: ['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
+      fonction2: ['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
+      telephone1: ['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
+      telephone2: ['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
+      adresseMail1: ['', Validators.email],
+      adresseMail2: ['', Validators.email]
     });
     this.contactForm6 = this.formBuilder.group({
       enPoste: ['', Validators.required],
@@ -100,13 +100,13 @@ export class AddContactComponent implements OnInit {
       dateDispo: ['']
     });
     this.contactForm7 = this.formBuilder.group({
-      fixeDernierSalaireBrut: ['', Validators.required],
-      varDernierSalaireBrut: [''],
-      pretentionSalaireBrut: [''],
+      fixeDernierSalaireBrut: ['', [Validators.required, Validators.pattern('^[1-9]{1}[0-9]*$')]],
+      varDernierSalaireBrut: ['', Validators.pattern('^[1-9]{1}[0-9]*$')],
+      pretentionSalaireBrut: ['', Validators.pattern('^[1-9]{1}[0-9]*$')],
     });
     this.contactForm8 = this.formBuilder.group({
       acceptTerms: ['', Validators.required],
-      faitA: ['', Validators.required]
+      faitA: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]]
     });
   }
 

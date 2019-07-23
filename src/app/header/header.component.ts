@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
       ()=>{
         localStorage.removeItem('token');
         localStorage.removeItem('currentUser');
-        this.router.navigate(['']).then(
+        this.router.navigate(['login']).then(
           () => {
             console.log("Déconnecté");
             this.ngOnInit();

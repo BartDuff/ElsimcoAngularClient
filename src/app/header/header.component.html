@@ -11,6 +11,7 @@
   <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
   <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures</a></li>
   <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>
+  <li><a routerLink="/presence" *ngIf="token">Fiche de Présence</a></li>
 </ul>
 <ul class="sidenav" id="mobile-demo">
   <li><a routerLink="/contact_form" *ngIf="!token" class="white-text">Candidature</a></li>
@@ -21,6 +22,7 @@
   <li><a routerLink="/documents" *ngIf="token" class="white-text">Documents</a></li>
   <li><a routerLink="/missions" *ngIf="token" class="white-text">Missions</a></li>
   <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Utilisateurs</a></li>
+  <li><a routerLink="/presence" *ngIf="token">Fiche de Présence</a></li>
   <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidatures</a></li>
   <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidathèque</a></li>
 </ul>

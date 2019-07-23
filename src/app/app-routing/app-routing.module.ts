@@ -19,6 +19,7 @@ import {NewsListComponent} from '../news-list/news-list.component';
 import {NewsEditComponent} from '../news-edit/news-edit.component';
 import {NewsAddComponent} from '../news-add/news-add.component';
 import {CandidatListComponent} from '../candidat-list/candidat-list.component';
+import {FichePresenceComponent} from '../fiche-presence/fiche-presence.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -38,7 +39,8 @@ const routes: Routes = [
   { path: 'edit_user/:id', canActivate: [AuthGuardService], component: UserEditComponent },
   { path: 'documents', canActivate: [AuthGuardService], component: DocumentListComponent },
   { path: 'documents/:id', canActivate: [AuthGuardService], component: DocumentDetailsComponent },
-  { path: '', redirectTo: 'login', pathMatch: 'full'},
+  { path: 'presence', canActivate: [AuthGuardService], component: FichePresenceComponent },
+  { path: '', redirectTo: 'news', pathMatch: 'full'},
   { path: 'error', redirectTo: 'login', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }
 ];

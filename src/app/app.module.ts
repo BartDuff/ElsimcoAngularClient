@@ -13,7 +13,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
 import { MissionDetailsComponent } from './mission-details/mission-details.component';
 import { DocumentDetailsComponent } from './document-details/document-details.component';
 import {AppRoutingModule} from './app-routing/app-routing.module';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthenticationService} from './services/authentication.service';
 import {AuthGuardService} from './services/auth-guard.service';
@@ -36,13 +36,14 @@ import { InputFileConfig, InputFileModule } from 'ngx-input-file';
 import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import {
-  MatButtonModule, MatCheckboxModule,
+  MatButtonModule, MatCheckboxModule, MatDatepickerModule,
   MatDialogModule,
   MatInputModule,
   MatProgressSpinnerModule, MatSelectModule,
   MatSortModule,
   MatStepperModule,
-  MatTableModule
+  MatTableModule,
+  MatNativeDateModule, MatCardModule, MAT_DATE_LOCALE, DateAdapter
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -54,6 +55,9 @@ import { NewsItemComponent } from './news-item/news-item.component';
 import { NewsAddComponent } from './news-add/news-add.component';
 import { NewsEditComponent } from './news-edit/news-edit.component';
 import { CandidatListComponent } from './candidat-list/candidat-list.component';
+import { FichePresenceComponent } from './fiche-presence/fiche-presence.component';
+import {CdkTableModule} from '@angular/cdk/table';
+import {CustomDateAdapter} from './helpers/CustomDateAdapter';
 const config: InputFileConfig = {};
 
 
@@ -85,7 +89,8 @@ const config: InputFileConfig = {};
     NewsItemComponent,
     NewsAddComponent,
     NewsEditComponent,
-    CandidatListComponent
+    CandidatListComponent,
+    FichePresenceComponent
   ],
   imports: [
     AppRoutingModule,
@@ -101,6 +106,7 @@ const config: InputFileConfig = {};
     MatTableModule,
     MatSortModule,
     HttpClientModule,
+    HttpClientJsonpModule,
     InputFileModule.forRoot(config),
     ToastrModule.forRoot(),
     MatInputModule,
@@ -109,11 +115,16 @@ const config: InputFileConfig = {};
     MatButtonModule,
     MatCheckboxModule,
     MatSelectModule,
-
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCardModule,
+    CdkTableModule
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+    {provide: DateAdapter, useClass: CustomDateAdapter }
   ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmDialogComponent, EmailDialogComponent]

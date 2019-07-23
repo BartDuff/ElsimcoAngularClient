@@ -1,0 +1,50 @@
+<h1>
+  Outils fiche de présence
+</h1>
+<div *ngIf="!FicheEnvoyee">
+<mat-card>
+  <mat-card-title>
+    {{dateNow.getFullYear()}}
+  </mat-card-title>
+  <mat-month-view [dateFilter]="dateFilter" [activeDate]="dateNow" #calendar (selectedChange)="addRemoveDay($event)">
+  </mat-month-view>
+</mat-card>
+<h4>
+    Jours non travaillés
+</h4>
+<div>
+  <form (ngSubmit)="sendFiche(f)" #f="ngForm">
+    <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés ce mois-ci</div>
+    <div *ngFor="let dayOff of daysOff">
+        <mat-form-field>
+          <span class="prefix" matPrefix>{{dayOff}}</span>
+          <mat-select [ngModel] [name]="dayOff" required>
+            <mat-option *ngFor="let absence of absences" [value]="absence">
+              {{absence}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-checkbox [ngModel] [name]="dayOff + ' boolean'">Demi-journée?</mat-checkbox>
+      <mat-form-field class="commentaires">
+        <input matInput placeholder="Commentaires" [ngModel] [name]="dayOff + ' comm'">
+      </mat-form-field>
+    </div>
+    <button mat-raised-button type="submit" [disabled]="f.invalid">Envoyer</button>
+  </form>
+<!--  <p>{{f.value | json }}</p>-->
+  <div *ngIf="!FicheEnvoyee">
+    <p><span matPrefix>Jours ouvrés: </span><span></span></p>
+    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>
+    <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTTS(f) }}</span></p>
+    <p><span matPrefix>Congés payés: </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>
+    <p><span matPrefix>Absences exceptionnelles: </span><span *ngIf="f.value">{{ countAbsences(f) }}</span></p>
+    <p><span matPrefix>Formation: </span><span *ngIf="f.value">{{ countFormation(f) }}</span></p>
+    <p><span matPrefix>Intercontrat: </span><span *ngIf="f.value">{{ countInterContrat(f) }}</span></p>
+    <p><span matPrefix>Congés sans solde: </span><span *ngIf="f.value">{{ countSansSolde(f) }}</span></p>
+    <p><span matPrefix>Arrêt maladie: </span><span *ngIf="f.value">{{ countMaladie(f) }}</span></p>
+  </div>
+</div>
+</div>
+<div *ngIf="FicheEnvoyee">
+  Vous avez envoyée votre Fiche de présence pour ce mois-ci
+</div>

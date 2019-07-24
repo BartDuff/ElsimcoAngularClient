@@ -31,9 +31,10 @@
     </div>
     <button mat-raised-button type="submit" [disabled]="f.invalid">Envoyer</button>
   </form>
-<!--  <p>{{f.value | json }}</p>-->
+<!--<p>{{f.value | json }}</p>-->
   <div *ngIf="!FicheEnvoyee">
-    <p><span matPrefix>Jours ouvrés: </span><span></span></p>
+    <p><span matPrefix>Jours ouvrés: </span><span>{{staticJoursOuvres}}</span></p>
+    <p><span matPrefix>Jours travaillés: </span><span>{{staticJoursOuvres - countJoursNonTravailles(f)}}</span></p>
     <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>
     <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTTS(f) }}</span></p>
     <p><span matPrefix>Congés payés: </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>

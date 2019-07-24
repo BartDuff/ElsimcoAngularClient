@@ -1,26 +1,30 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewChecked} from '@angular/core';
 import * as moment from 'moment';
 import {Moment} from 'moment';
-import {MatCalendar, MatMonthView} from '@angular/material';
+import {MatMonthView} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {NgForm} from '@angular/forms';
-import {a} from '@angular/core/src/render3';
+import {PdfService} from '../services/pdf.service';
+import {FicheModel} from '../models/fiche.model';
 
 @Component({
   selector: 'app-fiche-presence',
   templateUrl: './fiche-presence.component.html',
   styleUrls: ['./fiche-presence.component.css']
 })
-export class FichePresenceComponent implements OnInit {
+export class FichePresenceComponent implements OnInit, AfterViewChecked {
   @ViewChild('calendar') calendar: MatMonthView<Moment>;
   @ViewChild('f') f: NgForm;
   selectedDate: Moment;
   daysOff = [];
+  static joursOuvres:number;
+  nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
   absences= ["RTT E", "RTT S", "Congés payés", "Absences exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
   dateNow : Date;
   FicheEnvoyee:boolean = false;
 
-  constructor(private toastr: ToastrService) {
+  constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService) {
+    FichePresenceComponent.joursOuvres = 0;
   }
 
   ngOnInit() {
@@ -28,6 +32,12 @@ export class FichePresenceComponent implements OnInit {
     this.dateNow = new Date();
     this.dateFilter(this.dateNow);
   }
+
+  ngAfterViewChecked()
+  {
+    this.cdRef.detectChanges();
+  }
+
 
   dateFilter(date: Date) {
     let day = date.getDay();
@@ -39,6 +49,9 @@ export class FichePresenceComponent implements OnInit {
       }
     }
     let forbiddenDay = day === 0 || day === 6 || isHoliday;
+    if(!forbiddenDay){
+      FichePresenceComponent.joursOuvres++;
+    }
     return !forbiddenDay;
   }
 
@@ -80,8 +93,33 @@ export class FichePresenceComponent implements OnInit {
   }
 
   sendFiche(form: NgForm){
-    this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
-    this.FicheEnvoyee = true;
+    let fiche = new FicheModel();
+    fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
+    fiche.absences = this.countSansSolde(form);
+    fiche.conges = this.countConges(form);
+    fiche.congesSansSolde = this.countSansSolde(form);
+    fiche.formation = this.countFormation(form);
+    fiche.intercontrat = this.countInterContrat(form);
+    fiche.maladie = this.countMaladie(form);
+    fiche.rtte = this.countRTTE(form);
+    fiche.rtts = this.countRTTS(form);
+    fiche.datePublication = new Date();
+    fiche.user = JSON.parse(localStorage.getItem('currentUser'));
+    fiche.joursOuvres = FichePresenceComponent.joursOuvres;
+    fiche.joursTravailles = FichePresenceComponent.joursOuvres - this.countJoursNonTravailles(form);
+    for(let key in form.value){
+      if (form.value.hasOwnProperty(key)) {
+        if (key.endsWith(" comm")) {
+          console.log(form.value[key]);
+          fiche.commentaires[form.value[key.substr(0,10)]+" "+ key.substr(0,10)] = form.value[key];
+        }
+      }
+    }
+  this.pdfService.sendFiche(fiche).subscribe(
+    (data) => {
+      this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
+      this.FicheEnvoyee = data;
+    });
   }
 
   countRTTE(form: NgForm) {
@@ -89,8 +127,13 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "RTT E") {
-          count++;
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
@@ -102,8 +145,13 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "RTT S") {
-          count++;
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
@@ -115,8 +163,13 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "Congés payés") {
-          count++;
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
@@ -128,8 +181,13 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "Absences exceptionnelle") {
-          count++;
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
@@ -141,8 +199,13 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "Congé sans solde") {
-          count++;
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
@@ -155,8 +218,13 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "Arrêt maladie") {
-          count++;
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
@@ -168,8 +236,13 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "Formation") {
-          console.log(value);
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
@@ -181,13 +254,25 @@ export class FichePresenceComponent implements OnInit {
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
+        let nextValue = form.value[key + " boolean"];
         if (value === "Intercontrat") {
-          console.log(value);
+          if (nextValue){
+            count = count + 0.5;
+          } else {
+            count++;
+          }
         }
       }
     }
     return count;
   }
 
+  get staticJoursOuvres() {
+    return FichePresenceComponent.joursOuvres;
+  }
 
+  countJoursNonTravailles(form: NgForm){
+    return this.countAbsences(form) + this.countConges(form) + this.countFormation(form)+this.countInterContrat(form)
+      +this.countMaladie(form) + this.countRTTE(form)+this.countRTTS(form)+this.countSansSolde(form);
+  }
 }

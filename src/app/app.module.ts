@@ -58,6 +58,7 @@ import { CandidatListComponent } from './candidat-list/candidat-list.component';
 import { FichePresenceComponent } from './fiche-presence/fiche-presence.component';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CustomDateAdapter} from './helpers/CustomDateAdapter';
+import {PdfService} from './services/pdf.service';
 const config: InputFileConfig = {};
 
 
@@ -120,7 +121,7 @@ const config: InputFileConfig = {};
     MatCardModule,
     CdkTableModule
   ],
-  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService,
+  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, PdfService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },

@@ -16,7 +16,7 @@
     <th>Lieu de Naissance</th>
     <th>Numéro INSEE</th>
     <th>Identifiant Skype</th>
-    <th>Permis V</th>
+    <th>Permis B</th>
     <th>Voiture</th>
     <th>Permis 2 Roues</th>
     <th>2 Roues</th>
@@ -51,4 +51,11 @@
   </tr>
   </tbody>
 </table>
+  <mat-card *ngIf="!contacts"
+            style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner
+      color="accent"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
 </div>

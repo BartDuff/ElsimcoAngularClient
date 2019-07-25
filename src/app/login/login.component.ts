@@ -42,6 +42,9 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
+  showSpinner(){
+    return localStorage.getItem('currentUser') !== null;
+  }
 
   login() {
     this.submitted = true;

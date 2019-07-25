@@ -1,4 +1,10 @@
-<p class="loading" *ngIf="!mission">Chargement en cours...</p>
+<mat-card *ngIf="!mission"
+          style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>
 <div class="col s12 m7" *ngIf="mission">
   <h2 class="header">Mission : {{ mission.intitule }}</h2>
   <div class="card horizontal">

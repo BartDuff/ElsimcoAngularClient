@@ -30,3 +30,10 @@
     </form>
   </div>
 </div>
+<mat-card *ngIf="showSpinner()"
+          style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>

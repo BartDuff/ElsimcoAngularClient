@@ -29,13 +29,16 @@ export class ContactListComponent implements OnInit {
   }
 
   AcceptContact(contactAccepted: ContactModel) {
-    this.toastrService.success('Candidat ajouté à la Candidathèque', 'Candidature acceptée');
-    this.candidatService.addCandidat((<CandidatModel>contactAccepted)).subscribe(
-      () => this.contactService.deleteContact(contactAccepted).subscribe(
-        () => {
-          this.contacts.splice(this.contacts.indexOf(contactAccepted), 1)
-        })
-    );
+    this.contactService.deleteContact(contactAccepted).subscribe(
+      () => {
+        this.contacts.splice(this.contacts.indexOf(contactAccepted), 1);
+        this.candidatService.addCandidat((<CandidatModel>contactAccepted)).subscribe(
+          () => {
+            this.toastrService.success('Candidat ajouté à la Candidathèque', 'Candidature acceptée');
+          }
+        );
+      })
+
   }
 
   RefuseContact(contactToDelete: ContactModel) {

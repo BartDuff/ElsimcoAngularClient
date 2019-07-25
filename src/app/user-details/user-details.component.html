@@ -1,5 +1,4 @@
-<p class="loading" *ngIf="!user">Chargement en cours...</p>
-<div  *ngIf="user" id="profile-card" class="card">
+<div *ngIf="user" id="profile-card" class="card">
   <div class="card-image waves-effect waves-block waves-light">
     <img class="activator" [src]=img_bgd alt="user bg">
   </div>
@@ -26,3 +25,10 @@
   </div>
 </div>
 <a *ngIf="user.id != currentUser.id" routerLink="/users"><span>RETOUR <i class="material-icons">arrow_back</i></span></a>
+<mat-card *ngIf="!img_bgd"
+          style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>

@@ -100,14 +100,20 @@ checkWeekends(day:Date){
      return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString());
 }
   addRemoveDay(event) {
-    this.selectedDate = event;
-    let day = moment(event).format('DD/MM/YYYY');
-    if (this.daysOff.includes(day)){
-      this.daysOff.splice(this.daysOff.indexOf(day),1);
-    } else {
-      this.daysOff.push(day);
-      this.daysOff.sort()
-    }
+     if(this.checkWeekends(event)){
+        return;
+     } else {
+       this.selectedDate = event;
+       let day = moment(event).format('DD/MM/YYYY');
+       if (this.daysOff.includes(day) && !this.mouseDown) {
+         this.daysOff.splice(this.daysOff.indexOf(day),1);
+       } else if(this.daysOff.includes(day)){
+         return;
+       } else {
+         this.daysOff.push(day);
+         this.daysOff.sort()
+       }
+     }
   }
    static joursFeries(an): String[] {
     const JourAn = new Date(an, 0, 1);

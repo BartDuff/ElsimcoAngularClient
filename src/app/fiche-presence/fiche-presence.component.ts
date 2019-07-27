@@ -17,7 +17,9 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   @ViewChild('calendar') calendar: MatMonthView<Moment>;
   @ViewChild('f') f: NgForm;
   selectedDate: Moment;
+  mouseDown:boolean = false;
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
+  holidays = [];
   selected: {startdDate: Moment, endDate: Moment};
   dates : Date[] = [];
   daysOff = [];
@@ -26,6 +28,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   absences= ["RTT E", "RTT S", "Congés payés", "Absences exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
   dateNow : Date;
   FicheEnvoyee:boolean = false;
+  daysOff2=[];
 
    getDaysInMonth(month, year) {
     var date = new Date(Date.UTC(year, month, 1));
@@ -46,7 +49,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   }
 
   addCells(){
-     let d = this.getWeekday(moment('2019/03/01').startOf('month').toDate());
+     let d = this.getWeekday(moment('2019/05/01').startOf('month').toDate());
      return d;
   }
 
@@ -62,8 +65,8 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.selectedDate = moment(new Date(2019,6,10));
-    this.dateNow = new Date();
-    this.dateFilter(this.dateNow);
+    this.dateNow = new Date(2019,4,1);
+    // this.dateFilter(this.dateNow);
   }
 
   ngAfterViewChecked()
@@ -72,34 +75,30 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   }
 
 
-  choosedDate(event){
-    this.toastr.success(event);
-  }
+  // dateFilter(date: Date) {
+  //   let day = date.getDay();
+  //   let ferie = FichePresenceComponent.joursFeries(date.getFullYear()).filter((x) => x.getMonth() == date.getMonth());
+  //   let isHoliday = false;
+  //   for (let i=0; i<ferie.length;i++){
+  //     if(ferie[i].getDate() == date.getDate()){
+  //       isHoliday = true;
+  //     }
+  //   }
+  //   let forbiddenDay = day === 0 || day === 6 || isHoliday;
+  //   if(!forbiddenDay){
+  //     FichePresenceComponent.joursOuvres++;
+  //   }
+  //   return !forbiddenDay;
+  // }
+checkDay(day){
+  let d = moment(day).format('DD/MM/YYYY');
+  return this.daysOff.includes(d)
+}
 
-  minDate(){
-    const startOfMonth = moment().startOf('month').format('YYYY-MM-DD hh:mm');
-  }
-
-  maxDate(){
-    const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD hh:mm');
-  }
-
-  dateFilter(date: Date) {
-    let day = date.getDay();
-    let ferie = FichePresenceComponent.joursFeries(date.getFullYear()).filter((x) => x.getMonth() == date.getMonth());
-    let isHoliday = false;
-    for (let i=0; i<ferie.length;i++){
-      if(ferie[i].getDate() == date.getDate()){
-        isHoliday = true;
-      }
-    }
-    let forbiddenDay = day === 0 || day === 6 || isHoliday;
-    if(!forbiddenDay){
-      FichePresenceComponent.joursOuvres++;
-    }
-    return !forbiddenDay;
-  }
-
+checkWeekends(day:Date){
+     let d = day.toLocaleString('fr-FR', {weekday: 'short'});
+     return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString());
+}
   addRemoveDay(event) {
     this.selectedDate = event;
     let day = moment(event).format('DD/MM/YYYY');
@@ -110,7 +109,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       this.daysOff.sort()
     }
   }
-   static joursFeries(an): Date[] {
+   static joursFeries(an): String[] {
     const JourAn = new Date(an, 0, 1);
     const FeteTravail = new Date(an, 4, 1);
     const Victoire1945 = new Date(an, 4, 8);
@@ -134,7 +133,12 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     const Ascension = new Date(an, MoisPaques - 1, JourPaques + 39);
     const Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49);
     const LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50);
-    return [JourAn, VendrediSaint, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let t = [JourAn, VendrediSaint, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let sDates = [];
+    for(let i=0;i<t.length;i++){
+      sDates.push(moment(t[i]).format('DD/MM/YYYY'));
+    }
+    return sDates;
   }
 
   sendFiche(form: NgForm){

@@ -60,6 +60,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {CustomDateAdapter} from './helpers/CustomDateAdapter';
 import {PdfService} from './services/pdf.service';
 import {ClickOutsideModule} from 'ng-click-outside';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 const config: InputFileConfig = {};
 
 
@@ -121,7 +122,8 @@ const config: InputFileConfig = {};
     MatNativeDateModule,
     MatCardModule,
     CdkTableModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    BsDatepickerModule.forRoot()
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, PdfService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

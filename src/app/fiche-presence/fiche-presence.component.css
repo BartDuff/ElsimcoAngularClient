@@ -5,6 +5,7 @@ mat-card {
   overflow-y: auto;
 }
 
+
 .prefix {
   padding: 1em;
 }
@@ -25,3 +26,10 @@ mat-form-field {
 .emptyDaysoff {
   margin-bottom: 2em;
 }
+
+mat-card.calendar-card {
+  width: 50em;
+  height: 50em;
+}
+
+

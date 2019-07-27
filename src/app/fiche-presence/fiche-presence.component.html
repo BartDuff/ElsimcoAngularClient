@@ -2,12 +2,29 @@
   Outils fiche de présence
 </h1>
 <div *ngIf="!FicheEnvoyee">
-<mat-card>
+
+  <div style="border: 1px solid;width: 75vw;height: 60vh; margin: auto;text-align: left;">
+        <div style="border: 1px solid;width: 10vw;height: 5vh; display: inline-block;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
+
+    <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
+    <div *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" style="border:2px solid;height: 10vh;width: 10vw;display: inline-block;position: relative;">
+      <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 2em">{{day | date:'d'}}</span>
+    </div>
+  </div>
+
+
+
+  {{s(getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear()))}}
+  {{getWeekday(dateNow)}}
+  {{getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear()).length}}
+  {{addCells()}}
+  <mat-card class="calendar-card" style="zoom: 200%">
   <mat-card-title>
     {{dateNow.getFullYear()}}
   </mat-card-title>
-  <mat-month-view [dateFilter]="dateFilter" [activeDate]="dateNow" #calendar (selectedChange)="addRemoveDay($event)">
-  </mat-month-view>
+
+<!--  <mat-month-view [dateFilter]="dateFilter" [activeDate]="dateNow" #calendar (selectedChange)="addRemoveDay($event)" (selected)="SelectCell($event)">-->
+<!--  </mat-month-view>-->
 </mat-card>
 <h4>
     Jours non travaillés

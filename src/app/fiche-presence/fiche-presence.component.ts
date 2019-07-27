@@ -1,7 +1,7 @@
 import {Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewChecked} from '@angular/core';
 import * as moment from 'moment';
 import {Moment} from 'moment';
-import {MatMonthView} from '@angular/material';
+import {DateAdapter, MatDateFormats, MatMonthView} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {NgForm} from '@angular/forms';
 import {PdfService} from '../services/pdf.service';
@@ -13,9 +13,13 @@ import {FicheModel} from '../models/fiche.model';
   styleUrls: ['./fiche-presence.component.css']
 })
 export class FichePresenceComponent implements OnInit, AfterViewChecked {
+
   @ViewChild('calendar') calendar: MatMonthView<Moment>;
   @ViewChild('f') f: NgForm;
   selectedDate: Moment;
+  joursDeLaSemaine = ['L','M','M','J','V','S','D'];
+  selected: {startdDate: Moment, endDate: Moment};
+  dates : Date[] = [];
   daysOff = [];
   static joursOuvres:number;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
@@ -23,6 +27,35 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   dateNow : Date;
   FicheEnvoyee:boolean = false;
 
+   getDaysInMonth(month, year) {
+    var date = new Date(Date.UTC(year, month, 1));
+    var days = [];
+    while (date.getMonth() === month) {
+      days.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
+  }
+
+  getWeekday(date:Date){
+     return date.getDay()-1;
+  }
+
+  creatArray(number){
+     return new Array(number);
+  }
+
+  addCells(){
+     let d = this.getWeekday(moment('2019/03/01').startOf('month').toDate());
+     return d;
+  }
+
+  s(ss){
+    return JSON.stringify(ss)
+  }
+  c(cc){
+    console.log(cc)
+  }
   constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService) {
     FichePresenceComponent.joursOuvres = 0;
   }
@@ -38,6 +71,18 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     this.cdRef.detectChanges();
   }
 
+
+  choosedDate(event){
+    this.toastr.success(event);
+  }
+
+  minDate(){
+    const startOfMonth = moment().startOf('month').format('YYYY-MM-DD hh:mm');
+  }
+
+  maxDate(){
+    const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD hh:mm');
+  }
 
   dateFilter(date: Date) {
     let day = date.getDay();

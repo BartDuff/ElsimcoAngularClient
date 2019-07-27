@@ -1,3 +1,21 @@
 
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.mat-calendar-body-cell-content:hover{
+  background-color: orange !important;
+  color: black !important;
+}
+
+.selectedCell {
+  background-color: orange !important;
+  color: black !important;
+}
+
+td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+  padding: 0.5em !important;
+}
+
+button.next, button.previous {
+  display: none!important;
+}

@@ -1,55 +1,31 @@
 <h1>
   Outils fiche de présence
 </h1>
-<div *ngIf="!FicheEnvoyee">
 
-  <div style="border: 1px solid;width: 75vw;height: 60vh; margin: auto;text-align: left;" >
-        <div style="border: 1px solid;width: 10vw;height: 5vh; display: inline-block;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
-
+<br>
+<div *ngIf="!FicheEnvoyee" style="justify-content: space-evenly;display: flex">
+<!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
+    <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
     <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
     <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" style="border:2px solid;height: 10vh;width: 10vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':checkDay(day)?'orange':checkWeekends(day)?'grey':''}">
       <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 2em" >{{day | date:'d'}}</span>
     </div>
-  </div>
-{{mouseDown.valueOf()}}
-
-
-  <mat-card class="calendar-card" style="zoom: 200%">
-  <mat-card-title>
-    {{dateNow.getFullYear()}}
-  </mat-card-title>
-
-
-
-<!--  <mat-month-view [dateFilter]="dateFilter" [activeDate]="dateNow" #calendar (selectedChange)="addRemoveDay($event)" (selected)="SelectCell($event)">-->
-<!--  </mat-month-view>-->
-</mat-card>
-<h4>
-    Jours non travaillés
-</h4>
-<div>
-  <form (ngSubmit)="sendFiche(f)" #f="ngForm">
-    <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés ce mois-ci</div>
-    <div *ngFor="let dayOff of daysOff">
-        <mat-form-field>
-          <span class="prefix" matPrefix>{{dayOff}}</span>
-          <mat-select [ngModel] [name]="dayOff" required>
-            <mat-option *ngFor="let absence of absences" [value]="absence">
-              {{absence}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-checkbox [ngModel] [name]="dayOff + ' boolean'">Demi-journée?</mat-checkbox>
-      <mat-form-field class="commentaires">
-        <input matInput placeholder="Commentaires" [ngModel] [name]="dayOff + ' comm'">
-      </mat-form-field>
+  </div>-->
+<div id="cont">
+  <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
+    <h1 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h1>
+    <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
+    <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
+    <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())"
+         style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':checkDay(day)?'orange':checkWeekends(day)?'grey':''}">
+      <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
+      <span style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{f.value[toMomentFormat(day)+' boolean']?'1/2':''}} {{absShort[absences.indexOf(f.value[toMomentFormat(day)])]}}</span>
     </div>
-    <button mat-raised-button type="submit" [disabled]="f.invalid">Envoyer</button>
-  </form>
-<!--<p>{{f.value | json }}</p>-->
+  </div>
+  <br>
   <div *ngIf="!FicheEnvoyee">
-    <p><span matPrefix>Jours ouvrés: </span><span>{{staticJoursOuvres}}</span></p>
-    <p><span matPrefix>Jours travaillés: </span><span>{{staticJoursOuvres - countJoursNonTravailles(f)}}</span></p>
+    <p><span matPrefix>Jours ouvrés: </span><span>{{joursOuvres().length}}</span></p>
+    <p><span matPrefix>Jours travaillés: </span><span>{{joursOuvres().length - countJoursNonTravailles(f)}}</span></p>
     <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>
     <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTTS(f) }}</span></p>
     <p><span matPrefix>Congés payés: </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>
@@ -60,7 +36,43 @@
     <p><span matPrefix>Arrêt maladie: </span><span *ngIf="f.value">{{ countMaladie(f) }}</span></p>
   </div>
 </div>
+
+<!--  <mat-card class="calendar-card">
+  <mat-card-title>
+    {{dateNow.getFullYear()}}
+  </mat-card-title>
+&lt;!&ndash;  <mat-month-view [dateFilter]="dateFilter" [activeDate]="dateNow" #calendar (selectedChange)="addRemoveDay($event)" (selected)="SelectCell($event)">&ndash;&gt;
+&lt;!&ndash;  </mat-month-view>&ndash;&gt;
+</mat-card>-->
+
+<div style="width: 40vw">
+  <h4>
+      Jours non travaillés
+  </h4>
+  <div>
+    <form (ngSubmit)="sendFiche(f)" #f="ngForm">
+      <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés ce mois-ci</div>
+      <div *ngFor="let dayOff of daysOff" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
+          <mat-form-field>
+            <span class="prefix" matPrefix>{{dayOff}}</span>
+            <mat-select #raison [ngModel] [name]="dayOff" required placeholder="raison d'absence">
+              <mat-option *ngFor="let absence of absences" [value]="absence">
+                {{absence}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-checkbox [ngModel] [name]="dayOff + ' boolean'">Demi-journée?</mat-checkbox>
+        <br>
+        <mat-form-field class="commentaires">
+          <input matInput placeholder="Commentaires {{(raison.value&&raison.value !== 'Absences exceptionnelle'?'facultatif':'')}}" [ngModel] [name]="dayOff + ' comm'" [required]="raison.value === 'Absences exceptionnelle'">
+        </mat-form-field>
+      </div>
+      <button mat-raised-button type="submit" [disabled]="f.invalid">Envoyer</button>
+    </form>
+<!--  <p>{{f.value | json }}</p>-->
+  </div>
+  </div>
 </div>
-<div *ngIf="FicheEnvoyee">
+<div *ngIf="FicheEnvoyee" id="final">
   Vous avez envoyée votre Fiche de présence pour ce mois-ci
 </div>

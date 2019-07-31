@@ -17,4 +17,5 @@ export class FicheModel {
   joursOuvres:number;
   joursTravailles:number;
   commentaires:any = {};
+  tableImg:any;
 }

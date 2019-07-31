@@ -6,6 +6,8 @@ import {ToastrService} from 'ngx-toastr';
 import {NgForm} from '@angular/forms';
 import {PdfService} from '../services/pdf.service';
 import {FicheModel} from '../models/fiche.model';
+import htmlToImage from 'html-to-image';
+import {image} from 'html2canvas/dist/types/css/types/image';
 
 @Component({
   selector: 'app-fiche-presence',
@@ -19,26 +21,12 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   selectedDate: Moment;
   mouseDown:boolean = false;
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
-  holidays = [];
-  selected: {startdDate: Moment, endDate: Moment};
-  dates : Date[] = [];
   daysOff = [];
-  static joursOuvres:number;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
   absences= ["RTT E", "RTT S", "Congés payés", "Absences exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
+  absShort= ["RTT E.", "RTT S.", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
   dateNow : Date;
   FicheEnvoyee:boolean = false;
-  daysOff2=[];
-
-   getDaysInMonth(month, year) {
-    var date = new Date(Date.UTC(year, month, 1));
-    var days = [];
-    while (date.getMonth() === month) {
-      days.push(new Date(date));
-      date.setDate(date.getDate() + 1);
-    }
-    return days;
-  }
 
   getWeekday(date:Date){
      return date.getDay()-1;
@@ -49,7 +37,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   }
 
   addCells(){
-     let d = this.getWeekday(moment('2019/05/01').startOf('month').toDate());
+     let d = this.getWeekday(moment().startOf('month').toDate());
      return d;
   }
 
@@ -60,12 +48,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     console.log(cc)
   }
   constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService) {
-    FichePresenceComponent.joursOuvres = 0;
   }
 
   ngOnInit() {
-    this.selectedDate = moment(new Date(2019,6,10));
-    this.dateNow = new Date(2019,4,1);
+    this.selectedDate = moment(new Date());
+    this.dateNow = new Date();
     // this.dateFilter(this.dateNow);
   }
 
@@ -73,6 +60,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   {
     this.cdRef.detectChanges();
   }
+
 
 
   // dateFilter(date: Date) {
@@ -90,6 +78,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   //   }
   //   return !forbiddenDay;
   // }
+
 checkDay(day){
   let d = moment(day).format('DD/MM/YYYY');
   return this.daysOff.includes(d)
@@ -107,7 +96,7 @@ checkWeekends(day:Date){
        let day = moment(event).format('DD/MM/YYYY');
        if (this.daysOff.includes(day) && !this.mouseDown) {
          this.daysOff.splice(this.daysOff.indexOf(day),1);
-       } else if(this.daysOff.includes(day)){
+       } else if(this.daysOff.includes(day) && this.mouseDown){
          return;
        } else {
          this.daysOff.push(day);
@@ -115,6 +104,26 @@ checkWeekends(day:Date){
        }
      }
   }
+  getDaysInMonth(month, year) {
+    var date = new Date(Date.UTC(year, month, 1));
+    var days = [];
+    while (date.getMonth() === month) {
+      days.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
+  }
+
+  joursOuvres() {
+    let jo = [];
+    for(let d of this.getDaysInMonth(this.dateNow.getMonth(),this.dateNow.getFullYear())){
+      if(!this.checkWeekends(d)){
+        jo.push(d);
+      }
+    }
+    return jo;
+  }
+
    static joursFeries(an): String[] {
     const JourAn = new Date(an, 0, 1);
     const FeteTravail = new Date(an, 4, 1);
@@ -147,34 +156,43 @@ checkWeekends(day:Date){
     return sDates;
   }
 
+  toMomentFormat(date:Date){
+    return moment(date).format('DD/MM/YYYY');
+  }
+
   sendFiche(form: NgForm){
     let fiche = new FicheModel();
-    fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
-    fiche.absences = this.countSansSolde(form);
-    fiche.conges = this.countConges(form);
-    fiche.congesSansSolde = this.countSansSolde(form);
-    fiche.formation = this.countFormation(form);
-    fiche.intercontrat = this.countInterContrat(form);
-    fiche.maladie = this.countMaladie(form);
-    fiche.rtte = this.countRTTE(form);
-    fiche.rtts = this.countRTTS(form);
-    fiche.datePublication = new Date();
-    fiche.user = JSON.parse(localStorage.getItem('currentUser'));
-    fiche.joursOuvres = FichePresenceComponent.joursOuvres;
-    fiche.joursTravailles = FichePresenceComponent.joursOuvres - this.countJoursNonTravailles(form);
-    for(let key in form.value){
-      if (form.value.hasOwnProperty(key)) {
-        if (key.endsWith(" comm")) {
-          console.log(form.value[key]);
-          fiche.commentaires[form.value[key.substr(0,10)]+" "+ key.substr(0,10)] = form.value[key];
+    let table = document.getElementById('calendrier');
+    htmlToImage.toPng(table).then((image)=>{
+      fiche.tableImg = image;
+      fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
+      fiche.absences = this.countSansSolde(form);
+      fiche.conges = this.countConges(form);
+      fiche.congesSansSolde = this.countSansSolde(form);
+      fiche.formation = this.countFormation(form);
+      fiche.intercontrat = this.countInterContrat(form);
+      fiche.maladie = this.countMaladie(form);
+      fiche.rtte = this.countRTTE(form);
+      fiche.rtts = this.countRTTS(form);
+      fiche.datePublication = new Date();
+      fiche.user = JSON.parse(localStorage.getItem('currentUser'));
+      fiche.joursOuvres = this.joursOuvres().length;
+      fiche.joursTravailles = this.joursOuvres().length - this.countJoursNonTravailles(form);
+      for(let key in form.value){
+        if (form.value.hasOwnProperty(key)) {
+          if (key.endsWith(" comm")) {
+            console.log(form.value[key]);
+            fiche.commentaires[form.value[key.substr(0,10)]+" "+ key.substr(0,10)] = form.value[key];
+          }
         }
       }
-    }
-  this.pdfService.sendFiche(fiche).subscribe(
-    (data) => {
-      this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
-      this.FicheEnvoyee = data;
+      this.pdfService.sendFiche(fiche).subscribe(
+        (data) => {
+          this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
+          this.FicheEnvoyee = data;
+        });
     });
+
   }
 
   countRTTE(form: NgForm) {
@@ -322,9 +340,7 @@ checkWeekends(day:Date){
     return count;
   }
 
-  get staticJoursOuvres() {
-    return FichePresenceComponent.joursOuvres;
-  }
+
 
   countJoursNonTravailles(form: NgForm){
     return this.countAbsences(form) + this.countConges(form) + this.countFormation(form)+this.countInterContrat(form)

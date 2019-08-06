@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import {FlexLayoutModule} from '@angular/flex-layout';
 import { AppComponent } from './app.component';
 import {RouterModule} from '@angular/router';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -36,14 +36,25 @@ import { InputFileConfig, InputFileModule } from 'ngx-input-file';
 import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import {
-  MatButtonModule, MatCheckboxModule, MatDatepickerModule,
+  MatButtonModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
   MatDialogModule,
   MatInputModule,
-  MatProgressSpinnerModule, MatSelectModule,
+  MatProgressSpinnerModule,
+  MatSelectModule,
   MatSortModule,
   MatStepperModule,
   MatTableModule,
-  MatNativeDateModule, MatCardModule, MAT_DATE_LOCALE, DateAdapter
+  MatNativeDateModule,
+  MatCardModule,
+  MAT_DATE_LOCALE,
+  DateAdapter,
+  MatMenuModule,
+  MatSidenavModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatListModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -60,6 +71,8 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {CustomDateAdapter} from './helpers/CustomDateAdapter';
 import {PdfService} from './services/pdf.service';
 import {ClickOutsideModule} from 'ng-click-outside';
+import { LayoutComponent } from './layout/layout.component';
+import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
 const config: InputFileConfig = {};
 
 
@@ -92,7 +105,9 @@ const config: InputFileConfig = {};
     NewsAddComponent,
     NewsEditComponent,
     CandidatListComponent,
-    FichePresenceComponent
+    FichePresenceComponent,
+    LayoutComponent,
+    SidenavListComponent
   ],
   imports: [
     AppRoutingModule,
@@ -121,7 +136,13 @@ const config: InputFileConfig = {};
     MatNativeDateModule,
     MatCardModule,
     CdkTableModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    FlexLayoutModule,
+    MatListModule
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, PdfService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

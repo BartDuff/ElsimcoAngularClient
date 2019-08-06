@@ -1,28 +1,64 @@
-<a class="brand-logo"><img class="logo" [src]=img alt="Brand logo"/></a>
-<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-<ul class="right hide-on-med-and-down">
-  <li><a routerLink="/contact_form" *ngIf="!token">Candidature</a></li>
-  <li><a routerLink="/login" *ngIf="!token">Login</a></li>
-  <li><a (click)="onLogout()" *ngIf="token">Logout</a></li>
-  <li><a routerLink="/news" *ngIf="token">Actualités</a></li>
-  <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token">{{currentUser.email}}</a></li>
-  <li><a routerLink="/documents" *ngIf="token">Documents</a></li>
-  <li><a routerLink="/missions" *ngIf="token">Missions</a></li>
-  <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
-  <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures</a></li>
-  <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>
-  <li><a routerLink="/presence" *ngIf="token">Fiche de Présence</a></li>
-</ul>
-<ul class="sidenav" id="mobile-demo">
-  <li><a routerLink="/contact_form" *ngIf="!token" class="white-text">Candidature</a></li>
-  <li><a routerLink="/login" *ngIf="!token" class="white-text">Login</a></li>
-  <li><a (click)="onLogout()" *ngIf="token" class="white-text">Logout</a></li>
-  <li><a routerLink="/news" *ngIf="token" class="white-text">Actualités</a></li>
-  <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token" class="white-text">{{currentUser.email}}</a></li>
-  <li><a routerLink="/documents" *ngIf="token" class="white-text">Documents</a></li>
-  <li><a routerLink="/missions" *ngIf="token" class="white-text">Missions</a></li>
-  <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Utilisateurs</a></li>
-  <li><a routerLink="/presence" *ngIf="token" class="white-text">Fiche de Présence</a></li>
-  <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidatures</a></li>
-  <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidathèque</a></li>
-</ul>
+<mat-toolbar>
+  <!--  <a class="brand-logo"><img class="logo" [src]=img alt="Brand logo"/></a>-->
+  <!--  <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>-->
+  <!--  <ul class="right hide-on-med-and-down">-->
+  <!--    <li><a routerLink="/contact_form" *ngIf="!token">Nous Contacter</a></li>-->
+  <!--    <li><a routerLink="/login" *ngIf="!token">Connexion</a></li>-->
+  <!--    <li><a (click)="onLogout()" *ngIf="token">Déconnexion</a></li>-->
+  <!--    <li><a routerLink="/news" *ngIf="token">Actualités</a></li>-->
+  <!--    <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profile</a></li>-->
+  <!--    <li><a routerLink="/documents" *ngIf="token">Pack Collaborateurs</a></li>-->
+  <!--    <li><a routerLink="/missions" *ngIf="token">Missions</a></li>-->
+  <!--    <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>-->
+  <!--    <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures</a></li>-->
+  <!--    <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>-->
+  <!--    <li>-->
+  <!--      <a mat-button [matMenuTriggerFor]="menu">Outils</a>-->
+  <!--      <mat-menu #menu="matMenu" yPosition="below">-->
+  <!--        <a routerLink="/presence" *ngIf="token">Remplir ma fiche de Présence</a>-->
+  <!--        <a mat-menu-item>Mes fiches de présence</a>-->
+  <!--      </mat-menu>-->
+  <!--    </li>-->
+  <!--  </ul>-->
+  <div fxHide.gt-xs>
+    <button mat-icon-button (click)="onToggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+    <img [src]=img alt="Brand logo" class="brand-logo"/>
+  <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
+    <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+      <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Contacter</a></li>
+      <li><a mat-button routerLink="/login" *ngIf="!token">Connexion</a></li>
+      <li><a mat-button (click)="onLogout()" *ngIf="token">Déconnexion</a></li>
+      <li><a mat-button routerLink="/news" *ngIf="token">Actualités</a></li>
+      <li><a mat-button routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profile</a></li>
+      <li><a mat-button routerLink="/documents" *ngIf="token">Pack Collaborateurs</a></li>
+      <li><a mat-button routerLink="/missions" *ngIf="token">Missions</a></li>
+      <li><a mat-button routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
+      <li><a mat-button routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures</a></li>
+      <li><a mat-button routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>
+      <li>
+        <button mat-button [matMenuTriggerFor]="menu" *ngIf="token">Outils</button>
+        <mat-menu #menu="matMenu" yPosition="below" backdropClass="toolbar-menu">
+          <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de Présence</a>
+          <a mat-menu-item>Mes fiches de présence</a>
+        </mat-menu>
+      </li>
+    </ul>
+  </div>
+</mat-toolbar>
+
+<!--<ul class="sidenav" id="mobile-demo">-->
+<!--  <li><a routerLink="/contact_form" *ngIf="!token" class="white-text">Nous Contacter</a></li>-->
+<!--  <li><a routerLink="/login" *ngIf="!token" class="white-text">Connexion</a></li>-->
+<!--  <li><a (click)="onLogout()" *ngIf="token" class="white-text">Déconnexion</a></li>-->
+<!--  <li><a routerLink="/news" *ngIf="token" class="white-text">Actualités</a></li>-->
+<!--  <li><a routerLink="/users/{{ currentUser.id }}" *ngIf="token" class="white-text">Mon Profile</a></li>-->
+<!--  <li><a routerLink="/documents" *ngIf="token" class="white-text">Pack Collaborateurs</a></li>-->
+<!--  <li><a routerLink="/missions" *ngIf="token" class="white-text">Missions</a></li>-->
+<!--  <li><a routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Utilisateurs</a></li>-->
+<!--  <li><a routerLink="/presence" *ngIf="token" class="white-text">Fiche de Présence</a></li>-->
+<!--  <li><a routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidatures</a></li>-->
+<!--  <li><a routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'" class="white-text">Candidathèque</a></li>-->
+<!--</ul>-->

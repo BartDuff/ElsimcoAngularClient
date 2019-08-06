@@ -1,14 +1,50 @@
-.logo {
+.brand-logo {
+  margin-top: 0.2em;
+  margin-left: 0.5em;
   height: 40px;
   width: 250px;
 }
 
-.brand-logo {
-  margin-top: 0.2em;
-  margin-left: 0.5em;
+a {
+  text-decoration: none;
+  color: white;
 }
 
-.sidenav {
+a:hover, a:active {
+  color: lightgray;
+  text-decoration: none;
+}
+
+.navigation-items{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mat-button {
+  color: white;
+}
+
+.mat-icon-button {
+  color: white;
+}
+
+.mat-toolbar{
+  border-radius: 3px;
   background-color: black;
 }
 
+@media(max-width: 959px){
+  mat-toolbar{
+    border-radius: 0px;
+    background-color: black;
+  }
+}
+
+.mat-menu-content {
+  background-color: black;
+}
+
+.mat-menu-item {
+  color: white;
+}

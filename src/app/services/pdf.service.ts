@@ -16,7 +16,7 @@ export class PdfService {
   sendFiche(newFiche: FicheModel): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type' : 'application/json; charset=utf-8'});
-    return this.http.post(`${API_URL}/documents/fiches`, newFiche, { headers: headers});
+    return this.http.post(`${API_URL}/fiches`, newFiche, { headers: headers});
   }
 
 }

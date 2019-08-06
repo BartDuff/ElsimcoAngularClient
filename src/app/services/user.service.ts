@@ -62,4 +62,10 @@ export class UserService {
       'Content-Type'  : 'application/json'});
     return this.http.get(`${API_URL}/users/${user.id}/missions`, { headers: headers});
   }
+
+  getFicheForUser(user: UserModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.get(`${API_URL}/users/${user.id}/fiches`, { headers: headers});
+  }
 }

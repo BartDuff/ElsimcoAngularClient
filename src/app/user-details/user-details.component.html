@@ -1,31 +1,72 @@
-<div *ngIf="user" id="profile-card" class="card">
-  <div class="card-image waves-effect waves-block waves-light">
-    <img class="activator" [src]=img_bgd alt="user bg">
-  </div>
-  <div class="card-content">
-    <img [src]=img alt=""
-         class="circle responsive-img activator card-profile-image cyan lighten-1 padding-2">
-    <a class="btn-floating activator btn-move-up waves-effect waves-light z-depth-4 right" [routerLink]="['/edit_user/', user.id]">
-      <i class="material-icons">edit</i>
-    </a>
-    <h5 class="card-title activator grey-text text-darken-4"> {{ user.nom }} {{ user.prenom }}</h5>
-    <h4 class="mat-card-subtitle">Dernière connexion: {{ user.derniereConnexion | date: 'dd/MM/yyyy, HH:mm' }}</h4>
-    <p><i class="material-icons profile-card-i">perm_identity</i> {{ user.role }}</p>
-    <p>Date d'inscription: {{ user.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
-    <p><i class="material-icons profile-card-i">email</i> {{ user.email }}</p>
+<!--<div *ngIf="user" id="profile-card" class="card">-->
+<!--  <div class="card-image waves-effect waves-block waves-light">-->
+<!--    <img class="activator" [src]=img_bgd alt="user bg">-->
+<!--  </div>-->
+<!--  <div class="card-content">-->
+<!--    <img [src]=img alt=""-->
+<!--         class="circle responsive-img activator card-profile-image cyan lighten-1 padding-2">-->
+<!--    <a class="btn-floating activator btn-move-up waves-effect waves-light z-depth-4 right" [routerLink]="['/edit_user/', user.id]">-->
+<!--      <i class="material-icons">edit</i>-->
+<!--    </a>-->
+<!--    <h5 class="card-title activator grey-text text-darken-4"> {{ user.nom }} {{ user.prenom }}</h5>-->
+<!--    <h4 class="mat-card-subtitle">Dernière connexion: {{ user.derniereConnexion | date: 'dd/MM/yyyy, HH:mm' }}</h4>-->
+<!--    <p><i class="material-icons profile-card-i">perm_identity</i> {{ user.role }}</p>-->
+<!--    <p>Date d'inscription: {{ user.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>-->
+<!--    <p><i class="material-icons profile-card-i">email</i> {{ user.email }}</p>-->
 
-    <p class="mat-dialog-title">Cet utilisateur s'intéresse aux missions suivantes:</p>
-    <div class="row">
-        <div class="card-panel col s6" *ngFor="let mission of user.missions">
+<!--    <p class="mat-dialog-title">Cet utilisateur s'intéresse aux missions suivantes:</p>-->
+<!--    <div class="row">-->
+<!--        <div class="card-panel col s6" *ngFor="let mission of user.missions">-->
+<!--          <p><b>Intitulé:</b> {{ mission.intitule }}</p>-->
+<!--          <p><b>Client:</b> {{ mission.client }}</p>-->
+<!--          <p><b>Id:</b> {{ mission.id }}</p>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<!--<a *ngIf="user.id != currentUser.id" routerLink="/users"><span>RETOUR <i class="material-icons">arrow_back</i></span></a>-->
+  <mat-card *ngIf="!spinner">
+    <div mat-card-image>
+      <img [src]=img_bgd alt="user bg">
+      <button mat-fab [routerLink]="['/edit_user/', user?.id]">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+    <mat-card-header>
+      <img mat-card-avatar [src]=img alt="">
+      <mat-card-title>
+        {{ user?.nom }} {{ user?.prenom }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        Dernière connexion: {{ user?.derniereConnexion | date: 'dd/MM/yyyy, HH:mm' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content fxLayout="column" fxLayoutAlign="space-between start">
+      <p>
+        <mat-icon>perm_identity</mat-icon>
+        {{ user?.role }}</p>
+      <p>Date d'inscription: {{ user?.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
+      <p>
+        <mat-icon>email</mat-icon>
+        {{ user?.email }}</p>
+
+      <p>Cet utilisateur s'intéresse aux missions suivantes:</p>
+      <div class="mini-container" fxLayout="row wrap" fxFlexAlign="space-evenly" fxLayoutGap="5vw">
+        <div *ngFor="let mission of user?.missions" class="mat-card mat-card-mini">
           <p><b>Intitulé:</b> {{ mission.intitule }}</p>
           <p><b>Client:</b> {{ mission.client }}</p>
           <p><b>Id:</b> {{ mission.id }}</p>
         </div>
-    </div>
-  </div>
-</div>
-<a *ngIf="user.id != currentUser.id" routerLink="/users"><span>RETOUR <i class="material-icons">arrow_back</i></span></a>
-<mat-card *ngIf="!img_bgd"
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+<!--      <button mat-icon-button routerLink="/users">RETOUR <mat-icon>arrow_back</mat-icon></button>-->
+      <button mat-mini-fab aria-label="Example icon-button with a heart icon" *ngIf="user?.id != currentUser.id">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+<mat-card *ngIf="spinner"
           style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner
     color="accent"

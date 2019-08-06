@@ -1,36 +1,58 @@
-.card .card-image img {
-  position: relative;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-  border-radius: 2px 2px 0 0;
-  margin: -10% 0%;
-}
-
-#profile-card .card-profile-image {
-  position: center;
-  z-index: 1;
-  top: 110px;
-  width: 70px;
-  cursor: pointer;
-}
-
-.card .activator {
-  cursor: pointer;
-}
-
-#profile-card .card-image {
-  height: 200px;
-}
-
-.card .card-image {
-  position: relative;
-}
-
 .btn-floating {
   background-color: black;
   color: white;
+}
+
+mat-card .mat-card-image img {
+   display: block;
+   border-radius: 2px 2px 0 0;
+   position: relative;
+   left: 0;
+   right: 0;
+   top: -10vw;
+   bottom: 0;
+   width: 100%;
+ }
+
+.mat-card-image {
+  height: 20vh;
+  overflow: hidden;
+}
+
+mat-card-header {
+  justify-content: center;
+}
+
+mat-card {
+  background-color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.mat-card-mini {
+  width: 20em;
+}
+
+.mini-container {
+  align-content: space-evenly;
+  flex-flow: row wrap;
+  justify-content: stretch;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.mat-icon-button {
+  color: black;
+  margin: 6em;
+}
+
+.mat-fab {
+  position: absolute;
+  top:0;
+  right: 0;
+  margin: 1em;
+  color: white;
+  background-color: black;
 }

@@ -2,3 +2,15 @@
   background-color: black;
   color: white;
 }
+
+.news-card {
+  width: 80%;
+  margin-bottom: 5%;
+  justify-content: center;
+}
+
+.mat-fab {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}

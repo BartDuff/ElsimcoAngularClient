@@ -1,11 +1,25 @@
-.card {
-  width: 50em;
-  margin-left: auto;
-  margin-right: auto;
+.mat-button {
+  background-color: black;
+  color: white;
+  margin: 1em;
 }
 
-.activator {
+mat-form-field {
+  width: 50%;
+}
+
+.mat-icon-button {
+  color: black;
+  margin: 6em;
+}
+
+.login-image {
   max-width: 100%;
   height:auto;
 }
 
+.login-card {
+  width: 80vw;
+  margin: auto;
+  justify-content: center;
+}

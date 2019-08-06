@@ -13,15 +13,18 @@ export class UserDetailsComponent implements OnInit {
   img = `/../../${environment.base}/assets/images/profile.png`;
   img_bgd = `../../${environment.base}/assets/images/179317.jpg`;
   currentUser: UserModel;
+  spinner = true;
   @Input() user: UserModel;
 
   constructor(private userService: UserService,
               private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.spinner = true;
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
-        data => this.user = data
+        data => {this.user = data;
+        this.spinner = false;}
       )
     );
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));

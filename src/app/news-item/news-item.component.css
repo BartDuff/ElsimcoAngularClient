@@ -1,3 +1,24 @@
-.card.large {
-  height: fit-content;
+.mat-icon-button {
+  color: white;
+}
+
+mat-card-header {
+  background-color: black;
+  border: 0.1em solid black;
+  border-radius: 15px;
+}
+
+mat-card-title {
+  color: white;
+}
+
+mat-card-subtitle {
+  color: grey;
+}
+
+mat-card-content {
+  margin: 1em;
+  text-wrap: normal;
+  text-align: left;
+  white-space: pre-wrap;
 }

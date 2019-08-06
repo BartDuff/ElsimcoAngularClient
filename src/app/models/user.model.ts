@@ -9,4 +9,5 @@ export class UserModel {
   derniereConnexion: Date;
   role: String;
   missions: MissionModel[];
+
 }

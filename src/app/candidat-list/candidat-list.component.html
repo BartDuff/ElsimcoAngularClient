@@ -3,287 +3,295 @@
   <mat-form-field>
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Rechercher">
   </mat-form-field>
-  <div class="table-container">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 center" (clickOutside)="resetRowAndColumnsClick()">
-    <ng-container matColumnDef="nom">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
-      <td mat-cell *matCellDef="let candidat;" (click)="checkClickedColumn('nom')"><span [hidden]="cellClicked(candidat, 'nom')"> {{candidat.nom}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'nom')" placeholder="{{candidat.nom}}" [(ngModel)]="candidat.nom" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--  <div class="table-container">-->
+<!--  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 center" (clickOutside)="resetRowAndColumnsClick()">-->
+<!--    <ng-container matColumnDef="nom">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>-->
+<!--      <td mat-cell *matCellDef="let candidat;" (click)="checkClickedColumn('nom')"><span [hidden]="cellClicked(candidat, 'nom')"> {{candidat.nom}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'nom')" placeholder="{{candidat.nom}}" [(ngModel)]="candidat.nom" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="prenom">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>
-      <td mat-cell *matCellDef="let candidat;" (click)="checkClickedColumn('prenom')"><span [hidden]="cellClicked(candidat, 'prenom')"> {{candidat.prenom}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'prenom')" placeholder="{{candidat.prenom}}" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="prenom">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>-->
+<!--      <td mat-cell *matCellDef="let candidat;" (click)="checkClickedColumn('prenom')"><span [hidden]="cellClicked(candidat, 'prenom')"> {{candidat.prenom}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'prenom')" placeholder="{{candidat.prenom}}" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="nationalite">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationalite</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('nationalite')"><span [hidden]="cellClicked(candidat, 'nationalite')"> {{candidat.nationalite}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'nationalite')" placeholder="{{candidat.nationalite}}" [(ngModel)]="candidat.nationalite" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="nationalite">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nationalite</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('nationalite')"><span [hidden]="cellClicked(candidat, 'nationalite')"> {{candidat.nationalite}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'nationalite')" placeholder="{{candidat.nationalite}}" [(ngModel)]="candidat.nationalite" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="villeNaissance">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ville de Naissance</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('villeNaissance')"><span [hidden]="cellClicked(candidat, 'villeNaissance')"> {{candidat.villeNaissance}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'villeNaissance')" placeholder="{{candidat.villeNaissance}}" [(ngModel)]="candidat.villeNaissance" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="villeNaissance">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ville de Naissance</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('villeNaissance')"><span [hidden]="cellClicked(candidat, 'villeNaissance')"> {{candidat.villeNaissance}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'villeNaissance')" placeholder="{{candidat.villeNaissance}}" [(ngModel)]="candidat.villeNaissance" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="departementNaissance">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Département de Naissance</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('departementNaissance')"><span [hidden]="cellClicked(candidat, 'departementNaissance')"> {{candidat.departementNaissance}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'departementNaissance')" placeholder="{{candidat.departementNaissance}}" [(ngModel)]="candidat.departementNaissance" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="departementNaissance">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Département de Naissance</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('departementNaissance')"><span [hidden]="cellClicked(candidat, 'departementNaissance')"> {{candidat.departementNaissance}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'departementNaissance')" placeholder="{{candidat.departementNaissance}}" [(ngModel)]="candidat.departementNaissance" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('email')"><span [hidden]="cellClicked(candidat, 'email')"> {{candidat.email}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'email')" placeholder="{{candidat.email}}" [(ngModel)]="candidat.email" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="email">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('email')"><span [hidden]="cellClicked(candidat, 'email')"> {{candidat.email}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'email')" placeholder="{{candidat.email}}" [(ngModel)]="candidat.email" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="dateNaissance">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de Naissance</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('dateNaissance')"><span [hidden]="cellClicked(candidat, 'dateNaissance')"> {{candidat.dateNaissance}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'dateNaissance')" placeholder="{{candidat.dateNaissance}}" [(ngModel)]="candidat.dateNaissance" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="dateNaissance">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de Naissance</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('dateNaissance')"><span [hidden]="cellClicked(candidat, 'dateNaissance')"> {{candidat.dateNaissance}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'dateNaissance')" placeholder="{{candidat.dateNaissance}}" [(ngModel)]="candidat.dateNaissance" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="adresse">
-      <th mat-header-cell *matHeaderCellDef>Adresse</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('adresse')"><span [hidden]="cellClicked(candidat, 'adresse')"> {{candidat.adresse}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'adresse')" placeholder="{{candidat.adresse}}" [(ngModel)]="candidat.adresse" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="adresse">-->
+<!--      <th mat-header-cell *matHeaderCellDef>Adresse</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('adresse')"><span [hidden]="cellClicked(candidat, 'adresse')"> {{candidat.adresse}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'adresse')" placeholder="{{candidat.adresse}}" [(ngModel)]="candidat.adresse" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="codePostal">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code Postal</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('codePostal')"><span [hidden]="cellClicked(candidat, 'codePostal')"> {{candidat.codePostal}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'codePostal')" placeholder="{{candidat.codePostal}}" [(ngModel)]="candidat.codePostal" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="codePostal">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Code Postal</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('codePostal')"><span [hidden]="cellClicked(candidat, 'codePostal')"> {{candidat.codePostal}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'codePostal')" placeholder="{{candidat.codePostal}}" [(ngModel)]="candidat.codePostal" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="ville">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ville</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('ville')"><span [hidden]="cellClicked(candidat, 'ville')"> {{candidat.ville}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'ville')" placeholder="{{candidat.ville}}" [(ngModel)]="candidat.ville" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="ville">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ville</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('ville')"><span [hidden]="cellClicked(candidat, 'ville')"> {{candidat.ville}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'ville')" placeholder="{{candidat.ville}}" [(ngModel)]="candidat.ville" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="mobile">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobile')"><span [hidden]="cellClicked(candidat, 'mobile')"> {{candidat.mobile}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'mobile')" placeholder="{{candidat.mobile}}" [(ngModel)]="candidat.mobile" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="mobile">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobile')"><span [hidden]="cellClicked(candidat, 'mobile')"> {{candidat.mobile}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'mobile')" placeholder="{{candidat.mobile}}" [(ngModel)]="candidat.mobile" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="numSecu">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Numéro de sécurité Sociale</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('numSecu')"><span [hidden]="cellClicked(candidat, 'numSecu')"> {{candidat.numSecu}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'numSecu')" placeholder="{{candidat.numSecu}}" [(ngModel)]="candidat.numSecu" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="numSecu">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Numéro de sécurité Sociale</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('numSecu')"><span [hidden]="cellClicked(candidat, 'numSecu')"> {{candidat.numSecu}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'numSecu')" placeholder="{{candidat.numSecu}}" [(ngModel)]="candidat.numSecu" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="skype">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Identifiant Skype</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('skype')"><span [hidden]="cellClicked(candidat, 'skype')"> {{candidat.departementNaissance}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'skype')" placeholder="{{candidat.skype}}" [(ngModel)]="candidat.skype" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="skype">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Identifiant Skype</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('skype')"><span [hidden]="cellClicked(candidat, 'skype')"> {{candidat.departementNaissance}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'skype')" placeholder="{{candidat.skype}}" [(ngModel)]="candidat.skype" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="telDomicile">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Téléphone Domicile</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('telDomicile')"> <span [hidden]="cellClicked(candidat, 'telDomicile')">{{candidat.telDomicile}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'telDomicile')" placeholder="{{candidat.telDomicile}}" [(ngModel)]="candidat.telDomicile" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="telDomicile">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Téléphone Domicile</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('telDomicile')"> <span [hidden]="cellClicked(candidat, 'telDomicile')">{{candidat.telDomicile}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'telDomicile')" placeholder="{{candidat.telDomicile}}" [(ngModel)]="candidat.telDomicile" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="permisB">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Permis B</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('permisB')"><span [hidden]="cellClicked(candidat, 'permisB')"> {{candidat.permisB}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'permisB')" placeholder="{{candidat.permisB}}" [(ngModel)]="candidat.permisB" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="permisB">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Permis B</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('permisB')"><span [hidden]="cellClicked(candidat, 'permisB')"> {{candidat.permisB}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'permisB')" placeholder="{{candidat.permisB}}" [(ngModel)]="candidat.permisB" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="voiture">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Voiture?</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('voiture')"> <span [hidden]="cellClicked(candidat, 'voiture')">{{candidat.voiture}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'voiture')" placeholder="{{candidat.voiture}}" [(ngModel)]="candidat.voiture" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="voiture">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Voiture?</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('voiture')"> <span [hidden]="cellClicked(candidat, 'voiture')">{{candidat.voiture}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'voiture')" placeholder="{{candidat.voiture}}" [(ngModel)]="candidat.voiture" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="permis2roues">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Permis 2 Roues</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('permis2roues')"> <span [hidden]="cellClicked(candidat, 'permis2roues')">{{candidat.permis2roues}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'permis2roues')" placeholder="{{candidat.permis2roues}}" [(ngModel)]="candidat.permis2roues" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="permis2roues">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Permis 2 Roues</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('permis2roues')"> <span [hidden]="cellClicked(candidat, 'permis2roues')">{{candidat.permis2roues}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'permis2roues')" placeholder="{{candidat.permis2roues}}" [(ngModel)]="candidat.permis2roues" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="deuxRoues">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>2 Roues?</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('deuxRoues')"><span [hidden]="cellClicked(candidat, 'deuxRoues')"> {{candidat.deuxRoues}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'deuxRoues')" placeholder="{{candidat.deuxRoues}}" [(ngModel)]="candidat.deuxRoues" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="deuxRoues">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>2 Roues?</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('deuxRoues')"><span [hidden]="cellClicked(candidat, 'deuxRoues')"> {{candidat.deuxRoues}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'deuxRoues')" placeholder="{{candidat.deuxRoues}}" [(ngModel)]="candidat.deuxRoues" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="anglais">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Anglais</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('anglais')"> <span [hidden]="cellClicked(candidat, 'anglais')">{{candidat.anglais}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'anglais')" placeholder="{{candidat.anglais}}" [(ngModel)]="candidat.anglais" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="anglais">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Anglais</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('anglais')"> <span [hidden]="cellClicked(candidat, 'anglais')">{{candidat.anglais}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'anglais')" placeholder="{{candidat.anglais}}" [(ngModel)]="candidat.anglais" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="italien">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Italien</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('italien')"> <span [hidden]="cellClicked(candidat, 'italien')">{{candidat.italien}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'italien')" placeholder="{{candidat.italien}}" [(ngModel)]="candidat.italien" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="italien">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Italien</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('italien')"> <span [hidden]="cellClicked(candidat, 'italien')">{{candidat.italien}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'italien')" placeholder="{{candidat.italien}}" [(ngModel)]="candidat.italien" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="allemand">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Allemand</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('allemand')"> <span [hidden]="cellClicked(candidat, 'allemand')">{{candidat.allemand}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'allemand')" placeholder="{{candidat.allemand}}" [(ngModel)]="candidat.allemand" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="allemand">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Allemand</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('allemand')"> <span [hidden]="cellClicked(candidat, 'allemand')">{{candidat.allemand}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'allemand')" placeholder="{{candidat.allemand}}" [(ngModel)]="candidat.allemand" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="espagnol">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Espagnol</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('espagnol')"> <span [hidden]="cellClicked(candidat, 'espagnol')">{{candidat.espagnol}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'espagnol')" placeholder="{{candidat.espagnol}}" [(ngModel)]="candidat.espagnol" (change)="updateModel(candidat)">
-      </td>
-    </ng-container>
+<!--    <ng-container matColumnDef="espagnol">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Espagnol</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('espagnol')"> <span [hidden]="cellClicked(candidat, 'espagnol')">{{candidat.espagnol}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'espagnol')" placeholder="{{candidat.espagnol}}" [(ngModel)]="candidat.espagnol" (change)="updateModel(candidat)">-->
+<!--      </td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="autreLangue">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Autre Langue:</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('autreLangue')">{{candidat.autreLangue }}: {{candidat.niveauAutrelangue}}
-    </ng-container>
+<!--    <ng-container matColumnDef="autreLangue">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Autre Langue:</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('autreLangue')">{{candidat.autreLangue }}: {{candidat.niveauAutrelangue}}-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="mobiliteParis">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité Paris-IDF</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteParis')"> <span [hidden]="cellClicked(candidat, 'mobiliteParis')">{{candidat.mobiliteParis}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteParis')" placeholder="{{candidat.mobiliteParis}}" [(ngModel)]="candidat.mobiliteParis" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="mobiliteParis">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité Paris-IDF</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteParis')"> <span [hidden]="cellClicked(candidat, 'mobiliteParis')">{{candidat.mobiliteParis}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteParis')" placeholder="{{candidat.mobiliteParis}}" [(ngModel)]="candidat.mobiliteParis" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="mobiliteFrance">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité France</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteFrance')"> <span [hidden]="cellClicked(candidat, 'mobiliteFrance')">{{candidat.mobiliteFrance}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteFrance')" placeholder="{{candidat.mobiliteFrance}}" [(ngModel)]="candidat.mobiliteFrance" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="mobiliteFrance">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité France</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteFrance')"> <span [hidden]="cellClicked(candidat, 'mobiliteFrance')">{{candidat.mobiliteFrance}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteFrance')" placeholder="{{candidat.mobiliteFrance}}" [(ngModel)]="candidat.mobiliteFrance" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="mobiliteEurope">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité Europe</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteEurope')"> <span [hidden]="cellClicked(candidat, 'mobiliteEurope')">{{candidat.mobiliteEurope}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteEurope')" placeholder="{{candidat.mobiliteEurope}}" [(ngModel)]="candidat.mobiliteEurope" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="mobiliteEurope">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité Europe</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteEurope')"> <span [hidden]="cellClicked(candidat, 'mobiliteEurope')">{{candidat.mobiliteEurope}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteEurope')" placeholder="{{candidat.mobiliteEurope}}" [(ngModel)]="candidat.mobiliteEurope" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="mobiliteIntl">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité Internationale</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteIntl')"> <span [hidden]="cellClicked(candidat, 'mobiliteIntl')">{{candidat.mobiliteIntl}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteIntl')" placeholder="{{candidat.mobiliteIntl}}" [(ngModel)]="candidat.mobiliteIntl" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="mobiliteIntl">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobilité Internationale</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('mobiliteIntl')"> <span [hidden]="cellClicked(candidat, 'mobiliteIntl')">{{candidat.mobiliteIntl}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'mobiliteIntl')" placeholder="{{candidat.mobiliteIntl}}" [(ngModel)]="candidat.mobiliteIntl" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="reference1">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Références Entreprise 1</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('reference1')"> {{candidat.references[0].nomEntreprise }} {{candidat.references[0].nomResponsable }} {{candidat.references[0].fonction }} {{candidat.references[0].telephone }} {{candidat.references[0].adresseMail }} </td>
-    </ng-container>
+<!--    <ng-container matColumnDef="reference1">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Références Entreprise 1</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('reference1')"> {{candidat.references[0].nomEntreprise }} {{candidat.references[0].nomResponsable }} {{candidat.references[0].fonction }} {{candidat.references[0].telephone }} {{candidat.references[0].adresseMail }} </td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="reference2">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Références Entreprise 1</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('reference2')">{{candidat.references[1].nomEntreprise }} {{candidat.references[1].nomResponsable }} {{candidat.references[1].fonction }} {{candidat.references[1].telephone }} {{candidat.references[1].adresseMail }}</td>
-    </ng-container>
+<!--    <ng-container matColumnDef="reference2">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Références Entreprise 1</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('reference2')">{{candidat.references[1].nomEntreprise }} {{candidat.references[1].nomResponsable }} {{candidat.references[1].fonction }} {{candidat.references[1].telephone }} {{candidat.references[1].adresseMail }}</td>-->
+<!--    </ng-container>-->
 
 
-    <ng-container matColumnDef="diplome">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Diplôme</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('diplome')">{{candidat.diplome.annee }} {{ candidat.diplome.etablissement }} {{candidat.diplome.obtenu}} </td>
-    </ng-container>
+<!--    <ng-container matColumnDef="diplome">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Diplôme</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('diplome')">{{candidat.diplome.annee }} {{ candidat.diplome.etablissement }} {{candidat.diplome.obtenu}} </td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="enPoste">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>En Poste?</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('enPoste')"> <span [hidden]="cellClicked(candidat, 'enPoste')">{{candidat.enPoste}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'enPoste')" placeholder="{{candidat.enPoste}}" [(ngModel)]="candidat.enPoste" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="enPoste">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>En Poste?</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('enPoste')"> <span [hidden]="cellClicked(candidat, 'enPoste')">{{candidat.enPoste}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'enPoste')" placeholder="{{candidat.enPoste}}" [(ngModel)]="candidat.enPoste" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="dateDispo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de disponibilité</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('dateDispo')"> <span [hidden]="cellClicked(candidat, 'dateDispo')">{{candidat.dateDispo}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'dateDispo')" placeholder="{{candidat.dateDispo}}" [(ngModel)]="candidat.dateDispo" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="dateDispo">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date de disponibilité</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('dateDispo')"> <span [hidden]="cellClicked(candidat, 'dateDispo')">{{candidat.dateDispo}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'dateDispo')" placeholder="{{candidat.dateDispo}}" [(ngModel)]="candidat.dateDispo" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="delai">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Délai du préavis</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('delai')"> <span [hidden]="cellClicked(candidat, 'delai')">{{candidat.delai}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'delai')" placeholder="{{candidat.delai}}" [(ngModel)]="candidat.delai" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="delai">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Délai du préavis</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('delai')"> <span [hidden]="cellClicked(candidat, 'delai')">{{candidat.delai}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'delai')" placeholder="{{candidat.delai}}" [(ngModel)]="candidat.delai" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="raisonDispo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Raison de la recherche</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('raisonDispo')"> <span [hidden]="cellClicked(candidat, 'raisonDispo')">{{candidat.raisonDispo}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'raisonDispo')" placeholder="{{candidat.raisonDispo}}" [(ngModel)]="candidat.raisonDispo" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="raisonDispo">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Raison de la recherche</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('raisonDispo')"> <span [hidden]="cellClicked(candidat, 'raisonDispo')">{{candidat.raisonDispo}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'raisonDispo')" placeholder="{{candidat.raisonDispo}}" [(ngModel)]="candidat.raisonDispo" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="preavisNegociable">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Préavis négociable?</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('preavisNegociable')"> <span [hidden]="cellClicked(candidat, 'preavisNegociable')">{{candidat.preavisNegociable}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'preavisNegociable')" placeholder="{{candidat.preavisNegociable}}" [(ngModel)]="candidat.preavisNegociable" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="preavisNegociable">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Préavis négociable?</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('preavisNegociable')"> <span [hidden]="cellClicked(candidat, 'preavisNegociable')">{{candidat.preavisNegociable}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'preavisNegociable')" placeholder="{{candidat.preavisNegociable}}" [(ngModel)]="candidat.preavisNegociable" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="contrat">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Contrat</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('contrat')"> <span [hidden]="cellClicked(candidat, 'contrat')">{{candidat.contrat}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'contrat')" placeholder="{{candidat.contrat}}" [(ngModel)]="candidat.contrat" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="contrat">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Contrat</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('contrat')"> <span [hidden]="cellClicked(candidat, 'contrat')">{{candidat.contrat}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'contrat')" placeholder="{{candidat.contrat}}" [(ngModel)]="candidat.contrat" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="posteSouhaite">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste Souhaité</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('posteSouhaite')"> <span [hidden]="cellClicked(candidat, 'posteSouhaite')">{{candidat.posteSouhaite}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'posteSouhaite')" placeholder="{{candidat.posteSouhaite}}" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="posteSouhaite">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste Souhaité</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('posteSouhaite')"> <span [hidden]="cellClicked(candidat, 'posteSouhaite')">{{candidat.posteSouhaite}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'posteSouhaite')" placeholder="{{candidat.posteSouhaite}}" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="evolution5ans">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Evolution dans 5 ans?</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('evolution5ans')"> <span [hidden]="cellClicked(candidat, 'evolution5ans')">{{candidat.evolution5ans}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'evolution5ans')" placeholder="{{candidat.evolution5ans}}" [(ngModel)]="candidat.evolution5ans" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="evolution5ans">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Evolution dans 5 ans?</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('evolution5ans')"> <span [hidden]="cellClicked(candidat, 'evolution5ans')">{{candidat.evolution5ans}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'evolution5ans')" placeholder="{{candidat.evolution5ans}}" [(ngModel)]="candidat.evolution5ans" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="fixeDernierSalaireBrut">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fixe Dernier Salaire brut</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('fixeDernierSalaireBrut')"> <span [hidden]="cellClicked(candidat, 'fixeDernierSalaireBrut')">{{candidat.fixeDernierSalaireBrut}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'fixeDernierSalaireBrut')" placeholder="{{candidat.fixeDernierSalaireBrut}}" [(ngModel)]="candidat.fixeDernierSalaireBrut" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="fixeDernierSalaireBrut">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fixe Dernier Salaire brut</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('fixeDernierSalaireBrut')"> <span [hidden]="cellClicked(candidat, 'fixeDernierSalaireBrut')">{{candidat.fixeDernierSalaireBrut}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'fixeDernierSalaireBrut')" placeholder="{{candidat.fixeDernierSalaireBrut}}" [(ngModel)]="candidat.fixeDernierSalaireBrut" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="varDernierSalaireBrut">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Variable Dernier Salaire Brut</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('varDernierSalaireBrut')"> <span [hidden]="cellClicked(candidat, 'varDernierSalaireBrut')">{{candidat.varDernierSalaireBrut}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'varDernierSalaireBrut')" placeholder="{{candidat.varDernierSalaireBrut}}" [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="varDernierSalaireBrut">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Variable Dernier Salaire Brut</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('varDernierSalaireBrut')"> <span [hidden]="cellClicked(candidat, 'varDernierSalaireBrut')">{{candidat.varDernierSalaireBrut}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'varDernierSalaireBrut')" placeholder="{{candidat.varDernierSalaireBrut}}" [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="pretentionSalaireBrut">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Prétentions Salaire Brut</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('pretentionSalaireBrut')"> <span [hidden]="cellClicked(candidat, 'pretentionSalaireBrut')">{{candidat.pretentionSalaireBrut}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'pretentionSalaireBrut')" placeholder="{{candidat.pretentionSalaireBrut}}" [(ngModel)]="candidat.pretentionSalaireBrut" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="pretentionSalaireBrut">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Prétentions Salaire Brut</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('pretentionSalaireBrut')"> <span [hidden]="cellClicked(candidat, 'pretentionSalaireBrut')">{{candidat.pretentionSalaireBrut}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'pretentionSalaireBrut')" placeholder="{{candidat.pretentionSalaireBrut}}" [(ngModel)]="candidat.pretentionSalaireBrut" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="faitA">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Candidature faite à:</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('faitA')"><span [hidden]="cellClicked(candidat, 'faitA')"> {{candidat.faitA}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'faitA')" placeholder="{{candidat.faitA}}" [(ngModel)]="candidat.faitA" (change)="updateModel(candidat)"></td>
+<!--    <ng-container matColumnDef="faitA">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Candidature faite à:</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('faitA')"><span [hidden]="cellClicked(candidat, 'faitA')"> {{candidat.faitA}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'faitA')" placeholder="{{candidat.faitA}}" [(ngModel)]="candidat.faitA" (change)="updateModel(candidat)"></td>-->
 
-    </ng-container>
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="dateEnvoi">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Candidature envoyée le:</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('dateEnvoi')"> {{candidat.dateEnvoi | date:'short' }} </td>
-    </ng-container>
+<!--    <ng-container matColumnDef="dateEnvoi">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Candidature envoyée le:</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('dateEnvoi')"> {{candidat.dateEnvoi | date:'short' }} </td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="fileBase64">
-      <th mat-header-cell *matHeaderCellDef>CV:</th>
-      <td mat-cell *matCellDef="let candidat">
-        <button type="button" (click)="downloadCV(candidat)"><i class="material-icons">file_download</i></button>
-      </td>
-    </ng-container>
+<!--    <ng-container matColumnDef="fileBase64">-->
+<!--      <th mat-header-cell *matHeaderCellDef>CV:</th>-->
+<!--      <td mat-cell *matCellDef="let candidat">-->
+<!--        <button type="button" (click)="downloadCV(candidat)"><i class="material-icons">file_download</i></button>-->
+<!--      </td>-->
+<!--    </ng-container>-->
 
-    <ng-container matColumnDef="echangesEffectues">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Échanges effectués</th>
-      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('echangesEffectues')"><span [hidden]="cellClicked(candidat, 'echangesEffectues')">{{candidat.echangesEffectues}}</span>
-        <input matInput [hidden]="!cellClicked(candidat, 'echangesEffectues')" placeholder="{{candidat.echangesEffectues}}" [(ngModel)]="candidat.echangesEffectues" (change)="updateModel(candidat)"></td>
-    </ng-container>
+<!--    <ng-container matColumnDef="echangesEffectues">-->
+<!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Échanges effectués</th>-->
+<!--      <td mat-cell *matCellDef="let candidat" (click)="checkClickedColumn('echangesEffectues')"><span [hidden]="cellClicked(candidat, 'echangesEffectues')">{{candidat.echangesEffectues}}</span>-->
+<!--        <input matInput [hidden]="!cellClicked(candidat, 'echangesEffectues')" placeholder="{{candidat.echangesEffectues}}" [(ngModel)]="candidat.echangesEffectues" (change)="updateModel(candidat)"></td>-->
+<!--    </ng-container>-->
 
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="checkClickedRow(row)"></tr>
+<!--    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>-->
+<!--    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;" (click)="checkClickedRow(row)"></tr>-->
+<!--  </table>-->
+<!--    <mat-card *ngIf="!dataSource"-->
+<!--              style="display: flex; justify-content: center; align-items: center">-->
+<!--      <mat-progress-spinner-->
+<!--        color="accent"-->
+<!--        mode="indeterminate">-->
+<!--      </mat-progress-spinner>-->
+<!--    </mat-card>-->
+<!--  </div>-->
+  <table>
+    <tr><td *ngFor="let k of objectKeys(qCandidatExemple)">{{k}}<br>
+      <input matInput placeholder="{{k}}" [(ngModel)]="candidatFiltre[k]" (input)="getQCandidates()">
+    </td></tr>
+    <tr *ngFor="let c of qCandidats"><td style="  white-space: pre;" *ngFor="let k of objectKeys(qCandidatExemple)">{{ss(c[k])}}</td></tr>
   </table>
-    <mat-card *ngIf="!dataSource"
-              style="display: flex; justify-content: center; align-items: center">
-      <mat-progress-spinner
-        color="accent"
-        mode="indeterminate">
-      </mat-progress-spinner>
-    </mat-card>
-  </div>
 </div>
 
+<mat-progress-spinner color="accent" mode="indeterminate" *ngIf="spinner">
+</mat-progress-spinner>

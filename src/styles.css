@@ -6,13 +6,18 @@
   background-color: orange !important;
   color: black !important;
 }
-
+input{
+  margin:auto!important;
+}
+table{
+  padding: 1em;
+}
 .selectedCell {
   background-color: orange !important;
   color: black !important;
 }
 
-td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+td{
   padding: 0.5em !important;
 }
 
@@ -29,4 +34,11 @@ md-input-container{
 }
 ::ng-deep  .mat-list .mat-list-item{
   height:initial!important;
+}
+
+
+/* for sidenav to take a whole page */
+html, body {
+  margin: 0;
+  height: 100%;
 }

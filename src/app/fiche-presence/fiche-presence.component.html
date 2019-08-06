@@ -3,7 +3,14 @@
 </h1>
 
 <br>
-<div *ngIf="!FicheEnvoyee" style="justify-content: space-evenly;display: flex">
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="FicheEnvoyee === undefined"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
+<div *ngIf="!FicheEnvoyee && FicheEnvoyee !== undefined" style="justify-content: space-evenly;display: flex">
 <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
     <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
     <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>

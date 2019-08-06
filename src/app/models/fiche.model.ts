@@ -3,7 +3,9 @@ import {Moment} from 'moment';
 
 export class FicheModel {
   id: any;
+  uri:String;
   mois: String;
+  annee:number;
   rtte: number;
   rtts: number;
   conges: number;

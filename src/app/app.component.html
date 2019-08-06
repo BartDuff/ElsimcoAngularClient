@@ -1,9 +1,20 @@
-<nav>
-  <div class="nav-wrapper">
-    <app-header></app-header>
-  </div>
-</nav>
-<div class="row-full center">
-  <router-outlet></router-outlet>
-</div>
-<cookie-law position="bottom" target="_self">En utilisant ce site vous acceptez notre politique d'utilisation des cookies</cookie-law>
+<!--<nav>-->
+<!--  <div class="nav-wrapper">-->
+<app-layout>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation">
+    <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+    <!--  </div>-->
+    <!--</nav>-->
+<!--    <div class="row-full center">-->
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+<!--    </div>-->
+    <cookie-law position="bottom" target="_self">En utilisant ce site vous acceptez notre politique d'utilisation des cookies</cookie-law>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+</app-layout>

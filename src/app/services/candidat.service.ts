@@ -26,6 +26,14 @@ export class CandidatService {
     return this.http.get<CandidatModel[]>(`${API_URL}/candidats`);
   }
 
+  getQCandidats(q): Observable<CandidatModel[]> {
+    let s = "";
+    for(let k of Object.keys(q))
+      if(q[k])
+        s+=(s.length > 0?'&':'')+k+"="+q[k];
+    return this.http.get<CandidatModel[]>(`${API_URL}/candidats/q?${s}`);
+  }
+
   addCandidat(newCandidat: any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type'  : 'application/json'});

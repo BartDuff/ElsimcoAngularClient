@@ -6,6 +6,9 @@ import {saveAs} from 'file-saver';
 import {ToastrService} from 'ngx-toastr';
 import {CandidatModel} from '../models/candidat.model';
 import {MatTableDataSource} from '@angular/material';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {Diplome} from '../models/diplome.model';
 
 @Component({
   selector: 'app-candidat-list',
@@ -15,8 +18,13 @@ import {MatTableDataSource} from '@angular/material';
 export class CandidatListComponent implements OnInit, AfterViewChecked {
   clickedRow = null;
   clickedColumn = null;
-  editField: String;
+  qCandidats;
+  spinner = false;
+  qCandidatExemple = {};
+  candidatFiltre = new CandidatModel();
+  //editField: String;
   candidats: CandidatModel[];
+  public ngUnsubscribe: Subject<void> = new Subject<void>();
   dataSource: any;
   columnsToDisplay = ['nom', 'prenom', 'dateNaissance', 'nationalite', 'villeNaissance', 'departementNaissance', 'skype', 'telDomicile', 'permisB', 'voiture', 'permis2roues', 'deuxRoues', 'anglais', 'italien', 'allemand', 'espagnol', 'autreLangue', 'email', 'adresse', 'codePostal', 'ville', 'mobile', 'dateEnvoi', 'fileBase64',
     'mobiliteParis', 'mobiliteFrance', 'mobiliteEurope', 'mobiliteIntl', 'reference1', 'reference2', 'diplome', 'enPoste', 'dateDispo', 'delai', 'raisonDispo', 'preavisNegociable', 'contrat', 'posteSouhaite', 'evolution5ans', 'numSecu', 'fixeDernierSalaireBrut', 'varDernierSalaireBrut', 'pretentionSalaireBrut', 'faitA', 'echangesEffectues'];
@@ -28,7 +36,23 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.getQCandidates();
     this.getCandidates();
+  }
+
+  getQCandidates(){
+    this.spinner=true;
+    this.ngUnsubscribe.next();
+
+    this.candidatService.getQCandidats(this.candidatFiltre)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
+      (data)=> {
+        this.qCandidats = data;
+        this.qCandidatExemple = this.qCandidats[0];
+        this.spinner = false;
+      }
+    );
   }
 
   ngAfterViewChecked()
@@ -43,6 +67,22 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
         this.candidats = data;
       }
     );
+  }
+
+  ss(o){
+    let s = "";
+    if(!o)
+      return "";
+    if(typeof o === 'object'){
+      for(let k of Object.keys(o))
+        s += o[k] + '\n';
+      return s;
+    }
+    return o;
+  }
+
+  objectKeys(o){
+    return Object.keys(o);
   }
 
   applyFilter(filterValue: string) {
@@ -60,7 +100,7 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     this.candidatService.getCandidant(contactCV.id).subscribe(
       (res) => {
         let c: ContactModel = res;
-        console.log(c);
+        //console.log(c);
         if (c.fileBase64) {
           let blob = this.base64ToBlob(c.fileBase64);
           saveAs(blob, `${contactCV.prenom} ${contactCV.nom}_CV.pdf`);

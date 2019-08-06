@@ -1,29 +1,26 @@
-<div class="col s12 m12 l6">
-  <div class="card-panel">
-    <h4 class="text-center">Modifier une actualité</h4>
-    <a routerLink="/news"><span>RETOUR <i class="material-icons">arrow_back</i></span></a>
-    <div class="row">
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="col s12">
-        <div class="row">
-          <div class="input-field col s12" style="display:none;">
-            <label for="id" class="active">Id:</label>
-            <input disabled formControlName="id" placeholder="id" name="id" class="validate" id="id">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="titre" class="active">Titre:</label>
-            <input formControlName="titre" placeholder="Titre" name="titre" class="validate" id="titre">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="contenu" class="active">Contenu:</label>
-            <textarea formControlName="contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..." name="contenu" class="materialize-textarea" id="contenu"></textarea>
-          </div>
-        </div>
-        <button class="btn btn-success">Modifier</button>
-      </form>
-    </div>
-  </div>
-</div>
+<mat-card>
+  <mat-card-title>Modifier une actualité</mat-card-title>
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field hidden>
+          <input matInput disabled formControlName="id" placeholder="id" name="id"  id="id">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="titre" placeholder="Titre" name="titre"  id="titre">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Contenu de l'article</mat-label>
+          <textarea matInput formControlName="contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..."
+                    name="contenu" id="contenu"></textarea>
+        </mat-form-field>
+        <mat-card-actions fxFlexAlign="center">
+          <button mat-icon-button routerLink="/news">RETOUR <mat-icon>arrow_back</mat-icon></button>
+          <button mat-button>Modifier</button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>

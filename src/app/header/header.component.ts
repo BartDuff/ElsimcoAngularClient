@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AuthenticationService} from '../services/authentication.service';
 import {UserModel} from '../models/user.model';
@@ -8,13 +8,15 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent implements OnInit {
   img = `../../${environment.base}/assets/images/elsimco-black.PNG`;
   currentUserSubscription: Subscription;
   currentUser: UserModel;
   token: any;
+  @Output() public sidenavToggle = new EventEmitter();
 
   constructor(private authService: AuthenticationService,
               private router: Router) {
@@ -30,6 +32,10 @@ export class HeaderComponent implements OnInit {
     );
     this.authService.emitCurrentUserSubject();
   }
+
+  public onToggleSidenav = () => {
+    this.sidenavToggle.emit();
+  };
 
   onLogout() {
     this.authService.logout().subscribe(

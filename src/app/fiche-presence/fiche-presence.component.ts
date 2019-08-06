@@ -8,6 +8,8 @@ import {PdfService} from '../services/pdf.service';
 import {FicheModel} from '../models/fiche.model';
 import htmlToImage from 'html-to-image';
 import {image} from 'html2canvas/dist/types/css/types/image';
+import {UserService} from '../services/user.service';
+import {UserModel} from '../models/user.model';
 
 @Component({
   selector: 'app-fiche-presence',
@@ -26,7 +28,8 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   absences= ["RTT E", "RTT S", "Congés payés", "Absences exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
   absShort= ["RTT E.", "RTT S.", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
   dateNow : Date;
-  FicheEnvoyee:boolean = false;
+  FicheEnvoyee:boolean;
+  currentUser:UserModel;
 
   getWeekday(date:Date){
      return date.getDay()-1;
@@ -47,13 +50,28 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   c(cc){
     console.log(cc)
   }
-  constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService) {
+  constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService, private userService:UserService) {
   }
 
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.getFichesForUser();
     this.selectedDate = moment(new Date());
     this.dateNow = new Date();
     // this.dateFilter(this.dateNow);
+  }
+
+  getFichesForUser(){
+    this.userService.getFicheForUser(this.currentUser).subscribe(
+      (data) => {
+        let fichesUser:FicheModel[] = data;
+        if (fichesUser.find((x) => x.annee === this.dateNow.getFullYear() && x.mois === this.nomsDesMois[this.dateNow.getMonth()])){
+          this.FicheEnvoyee = true;
+        } else {
+          this.FicheEnvoyee = false;
+        }
+      }
+    );
   }
 
   ngAfterViewChecked()
@@ -165,6 +183,7 @@ checkWeekends(day:Date){
     let table = document.getElementById('calendrier');
     htmlToImage.toPng(table).then((image)=>{
       fiche.tableImg = image;
+      fiche.annee = this.dateNow.getFullYear();
       fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
       fiche.absences = this.countSansSolde(form);
       fiche.conges = this.countConges(form);
@@ -186,10 +205,11 @@ checkWeekends(day:Date){
           }
         }
       }
+      fiche.uri = `${fiche.user.prenom}_${fiche.user.nom}_${fiche.mois}${fiche.annee}.pdf`;
       this.pdfService.sendFiche(fiche).subscribe(
         (data) => {
           this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
-          this.FicheEnvoyee = data;
+          this.getFichesForUser();
         });
     });
 

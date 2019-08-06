@@ -1,9 +1,23 @@
-<div class="card large">
-  <div class="card-content">
-    <div class="card-title black white-text">{{newsitem.titre}}<a *ngIf="currentUser.role == 'ADMIN'" class="activator waves-effect waves-light z-depth-4 right" [routerLink]="['/edit_news/', newsitem.id]">
-      <i class="material-icons" style="color: white;">edit</i>
-    </a></div>
-    <span class="mat-card-subtitle">Publié le {{newsitem.datePublication | date: 'dd/MM/yyyy à HH:mm'}} par {{ newsitem.auteur.prenom }} {{ newsitem.auteur.nom }}</span>
-    <p>{{newsitem.contenu}}</p>
-  </div>
-</div>
+<!--<div class="card large">-->
+<!--  <div class="card-content">-->
+<!--    <div class="card-title black white-text">{{newsitem.titre}}<a *ngIf="currentUser.role == 'ADMIN'" class="activator waves-effect waves-light z-depth-4 right" [routerLink]="['/edit_news/', newsitem.id]">-->
+<!--      <i class="material-icons" style="color: white;">edit</i>-->
+<!--    </a></div>-->
+<!--    <span class="mat-card-subtitle">Publié le {{newsitem.datePublication | date: 'dd/MM/yyyy à HH:mm'}} par {{ newsitem.auteur.prenom }} {{ newsitem.auteur.nom }}</span>-->
+<!--    <p>{{newsitem.contenu}}</p>-->
+<!--  </div>-->
+<!--</div>-->
+
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar> <button mat-icon-button [routerLink]="['/edit_news/', newsitem.id]"><mat-icon>edit</mat-icon></button></div>
+    <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
+      <span >{{newsitem.titre}}</span>
+    </mat-card-title>
+    <mat-card-subtitle>Publié le {{newsitem.datePublication | date: 'dd/MM/yyyy à HH:mm'}} par {{ newsitem.auteur.prenom }} {{ newsitem.auteur.nom }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p [innerHTML]="newsitem.contenu">
+    </p>
+  </mat-card-content>
+</mat-card>

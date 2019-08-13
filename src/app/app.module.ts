@@ -54,7 +54,7 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatIconModule,
-  MatListModule
+  MatListModule, MatPaginatorModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -142,7 +142,8 @@ const config: InputFileConfig = {};
     MatToolbarModule,
     MatIconModule,
     FlexLayoutModule,
-    MatListModule
+    MatListModule,
+    MatPaginatorModule
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, PdfService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

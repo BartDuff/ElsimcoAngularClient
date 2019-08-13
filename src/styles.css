@@ -17,10 +17,6 @@ table{
   color: black !important;
 }
 
-td{
-  padding: 0.5em !important;
-}
-
 button.next, button.previous {
   display: none!important;
 }

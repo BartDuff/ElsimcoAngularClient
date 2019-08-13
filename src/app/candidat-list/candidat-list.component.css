@@ -10,3 +10,16 @@ th.mat-sort-header-sorted {
 .table-container {
   overflow: auto;
 }
+
+td{
+  padding: 0.5em !important;
+}
+
+.paginator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 56px;
+  padding: 0 8px;
+  flex-wrap: wrap-reverse;
+}

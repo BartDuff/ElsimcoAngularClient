@@ -15,11 +15,11 @@
 <td>{{ contact.voiture }}</td>
 <td>{{ contact.permis2roues }}</td>
 <td>{{ contact.deuxRoues }}</td>
-<td>{{ contact.diplome.intitule }} {{contact.diplome.annee }} {{ contact.diplome.etablissement }} {{contact.diplome.obtenu}} </td>
+<td>{{ contact.diplome?.intitule }} {{contact.diplome?.annee }} {{ contact.diplome?.etablissement }} {{contact.diplome?.obtenu}} </td>
 <td>{{ contact.anglais }} {{ contact.allemand }} {{ contact.italien}} {{contact.espagnol}} {{contact.autreLangue}}:{{contact.niveauAutrelangue}}</td>
 <td>{{ contact.mobiliteParis }} {{contact.mobiliteFrance}} {{contact.mobiliteEurope}} {{ contact.mobiliteIntl }}</td>
-<td>{{contact.references[0].nomEntreprise }} {{contact.references[0].nomResponsable }} {{contact.references[0].fonction }} {{contact.references[0].telephone }} {{contact.references[0].adresseMail }}</td>
-<td>{{contact.references[1].nomEntreprise }} {{contact.references[1].nomResponsable }} {{contact.references[1].fonction }} {{contact.references[1].telephone }} {{contact.references[1].adresseMail }}</td>
+<td>{{contact.references[0]?.nomEntreprise }} {{contact.references[0]?.nomResponsable }} {{contact.references[0]?.fonction }} {{contact.references[0]?.telephone }} {{contact.references[0]?.adresseMail }}</td>
+<td>{{contact.references[1]?.nomEntreprise }} {{contact.references[1]?.nomResponsable }} {{contact.references[1]?.fonction }} {{contact.references[1]?.telephone }} {{contact.references[1]?.adresseMail }}</td>
 <td>{{ contact.enPoste }}</td>
 <td>{{ contact.contrat }}</td>
 <td>{{ contact.preavisNegociable }}</td>

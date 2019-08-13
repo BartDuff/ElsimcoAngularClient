@@ -22,16 +22,20 @@ export class CandidatService {
 
   constructor(private http: HttpClient) { }
 
-  getCandidats(): Observable<CandidatModel[]> {
+  getCandidats(): any {
     return this.http.get<CandidatModel[]>(`${API_URL}/candidats`);
   }
 
-  getQCandidats(q): Observable<CandidatModel[]> {
+  getQCandidats(q, pageable, size): any {
     let s = "";
     for(let k of Object.keys(q))
       if(q[k])
         s+=(s.length > 0?'&':'')+k+"="+q[k];
-    return this.http.get<CandidatModel[]>(`${API_URL}/candidats/q?${s}`);
+
+    s+=(s.length > 0?'&':'')+"page="+(pageable.number-1);
+    s+=(s.length > 0?'&':'')+"size="+size;
+
+    return this.http.get<CandidatModel[]>(`${API_URL}/candidats?${s}`);
   }
 
   addCandidat(newCandidat: any): Observable<any> {

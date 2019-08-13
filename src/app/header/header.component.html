@@ -32,7 +32,7 @@
       <li><a mat-button routerLink="/login" *ngIf="!token">Connexion</a></li>
       <li><a mat-button (click)="onLogout()" *ngIf="token">Déconnexion</a></li>
       <li><a mat-button routerLink="/news" *ngIf="token">Actualités</a></li>
-      <li><a mat-button routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profile</a></li>
+      <li><a mat-button routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profil</a></li>
       <li><a mat-button routerLink="/documents" *ngIf="token">Pack Collaborateurs</a></li>
       <li><a mat-button routerLink="/missions" *ngIf="token">Missions</a></li>
       <li><a mat-button routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>

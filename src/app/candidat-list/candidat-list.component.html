@@ -285,13 +285,50 @@
 <!--      </mat-progress-spinner>-->
 <!--    </mat-card>-->
 <!--  </div>-->
-  <table>
-    <tr><td *ngFor="let k of objectKeys(qCandidatExemple)">{{k}}<br>
-      <input matInput placeholder="{{k}}" [(ngModel)]="candidatFiltre[k]" (input)="getQCandidates()">
-    </td></tr>
-    <tr *ngFor="let c of qCandidats"><td style="  white-space: pre;" *ngFor="let k of objectKeys(qCandidatExemple)">{{ss(c[k])}}</td></tr>
-  </table>
+<!--  <table>-->
+<!--    <tr><td *ngFor="let k of objectKeys(qCandidatExemple)">{{k}}<br>-->
+<!--      <input matInput placeholder="{{k}}" [(ngModel)]="candidatFiltre[k]" (input)="getQCandidates()">-->
+<!--    </td></tr>-->
+<!--    <tr *ngFor="let c of qCandidats"><td style="  white-space: pre;" *ngFor="let k of objectKeys(qCandidatExemple)">{{ss(c[k])}}</td></tr>-->
+<!--  </table>-->
 </div>
+<div class="mat-elevation-z8">
+  <mat-paginator [length]="totalPages"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+  showFirstLastButtons>
+  </mat-paginator>
+<div style="width: 100vw;overflow: scroll">
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
+    <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
+      <mat-form-field style="max-width:10em;text-align: center">
+        <input  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [placeholder]="x" [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=1;getQCandidates()"  >
 
+        <button style="z-index:100;  position:absolute;
+                          top: -0.2em; right: 0px" *ngIf="candidatFiltre[x]"
+                (click)="candidatFiltre[x]='';getQCandidates();" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent mdl-js-ripple-effect ">
+          <i class="material-icons" title="clear filter">clear</i>
+        </button>
+
+      </mat-form-field>
+<!--       {{x}}-->
+    </th>
+    <td mat-cell *matCellDef="let element">
+
+
+      {{element[x]}}
+
+
+
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple)"></tr>
+  <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
+
+</table>
+</div>
+</div>
 <mat-progress-spinner color="accent" mode="indeterminate" *ngIf="spinner">
 </mat-progress-spinner>

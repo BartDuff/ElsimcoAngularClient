@@ -22,7 +22,7 @@ export class ContactService {
 
   constructor(private http: HttpClient) { }
 
-  getContacts(): Observable<ContactModel[]> {
+  getContacts(): Observable<any> {
     return this.http.get<ContactModel[]>(`${API_URL}/contacts`);
   }
 

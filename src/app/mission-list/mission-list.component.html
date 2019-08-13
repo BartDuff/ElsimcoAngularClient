@@ -1,6 +1,5 @@
 <h2>Missions:</h2>
-<div class="align-content-center" style="margin: 2em;"><a *ngIf="this.currentUser.role == 'ADMIN'" class="btn-floating btn-large waves-effect waves-light scale-transition" routerLink="/add_missions"><i
-  class="material-icons">add</i></a></div>
+<button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_missions"><mat-icon>add</mat-icon></button>
 <table class="bordered mat-elevation-z8" >
   <thead>
   <tr>

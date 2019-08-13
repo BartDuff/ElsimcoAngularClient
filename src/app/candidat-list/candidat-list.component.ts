@@ -1,11 +1,11 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ContactModel} from '../models/contact.model';
 import {CandidatService} from '../services/candidat.service';
 import {saveAs} from 'file-saver';
 
 import {ToastrService} from 'ngx-toastr';
 import {CandidatModel} from '../models/candidat.model';
-import {MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Diplome} from '../models/diplome.model';
@@ -20,6 +20,9 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   clickedColumn = null;
   qCandidats;
   spinner = false;
+  pageable = {size:3,number:1};
+  totalPages = 1;
+  size=10;
   qCandidatExemple = {};
   candidatFiltre = new CandidatModel();
   //editField: String;
@@ -35,22 +38,28 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
               private cdRef:ChangeDetectorRef,) {
   }
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   ngOnInit() {
     this.getQCandidates();
-    this.getCandidates();
+    //this.getCandidates();
   }
 
   getQCandidates(){
     this.spinner=true;
     this.ngUnsubscribe.next();
 
-    this.candidatService.getQCandidats(this.candidatFiltre)
+    this.candidatService.getQCandidats(this.candidatFiltre, this.pageable,this.size)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
       (data)=> {
-        this.qCandidats = data;
+        this.qCandidats = data.content;
+        //this.pageable=data.pageable;
+        this.totalPages = data.totalElements;
         this.qCandidatExemple = this.qCandidats[0];
         this.spinner = false;
+        this.dataSource = this.qCandidats;
+        this.dataSource.paginator = this.paginator;
       }
     );
   }
@@ -58,13 +67,21 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   ngAfterViewChecked()
   {
     this.cdRef.detectChanges();
+    this.paginator.page.subscribe(
+      (data) => {
+        this.pageable.number = data.pageIndex;
+        this.size = this.paginator.pageSize;
+        this.getQCandidates();
+      }
+    )
   }
 
   getCandidates() {
     this.candidatService.getCandidats().subscribe(
       (data) => {
-        this.dataSource = new MatTableDataSource(data);
-        this.candidats = data;
+        this.dataSource = new MatTableDataSource(data.content);
+        this.candidats = data.content;
+        this.pageable=data.pageable;
       }
     );
   }
@@ -79,6 +96,9 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
       return s;
     }
     return o;
+  }
+  s(ss){
+    return JSON.stringify(ss,null,4)
   }
 
   objectKeys(o){

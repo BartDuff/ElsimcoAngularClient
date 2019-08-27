@@ -1,6 +1,6 @@
-<h2>Missions:</h2>
+<h2 style="align-self: center;">Missions:</h2>
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_missions"><mat-icon>add</mat-icon></button>
-<table class="bordered mat-elevation-z8" >
+<table class="bordered mat-elevation-z8" style="margin: auto; ">
   <thead>
   <tr>
     <th>Mission</th>
@@ -9,7 +9,7 @@
     <th>Durée</th>
     <th>Description</th>
     <th>Détails</th>
-    <th *ngIf="currentUser.role=='ADMIN'">Éditer</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Modifier</th>
     <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
     <th>Intérêt</th>
     <th *ngIf="currentUser.role=='ADMIN'">Archiver</th>
@@ -30,7 +30,7 @@
 <div style="margin-top: 15px;">
   <button (click)="toggleArchivesClick()" *ngIf="currentUser.role=='ADMIN'"><span *ngIf="toggleArchives">Afficher les missions archivées</span><span *ngIf="!toggleArchives">Cacher les missions archivées</span></button>
 </div>
-<table class="bordered mat-elevation-z8" [hidden]="toggleArchives">
+<table class="bordered mat-elevation-z8" [hidden]="toggleArchives" style="margin: auto; margin-top: 15px;">
   <thead>
   <tr>
     <th>Mission</th>
@@ -39,7 +39,7 @@
     <th>Durée</th>
     <th>Description</th>
     <th>Détails</th>
-    <th *ngIf="currentUser.role=='ADMIN'">Éditer</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Modifier</th>
     <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
     <th></th>
     <th *ngIf="currentUser.role=='ADMIN'">Sortir des archives</th>

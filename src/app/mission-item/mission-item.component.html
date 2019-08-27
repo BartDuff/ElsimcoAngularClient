@@ -4,7 +4,7 @@
 <td>{{ mission.duree }} mois</td>
 <td>{{ mission.jobDesc }}</td>
 <td><a [routerLink]="['/missions/', mission.id]">Détail</a></td>
-<td *ngIf="currentUser.role=='ADMIN'"><a [routerLink]="['/edit_mission/', mission.id]">Editer</a></td>
+<td *ngIf="currentUser.role=='ADMIN'"><a [routerLink]="['/edit_mission/', mission.id]">Modifier</a></td>
 <td *ngIf="currentUser.role=='ADMIN'">
   <button type="button"
           (click)="deleteMission()"><i class="material-icons">delete</i></button>

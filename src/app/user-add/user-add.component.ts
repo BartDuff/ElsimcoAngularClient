@@ -30,7 +30,8 @@ export class UserAddComponent implements OnInit {
       email: ['', Validators.required],
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
+      fonction:['', Validators.required]
     });
 
   }
@@ -41,6 +42,7 @@ export class UserAddComponent implements OnInit {
     this.user.prenom = this.f.prenom;
     this.user.nom = this.f.nom;
     this.user.role = this.addForm.get('role').value;
+    this.user.fonction = this.addForm.get('fonction').value;
     this.userService.addUser(this.user)
       .subscribe( data => {
         this.router.navigate(['users']);

@@ -1,0 +1,30 @@
+<h2>Mes Fiches de présence:</h2>
+<div style="margin-top: 2em;">
+  <table class="bordered mat-elevation-z8" style="margin: auto; ">
+    <thead>
+    <tr>
+      <th>Mois</th>
+      <th>Année</th>
+      <th>Validée RH</th>
+      <th>Validée Direction</th>
+      <th colspan="2">Télécharger</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let fiche of fiches">
+      <td>{{fiche.mois}}</td>
+      <td>{{fiche.annee}}</td>
+      <td>{{fiche.valideRH}}</td>
+      <td>{{fiche.valideDir}}</td>
+      <td>Download</td>
+    </tr>
+    </tbody>
+  </table>
+  <mat-card *ngIf="!fiches"
+            style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner
+      color="accent"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+</div>

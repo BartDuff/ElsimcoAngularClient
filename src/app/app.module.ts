@@ -73,6 +73,7 @@ import {PdfService} from './services/pdf.service';
 import {ClickOutsideModule} from 'ng-click-outside';
 import { LayoutComponent } from './layout/layout.component';
 import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
+import { FicheListComponent } from './fiche-list/fiche-list.component';
 const config: InputFileConfig = {};
 
 
@@ -107,7 +108,8 @@ const config: InputFileConfig = {};
     CandidatListComponent,
     FichePresenceComponent,
     LayoutComponent,
-    SidenavListComponent
+    SidenavListComponent,
+    FicheListComponent
   ],
   imports: [
     AppRoutingModule,

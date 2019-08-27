@@ -9,6 +9,7 @@ import {UserModel} from '../models/user.model';
 import {MatDialog} from '@angular/material';
 import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 import {MatDialogConfig} from '@angular/material';
+import {ToastrService} from 'ngx-toastr';
 
 const API_URL = environment.apiUrl;
 @Component({
@@ -28,7 +29,8 @@ export class DocumentListComponent implements OnInit {
 
 
   constructor(private documentService: DocumentService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private toastrService: ToastrService) {
   }
 
   ngOnInit() {
@@ -93,7 +95,8 @@ export class DocumentListComponent implements OnInit {
 
   sendDocumentByEmail(documentToSend: DocumentModel) {
     this.documentService.sendDocumentByEmail(this.currentUser,documentToSend).subscribe(
-      (res) => console.log(res)
+      (res) => this.toastrService.success(documentToSend.originalFileName + " envoyé avec succès!", "Envoyé"),
+      (err)=> this.toastrService.error(documentToSend.originalFileName + ": echec de l'envoi!","Erreur d'envoi")
     );
   }
 

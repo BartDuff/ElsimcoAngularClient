@@ -1,37 +1,79 @@
-<div class="col s12 m12 l6">
-  <div class="card-panel">
-    <h4 class="text-center">Editer utilisateur</h4>
-    <div class="row">
-      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="col s12">
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="email" class="active">Email:</label>
-            <input type="email" formControlName="email" placeholder="Email" name="email" class="validate" id="email">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="prenom" class="active">Prénom:</label>
-            <input formControlName="prenom" placeholder="Prénom" name="prenom" class="validate" id="prenom">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="nom" class="active">Nom:</label>
-            <input formControlName="nom" placeholder="Nom" name="lastName" class="validate" id="nom">
-          </div>
-        </div>
-        <div *ngIf="currentUser.role=='ADMIN'" class="row">
-          <div class="input-field col s12">
-            <label for="role" class="active">Role:</label>
-            <select formControlName="role" name="role" class="browser-default" id="role">
-              <option value="ADMIN">ADMIN</option>
-              <option value="USER" selected>UTILISATEUR</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn btn-success">Mettre à jour</button>
-      </form>
-    </div>
-  </div>
-</div>
+<!--<div class="col s12 m12 l6">-->
+<!--  <div class="card-panel">-->
+<!--    <h4 class="text-center">Editer utilisateur</h4>-->
+<!--    <div class="row">-->
+<!--      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="col s12">-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="email" class="active">Email:</label>-->
+<!--            <input type="email" formControlName="email" placeholder="Email" name="email" class="validate" id="email">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="prenom" class="active">Prénom:</label>-->
+<!--            <input formControlName="prenom" placeholder="Prénom" name="prenom" class="validate" id="prenom">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="nom" class="active">Nom:</label>-->
+<!--            <input formControlName="nom" placeholder="Nom" name="lastName" class="validate" id="nom">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div *ngIf="currentUser.role=='ADMIN'" class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="role" class="active">Role:</label>-->
+<!--            <select formControlName="role" name="role" class="browser-default" id="role">-->
+<!--              <option value="ADMIN">ADMIN</option>-->
+<!--              <option value="USER" selected>UTILISATEUR</option>-->
+<!--            </select>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <button class="btn btn-success">Mettre à jour</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<mat-card>
+  <mat-card-title>Modifier un utilisateur</mat-card-title>
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field>
+          <input matInput formControlName="email" placeholder="Email" name="email" id="email">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="prenom" placeholder="Prénom" name="prenom" id="prenom">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="nom" placeholder="Nom" name="nom" id="nom">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Role:</mat-label>
+          <mat-select formControlName="role">
+            <mat-option value="ADMIN">ADMIN</mat-option>
+            <mat-option value="USER">UTILISATEUR</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Fonction:</mat-label>
+          <mat-select formControlName="fonction">
+            <mat-option value="RH">RH</mat-option>
+            <mat-option value="DIRECTION">DIRECTION</mat-option>
+            <mat-option value="CONSULTANT">CONSULTANT</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-card-actions fxFlexAlign="center">
+          <button mat-icon-button routerLink="/users">RETOUR
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button mat-button>Mettre à jour</button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>

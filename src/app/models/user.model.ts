@@ -8,6 +8,7 @@ export class UserModel {
   dateInscription: Date;
   derniereConnexion: Date;
   role: String;
+  fonction:String;
   missions: MissionModel[];
 
 }

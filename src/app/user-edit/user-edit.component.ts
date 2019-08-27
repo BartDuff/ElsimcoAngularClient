@@ -27,13 +27,18 @@ export class UserEditComponent implements OnInit {
       email: ['', Validators.required],
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
-      role: ['', Validators.required]
+      role: ['', Validators.required],
+      fonction: ['', Validators.required]
     });
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
         data => {
+          this.editForm.controls.id.setValue(data.id);
+          this.editForm.controls.email.setValue(data.email);
+          this.editForm.controls.prenom.setValue(data.prenom);
+          this.editForm.controls.nom.setValue(data.nom);
           this.editForm.controls.role.setValue(data.role);
-          this.editForm.setValue(data);
+          this.editForm.controls.fonction.setValue(data.fonction);
         }
       )
     );
@@ -43,6 +48,9 @@ export class UserEditComponent implements OnInit {
   onSubmit() {
     if (this.editForm.get('role').value == '') {
       this.editForm.get('role').setValue(this.user.role);
+    }
+    if (this.editForm.get('fonction').value == '') {
+      this.editForm.get('fonction').setValue(this.user.fonction);
     }
     this.userService.editUser(this.editForm.value)
       .subscribe(data => {

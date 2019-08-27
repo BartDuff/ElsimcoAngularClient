@@ -25,3 +25,20 @@
 input[type='file'] {
   display: none;
 }
+
+.mat-fab {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
+
+.document-list {
+  width: 80%;
+  margin-bottom: 5%;
+  justify-content: center;
+}
+
+td {
+  padding: 15em!important;
+}
+

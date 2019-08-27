@@ -1,46 +1,84 @@
-<div class="col s12 m12 l6">
-  <div class="card-panel">
-    <h4 class="text-center">Ajouter une mission</h4>
-    <div class="row">
-      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="col s12">
-        <div class="row">
-          <div class="input-field col s12" style="display:none;">
-            <label for="id" class="active">Id:</label>
-            <input disabled formControlName="id" placeholder="id" name="id" class="validate" id="id">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="intitule" class="active">Intitulé:</label>
-            <input formControlName="intitule" placeholder="Intitulé" name="intitule" class="validate" id="intitule">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="client" class="active">Client:</label>
-            <input formControlName="client" placeholder="Client" name="client" class="validate" id="client">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="resume" class="active">Résumé:</label>
-            <input formControlName="resume" placeholder="resume" name="resume" class="validate" id="resume">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="duree" class="active">Durée:</label>
-            <input type="number" formControlName="duree" placeholder="0" name="duree" class="validate" id="duree">
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <label for="jobDesc" class="active">Job Description:</label>
-            <textarea formControlName="jobDesc" placeholder="Job Description" name="jobDesc" class="materialize-textarea" id="jobDesc"></textarea>
-          </div>
-        </div>
-        <button class="btn btn-success">Ajouter</button>
-      </form>
-    </div>
-  </div>
-</div>
+<!--<div class="col s12 m12 l6">-->
+<!--  <div class="card-panel">-->
+<!--    <h4 class="text-center">Ajouter une mission</h4>-->
+<!--    <div class="row">-->
+<!--      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="col s12">-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12" style="display:none;">-->
+<!--            <label for="id" class="active">Id:</label>-->
+<!--            <input disabled formControlName="id" placeholder="id" name="id" class="validate" id="id">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="intitule" class="active">Intitulé:</label>-->
+<!--            <input formControlName="intitule" placeholder="Intitulé" name="intitule" class="validate" id="intitule">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="client" class="active">Client:</label>-->
+<!--            <input formControlName="client" placeholder="Client" name="client" class="validate" id="client">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="resume" class="active">Résumé:</label>-->
+<!--            <input formControlName="resume" placeholder="resume" name="resume" class="validate" id="resume">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="duree" class="active">Durée:</label>-->
+<!--            <input type="number" formControlName="duree" placeholder="0" name="duree" class="validate" id="duree">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="jobDesc" class="active">Job Description:</label>-->
+<!--            <textarea formControlName="jobDesc" placeholder="Job Description" name="jobDesc" class="materialize-textarea" id="jobDesc"></textarea>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <button class="btn btn-success">Ajouter</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<mat-card>
+  <mat-card-title>Publier une mission</mat-card-title>
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field hidden>
+          <input matInput disabled formControlName="id" placeholder="id" name="id"  id="id">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="intitule" placeholder="Intitulé de la mission" name="intitule"  id="intitule">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="client" placeholder="Client" name="client"  id="client">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="resume" placeholder="Résumé de la mission" name="resume"  id="resume">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="duree" placeholder="Durée de la mission" value="0" name="duree"  id="duree">
+        </mat-form-field>
+
+        <mat-form-field>
+          <textarea matInput formControlName="jobDesc" placeholder="Renseignez la description du poste..."
+                    name="jobDesc" id="jobDesc"></textarea>
+        </mat-form-field>
+        <mat-card-actions fxFlexAlign="center">
+          <button mat-icon-button routerLink="/missions">RETOUR <mat-icon>arrow_back</mat-icon></button>
+          <button mat-button>Publier</button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>

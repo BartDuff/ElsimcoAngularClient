@@ -42,7 +42,7 @@
         <button mat-button [matMenuTriggerFor]="menu" *ngIf="token">Outils</button>
         <mat-menu #menu="matMenu" yPosition="below" backdropClass="toolbar-menu">
           <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de Présence</a>
-          <a mat-menu-item>Mes fiches de présence</a>
+          <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token">Mes fiches de présence</a>
         </mat-menu>
       </li>
     </ul>

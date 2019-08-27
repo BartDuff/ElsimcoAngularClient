@@ -20,4 +20,6 @@ export class FicheModel {
   joursTravailles:number;
   commentaires:any = {};
   tableImg:any;
+  valideRH: boolean;
+  valideDir: boolean;
 }

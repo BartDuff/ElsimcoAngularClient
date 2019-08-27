@@ -2,10 +2,11 @@
 <td>{{ user.nom }}</td>
 <td>{{ user.prenom }}</td>
 <td [ngStyle]="{'color':user.role=='ADMIN'?'red':''}">{{ user.role }}</td>
+<td>{{ user.fonction }}</td>
 <td>{{ user.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</td>
 <td>
   <a [routerLink]="['/users/', user.id]">Détail</a></td>
-<td><a *ngIf="currentUser.role=='ADMIN'" [routerLink]="['/edit_user/', user.id]">Editer</a></td>
+<td><a *ngIf="currentUser.role=='ADMIN'" [routerLink]="['/edit_user/', user.id]">Modifier</a></td>
 <td>
   <button *ngIf="currentUser.role=='ADMIN'" type="button"
           (click)="deleteUser()"><i class="material-icons">delete</i></button>

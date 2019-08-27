@@ -20,6 +20,7 @@ import {NewsEditComponent} from '../news-edit/news-edit.component';
 import {NewsAddComponent} from '../news-add/news-add.component';
 import {CandidatListComponent} from '../candidat-list/candidat-list.component';
 import {FichePresenceComponent} from '../fiche-presence/fiche-presence.component';
+import {FicheListComponent} from '../fiche-list/fiche-list.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'edit_news/:id', canActivate: [AuthGuardService], component: NewsEditComponent },
   { path: 'users', canActivate: [AuthGuardService], component: UserListComponent },
   { path: 'users/:id', canActivate: [AuthGuardService], component: UserDetailsComponent },
+  { path: 'users/:id/fiches', canActivate: [AuthGuardService], component: FicheListComponent },
   { path: 'add_users', canActivate: [AuthGuardService], component: UserAddComponent },
   { path: 'edit_user/:id', canActivate: [AuthGuardService], component: UserEditComponent },
   { path: 'documents', canActivate: [AuthGuardService], component: DocumentListComponent },

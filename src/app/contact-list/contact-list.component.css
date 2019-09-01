@@ -1,4 +1,9 @@
-.table-container {
-  max-width: 100%;
-  overflow: auto;
+.mat-fab {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
+
+td {
+  padding: 15em!important;
 }

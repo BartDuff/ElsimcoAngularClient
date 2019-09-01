@@ -5,6 +5,7 @@ export class UserModel {
   nom: String;
   prenom: String;
   email: String;
+  trigramme: String;
   dateInscription: Date;
   derniereConnexion: Date;
   role: String;

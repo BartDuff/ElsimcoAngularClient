@@ -6,6 +6,8 @@ import {ToastrService} from 'ngx-toastr';
 import { saveAs } from 'file-saver';
 import {CandidatModel} from '../models/candidat.model';
 import {CandidatService} from '../services/candidat.service';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-contact-list',
@@ -16,7 +18,8 @@ export class ContactListComponent implements OnInit {
   contacts: ContactModel[];
   constructor(private contactService: ContactService,
               private candidatService: CandidatService,
-              private toastrService:ToastrService) { }
+              private toastrService:ToastrService,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.getContacts()
@@ -24,33 +27,63 @@ export class ContactListComponent implements OnInit {
 
   getContacts() {
     this.contactService.getContacts().subscribe(
-      (data) => this.contacts = data.content
+      (data) => {
+        this.contacts = [];
+        for(let i=0; i< data.content.length;i++){
+          if(!data.content[i].hasOwnProperty("faitA")){
+            this.contacts.push(data.content[i])
+          }
+        }
+      }
     );
   }
 
-  AcceptContact(contactAccepted: ContactModel) {
-    this.contactService.deleteContact(contactAccepted).subscribe(
+  AcceptContact(contactAccepted: ContactModel){
+    contactAccepted.accepte = true;
+    this.contactService.editContact(contactAccepted).subscribe(
       () => {
-        this.contacts.splice(this.contacts.indexOf(contactAccepted), 1);
-        this.candidatService.addCandidat((<CandidatModel>contactAccepted)).subscribe(
-          () => {
-            this.toastrService.success('Candidat ajouté à la Candidathèque', 'Candidature acceptée');
+        this.contactService.sendAcceptanceMail(contactAccepted.email, contactAccepted).subscribe(
+          ()=>{
+            this.toastrService.success('Candidature spontannée acceptée', 'Candidature acceptée');
           }
-        );
-      })
-
-  }
-
-  RefuseContact(contactToDelete: ContactModel) {
-    this.contactService.deleteContact(contactToDelete).subscribe(
-      () => {
-        this.contacts.splice(this.contacts.indexOf(contactToDelete), 1);
-        this.toastrService.error('Candidature supprimée', 'Suppression effectuée');
-        this.contactService.sendRejectionMail(contactToDelete.email, contactToDelete).subscribe(
-          ()=> console.log("succès")
         );
       }
     )
+  }
+
+  // AcceptContact(contactAccepted: ContactModel) {
+  //   this.contactService.deleteContact(contactAccepted).subscribe(
+  //     () => {
+  //       this.contacts.splice(this.contacts.indexOf(contactAccepted), 1);
+  //       this.candidatService.addCandidat((<CandidatModel>contactAccepted)).subscribe(
+  //         () => {
+  //           this.toastrService.success('Candidat ajouté à la Candidathèque', 'Candidature acceptée');
+  //         }
+  //       );
+  //     })
+  //
+  // }
+
+  RefuseContact(contactToDelete: ContactModel) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        if (data) {
+          this.contactService.sendRejectionMail(contactToDelete.email, contactToDelete).subscribe(
+            () => {
+              this.contacts.splice(this.contacts.indexOf(contactToDelete), 1);
+              this.contactService.deleteContact(contactToDelete).subscribe(
+                () => {
+                  this.toastrService.error('Candidature supprimée', 'Suppression effectuée');
+                }
+              );
+            }
+          )
+        }
+      });
   }
 
   downloadCV(contactCV: ContactModel) {

@@ -52,14 +52,14 @@
           <input matInput formControlName="nom" placeholder="Nom" name="nom" id="nom">
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <mat-label>Role:</mat-label>
           <mat-select formControlName="role">
             <mat-option value="ADMIN">ADMIN</mat-option>
             <mat-option value="USER">UTILISATEUR</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <mat-label>Fonction:</mat-label>
           <mat-select formControlName="fonction">
             <mat-option value="RH">RH</mat-option>

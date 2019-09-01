@@ -205,7 +205,7 @@ checkWeekends(day:Date){
           }
         }
       }
-      fiche.uri = `${fiche.user.prenom}_${fiche.user.nom}_${fiche.mois}${fiche.annee}.pdf`;
+      fiche.uri = `${fiche.user.prenom}_${fiche.user.nom}_${fiche.user.trigramme}_${fiche.mois}${fiche.annee}.pdf`;
       this.pdfService.sendFiche(fiche).subscribe(
         (data) => {
           this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');

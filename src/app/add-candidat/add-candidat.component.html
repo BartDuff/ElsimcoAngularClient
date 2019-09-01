@@ -1,0 +1,671 @@
+<mat-card class="contact-card">
+  <!--<div class="card">-->
+  <!--  <div class="card-title black white-text">Candidature:</div>-->
+  <!--  <div class="card-image">-->
+  <!--    <img class="activator" src="../../{{envBase}}/assets/images/resume2.png" alt="user bg">-->
+  <!--  </div>-->
+  <mat-card-title>
+    Candidature
+  </mat-card-title>
+  <div mat-card-image>
+    <img class="card-image" src="../../{{envBase}}/assets/images/resume2.png" alt="user bg">
+  </div>
+  <mat-vertical-stepper linear #stepper>
+    <div class="card-content">
+      <div class="mat-card-content">
+        <p>Merci de renseignez tous les champs obligatoires de ce formulaire afin de compléter votre candidature.</p>
+        <p>Une fois votre candidature envoyées, nous reprendrons contact avec vous dans les plus brefs délais.</p>
+        <br>
+      </div>
+      <p *ngIf="message" class="text-center error">{{message}}</p>
+      <mat-step [stepControl]="contactForm1">
+        <form [formGroup]="contactForm1" (ngSubmit)="sendCV()">
+          <ng-template matStepLabel>Renseignements personnels</ng-template>
+          <mat-form-field>
+            <input matInput formControlName="nom" placeholder="Nom" required>
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.nom.errors }">-->
+          <!--            <label for="nom" class="col-md-3 col-sm-5 col-xs-12">Nom:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="nom" id="nom" required/>-->
+          <!--              <div *ngIf="submitted && f.email.errors" class="help-block">-->
+          <!--                <div *ngIf="f.email.errors.required">Nom est requis</div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <mat-form-field>
+            <input matInput formControlName="prenom" placeholder="Prénom" required>
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.prenom.errors }">-->
+          <!--            <label for="prenom" class="col-md-3 col-sm-5 col-xs-12">Prénom:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="prenom" id="prenom" required/>-->
+          <!--              <div *ngIf="submitted && f.email.errors" class="help-block">-->
+          <!--                <div *ngIf="f.email.errors.required">Prénom est requis</div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <!--            <div class="form-group" [ngClass]="{ 'has-error': submitted && f.dateNaissance.errors }">-->
+          <!--              <label for="dateNaissance" class="col-md-3 col-sm-5 col-xs-12">Date de Naissance:</label>-->
+          <!--              <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--                <input type="text" class="datepicker" formControlName="dateNaissance" id="dateNaissance"/>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <mat-form-field>
+            <label>
+              <input matInput readonly [matDatepicker]="picker2" placeholder="Date de Naissance:"
+                     formControlName="dateNaissance">
+            </label>
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput formControlName="nationalite" placeholder="Nationalité">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.nationalite.errors }">-->
+          <!--            <label for="nationalite" class="col-md-3 col-sm-5 col-xs-12">Nationalité:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="nationalite" id="nationalite"/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="villeNaissance" placeholder="Ville de Naissance">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.villeNaissance.errors }">-->
+          <!--            <label for="villeNaissance" class="col-md-3 col-sm-5 col-xs-12">Ville de Naissance:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="villeNaissance" id="villeNaissance"/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="departementNaissance" placeholder="Département de Naissance">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.departementNaissance.errors }">-->
+          <!--            <label for="departementNaissance" class="col-md-3 col-sm-5 col-xs-12">Département de Naissance :</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="departementNaissance"-->
+          <!--                     id="departementNaissance"/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="numSecu" placeholder="Numéro INSEE (Sécurité Sociale)">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.numSecu.errors }">-->
+          <!--            <label for="numSecu" class="col-md-3 col-sm-5 col-xs-12">Numéro INSEE (Sécurité Sociale):</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="numSecu" id="numSecu"/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="mobile" placeholder="Numéro de mobile" required>
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.mobile.errors }">-->
+          <!--            <label for="mobile" class="col-md-3 col-sm-5 col-xs-12">Mobile:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="mobile" id="mobile" required/>-->
+          <!--              <div *ngIf="submitted && f.email.errors" class="help-block">-->
+          <!--                <div *ngIf="f.email.errors.required">Votre numéro de mobile est requis pour pouvoir vous recontacter-->
+          <!--                </div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="telDomicile" placeholder="Téléphone domicile">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.telDomicile.errors }">-->
+          <!--            <label for="telDomicile" class="col-md-3 col-sm-5 col-xs-12">Téléphone Domicile:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="telDomicile" id="telDomicile"/>-->
+          <!--              <div *ngIf="submitted && f.email.errors" class="help-block">-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="skype" placeholder="Identifiant Skype">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.skype.errors }">-->
+          <!--            <label for="skype" class="col-md-3 col-sm-5 col-xs-12">Identifiant Skype:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="skype" id="skype"/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="email" placeholder="Email" required>
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.email.errors }">-->
+          <!--            <label for="email" class="col-md-3 col-sm-5 col-xs-12">Email:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="email" class="form-control" formControlName="email" id="email" required/>-->
+          <!--              <div *ngIf="submitted && f.email.errors" class="help-block">-->
+          <!--                <div *ngIf="f.email.errors.required">Email est requis</div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="adresse" placeholder="Adresse">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.adresse.errors }">-->
+          <!--            <label for="adresse" class="col-md-3 col-sm-5 col-xs-12">Adresse:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="adresse" id="adresse" required/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="codePostal" placeholder="Code Postal">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.codePostal.errors }">-->
+          <!--            <label for="codePostal" class="col-md-3 col-sm-5 col-xs-12">Code Postal:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="codePostal" id="codePostal" required/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <input matInput formControlName="ville" placeholder="Ville">
+          </mat-form-field>
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.ville.errors }">-->
+          <!--            <label for="ville" class="col-md-3 col-sm-5 col-xs-12">Ville:</label>-->
+          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--              <input type="text" class="form-control" formControlName="ville" id="ville" required/>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Vous disposez de:</mat-label>
+            <mat-select formControlName="transport" multiple>
+              <mat-option value="permis B">Permis B</mat-option>
+              <mat-option value="voiture">D'une voiture</mat-option>
+              <mat-option value="permis2roues">Du permis 2 roues</mat-option>
+              <mat-option value="deuxRoues">D'un 2 roues</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.fileBase64.errors }">
+            <label class="col-md-3 col-sm-5 col-xs-12">CV:</label>
+            <div class="col-md-9 col-sm-7 col-xs-12">
+              <input-file id="fileBase64" placeholder="Fichier en PDF" formControlName="fileBase64"
+                          (change)="onFileChange()"></input-file>
+              <div *ngIf="submitted && f.fileBase64.errors" class="help-block">
+                <div *ngIf="f.fileBase64.errors.required">Votre CV est requis pour pouvoir vous recontacter</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group center">
+            <div>
+              <button mat-button matStepperNext [disabled]="loading || contactForm1.invalid">Suivant</button>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="contactForm2">
+        <form [formGroup]="contactForm2">
+          <ng-template matStepLabel>Dernier diplôme</ng-template>
+          <mat-form-field>
+            <label>
+              <input matInput placeholder="Annee" formControlName="annee">
+            </label>
+          </mat-form-field>
+          <mat-form-field>
+            <label>
+              <input matInput placeholder="Intitulé de la formation" formControlName="intitule">
+            </label>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Etablissement" formControlName="etablissement">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Diplôme obtenu?</mat-label>
+            <mat-select formControlName="obtenu" required>
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option [value]="true">Oui</mat-option>
+              <mat-option [value]="false">Non</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="obtenu">Diplôme obtenu-->
+          <!--              <select id="obtenu" formControlName="obtenu" required>-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option [value]="true">Oui</option>-->
+          <!--                <option [value]="false">Non</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <div>
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext [disabled]="contactForm2.invalid">Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="contactForm3">
+        <form [formGroup]="contactForm3">
+          <ng-template matStepLabel>Langue(s) étrangère(s) connues(s)</ng-template>
+          <mat-form-field>
+            <mat-label>Anglais:</mat-label>
+            <mat-select formControlName="anglais">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
+              <mat-option value="1">Niveau scolaire</mat-option>
+              <mat-option value="2">Moyen</mat-option>
+              <mat-option value="3">Courant</mat-option>
+              <mat-option value="4">Bilingue</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="anglais">Anglais-->
+          <!--              <select id="anglais" formControlName="anglais">-->
+          <!--              <option value="" disabled selected>Sélectionner votre niveau:</option>-->
+          <!--              <option value="1">Niveau scolaire</option>-->
+          <!--              <option value="2">Moyen</option>-->
+          <!--              <option value="3">Courant</option>-->
+          <!--              <option value="4">Bilingue</option>-->
+          <!--            </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Italien:</mat-label>
+            <mat-select formControlName="italien">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
+              <mat-option value="1">Niveau scolaire</mat-option>
+              <mat-option value="2">Moyen</mat-option>
+              <mat-option value="3">Courant</mat-option>
+              <mat-option value="4">Bilingue</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="italien">Italien-->
+          <!--              <select id="italien" formControlName="italien">-->
+          <!--                <option value="" disabled selected>Sélectionner votre niveau:</option>-->
+          <!--                <option value="Niveau scolaire">Niveau scolaire</option>-->
+          <!--                <option value="Moyen">Moyen</option>-->
+          <!--                <option value="Courant">Courant</option>-->
+          <!--                <option value="Bilingue">Bilingue</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Allemand:</mat-label>
+            <mat-select formControlName="allemand">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
+              <mat-option value="1">Niveau scolaire</mat-option>
+              <mat-option value="2">Moyen</mat-option>
+              <mat-option value="3">Courant</mat-option>
+              <mat-option value="4">Bilingue</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="allemand">Allemand-->
+          <!--              <select id="allemand" formControlName="allemand">-->
+          <!--                <option value="" disabled selected>Sélectionner votre niveau:</option>-->
+          <!--                <option value="Niveau scolaire">Niveau scolaire</option>-->
+          <!--                <option value="Moyen">Moyen</option>-->
+          <!--                <option value="Courant">Courant</option>-->
+          <!--                <option value="Bilingue">Bilingue</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Espagnol:</mat-label>
+            <mat-select formControlName="espagnol">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
+              <mat-option value="1">Niveau scolaire</mat-option>
+              <mat-option value="2">Moyen</mat-option>
+              <mat-option value="3">Courant</mat-option>
+              <mat-option value="4">Bilingue</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="espagnol">Espagnol-->
+          <!--              <select id="espagnol" formControlName="espagnol">-->
+          <!--                <option value="" disabled selected>Sélectionner votre niveau:</option>-->
+          <!--                <option value="Niveau scolaire">Niveau scolaire</option>-->
+          <!--                <option value="Moyen">Moyen</option>-->
+          <!--                <option value="Courant">Courant</option>-->
+          <!--                <option value="Bilingue">Bilingue</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <label>
+              <input matInput placeholder="Autre langue connue" formControlName="autreLangue">
+            </label>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>{{contactForm3.controls.autreLangue.value}}:</mat-label>
+            <mat-select formControlName="niveauAutreLangue">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
+              <mat-option value="1">Niveau scolaire</mat-option>
+              <mat-option value="2">Moyen</mat-option>
+              <mat-option value="3">Courant</mat-option>
+              <mat-option value="4">Bilingue</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="niveauAutreLangue">{{contactForm3.controls.autreLangue.value}}-->
+          <!--              <select id="niveauAutreLangue" formControlName="niveauAutreLangue">-->
+          <!--                <option value="" disabled selected>Sélectionner votre niveau:</option>-->
+          <!--                <option value="Niveau scolaire">Niveau scolaire</option>-->
+          <!--                <option value="Moyen">Moyen</option>-->
+          <!--                <option value="Courant">Courant</option>-->
+          <!--                <option value="Bilingue">Bilingue</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <div>
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext [disabled]="contactForm3.invalid">Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="contactForm4">
+        <form [formGroup]="contactForm4">
+          <ng-template matStepLabel>Mobilité Géographique</ng-template>
+          <mat-form-field>
+            <mat-label>Mobilité Paris et île-de-France:</mat-label>
+            <mat-select formControlName="mobiliteParis">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option [value]="true">Oui</mat-option>
+              <mat-option [value]="false">Non</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="mobiliteParis">Mobilité Paris et île-de-France-->
+          <!--              <select id="mobiliteParis" formControlName="mobiliteParis" required>-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option [value]="true">Oui</option>-->
+          <!--                <option [value]="false">Non</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Mobilité France:</mat-label>
+            <mat-select formControlName="mobiliteFrance">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option [value]="true">Oui</mat-option>
+              <mat-option [value]="false">Non</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="mobiliteFrance">Mobilité France-->
+          <!--              <select id="mobiliteFrance" formControlName="mobiliteFrance" required>-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option [value]="true">Oui</option>-->
+          <!--                <option [value]="false">Non</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Mobilité Europe:</mat-label>
+            <mat-select formControlName="mobiliteEurope">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option [value]="true">Oui</mat-option>
+              <mat-option [value]="false">Non</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="mobiliteEurope">Mobilité Europe-->
+          <!--              <select id="mobiliteEurope" formControlName="mobiliteEurope" required>-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option [value]="true">Oui</option>-->
+          <!--                <option [value]="false">Non</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Mobilité Internationale:</mat-label>
+            <mat-select formControlName="mobiliteIntl">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option [value]="true">Oui</mat-option>
+              <mat-option [value]="false">Non</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="mobiliteIntl">Mobilité Internationale-->
+          <!--              <select id="mobiliteIntl" formControlName="mobiliteIntl" required>-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option [value]="true">Oui</option>-->
+          <!--                <option [value]="false">Non</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <div>
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext [disabled]="contactForm4.invalid">Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="contactForm5">
+        <form [formGroup]="contactForm5">
+          <ng-template matStepLabel>Références</ng-template>
+          <h3>Entreprise 1</h3>
+          <div>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Nom de l'entreprise" formControlName="nomEntreprise1">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Nom du Responsable" formControlName="nomResponsable1">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Fonction du Responsable" formControlName="fonction1">
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Téléphone" formControlName="telephone1">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Adresse Email" formControlName="adresseMail1">
+              </label>
+            </mat-form-field>
+          </div>
+          <h3>Entreprise 2</h3>
+          <div>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Nom de l'entreprise" formControlName="nomEntreprise2">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Nom du Responsable" formControlName="nomResponsable2">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Fonction du Responsable" formControlName="fonction2">
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Téléphone" formControlName="telephone2">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input matInput placeholder="Adresse Email" formControlName="adresseMail2">
+              </label>
+            </mat-form-field>
+          </div>
+          <div>
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext [disabled]="contactForm5.invalid">Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="contactForm6">
+        <form [formGroup]="contactForm6">
+          <ng-template matStepLabel>Situation Actuelle</ng-template>
+          <mat-form-field>
+            <mat-label>Êtes-vous actuellement en poste?</mat-label>
+            <mat-select formControlName="enPoste">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option [value]="true">Oui</mat-option>
+              <mat-option [value]="false">Non</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="enPoste">Êtes-vous actuellement en poste?-->
+          <!--              <select id="enPoste" formControlName="enPoste" required>-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option [value]="true">Oui</option>-->
+          <!--                <option [value]="false">Non</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Sous quel type de contrat?</mat-label>
+            <mat-select formControlName="contrat">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="1">CDI</mat-option>
+              <mat-option value="2">CDD</mat-option>
+              <mat-option value="3">Intérim</mat-option>
+              <mat-option value="4">Indépendant</mat-option>
+              <mat-option value="5">Contrat de professionnalisation</mat-option>
+              <mat-option value="6">Alternance</mat-option>
+              <mat-option value="7">Formation</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="contrat">Sous quel type de contrat?-->
+          <!--              <select id="contrat" formControlName="contrat">-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option value="1">CDI</option>-->
+          <!--                <option value="2">CDD</option>-->
+          <!--                <option value="3">Intérim</option>-->
+          <!--                <option value="4">Indépendant</option>-->
+          <!--                <option value="5">Contrat de professionnalisation</option>-->
+          <!--                <option value="6">Alternance</option>-->
+          <!--                <option value="7">Formation</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Préavis négociable?</mat-label>
+            <mat-select formControlName="preavisNegociable">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option [value]="true">Oui</mat-option>
+              <mat-option [value]="false">Non</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="preavisNegociable">Préavis négociable?-->
+          <!--              <select id="preavisNegociable" formControlName="preavisNegociable">-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option [value]="true">Oui</option>-->
+          <!--                <option [value]="false">Non</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <mat-label>Sous quel délai?</mat-label>
+            <mat-select formControlName="delai">
+              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="1 semaine">1 semaine</mat-option>
+              <mat-option value="2 semaines">2 semaines</mat-option>
+              <mat-option value="3 semaines">3 semaines</mat-option>
+              <mat-option value="1 mois">1 mois</mat-option>
+              <mat-option value="2 mois">2 mois</mat-option>
+              <mat-option value="3 mois">3 mois</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!--          <div class="form-field">-->
+          <!--            <label for="delai">Sous quel délai?-->
+          <!--              <select id="delai" formControlName="delai">-->
+          <!--                <option value="" disabled selected>Sélectionnez une option</option>-->
+          <!--                <option value="1 semaine">1 semaine</option>-->
+          <!--                <option value="2 semaines">2 semaines</option>-->
+          <!--                <option value="3 semaines">3 semaines</option>-->
+          <!--                <option value="1 mois">1 mois</option>-->
+          <!--                <option value="2 mois">2 mois</option>-->
+          <!--                <option value="3 mois">3 mois</option>-->
+          <!--              </select>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <mat-form-field>
+            <label>
+              <input matInput placeholder="Pourquoi être vous à l'écoute aujourd'hui? " formControlName="raisonDispo"
+                     required>
+            </label>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Poste souhaité (niveau, fonction, domaine,...)" formControlName="posteSouhaite"
+                   required>
+          </mat-form-field>
+          <mat-form-field>
+            <label>
+              <input matInput
+                     placeholder="Quelle évolution souhaitez-vous donner à votre carrière dans les 5 ans à venir :"
+                     formControlName="evolution5ans" required>
+            </label>
+          </mat-form-field>
+          <mat-form-field>
+            <label>
+              <input matInput readonly [matDatepicker]="picker" placeholder="Date de disponibilité:" formControlName="dateDispo">
+            </label>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <!--          <div class="form-control">-->
+          <!--          <label for="dateDispo" class="col-md-3 col-sm-5 col-xs-12">Date de disponibilité:</label>-->
+          <!--          <div class="col-md-9 col-sm-7 col-xs-12">-->
+          <!--            <input type="text" class="datepicker" formControlName="dateDispo" id="dateDispo"/>-->
+          <!--          </div>-->
+          <!--          </div>-->
+          <div>
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext [disabled]="contactForm6.invalid">Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="contactForm7">
+        <form [formGroup]="contactForm7">
+          <ng-template matStepLabel>Rémunération</ng-template>
+          <div>
+            <h3>Dernier salaire annuel brut</h3>
+            <mat-form-field>
+              <input matInput placeholder="Part fixe en Euros" formControlName="fixeDernierSalaireBrut" required>
+              <span class="matSuffix" matSuffix>€</span>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Part variable en Euros" formControlName="varDernierSalaireBrut">
+              <span class="matSuffix" matSuffix>€</span>
+            </mat-form-field>
+          </div>
+          <div>
+            <h3>Prétentions salariales annuelles brut</h3>
+            <mat-form-field>
+              <input matInput placeholder="Prétention annuelle Brut" formControlName="pretentionSalaireBrut" required>
+              <span class="matSuffix" matSuffix>€</span>
+            </mat-form-field>
+          </div>
+          <div>
+            <button mat-button matStepperPrevious>Retour</button>
+            <button mat-button matStepperNext [disabled]="contactForm7.invalid">Suivant</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="contactForm8">
+        <form [formGroup]="contactForm8" (ngSubmit)="sendInfos()">
+          <ng-template matStepLabel>Transmission</ng-template>
+          <p>J'ai bien noté que ces renseignements sont strictement confidentiels et ne pourront être communiqués hors de
+            la société ELSIMCO sans mon accord. Par ailleurs, je suis informé(e), en conformité avec l'article 27 de la
+            loi 78.17 du 6 Janvier 1978, de ma possibilité d'avoir accès à ces informations et de les faire rectifier. Ce
+            droit d'accès et de rectification pourra s'exercer auprès du service juridique d'ELSIMCO.
+            J'ai bien pris connaissance de l'information ci-dessus concernant la confidentialité de mes données
+          </p>
+          <mat-checkbox formControlName="acceptTerms" required>Oui</mat-checkbox>
+          <mat-form-field>
+            <input matInput placeholder="Fait à:" formControlName="faitA" required>
+          </mat-form-field>
+          <div class="form-group center">
+            <button mat-raised-button type="submit"
+                    [disabled]="contactForm8.invalid">Envoyer
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </div>
+  </mat-vertical-stepper>
+</mat-card>

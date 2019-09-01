@@ -14,9 +14,15 @@
     <tr *ngFor="let fiche of fiches">
       <td>{{fiche.mois}}</td>
       <td>{{fiche.annee}}</td>
-      <td>{{fiche.valideRH}}</td>
-      <td>{{fiche.valideDir}}</td>
-      <td>Download</td>
+      <td><mat-icon *ngIf="fiche.valideRH; else unvalid">check</mat-icon></td>
+      <td><mat-icon *ngIf="fiche.valideRH; else unvalid">check</mat-icon></td>
+      <ng-template #unvalid>
+        <mat-icon>close</mat-icon>
+      </ng-template>
+      <td>
+        <button type="button"
+                (click)="downloadDocument(fiche)"><i class="material-icons">file_download</i></button>
+      </td>
     </tr>
     </tbody>
   </table>

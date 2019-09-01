@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import {ContactModel} from '../models/contact.model';
-import {ContactService} from '../services/contact.service';
-import {CandidatService} from '../services/candidat.service';
+import {Component, OnInit} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
+import {saveAs} from 'file-saver';
 import {FicheModel} from '../models/fiche.model';
 import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
+import {PdfService} from '../services/pdf.service';
 
 @Component({
   selector: 'app-fiche-list',
@@ -15,7 +14,8 @@ import {UserModel} from '../models/user.model';
 export class FicheListComponent implements OnInit {
   currentUser:UserModel;
   fiches: FicheModel[];
-  constructor(private userService: UserService ,
+  constructor(private userService: UserService,
+              private pdfService:PdfService,
               private toastrService:ToastrService) { }
 
   ngOnInit() {
@@ -28,5 +28,17 @@ export class FicheListComponent implements OnInit {
       (data) => {this.fiches = data;
       console.log(data);}
     );
+  }
+
+  downloadDocument(ficheToDownload: FicheModel) {
+    this.pdfService.downloadFiche(ficheToDownload.id).subscribe(
+      (res) => {
+        let blob = new Blob([res],{type:"text/plain; encoding=UTF-8"});
+        saveAs(blob, ficheToDownload.uri);
+        this.toastrService.success("Téléchargé", "Téléchargé")},
+      (err) => {
+        this.toastrService.error("Erreur", "Erreur de téléchargement");
+      }
+    )
   }
 }

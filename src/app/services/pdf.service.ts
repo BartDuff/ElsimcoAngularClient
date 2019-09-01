@@ -19,4 +19,10 @@ export class PdfService {
     return this.http.post(`${API_URL}/fiches`, newFiche, { headers: headers});
   }
 
+  downloadFiche(id: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type' : 'application/json; charset=utf-8'});
+    return this.http.get(`${API_URL}/fiches/${id}`, { headers: headers});
+  }
+
 }

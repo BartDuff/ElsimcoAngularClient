@@ -74,6 +74,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import { LayoutComponent } from './layout/layout.component';
 import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
 import { FicheListComponent } from './fiche-list/fiche-list.component';
+import { AddCandidatComponent } from './add-candidat/add-candidat.component';
 const config: InputFileConfig = {};
 
 
@@ -109,7 +110,8 @@ const config: InputFileConfig = {};
     FichePresenceComponent,
     LayoutComponent,
     SidenavListComponent,
-    FicheListComponent
+    FicheListComponent,
+    AddCandidatComponent
   ],
   imports: [
     AppRoutingModule,

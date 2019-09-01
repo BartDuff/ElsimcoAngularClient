@@ -21,10 +21,12 @@ import {NewsAddComponent} from '../news-add/news-add.component';
 import {CandidatListComponent} from '../candidat-list/candidat-list.component';
 import {FichePresenceComponent} from '../fiche-presence/fiche-presence.component';
 import {FicheListComponent} from '../fiche-list/fiche-list.component';
+import {AddCandidatComponent} from '../add-candidat/add-candidat.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'contact_form', component: AddContactComponent},
+  { path: 'candidat_form/:secretid', component: AddCandidatComponent},
   { path: 'contacts', canActivate: [AuthGuardService], component: ContactListComponent},
   { path: 'candidats', canActivate: [AuthGuardService], component: CandidatListComponent},
   { path: 'missions', canActivate: [AuthGuardService], component: MissionListComponent },

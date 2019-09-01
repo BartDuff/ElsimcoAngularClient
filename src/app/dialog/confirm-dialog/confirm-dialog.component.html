@@ -3,6 +3,6 @@
   <span>Voulez-vous vraiment supprimer?</span>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button class="mat-raised-button"(click)="confirmer()">Oui</button>
-  <button class="mat-raised-button mat-accent"(click)="fermer()">Non</button>
+  <button mat-button id="yes" (click)="confirmer()">Oui</button>
+  <button mat-button id="no" (click)="fermer()">Non</button>
 </mat-dialog-actions>

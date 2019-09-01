@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ContactService} from '../services/contact.service';
-import {DocumentModel} from '../models/document.model';
 import {ContactModel} from '../models/contact.model';
 
 @Component({

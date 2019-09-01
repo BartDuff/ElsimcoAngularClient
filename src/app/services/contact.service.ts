@@ -48,4 +48,8 @@ export class ContactService {
   sendRejectionMail(recipient:String, contact: ContactModel) {
     return this.http.post(`${API_URL}/emails/rejection/${contact.id}`, recipient);
   }
+
+  sendAcceptanceMail(recipient:String, contact: ContactModel) {
+    return this.http.post(`${API_URL}/emails/acceptance/${contact.id}`, recipient);
+  }
 }

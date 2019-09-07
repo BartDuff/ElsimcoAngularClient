@@ -51,7 +51,6 @@ export class AddCandidatComponent implements OnInit {
       nationalite:['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
       villeNaissance:['', Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')],
       departementNaissance:[''],
-      telDomicile:['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
       numSecu:['', Validators.pattern('^([1278])([0-9]{2})(0[1-9]|1[0-2]|20)([02][1-9]|2[AB]|[1345678][0-9]|9[012345789])([0-9]{3})(00[1-9]|0[1-9][0-9]|[1-9][0-9]{2})(0[1-9]|[1-8][0-9]|9[1-7])?$')],
       skype:[''],
       email: ['', [Validators.email, Validators.required]],
@@ -64,8 +63,8 @@ export class AddCandidatComponent implements OnInit {
     });
     this.contactForm2 = this.formBuilder.group({
       Id:[''],
-      annee: ['', Validators.pattern('^[0-9]{4}$')],
-      intitule: [''],
+      annee: ['',[Validators.required, Validators.pattern('^[0-9]{4}$')]],
+      intitule: ['', Validators.required],
       etablissement: [''],
       obtenu: ['', Validators.required]
     });
@@ -93,21 +92,22 @@ export class AddCandidatComponent implements OnInit {
       telephone1: ['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
       telephone2: ['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
       adresseMail1: ['', Validators.email],
-      adresseMail2: ['', Validators.email]
+      adresseMail2: ['', Validators.email],
+      autorisationControle: ['', Validators.required]
     });
     this.contactForm6 = this.formBuilder.group({
       enPoste: ['', Validators.required],
       contrat: [''],
       preavisNegociable: [''],
       delai: [''],
-      raisonDispo: [''],
-      posteSouhaite: [''],
-      evolution5ans: [''],
-      dateDispo: ['']
+      raisonDispo: ['', Validators.required],
+      posteSouhaite: ['', Validators.required],
+      evolution5ans: ['', Validators.required],
+      dateDispo: ['', Validators.required]
     });
     this.contactForm7 = this.formBuilder.group({
       fixeDernierSalaireBrut: ['', [Validators.required, Validators.pattern('^[1-9]{1}[0-9]*$')]],
-      varDernierSalaireBrut: ['', Validators.pattern('^[1-9]{1}[0-9]*$')],
+      varDernierSalaireBrut: ['', Validators.pattern('^[0-9]{1}[0-9]*$')],
       pretentionSalaireBrut: ['', Validators.pattern('^[1-9]{1}[0-9]*$')],
     });
     this.contactForm8 = this.formBuilder.group({
@@ -147,7 +147,6 @@ export class AddCandidatComponent implements OnInit {
     c.nationalite = this.contactForm1.controls.nationalite.value;
     c.villeNaissance = this.contactForm1.controls.villeNaissance.value;
     c.departementNaissance = this.contactForm1.controls.departementNaissance.value;
-    c.telDomicile = this.contactForm1.controls.telDomicile.value;
     c.numSecu = this.contactForm1.controls.numSecu.value;
     c.skype = this.contactForm1.controls.skype.value;
     c.email = this.contactForm1.controls.email.value;
@@ -182,6 +181,7 @@ export class AddCandidatComponent implements OnInit {
     ref2.telephone = this.contactForm5.controls.telephone2.value;
     c.references.push(ref1);
     c.references.push(ref2);
+    c.autorisationControle = this.contactForm5.controls.autorisationControle.value;
     c.mobiliteParis = this.contactForm4.controls.mobiliteParis.value;
     c.mobiliteFrance = this.contactForm4.controls.mobiliteFrance.value;
     c.mobiliteEurope = this.contactForm4.controls.mobiliteEurope.value;

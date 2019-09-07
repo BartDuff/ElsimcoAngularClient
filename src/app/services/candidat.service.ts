@@ -48,7 +48,7 @@ export class CandidatService {
     return this.http.put<CandidatModel>(`${API_URL}/candidats/${updateCandidat.id}`, updateCandidat);
   }
 
-  getCandidant(idRecherche: string): Observable<CandidatModel> {
+  getCandidat(idRecherche: string): Observable<CandidatModel> {
     return this.http.get<CandidatModel>(`${API_URL}/candidats/${idRecherche}`);
   }
 

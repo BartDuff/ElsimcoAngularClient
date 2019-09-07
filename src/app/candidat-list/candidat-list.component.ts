@@ -117,7 +117,7 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   }
 
   downloadCV(contactCV: ContactModel) {
-    this.candidatService.getCandidant(contactCV.id).subscribe(
+    this.candidatService.getCandidat(contactCV.id).subscribe(
       (res) => {
         let c: ContactModel = res;
         //console.log(c);

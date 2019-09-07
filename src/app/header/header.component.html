@@ -39,7 +39,7 @@
       <li><a mat-button routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures spontannées</a></li>
       <li><a mat-button routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>
       <li>
-        <button mat-button [matMenuTriggerFor]="menu" *ngIf="token">Outils</button>
+        <button mat-button [matMenuTriggerFor]="menu" *ngIf="token">Outils <mat-icon style="color: white">expand_more</mat-icon></button>
         <mat-menu #menu="matMenu" yPosition="below" backdropClass="toolbar-menu">
           <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de Présence</a>
           <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token">Mes fiches de présence</a>

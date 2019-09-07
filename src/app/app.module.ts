@@ -54,7 +54,7 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatIconModule,
-  MatListModule, MatPaginatorModule
+  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -75,6 +75,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
 import { FicheListComponent } from './fiche-list/fiche-list.component';
 import { AddCandidatComponent } from './add-candidat/add-candidat.component';
+import { CandidatDetailsComponent } from './candidat-details/candidat-details.component';
 const config: InputFileConfig = {};
 
 
@@ -111,7 +112,8 @@ const config: InputFileConfig = {};
     LayoutComponent,
     SidenavListComponent,
     FicheListComponent,
-    AddCandidatComponent
+    AddCandidatComponent,
+    CandidatDetailsComponent
   ],
   imports: [
     AppRoutingModule,
@@ -147,7 +149,9 @@ const config: InputFileConfig = {};
     MatIconModule,
     FlexLayoutModule,
     MatListModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatRadioModule,
+    MatTabsModule
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, PdfService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

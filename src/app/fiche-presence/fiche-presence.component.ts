@@ -32,15 +32,17 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   currentUser:UserModel;
 
   getWeekday(date:Date){
-     return date.getDay()-1;
+     return date.getUTCDay();
   }
 
   creatArray(number){
+    console.log(new Array(number));
      return new Array(number);
   }
 
   addCells(){
      let d = this.getWeekday(moment().startOf('month').toDate());
+     console.log(moment().startOf('month').toDate());
      return d;
   }
 

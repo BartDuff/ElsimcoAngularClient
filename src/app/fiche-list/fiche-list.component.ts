@@ -33,10 +33,11 @@ export class FicheListComponent implements OnInit {
   downloadDocument(ficheToDownload: FicheModel) {
     this.pdfService.downloadFiche(ficheToDownload.id).subscribe(
       (res) => {
-        let blob = new Blob([res],{type:"text/plain; encoding=UTF-8"});
-        saveAs(blob, ficheToDownload.uri);
+        // let blob = new Blob([res],{type:"application/octet-stream"});
+        saveAs(res, ficheToDownload.uri);
         this.toastrService.success("Téléchargé", "Téléchargé")},
       (err) => {
+        console.log(err);
         this.toastrService.error("Erreur", "Erreur de téléchargement");
       }
     )

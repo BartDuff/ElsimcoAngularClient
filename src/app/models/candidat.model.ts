@@ -1,6 +1,7 @@
 import {ContactModel} from './contact.model';
 import {Diplome} from './diplome.model';
 import {Reference} from './reference.model';
+import {UserModel} from './user.model';
 
 export class CandidatModel extends ContactModel {
 
@@ -13,7 +14,6 @@ export class CandidatModel extends ContactModel {
   departementNaissance: String;
   numSecu: String;
   skype: String;
-  telDomicile: String;
   diplome: Diplome;
   permisB: boolean;
   voiture: boolean;
@@ -27,6 +27,7 @@ export class CandidatModel extends ContactModel {
   niveauAutrelangue: String;
   mobiliteParis: boolean;
   mobiliteFrance: boolean;
+  mobiliteAutresRegions: boolean;
   mobiliteEurope: boolean;
   mobiliteIntl: boolean;
   references: Reference[];
@@ -46,5 +47,27 @@ export class CandidatModel extends ContactModel {
   codePostal: String;
   ville: String;
   dateEnvoi: Date;
-  echangesEffectues:String;
+  creePar: String;
+  dateCreation: Date;
+  statut:String;
+  sourceCV:String;
+  dateMAJ: Date;
+  majPar: String;
+  alerteMAJ: Date;
+  commentairesCV: String;
+  experience: String;
+  tags: String;
+  domaine1: String;
+  domaine2: String;
+  domaine3: String;
+  metier1: String;
+  metier2: String;
+  metier3: String;
+  outils1: String;
+  outils2: String;
+  outils3: String;
+  fourchetteSalariale: String;
+  region1: String;
+  region2: String;
+  autorisationControle: boolean;
 }

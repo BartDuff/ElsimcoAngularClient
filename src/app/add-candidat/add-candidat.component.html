@@ -59,12 +59,12 @@
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
           <mat-form-field>
-            <input matInput formControlName="nationalite" placeholder="Nationalité">
+            <input matInput formControlName="numSecu" placeholder="Numéro INSEE (Sécurité Sociale)">
           </mat-form-field>
-          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.nationalite.errors }">-->
-          <!--            <label for="nationalite" class="col-md-3 col-sm-5 col-xs-12">Nationalité:</label>-->
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.numSecu.errors }">-->
+          <!--            <label for="numSecu" class="col-md-3 col-sm-5 col-xs-12">Numéro INSEE (Sécurité Sociale):</label>-->
           <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
-          <!--              <input type="text" class="form-control" formControlName="nationalite" id="nationalite"/>-->
+          <!--              <input type="text" class="form-control" formControlName="numSecu" id="numSecu"/>-->
           <!--            </div>-->
           <!--          </div>-->
           <mat-form-field>
@@ -87,12 +87,12 @@
           <!--            </div>-->
           <!--          </div>-->
           <mat-form-field>
-            <input matInput formControlName="numSecu" placeholder="Numéro INSEE (Sécurité Sociale)">
+            <input matInput formControlName="nationalite" placeholder="Nationalité">
           </mat-form-field>
-          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.numSecu.errors }">-->
-          <!--            <label for="numSecu" class="col-md-3 col-sm-5 col-xs-12">Numéro INSEE (Sécurité Sociale):</label>-->
+          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.nationalite.errors }">-->
+          <!--            <label for="nationalite" class="col-md-3 col-sm-5 col-xs-12">Nationalité:</label>-->
           <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
-          <!--              <input type="text" class="form-control" formControlName="numSecu" id="numSecu"/>-->
+          <!--              <input type="text" class="form-control" formControlName="nationalite" id="nationalite"/>-->
           <!--            </div>-->
           <!--          </div>-->
           <mat-form-field>
@@ -105,17 +105,6 @@
           <!--              <div *ngIf="submitted && f.email.errors" class="help-block">-->
           <!--                <div *ngIf="f.email.errors.required">Votre numéro de mobile est requis pour pouvoir vous recontacter-->
           <!--                </div>-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-          <mat-form-field>
-            <input matInput formControlName="telDomicile" placeholder="Téléphone domicile">
-          </mat-form-field>
-          <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.telDomicile.errors }">-->
-          <!--            <label for="telDomicile" class="col-md-3 col-sm-5 col-xs-12">Téléphone Domicile:</label>-->
-          <!--            <div class="col-md-9 col-sm-7 col-xs-12">-->
-          <!--              <input type="text" class="form-control" formControlName="telDomicile" id="telDomicile"/>-->
-          <!--              <div *ngIf="submitted && f.email.errors" class="help-block">-->
           <!--              </div>-->
           <!--            </div>-->
           <!--          </div>-->
@@ -179,7 +168,7 @@
           <div class="form-group" [ngClass]="{ 'has-error': submitted && f.fileBase64.errors }">
             <label class="col-md-3 col-sm-5 col-xs-12">CV:</label>
             <div class="col-md-9 col-sm-7 col-xs-12">
-              <input-file id="fileBase64" placeholder="Fichier en PDF" formControlName="fileBase64"
+              <input-file id="fileBase64" placeholder="CV en pièce jointe" formControlName="fileBase64"
                           (change)="onFileChange()"></input-file>
               <div *ngIf="submitted && f.fileBase64.errors" class="help-block">
                 <div *ngIf="f.fileBase64.errors.required">Votre CV est requis pour pouvoir vous recontacter</div>
@@ -198,12 +187,12 @@
           <ng-template matStepLabel>Dernier diplôme</ng-template>
           <mat-form-field>
             <label>
-              <input matInput placeholder="Annee" formControlName="annee">
+              <input matInput placeholder="Année" formControlName="annee" required>
             </label>
           </mat-form-field>
           <mat-form-field>
             <label>
-              <input matInput placeholder="Intitulé de la formation" formControlName="intitule">
+              <input matInput placeholder="Intitulé de la formation" formControlName="intitule" required>
             </label>
           </mat-form-field>
           <mat-form-field>
@@ -240,10 +229,10 @@
             <mat-select formControlName="anglais">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
-              <mat-option value="1">Niveau scolaire</mat-option>
-              <mat-option value="2">Moyen</mat-option>
-              <mat-option value="3">Courant</mat-option>
-              <mat-option value="4">Bilingue</mat-option>
+              <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
+              <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+              <mat-option value="Courant">Courant</mat-option>
+              <mat-option value="Bilingue">Bilingue</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -262,10 +251,10 @@
             <mat-select formControlName="italien">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
-              <mat-option value="1">Niveau scolaire</mat-option>
-              <mat-option value="2">Moyen</mat-option>
-              <mat-option value="3">Courant</mat-option>
-              <mat-option value="4">Bilingue</mat-option>
+              <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
+              <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+              <mat-option value="Courant">Courant</mat-option>
+              <mat-option value="Bilingue">Bilingue</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -284,10 +273,10 @@
             <mat-select formControlName="allemand">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
-              <mat-option value="1">Niveau scolaire</mat-option>
-              <mat-option value="2">Moyen</mat-option>
-              <mat-option value="3">Courant</mat-option>
-              <mat-option value="4">Bilingue</mat-option>
+              <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
+              <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+              <mat-option value="Courant">Courant</mat-option>
+              <mat-option value="Bilingue">Bilingue</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -306,10 +295,10 @@
             <mat-select formControlName="espagnol">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
-              <mat-option value="1">Niveau scolaire</mat-option>
-              <mat-option value="2">Moyen</mat-option>
-              <mat-option value="3">Courant</mat-option>
-              <mat-option value="4">Bilingue</mat-option>
+              <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
+              <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+              <mat-option value="Courant">Courant</mat-option>
+              <mat-option value="Bilingue">Bilingue</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -333,10 +322,10 @@
             <mat-select formControlName="niveauAutreLangue">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau:</mat-option>
-              <mat-option value="1">Niveau scolaire</mat-option>
-              <mat-option value="2">Moyen</mat-option>
-              <mat-option value="3">Courant</mat-option>
-              <mat-option value="4">Bilingue</mat-option>
+              <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
+              <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+              <mat-option value="Courant">Courant</mat-option>
+              <mat-option value="Bilingue">Bilingue</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -487,6 +476,13 @@
                 <input matInput placeholder="Adresse Email" formControlName="adresseMail2">
               </label>
             </mat-form-field>
+            <div *ngIf="contactForm5.value">
+              <label>J'autorise la société Elsimco à procéder si besoin à un contrôle de référence auprès du/des responsable(s) cité(s):</label>
+              <mat-radio-group formControlName="autorisationControle" required>
+                <mat-radio-button [value]="true">Oui</mat-radio-button>
+                <mat-radio-button [value]="false">Non</mat-radio-button>
+              </mat-radio-group>
+            </div>
           </div>
           <div>
             <button mat-button matStepperPrevious>Retour</button>
@@ -499,7 +495,7 @@
           <ng-template matStepLabel>Situation Actuelle</ng-template>
           <mat-form-field>
             <mat-label>Êtes-vous actuellement en poste?</mat-label>
-            <mat-select formControlName="enPoste">
+            <mat-select formControlName="enPoste" required>
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option [value]="true">Oui</mat-option>
               <mat-option [value]="false">Non</mat-option>
@@ -518,13 +514,13 @@
             <mat-label>Sous quel type de contrat?</mat-label>
             <mat-select formControlName="contrat">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
-              <mat-option value="1">CDI</mat-option>
-              <mat-option value="2">CDD</mat-option>
-              <mat-option value="3">Intérim</mat-option>
-              <mat-option value="4">Indépendant</mat-option>
-              <mat-option value="5">Contrat de professionnalisation</mat-option>
-              <mat-option value="6">Alternance</mat-option>
-              <mat-option value="7">Formation</mat-option>
+              <mat-option value="CDI">CDI</mat-option>
+              <mat-option value="CDD">CDD</mat-option>
+              <mat-option value="Intérim">Intérim</mat-option>
+              <mat-option value="Indépendant">Indépendant</mat-option>
+              <mat-option value="Contrat de professionnalisation">Contrat de professionnalisation</mat-option>
+              <mat-option value="Alternance">Alternance</mat-option>
+              <mat-option value="Formation">Formation</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -585,24 +581,24 @@
           <!--          </div>-->
           <mat-form-field>
             <label>
-              <input matInput placeholder="Pourquoi être vous à l'écoute aujourd'hui? " formControlName="raisonDispo"
+              <input matInput placeholder="Pourquoi être vous à l'écoute aujourd'hui ? " formControlName="raisonDispo"
                      required>
             </label>
           </mat-form-field>
           <mat-form-field>
-            <input matInput placeholder="Poste souhaité (niveau, fonction, domaine,...)" formControlName="posteSouhaite"
+            <input matInput placeholder="Postes souhaités (niveau, fonction, domaine,...)" formControlName="posteSouhaite"
                    required>
           </mat-form-field>
           <mat-form-field>
             <label>
               <input matInput
-                     placeholder="Quelle évolution souhaitez-vous donner à votre carrière dans les 5 ans à venir :"
+                     placeholder="Évolution souhaitée ?"
                      formControlName="evolution5ans" required>
             </label>
           </mat-form-field>
           <mat-form-field>
             <label>
-              <input matInput readonly [matDatepicker]="picker" placeholder="Date de disponibilité:" formControlName="dateDispo">
+              <input matInput readonly [matDatepicker]="picker" placeholder="Date de disponibilité:" formControlName="dateDispo" required>
             </label>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -655,6 +651,7 @@
             droit d'accès et de rectification pourra s'exercer auprès du service juridique d'ELSIMCO.
             J'ai bien pris connaissance de l'information ci-dessus concernant la confidentialité de mes données
           </p>
+          <label>J'accepte les conditions: </label>
           <mat-checkbox formControlName="acceptTerms" required>Oui</mat-checkbox>
           <mat-form-field>
             <input matInput placeholder="Fait à:" formControlName="faitA" required>

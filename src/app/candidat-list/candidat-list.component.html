@@ -316,19 +316,26 @@
 <!--       {{x}}-->
     </th>
     <td mat-cell *matCellDef="let element">
-
-
-      {{element[x]}}
-
-
-
+      <a *ngIf="x === 'id';else others" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon> {{element[x]}}</a>
+      <ng-template #others>
+        {{element[x]}}
+      </ng-template>
     </td>
   </ng-container>
+  <td>
+    <mat-icon>remove_red_eye</mat-icon>
+  </td>
   <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple)"></tr>
   <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
 
 </table>
 </div>
 </div>
-<mat-progress-spinner color="accent" mode="indeterminate" *ngIf="spinner">
-</mat-progress-spinner>
+<mat-card *ngIf="spinner"
+          style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>
+

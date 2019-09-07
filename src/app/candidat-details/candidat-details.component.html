@@ -1,0 +1,274 @@
+<mat-tab-group>
+  <mat-tab label="1 - Fiche de Renseignement">
+    <button mat-icon-button routerLink="/candidats" style="color: black;">RETOUR <mat-icon>arrow_back</mat-icon></button>
+    <mat-card>
+      <mat-card-title>ETAT CIVIL</mat-card-title>
+      <form [formGroup]="formulaire" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+
+            <mat-form-field>
+              <input matInput formControlName="nom" placeholder="Nom" name="nom"  id="nom" [(ngModel)]="candidat.nom" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="prenom" placeholder="Prénom" name="prenom"  id="prenom" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <div>
+              <label>
+                <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance:"
+                       formControlName="dateNaissance" [(ngModel)]="candidat.dateNaissance" (change)="updateModel(candidat)">
+              </label>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </div>
+
+            <mat-form-field>
+              <input matInput formControlName="codePostal" placeholder="Code Postal" name="codePostal"  id="codePostal" [(ngModel)]="candidat.codePostal" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="ville" placeholder="Ville" name="ville"  id="ville" [(ngModel)]="candidat.ville" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="mobile" placeholder="Téléphone Mobile" name="mobile"  id="mobile" [(ngModel)]="candidat.mobile" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="skype" placeholder="Identifiant Skype" name="skype"  id="skype" [(ngModel)]="candidat.skype" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="email" placeholder="E-mail" name="email"  id="email" [(ngModel)]="candidat.email" (change)="updateModel(candidat)">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </form>
+    </mat-card>
+    <mat-card>
+    <mat-card-title>CREATION</mat-card-title>
+    <form [formGroup]="formulaire2" (ngSubmit)="onSubmit()">
+      <mat-card-content>
+        <div fxLayout="column" fxLayoutAlign="space-around center">
+
+          <mat-form-field>
+            <input matInput formControlName="creePar" placeholder="Créé par: " name="creePar"  id="creePar" [(ngModel)]="candidat.creePar" (change)="updateModel(candidat)">
+          </mat-form-field>
+
+          <div>
+            <input matInput formControlName="dateCreation" placeholder="Date de création: " name="dateCreation"  id="dateCreation" [(ngModel)]="candidat.dateCreation" (change)="updateModel(candidat)" disabled>
+          </div>
+        </div>
+      </mat-card-content>
+    </form>
+  </mat-card>
+    <mat-card>
+      <mat-card-title>STATUT</mat-card-title>
+      <form [formGroup]="formulaire3" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+
+            <mat-form-field>
+              <input matInput formControlName="statut" placeholder="Statut: " name="statut"  id="statut" [(ngModel)]="candidat.statut" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="sourceCV" placeholder="Source du CV: " name="sourceCV"  id="sourceCV" [(ngModel)]="candidat.sourceCV" (change)="updateModel(candidat)">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </form>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>DOCUMENTS ET MISE A JOUR</mat-card-title>
+      <form [formGroup]="formulaire4" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+            <mat-checkbox matInput formControlName="cvJoint" placeholder="CV joint: " name="cvJoint"  id="cvJoint" [ngModel]="candidat.fileBase64 != null" (ngModelChange)="$event" (change)="updateModel(candidat)">CV Joint</mat-checkbox>
+            <div>
+              <input matInput formControlName="dateMAJ" placeholder="Date de MAJ: " name="dateMAJ"  id="dateMAJ" [(ngModel)]="candidat.dateMAJ" (change)="updateModel(candidat)" disabled>
+            </div>
+
+            <mat-form-field>
+              <input matInput formControlName="majPar" placeholder="Par: " name="majPar"  id="majPar" [(ngModel)]="candidat.majPar" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="alerteMAJ" placeholder="Alerte mise à jour: " name="alerteMAJ"  id="alerteMAJ" [(ngModel)]="candidat.alerteMAJ" (change)="updateModel(candidat)" disabled>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="commentairesCV" placeholder="Commentaires: " name="commentairesCV"  id="commentairesCV" [(ngModel)]="candidat.commentairesCV" (change)="updateModel(candidat)">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </form>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>SITUATION ACTUELLE</mat-card-title>
+      <form [formGroup]="formulaire5" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+
+            <mat-form-field>
+              <input matInput formControlName="enPoste" placeholder="En poste ?" name="enPoste"  id="enPoste" [(ngModel)]="candidat.enPoste" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="contrat" placeholder="Contrat: " name="contrat"  id="contrat" [(ngModel)]="candidat.contrat" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="raisonDispo" placeholder="Raison de la Recherche: " name="raisonDispo"  id="raisonDispo" [(ngModel)]="candidat.raisonDispo" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="posteSouhaite" placeholder="Postes souhaités: " name="posteSouhaite"  id="posteSouhaite" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="delai" placeholder="Délai de préavis: " name="delai"  id="delai" [(ngModel)]="candidat.delai" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <div>
+              <input matInput formControlName="dateDispo" placeholder="Date de disponibilité: " name="dateDispo"  id="dateDispo" [(ngModel)]="candidat.dateDispo" (change)="updateModel(candidat)">
+            </div>
+          </div>
+        </mat-card-content>
+      </form>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>EXPERIENCE</mat-card-title>
+      <form [formGroup]="formulaire6" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+
+            <mat-form-field>
+              <input matInput formControlName="experience" placeholder="Expérience: " name="experience"  id="experience" [(ngModel)]="candidat.experience" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="tags" placeholder="Tags: " name="tags"  id="tags" [(ngModel)]="candidat.tags" (change)="updateModel(candidat)">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </form>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>COMPETENCES TECHNIQUES</mat-card-title>
+      <form [formGroup]="formulaire7" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+
+            <mat-form-field>
+              <input matInput formControlName="domaine1" placeholder="Domaine 1: " name="domaine1"  id="domaine1" [(ngModel)]="candidat.domaine1" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="domaine2" placeholder="Domaine 2: " name="domaine2"  id="domaine2" [(ngModel)]="candidat.domaine2" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="domaine3" placeholder="Domaine 3: " name="domaine3"  id="domaine3" [(ngModel)]="candidat.domaine3" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="metier1" placeholder="Métier 1: " name="metier1"  id="metier1" [(ngModel)]="candidat.metier1" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="metier2" placeholder="Métier 2: " name="metier2"  id="metier2" [(ngModel)]="candidat.metier2" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="metier3" placeholder="Métier 3: " name="metier3"  id="metier3" [(ngModel)]="candidat.metier3" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="outils1" placeholder="Outils 1: " name="outils1"  id="outils1" [(ngModel)]="candidat.outils1" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="outils2" placeholder="Outils 2: " name="outils2"  id="outils2" [(ngModel)]="candidat.outils2" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="outils3" placeholder="Outils 3: " name="outils3"  id="outils3" [(ngModel)]="candidat.outils3" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="anglais" placeholder="Anglais: " name="anglais"  id="anglais" [(ngModel)]="candidat.anglais" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="italien" placeholder="Italien: " name="italien"  id="italien" [(ngModel)]="candidat.italien" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="allemand" placeholder="Allemand: " name="allemand"  id="allemand" [(ngModel)]="candidat.allemand" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="espagnol" placeholder="Espagnol: " name="espagnol"  id="espagnol" [(ngModel)]="candidat.espagnol" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="autreLangue" placeholder="Autre langue: " name="autreLangue"  id="autreLangue" [(ngModel)]="candidat.autreLangue" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="niveauAutreLangue" placeholder="Niveau autre langue: " name="niveauAutreLangue"  id="niveauAutreLangue" [(ngModel)]="candidat.niveauAutrelangue" (change)="updateModel(candidat)">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </form>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>SOUHAITS DU CANDIDAT</mat-card-title>
+      <form [formGroup]="formulaire8" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+
+            <mat-form-field>
+              <input matInput formControlName="fixeDernierSalaireBrut" placeholder="Dernier salaire annuel brut: " name="fixeDernierSalaireBrut"  id="fixeDernierSalaireBrut" [(ngModel)]="candidat.fixeDernierSalaireBrut" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="varDernierSalaireBrut" placeholder="Part variable: " name="varDernierSalaireBrut"  id="varDernierSalaireBrut" [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="fourchetteSalariale" placeholder="Prétentions brut salariales en k€: " name="fourchetteSalariale"  id="fourchetteSalariale" [(ngModel)]="candidat.fourchetteSalariale" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="mobiliteGeographique" placeholder="Mobilité géographique: " name="mobiliteGeographique"  id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteAutresRegions" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="region1" placeholder="Région 1: " name="region1"  id="region1" [(ngModel)]="candidat.region1" (change)="updateModel(candidat)">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="region2" placeholder="Région 2: " name="region2"  id="region2" [(ngModel)]="candidat.region2" (change)="updateModel(candidat)">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </form>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="2 - Dossier de Candidature">
+    <p *ngFor="let c of objectKeys(candidat)">
+      <span *ngIf="c !=='fileBase64'">{{c}} :</span>
+      <span *ngIf="c !=='fileBase64'">{{candidat[c]}}</span>
+    </p>
+  </mat-tab>
+  <mat-tab label="3 - Fiche Info Candidat">
+
+  </mat-tab>
+  <mat-tab label="4 - Documents Joints">
+
+  </mat-tab>
+</mat-tab-group>

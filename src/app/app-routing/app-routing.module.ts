@@ -22,6 +22,7 @@ import {CandidatListComponent} from '../candidat-list/candidat-list.component';
 import {FichePresenceComponent} from '../fiche-presence/fiche-presence.component';
 import {FicheListComponent} from '../fiche-list/fiche-list.component';
 import {AddCandidatComponent} from '../add-candidat/add-candidat.component';
+import {CandidatDetailsComponent} from '../candidat-details/candidat-details.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'candidat_form/:secretid', component: AddCandidatComponent},
   { path: 'contacts', canActivate: [AuthGuardService], component: ContactListComponent},
   { path: 'candidats', canActivate: [AuthGuardService], component: CandidatListComponent},
+  { path: 'candidats/:id', canActivate: [AuthGuardService], component: CandidatDetailsComponent},
   { path: 'missions', canActivate: [AuthGuardService], component: MissionListComponent },
   { path: 'missions/:id', canActivate: [AuthGuardService], component: MissionDetailsComponent },
   { path: 'add_missions', canActivate: [AuthGuardService], component: MissionAddComponent },

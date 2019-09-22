@@ -28,7 +28,11 @@ export class UserEditComponent implements OnInit {
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
       role: ['', Validators.required],
-      fonction: ['', Validators.required]
+      fonction: ['', Validators.required],
+      trigramme:['', Validators.required],
+      cpNMoins1:['', Validators.required],
+      cpN:['', Validators.required],
+      rttn:['', Validators.required]
     });
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
@@ -39,6 +43,9 @@ export class UserEditComponent implements OnInit {
           this.editForm.controls.nom.setValue(data.nom);
           this.editForm.controls.role.setValue(data.role);
           this.editForm.controls.fonction.setValue(data.fonction);
+          this.editForm.controls.cpNMoins1.setValue(data.cpNMoins1);
+          this.editForm.controls.cpN.setValue(data.cpN);
+          this.editForm.controls.rttn.setValue(data.rttn);
         }
       )
     );

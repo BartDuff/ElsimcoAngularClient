@@ -5,6 +5,7 @@ import {FicheModel} from '../models/fiche.model';
 import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
 import {PdfService} from '../services/pdf.service';
+import {FicheService} from '../services/fiche.service';
 
 @Component({
   selector: 'app-fiche-list',
@@ -14,13 +15,18 @@ import {PdfService} from '../services/pdf.service';
 export class FicheListComponent implements OnInit {
   currentUser:UserModel;
   fiches: FicheModel[];
+  allFiches: FicheModel[];
+  allRHValidFiches: FicheModel[];
   constructor(private userService: UserService,
+              private ficheService: FicheService,
               private pdfService:PdfService,
               private toastrService:ToastrService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getFichesForUser();
+    this.getAllFiches();
+    this.getAllValidRHFiches();
   }
 
   getFichesForUser() {
@@ -29,6 +35,45 @@ export class FicheListComponent implements OnInit {
       console.log(data);}
     );
   }
+
+  getAllFiches() {
+    this.ficheService.getFiches().subscribe(
+      (data) => {this.allFiches = data;
+        console.log(data);}
+    );
+  }
+
+  getAllValidRHFiches() {
+    this.ficheService.getFiches().subscribe(
+      (data) => {
+        this.allRHValidFiches = data;
+        this.allRHValidFiches = this.allRHValidFiches.filter(function (value) {
+          return value.valideRH === true;
+        })
+        }
+    );
+  }
+
+  validateFicheRH(fiche: FicheModel){
+    fiche.valideRH = true;
+    this.ficheService.editFiche(fiche).subscribe(
+      (data)=> {
+        this.getAllFiches();
+        this.toastrService.success('Fiche de présence validée', 'Fiche validée');
+      }
+    )
+  }
+
+  validateFicheDir(fiche: FicheModel){
+    fiche.valideDir = true;
+    this.ficheService.editFiche(fiche).subscribe(
+      (data)=> {
+        this.getAllFiches();
+        this.toastrService.success('Fiche de présence validée', 'Fiche validée');
+      }
+    )
+  }
+
 
   downloadDocument(ficheToDownload: FicheModel) {
     this.pdfService.downloadFiche(ficheToDownload.id).subscribe(

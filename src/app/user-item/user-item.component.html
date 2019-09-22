@@ -3,6 +3,9 @@
 <td>{{ user.prenom }}</td>
 <td [ngStyle]="{'color':user.role=='ADMIN'?'red':''}">{{ user.role }}</td>
 <td>{{ user.fonction }}</td>
+<td>{{ user.cpNMoins1 }}</td>
+<td>{{ user.cpN }}</td>
+<td>{{ user.rttn }}</td>
 <td>{{ user.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</td>
 <td>
   <a [routerLink]="['/users/', user.id]">Détail</a></td>

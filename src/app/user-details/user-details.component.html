@@ -49,6 +49,15 @@
       <p>
         <mat-icon>email</mat-icon>
         {{ user?.email }}</p>
+      <p>
+        <span>Congés N-1: </span>
+        {{ user?.cpNMoins1 }}</p>
+      <p>
+        <span>Congés N: </span>
+        {{ user?.cpN }}</p>
+      <p>
+        <span>RTT: </span>
+        {{ user?.rttn }}</p>
 
       <p>Cet utilisateur s'intéresse aux missions suivantes:</p>
       <div class="mini-container" fxLayout="row wrap" fxFlexAlign="space-evenly" fxLayoutGap="5vw">

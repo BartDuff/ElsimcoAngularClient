@@ -23,6 +23,8 @@ import {FichePresenceComponent} from '../fiche-presence/fiche-presence.component
 import {FicheListComponent} from '../fiche-list/fiche-list.component';
 import {AddCandidatComponent} from '../add-candidat/add-candidat.component';
 import {CandidatDetailsComponent} from '../candidat-details/candidat-details.component';
+import {DemandeCongeComponent} from '../demande-conge/demande-conge.component';
+import {CongeListComponent} from '../conge-list/conge-list.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -41,11 +43,13 @@ const routes: Routes = [
   { path: 'users', canActivate: [AuthGuardService], component: UserListComponent },
   { path: 'users/:id', canActivate: [AuthGuardService], component: UserDetailsComponent },
   { path: 'users/:id/fiches', canActivate: [AuthGuardService], component: FicheListComponent },
+  { path: 'users/:id/conges', canActivate: [AuthGuardService], component: CongeListComponent },
   { path: 'add_users', canActivate: [AuthGuardService], component: UserAddComponent },
   { path: 'edit_user/:id', canActivate: [AuthGuardService], component: UserEditComponent },
   { path: 'documents', canActivate: [AuthGuardService], component: DocumentListComponent },
   { path: 'documents/:id', canActivate: [AuthGuardService], component: DocumentDetailsComponent },
   { path: 'presence', canActivate: [AuthGuardService], component: FichePresenceComponent },
+  { path: 'conges', canActivate: [AuthGuardService], component: DemandeCongeComponent },
   { path: '', redirectTo: 'news', pathMatch: 'full'},
   { path: 'error', redirectTo: 'login', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }

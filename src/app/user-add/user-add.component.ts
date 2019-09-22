@@ -31,7 +31,11 @@ export class UserAddComponent implements OnInit {
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
       role: ['', Validators.required],
-      fonction:['', Validators.required]
+      fonction:['', Validators.required],
+      trigramme:['', Validators.required],
+      cpNMoins1:['', Validators.required],
+      cpN:['', Validators.required],
+      rttn:['', Validators.required]
     });
 
   }
@@ -41,6 +45,9 @@ export class UserAddComponent implements OnInit {
     this.user.email = this.f.email;
     this.user.prenom = this.f.prenom;
     this.user.nom = this.f.nom;
+    this.user.cpNMoins1 = this.f.cpNMoins1;
+    this.user.cpN = this.f.cpN;
+    this.user.rttn = this.f.rttn;
     this.user.role = this.addForm.get('role').value;
     this.user.fonction = this.addForm.get('fonction').value;
     this.userService.addUser(this.user)

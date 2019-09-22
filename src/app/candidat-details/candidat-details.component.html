@@ -1,6 +1,6 @@
+<button mat-icon-button routerLink="/candidats" style="color: black;">RETOUR <mat-icon>arrow_back</mat-icon></button>
 <mat-tab-group>
   <mat-tab label="1 - Fiche de Renseignement">
-    <button mat-icon-button routerLink="/candidats" style="color: black;">RETOUR <mat-icon>arrow_back</mat-icon></button>
     <mat-card>
       <mat-card-title>ETAT CIVIL</mat-card-title>
       <form [formGroup]="formulaire" (ngSubmit)="onSubmit()">
@@ -266,9 +266,126 @@
     </p>
   </mat-tab>
   <mat-tab label="3 - Fiche Info Candidat">
+    <div style="text-align: center">
+      <h1>Fiche Process</h1>
+              <table id="ficheProcess">
+                <tr>
+                  <th>Fiche Information Candidat</th>
+                  <th>ASN</th>
+                </tr>
+                <tr>
+                  <td>Prénom du candidat :</td>
+                  <td (click)="checkClickedRow('prenom')"><span [hidden]="cellClicked(candidat, 'prenom')">{{candidat.prenom}}</span>
+                    <input matInput [hidden]="!cellClicked(candidat, 'prenom')" placeholder="{{candidat.prenom}}" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">{{candidat.prenom}}</td>
+                </tr>
+                <tr>
+                  <td>Date des derniers entretiens :</td>
+                  <td>{{candidat.dateDerniersEntretiens | date: 'short'}}</td>
+                </tr>
+                <tr>
+                  <td>Intitulé du poste concerné :</td>
+                  <td>{{candidat.intitulePosteConcerne}}</td>
+                </tr>
+                <tr>
+                  <td>Fonction et Employeur actuel :</td>
+                  <td>{{candidat.fonctionEmployeurActuel}}</td>
+                </tr>
+                <tr>
+                  <td>Nombres d'années d'expérience :</td>
+                  <td>{{candidat.nombreAnneesExperiences}}</td>
+                </tr>
+                <tr>
+                  <td>Raison du départ de la société :</td>
+                  <td>{{candidat.raisonDepartSociete}}</td>
+                </tr>
+                <tr>
+                  <td>Projet professionnel :</td>
+                  <td>{{candidat.posteSouhaite}}</td>
+                </tr>
+                <tr>
+                  <td>Etat des recherches :</td>
+                  <td>{{candidat.etatRecherches}}</td>
+                </tr>
+                <tr>
+                  <td>Adéquation poste/profil :</td>
+                  <td>{{candidat.adequationPosteProfil}}</td>
+                </tr>
+                <tr>
+                  <td>Lieu de résidence :</td>
+                  <td>{{candidat.ville}}</td>
+                </tr>
+                <tr>
+                  <td>Mobilité géographique :</td>
+                  <td>{{candidat.mobiliteGeographique}}</td>
+                </tr>
+                <tr>
+                  <td>Délai de disponibilité :</td>
+                  <td>{{candidat.delaiDispoFiche}}</td>
+                </tr>
+                <tr>
+                  <td>Rémunération actuelle fixe :</td>
+                  <td>{{candidat.fixeDernierSalaireBrut}}</td>
+                </tr>
+                <tr>
+                  <td>Rémunération actuelle part variable :</td>
+                  <td>{{candidat.varDernierSalaireBrut}}</td>
+                </tr>
+                <tr>
+                  <td>Rémunération souhaitée :</td>
+                  <td>{{candidat.pretentionSalaireBrut}}</td>
+                </tr>
+                <tr>
+                  <td>Connaissance langues et niveaux :</td>
+                  <td>{{candidat.anglais}}</td>
+                </tr>
+              </table>
 
-  </mat-tab>
-  <mat-tab label="4 - Documents Joints">
+              <h1>Fiche Recrutement</h1>
+              <table id="ficheRecrutement">
+                <tr>
+                  <th>Fiche Information Candidat</th>
+                  <th>ASN</th>
+                </tr>
+                <tr>
+                  <td>Prénom, Nom :</td>
+                  <td>{{candidat.prenom}} {{candidat.nom}}</td>
+                </tr>
+                <tr>
+                  <td>Date de naissance :</td>
+                  <td>{{candidat.dateNaissance | date: 'short'}}</td>
+                </tr>
+                <tr>
+                  <td>Lieu de niassance :</td>
+                  <td>{{candidat.villeNaissance}}</td>
+                </tr>
+                <tr>
+                  <td>Département de naissance :</td>
+                  <td>{{candidat.departementNaissance}}</td>
+                </tr>
+                <tr>
+                  <td>Nationalité :</td>
+                  <td>{{candidat.nationalite}}</td>
+                </tr>
+                <tr>
+                  <td>Adresse :</td>
+                  <td>{{candidat.adresse}}</td>
+                </tr>
+                <tr>
+                  <td>Téléphone :</td>
+                  <td>{{candidat.mobile}}</td>
+                </tr>
+                <tr>
+                  <td>Adresse e-mail :</td>
+                  <td>{{candidat.email}}</td>
+                </tr>
+                <tr>
+                  <td>Numéro Sécurité Sociale :</td>
+                  <td>{{candidat.numSecu}}</td>
+                </tr>
+              </table>
+            </div>
+          </mat-tab>
+          <mat-tab label="4 - Documents Joints">
 
-  </mat-tab>
-</mat-tab-group>
+          </mat-tab>
+        </mat-tab-group>

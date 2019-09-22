@@ -70,4 +70,13 @@ export class CandidatModel extends ContactModel {
   region1: String;
   region2: String;
   autorisationControle: boolean;
+  dateDerniersEntretiens: Date;
+  intitulePosteConcerne: String;
+  fonctionEmployeurActuel: String;
+  nombreAnneesExperiences: number;
+  raisonDepartSociete: String;
+  etatRecherches: String;
+  adequationPosteProfil: String;
+  mobiliteGeographique: String;
+  delaiDispoFiche: String;
 }

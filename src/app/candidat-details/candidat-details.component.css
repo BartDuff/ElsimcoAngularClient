@@ -1,0 +1,23 @@
+#ficheProcess, #ficheRecrutement, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#ficheProcess th, #ficheRecrutement th {
+  background-color: orange;
+}
+
+#ficheProcess, #ficheRecrutement {
+  margin: auto;
+  margin-top: 3em;
+}
+
+h1 {
+  margin: auto;
+  margin-top: 2%;
+}
+
+#ficheProcess th, td {
+  padding: 5px;
+  width: 20em;
+}

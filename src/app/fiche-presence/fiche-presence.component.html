@@ -71,7 +71,7 @@
           <mat-checkbox [ngModel] [name]="dayOff + ' boolean'">Demi-journée?</mat-checkbox>
         <br>
         <mat-form-field class="commentaires">
-          <input matInput placeholder="Commentaires {{(raison.value&&raison.value !== 'Absences exceptionnelle'?'facultatif':'')}}" [ngModel] [name]="dayOff + ' comm'" [required]="raison.value === 'Absences exceptionnelle'">
+          <input matInput placeholder="Commentaires {{(raison.value&&raison.value !== 'Absence exceptionnelle'?'facultatif':'')}}" [ngModel] [name]="dayOff + ' comm'" [required]="raison.value === 'Absence exceptionnelle'">
         </mat-form-field>
       </div>
       <button mat-raised-button type="submit" [disabled]="f.invalid">Envoyer</button>

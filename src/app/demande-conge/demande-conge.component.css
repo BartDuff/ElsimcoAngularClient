@@ -1,0 +1,33 @@
+mat-card {
+  width: 30em;
+  height: 35em;
+  margin: auto;
+  overflow-y: auto;
+}
+
+
+.prefix {
+  padding: 1em;
+}
+
+.selectedDate {
+  background-color: orange;
+  border-radius: 100%;
+}
+
+mat-form-field {
+  margin: 1.5em;
+}
+
+.commentaires {
+  width: 30em;
+}
+
+.emptyDaysoff {
+  margin-bottom: 2em;
+}
+
+mat-card.calendar-card {
+  width: 50em;
+  height: 50em;
+}

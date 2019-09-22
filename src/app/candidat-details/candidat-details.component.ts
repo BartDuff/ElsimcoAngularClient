@@ -12,7 +12,7 @@ import {CandidatModel} from '../models/candidat.model';
   styleUrls: ['./candidat-details.component.css']
 })
 export class CandidatDetailsComponent implements OnInit {
-
+  clickedColumn = null;
   envBase = environment.base;
   formulaire: FormGroup;
   formulaire2: FormGroup;
@@ -43,6 +43,14 @@ export class CandidatDetailsComponent implements OnInit {
 
   objectKeys(o){
     return Object.keys(o);
+  }
+
+  checkClickedRow(row:String){
+    return true;
+  }
+
+  cellClicked(candidat:CandidatModel, cell:String){
+    return true;
   }
 
   ngOnInit() {

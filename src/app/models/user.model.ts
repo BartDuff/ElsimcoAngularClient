@@ -6,6 +6,9 @@ export class UserModel {
   prenom: String;
   email: String;
   trigramme: String;
+  cpNMoins1: number;
+  cpN: number;
+  rttn: number;
   dateInscription: Date;
   derniereConnexion: Date;
   role: String;

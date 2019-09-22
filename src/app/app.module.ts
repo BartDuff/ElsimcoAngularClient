@@ -54,7 +54,7 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatIconModule,
-  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule
+  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule, MatBadgeModule, MatTooltipModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -76,6 +76,9 @@ import { SidenavListComponent } from './sidenav-list/sidenav-list.component';
 import { FicheListComponent } from './fiche-list/fiche-list.component';
 import { AddCandidatComponent } from './add-candidat/add-candidat.component';
 import { CandidatDetailsComponent } from './candidat-details/candidat-details.component';
+import {FicheService} from './services/fiche.service';
+import { CongeListComponent } from './conge-list/conge-list.component';
+import { DemandeCongeComponent } from './demande-conge/demande-conge.component';
 const config: InputFileConfig = {};
 
 
@@ -113,7 +116,9 @@ const config: InputFileConfig = {};
     SidenavListComponent,
     FicheListComponent,
     AddCandidatComponent,
-    CandidatDetailsComponent
+    CandidatDetailsComponent,
+    CongeListComponent,
+    DemandeCongeComponent
   ],
   imports: [
     AppRoutingModule,
@@ -151,9 +156,11 @@ const config: InputFileConfig = {};
     MatListModule,
     MatPaginatorModule,
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    MatBadgeModule,
+    MatTooltipModule
   ],
-  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, PdfService,
+  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },

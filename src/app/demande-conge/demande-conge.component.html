@@ -34,10 +34,13 @@
           <h1 style="text-align: center">{{mois}} {{dateNow.getFullYear()}}</h1>
           <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
           <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(mois)))"></div>
-          <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(mois),dateNow.getFullYear())"
+          <div  (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(mois),dateNow.getFullYear())"
                style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day)}">
-            <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
-            <span style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{f.value[toMomentFormat(day)+' boolean']?'1/2':''}} {{absShort[absences.indexOf(f.value[toMomentFormat(day)])]}}</span>
+            <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
+              <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
+              <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{f.value[toMomentFormat(day)+' boolean']?'1/2':''}} {{absShortTypes[absTypes.indexOf(f.value[toMomentFormat(day)])]}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+            </div>
+
           </div>
         </div>
         <br>
@@ -59,17 +62,17 @@
         </h4>
         <div>
           <form (ngSubmit)="sendRequest(f)" #f="ngForm">
-            <div *ngIf="mesCongesObj.length == 0; else conges" class="emptyDaysoff">Pas de jours de congés demandés ce mois-ci</div>
+            <div *ngIf="daysOffSavedObjArr.length == 0; else conges" class="emptyDaysoff">Pas de jours de congés demandés ce mois-ci</div>
             <ng-template #conges>
               <ul>
-                <li *ngFor="let c of mesCongesObj">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</li>
+                <li *ngFor="let c of daysOffSavedObjArr">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</li>
               </ul>
             </ng-template>
-            <div *ngFor="let dayOff of daysOffObj" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
+            <div *ngFor="let dayOff of daysOffSelectedObjArr" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
               <mat-form-field>
                 <span class="prefix" matPrefix>{{dayOff.date}}</span>
                 <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="decreaseCount($event.value, dayOff.date);autoFillType($event.value,dayOff.date)">
-                  <mat-option *ngFor="let absence of absences" [value]="absence">
+                  <mat-option *ngFor="let absence of absTypes" [value]="absence">
                     <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.cpN>0?'darkblue':'red'}">{{currentUser.cpN}}</span>
                     <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.cpN>0?'darkblue':'red'}">{{(currentUser.rttn)}}</span> {{absence}}
                   </mat-option>

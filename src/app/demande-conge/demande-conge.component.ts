@@ -28,15 +28,30 @@ export class DemandeCongeComponent implements OnInit {
   mouseDown:boolean = false;
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
   //daysOff = [];
-  daysOffObj = [];
+  daysOffSelectedObjArr = [];
+  daysOffSavedObjArr = [];
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
-  absences= ["RTT", "Congés payés", "Absences exceptionnelle", "Congé sans solde", "Arrêt maladie"];
-  absShort= ["RTT", "CP", "C.E.", "C.S.S.", "A.M."];
+  absTypes= ["RTT", "Congés payés", "Absences exceptionnelle", "Congé sans solde", "Arrêt maladie"];
+  absShortTypes= ["RTT", "CP", "C.E.", "C.S.S.", "A.M."];
   dateNow : Date;
   FicheEnvoyee:boolean;
   currentUser:UserModel;
   //mesConges = [];
-  mesCongesObj = [];
+
+
+  getAbsTypeShort(date){
+      for(let x of this.daysOffSavedObjArr)
+        if (x.date==date)
+          return this.absShortTypes[this.absTypes.indexOf(x.typeConge)]
+    return ""
+  }
+  getAbsTypeLong(date){
+      for(let x of this.daysOffSavedObjArr)
+        if (x.date==date)
+          return x.typeConge
+    return ""
+  }
+
   constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService, private userService:UserService, private congeService: CongeService) {
   }
 
@@ -122,22 +137,22 @@ export class DemandeCongeComponent implements OnInit {
 
   autoFillType(type,date){
     let ifrom = 0;
-    for(let i=0; i < this.daysOffObj.length;i++)
-      if(this.daysOffObj[i].date == date){
+    for(let i=0; i < this.daysOffSelectedObjArr.length; i++)
+      if(this.daysOffSelectedObjArr[i].date == date){
         //console.log("found "+date+ " at position "+ i)
         ifrom = i;
         //break
       }
 
 
-    for(;ifrom<this.daysOffObj.length;ifrom++)
-      this.daysOffObj[ifrom].typeConge = type;
-    this.toastr.warning("Le motif d'absence \""+type+"\" a été appliqué à toutes les dates sélectionnées à partir du "+date+". Veuillez préciser si nécessaire.","Attention")
+    for(; ifrom<this.daysOffSelectedObjArr.length; ifrom++)
+      this.daysOffSelectedObjArr[ifrom].typeConge = type;
+    this.toastr.warning("Le motif d'absence \""+type+"\" a été appliqué à toutes les dates sélectionnées à partir du "+date+". Veuillez le préciser si nécessaire.","Attention")
   }
 
   checkDay(day){
     let d = moment(day).format('DD/MM/YYYY');
-    for(let x of this.daysOffObj)
+    for(let x of this.daysOffSelectedObjArr)
       if (x.date == d)
         return true;
     return false;
@@ -154,7 +169,7 @@ export class DemandeCongeComponent implements OnInit {
         (data)=>{
           for(let d of data){
             //this.mesConges.push(moment(d.date).format('DD/MM/YYYY').toString());
-            this.mesCongesObj.push(({date:moment(d.date).format('DD/MM/YYYY').toString(), typeConge: d.typeConge, demiJournee:d.demiJournee}))
+            this.daysOffSavedObjArr.push(({date:moment(d.date).format('DD/MM/YYYY').toString(), typeConge: d.typeConge, demiJournee:d.demiJournee}))
           }
         }
       )
@@ -165,7 +180,7 @@ export class DemandeCongeComponent implements OnInit {
     // console.log(this.mesConges.indexOf(d));
     // console.log(d);
     // console.log(this.mesConges);
-    for(let x of this.mesCongesObj)
+    for(let x of this.daysOffSavedObjArr)
       if(x.date == d)
         return true;
       return false;
@@ -177,16 +192,16 @@ export class DemandeCongeComponent implements OnInit {
       return;
 
     let day = moment(event).format('DD/MM/YYYY');
-    if (this.includesDay(this.daysOffObj,day)&&!this.mouseDown)
-      this.spliceDay(this.daysOffObj,day)
+    if (this.includesDay(this.daysOffSelectedObjArr,day)&&!this.mouseDown)
+      this.spliceDay(this.daysOffSelectedObjArr,day)
 
     else
-      if(this.includesDay(this.daysOffObj,day)&&this.mouseDown)
+      if(this.includesDay(this.daysOffSelectedObjArr,day)&&this.mouseDown)
         return;
       else {
         //this.daysOff.push(day);
-        this.daysOffObj.push({date:day, typeConge: '', demiJournee: false, commentaires:''});
-        this.daysOffObj.sort((a,b)=>a.date.localeCompare(b.date));
+        this.daysOffSelectedObjArr.push({date:day, typeConge: '', demiJournee: false, commentaires:''});
+        this.daysOffSelectedObjArr.sort((a, b)=>a.date.localeCompare(b.date));
         //this.daysOff.sort();
       }
   }

@@ -68,4 +68,10 @@ export class UserService {
       'Content-Type'  : 'application/json'});
     return this.http.get(`${API_URL}/users/${user.id}/fiches`, { headers: headers});
   }
+
+  getCongeForUser(user: UserModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.get(`${API_URL}/users/${user.id}/conges`, { headers: headers});
+  }
 }

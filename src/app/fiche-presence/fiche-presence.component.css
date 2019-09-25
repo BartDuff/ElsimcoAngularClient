@@ -32,4 +32,6 @@ mat-card.calendar-card {
   height: 50em;
 }
 
-
+#cont {
+  display: flex;
+}

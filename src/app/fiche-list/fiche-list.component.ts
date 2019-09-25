@@ -64,15 +64,25 @@ export class FicheListComponent implements OnInit {
     )
   }
 
-  validateFicheDir(fiche: FicheModel){
-    fiche.valideDir = true;
-    this.ficheService.editFiche(fiche).subscribe(
+  refuseFicheRH(fiche: FicheModel){
+    fiche.valideRH = true;
+    this.ficheService.deleteFiche(fiche).subscribe(
       (data)=> {
         this.getAllFiches();
-        this.toastrService.success('Fiche de présence validée', 'Fiche validée');
+        this.toastrService.error('Fiche de présence refusée', 'Fiche refusée');
       }
     )
   }
+
+  // validateFicheDir(fiche: FicheModel){
+  //   fiche.valideDir = true;
+  //   this.ficheService.editFiche(fiche).subscribe(
+  //     (data)=> {
+  //       this.getAllFiches();
+  //       this.toastrService.success('Fiche de présence validée', 'Fiche validée');
+  //     }
+  //   )
+  // }
 
 
   downloadDocument(ficheToDownload: FicheModel) {

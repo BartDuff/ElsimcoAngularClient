@@ -1,3 +1,70 @@
-<p>
-  conge-list works!
-</p>
+<h2>Mes Congés:</h2>
+<div style="display: flex;flex: available;justify-content: space-evenly;">
+<div style="margin-top: 2em;">
+  <h3>Congés en attente de validation</h3>
+  <table class="bordered mat-elevation-z8" id="enattente" style="margin: auto; ">
+    <thead>
+    <tr>
+      <th>Date</th>
+      <th>Demi-journée</th>
+      <th>Type de congé</th>
+      <th>Validée RH</th>
+      <th>Commentaires</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let conge of getNonValidatedConges()">
+      <td>{{conge.date | date: 'short'}}</td>
+      <td>{{conge.demiJournee?'oui':'non'}}</td>
+      <td>{{conge.typeConge}}</td>
+      <td><mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon></td>
+      <td>{{conge.commentaires}}</td>
+      <ng-template #unvalid>
+        <mat-icon>close</mat-icon>
+      </ng-template>
+    </tr>
+    </tbody>
+  </table>
+  <mat-card *ngIf="!conges"
+            style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner
+      color="accent"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+</div>
+
+<div style="margin-top: 2em;">
+  <h3>Congés validés</h3>
+  <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; ">
+    <thead>
+    <tr>
+      <th>Date</th>
+      <th>Demi-journée</th>
+      <th>Type de congé</th>
+      <th>Validée RH</th>
+      <th>Commentaires</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let conge of getValidatedConges()">
+      <td>{{conge.date | date: 'short'}}</td>
+      <td>{{conge.demiJournee?'oui':'non'}}</td>
+      <td>{{conge.typeConge}}</td>
+      <td><mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon></td>
+      <td>{{conge.commentaires}}</td>
+      <ng-template #unvalid>
+        <mat-icon>close</mat-icon>
+      </ng-template>
+    </tr>
+    </tbody>
+  </table>
+  <mat-card *ngIf="!conges"
+            style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner
+      color="accent"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
+</div>
+</div>

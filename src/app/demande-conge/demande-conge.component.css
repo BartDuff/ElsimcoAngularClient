@@ -31,3 +31,7 @@ mat-card.calendar-card {
   width: 50em;
   height: 50em;
 }
+
+.legend {
+  margin-top: 10em;
+}

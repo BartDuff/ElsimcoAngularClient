@@ -8,7 +8,6 @@
       <th>Mois</th>
       <th>Année</th>
       <th>Validée RH</th>
-      <th>Validée Direction</th>
       <th colspan="2">Télécharger</th>
     </tr>
     </thead>
@@ -17,13 +16,12 @@
       <td>{{fiche.mois}}</td>
       <td>{{fiche.annee}}</td>
       <td><mat-icon *ngIf="fiche.valideRH; else unvalid">check</mat-icon></td>
-      <td><mat-icon *ngIf="fiche.valideDir; else unvalid">check</mat-icon></td>
       <ng-template #unvalid>
         <mat-icon>close</mat-icon>
       </ng-template>
       <td>
         <button type="button"
-                (click)="downloadDocument(fiche)"><i class="material-icons">file_download</i></button>
+                (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
       </td>
     </tr>
     </tbody>
@@ -37,7 +35,6 @@
       <th>Mois</th>
       <th>Année</th>
       <th>Validée RH</th>
-      <th>Validée Direction</th>
       <th colspan="2">Télécharger</th>
     </tr>
     </thead>
@@ -50,18 +47,16 @@
       <td>{{fiche.annee}}</td>
       <td>
         <button type="button" *ngIf="!fiche.valideRH;else valid"
-                (click)="validateFicheRH(fiche)"><mat-icon>check_circle</mat-icon></button>
+                (click)="validateFicheRH(fiche)" matTooltip="Valider la fiche"><mat-icon>check_circle</mat-icon></button>
+        <button type="button" *ngIf="!fiche.valideRH"
+                (click)="refuseFicheRH(fiche)" matTooltip="Refuser la fiche"><mat-icon>close_circle</mat-icon></button>
       </td>
-      <td><mat-icon *ngIf="fiche.valideDir; else unvalid">check</mat-icon></td>
-      <ng-template #unvalid>
-        <mat-icon>close</mat-icon>
-      </ng-template>
       <ng-template #valid>
         <mat-icon>check</mat-icon>
       </ng-template>
       <td>
         <button type="button"
-                (click)="downloadDocument(fiche)"><i class="material-icons">file_download</i></button>
+                (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
       </td>
     </tr>
     </tbody>
@@ -87,15 +82,8 @@
       <td>{{fiche.mois}}</td>
       <td>{{fiche.annee}}</td>
       <td><mat-icon *ngIf="fiche.valideRH; else unvalid">check</mat-icon></td>
-      <td>
-        <button type="button" *ngIf="!fiche.valideDir;else valid"
-                (click)="validateFicheDir(fiche)"><mat-icon>check_circle</mat-icon></button>
-      </td>
       <ng-template #unvalid>
         <mat-icon>close</mat-icon>
-      </ng-template>
-      <ng-template #valid>
-        <mat-icon>check</mat-icon>
       </ng-template>
       <td>
         <button type="button"

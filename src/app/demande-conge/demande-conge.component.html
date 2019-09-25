@@ -38,14 +38,25 @@
                style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day)}">
             <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
               <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
-              <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{f.value[toMomentFormat(day)+' boolean']?'1/2':''}} {{absShortTypes[absTypes.indexOf(f.value[toMomentFormat(day)])]}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+              <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{absShortTypes[absTypes.indexOf(f.value[toMomentFormat(day)])]}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
             </div>
 
           </div>
         </div>
         <br>
-        <div *ngIf="FicheEnvoyee">
+        <div class="legend">
+          <div style="background: yellow" disabled>Congés en attente de validation</div>
+          <div style="background: greenyellow" disabled>Congés validés</div>
         </div>
+        <h4>
+          Jours de congés demandés
+        </h4>
+        <div *ngIf="daysOffSavedObjArr.length == 0; else conges" class="emptyDaysoff">Pas de jours de congés demandés ce mois-ci</div>
+        <ng-template #conges>
+          <ul style="list-style-type: none;">
+            <li *ngFor="let c of getHolidaysOfMonth(mois)">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</li>
+          </ul>
+        </ng-template>
       </div>
 
       <!--  <mat-card class="calendar-card">
@@ -57,24 +68,21 @@
       </mat-card>-->
 
       <div style="width: 40vw">
-        <h4>
-          Jours de congés demandés
-        </h4>
         <div>
           <form (ngSubmit)="sendRequest(f)" #f="ngForm">
-            <div *ngIf="daysOffSavedObjArr.length == 0; else conges" class="emptyDaysoff">Pas de jours de congés demandés ce mois-ci</div>
-            <ng-template #conges>
-              <ul>
-                <li *ngFor="let c of daysOffSavedObjArr">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</li>
-              </ul>
-            </ng-template>
-            <div *ngFor="let dayOff of daysOffSelectedObjArr" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
+            <h4>
+              Faire une demande
+            </h4>
+            <div>
+              Sélectionnez les date de congés/absences à poser sur le calendrier joint. Pour changer de mois, sélectionnez l'onglet correspondant.
+            </div>
+            <div *ngFor="let dayOff of daysOffSelectedObjArr" style="margin: 3em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
               <mat-form-field>
                 <span class="prefix" matPrefix>{{dayOff.date}}</span>
-                <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="decreaseCount($event.value, dayOff.date);autoFillType($event.value,dayOff.date)">
+                <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="decreaseCount(dayOff);autoFillType(dayOff)">
                   <mat-option *ngFor="let absence of absTypes" [value]="absence">
-                    <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.cpN>0?'darkblue':'red'}">{{currentUser.cpN}}</span>
-                    <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.cpN>0?'darkblue':'red'}">{{(currentUser.rttn)}}</span> {{absence}}
+                    <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.cpNMoins1>0?'darkblue':'red'}">{{currentUser.cpNMoins1}}</span>
+                    <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.rttn>0?'darkblue':'red'}">{{currentUser.rttn}}</span> {{absence}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -84,7 +92,7 @@
                 <input matInput placeholder="Commentaires {{(raison.value && raison.value !== 'Absences exceptionnelle'?'facultatif':'')}}" [(ngModel)]="dayOff.commentaires" [name]="dayOff.date + ' comm'" [required]="raison.value === 'Absences exceptionnelle'">
               </mat-form-field>
             </div>
-            <button mat-raised-button type="submit" [disabled]="f.invalid">Envoyer</button>
+            <button mat-raised-button type="submit" [disabled]="f.invalid" style="margin-top: 2em;">Envoyer</button>
           </form>
           <!--  <p>{{f.value | json }}</p>-->
         </div>

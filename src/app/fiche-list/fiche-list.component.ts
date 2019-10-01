@@ -65,7 +65,7 @@ export class FicheListComponent implements OnInit {
   }
 
   refuseFicheRH(fiche: FicheModel){
-    fiche.valideRH = true;
+    fiche.valideRH = false;
     this.ficheService.deleteFiche(fiche).subscribe(
       (data)=> {
         this.getAllFiches();

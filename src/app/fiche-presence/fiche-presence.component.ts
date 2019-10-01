@@ -25,10 +25,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
   daysOff = [];
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
-  absences= ["RTT E", "RTT S", "Congés payés", "Absence exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
-  absShort= ["RTT E.", "RTT S.", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
+  absTypes= ["RTT E", "RTT S", "Congés payés", "Absence exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
+  absShortTypes= ["RTT E.", "RTT S.", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
   dateNow : Date;
   FicheEnvoyee:boolean;
+  daysOffSavedObjArr = [];
   currentUser:UserModel;
 
   getWeekday(date:Date){
@@ -38,6 +39,103 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   creatArray(number){
     console.log(new Array(number));
      return new Array(number);
+  }
+
+  getAbsTypeShort(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
+      }
+    }
+    return '';
+  }
+
+  getAbsTypeLong(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        return x.typeConge;
+      }
+    }
+    return '';
+  }
+
+  getAbsHalfDay(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return '1/2';
+        }
+      }
+    }
+    return '';
+  }
+
+  spliceDay(arr, date) {
+    for (let x of arr) {
+      if (x.date == date) {
+        arr.splice(arr.indexOf(x), 1);
+      }
+    }
+  }
+
+  includesDay(arr, date) {
+    for (let x of arr) {
+      if (x.date == date) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getDayColor(day) {
+    if (this.checkWeekends(day)) {
+      return 'grey';
+    }
+    if (this.checkDay(day)) {
+      return 'orange';
+    }
+    if (this.checkAskedHolidays(day)) {
+      for (let c of this.daysOffSavedObjArr) {
+        if (c.date == moment(day).format('DD/MM/YYYY')) {
+          if (c.valideRH) {
+            return 'greenyellow';
+          }
+        }
+      }
+      return 'yellow';
+    }
+    return 'white';
+  }
+
+  getHolidays() {
+    this.userService.getCongeForUser(this.currentUser).subscribe(
+      (data) => {
+        for (let d of data) {
+          //this.mesConges.push(moment(d.date).format('DD/MM/YYYY').toString());
+          this.daysOffSavedObjArr.push(({
+            date: moment(d.date).format('DD/MM/YYYY').toString(),
+            typeConge: d.typeConge,
+            demiJournee: d.demiJournee,
+            typeDemiJournee: d.typeDemiJournee,
+            valideRH: d.valideRH
+          }));
+        }
+      }
+    );
+  }
+
+  checkAskedHolidays(day: Date) {
+    let d = moment(day).format('DD/MM/YYYY').toString();
+    // console.log(this.mesConges.indexOf(d));
+    // console.log(d);
+    // console.log(this.mesConges);
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == d) {
+        return true;
+      }
+    }
+    return false;
+    //return this.mesConges.indexOf(d) != -1;
   }
 
   addCells(){
@@ -60,6 +158,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     this.getFichesForUser();
     this.selectedDate = moment(new Date());
     this.dateNow = new Date();
+    this.getHolidays();
     // this.dateFilter(this.dateNow);
   }
 
@@ -124,6 +223,7 @@ checkWeekends(day:Date){
        }
      }
   }
+
   getDaysInMonth(month, year) {
     var date = new Date(Date.UTC(year, month, 1));
     var days = [];

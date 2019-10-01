@@ -25,6 +25,7 @@ import {AddCandidatComponent} from '../add-candidat/add-candidat.component';
 import {CandidatDetailsComponent} from '../candidat-details/candidat-details.component';
 import {DemandeCongeComponent} from '../demande-conge/demande-conge.component';
 import {CongeListComponent} from '../conge-list/conge-list.component';
+import {ValidationCongesComponent} from '../validation-conges/validation-conges.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -50,6 +51,7 @@ const routes: Routes = [
   { path: 'documents/:id', canActivate: [AuthGuardService], component: DocumentDetailsComponent },
   { path: 'presence', canActivate: [AuthGuardService], component: FichePresenceComponent },
   { path: 'conges', canActivate: [AuthGuardService], component: DemandeCongeComponent },
+  { path: 'conges/validation', canActivate: [AuthGuardService], component: ValidationCongesComponent },
   { path: '', redirectTo: 'news', pathMatch: 'full'},
   { path: 'error', redirectTo: 'login', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }

@@ -6,6 +6,7 @@ import {UserModel} from '../models/user.model';
 import {ToastrService} from 'ngx-toastr';
 import {PdfService} from '../services/pdf.service';
 import {UserService} from '../services/user.service';
+import { InputFileComponent } from 'ngx-input-file';
 import {FicheModel} from '../models/fiche.model';
 import htmlToImage from 'html-to-image';
 import * as moment from 'moment';
@@ -22,6 +23,8 @@ export class DemandeCongeComponent implements OnInit {
 
   @ViewChild('calendar') calendar: MatMonthView<Moment>;
   @ViewChild('f') f: NgForm;
+  @ViewChild(InputFileComponent)
+  private inputFileComponent: InputFileComponent;
   previousCount: String;
   previousDate: String;
   //selectedDate: Moment;
@@ -31,13 +34,13 @@ export class DemandeCongeComponent implements OnInit {
   daysOffSelectedObjArr = [];
   daysOffSavedObjArr = [];
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-  absTypes = ['RTT', 'Congés payés', 'Absences exceptionnelle', 'Congé sans solde', 'Arrêt maladie'];
-  absShortTypes = ['RTT', 'CP', 'C.E.', 'C.S.S.', 'A.M.'];
+  absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
+  absShortTypes = ['RTT', 'CP', 'C.E.', 'C.S.S.'];
   dateNow: Date;
   FicheEnvoyee: boolean;
   currentUser: UserModel;
-
-  //mesConges = [];
+  selectedFiles;
+  filename;
 
 
   getAbsTypeShort(date) {
@@ -61,8 +64,9 @@ export class DemandeCongeComponent implements OnInit {
   getAbsHalfDay(date) {
     for (let x of this.daysOffSavedObjArr) {
       if (x.date == date) {
-        if(x.demiJournee)
+        if (x.demiJournee) {
           return '1/2';
+        }
       }
     }
     return '';
@@ -107,7 +111,7 @@ export class DemandeCongeComponent implements OnInit {
         holidayMonthArr.push(h);
       }
     }
-    holidayMonthArr.sort(function(a, b) {
+    holidayMonthArr.sort(function (a, b) {
       let dateA = moment(a.date).date();
       let dateB = moment(b.date).date();
       return dateA - dateB;
@@ -142,62 +146,45 @@ export class DemandeCongeComponent implements OnInit {
   }
 
   decreaseCount(absence) {
-    if (new Date(absence.date).getMonth()>=5){
-      if (absence.typeConge === 'Congés payés') {
-        if (this.previousCount === 'RTT' && this.previousDate === absence.date && this.currentUser.rttn != 0) {
-          this.currentUser.rttn += 1;
-        }
-        if (this.currentUser.cpNMoins1>0)
-          this.currentUser.cpNMoins1 -= 1;
-        else
-          this.toastr.error("Votre solde est insuffisant","Avertissement");
-        this.previousCount = 'Congés payés';
+    if (absence.typeConge === 'Congés payés') {
+      if (this.previousCount === 'RTT' && this.previousDate === absence.date && this.currentUser.rttn != 0) {
+        this.currentUser.rttn += 1;
       }
-      if (absence.typeConge === 'RTT') {
-        if (this.previousCount === 'Congés payés' && this.previousDate === absence.date && this.currentUser.cpNMoins1 != 0) {
-          this.currentUser.cpNMoins1 += 1;
-        }
-        if (this.currentUser.rttn>0)
-          this.currentUser.rttn -= 1;
-        else
-          this.toastr.error("Votre solde est insuffisant","Avertissement");
-        this.previousCount = 'RTT';
+      if (this.currentUser.cpNMoins1 > 0) {
+        this.currentUser.cpNMoins1 -= 1;
+      } else {
+        this.toastr.error('Votre solde est insuffisant', 'Avertissement');
       }
-      this.previousDate = absence.date;
+      this.previousCount = 'Congés payés';
     }
+    if (absence.typeConge === 'RTT') {
+      if (this.previousCount === 'Congés payés' && this.previousDate === absence.date && this.currentUser.cpNMoins1 != 0) {
+        this.currentUser.cpNMoins1 += 1;
+      }
+      if (this.currentUser.rttn > 0) {
+        this.currentUser.rttn -= 1;
+      } else {
+        this.toastr.error('Votre solde est insuffisant', 'Avertissement');
+      }
+      this.previousCount = 'RTT';
+    }
+    this.previousDate = absence.date;
   }
 
-
-  // dateFilter(date: Date) {
-  //   let day = date.getDay();
-  //   let ferie = FichePresenceComponent.joursFeries(date.getFullYear()).filter((x) => x.getMonth() == date.getMonth());
-  //   let isHoliday = false;
-  //   for (let i=0; i<ferie.length;i++){
-  //     if(ferie[i].getDate() == date.getDate()){
-  //       isHoliday = true;
-  //     }
-  //   }
-  //   let forbiddenDay = day === 0 || day === 6 || isHoliday;
-  //   if(!forbiddenDay){
-  //     FichePresenceComponent.joursOuvres++;
-  //   }
-  //   return !forbiddenDay;
-  // }
-
   autoFillType(absence) {
-    if(this.daysOffSelectedObjArr.length>1){
-      let ifrom = 0;
-      for (let i = 0; i < this.daysOffSelectedObjArr.length; i++) {
-        if (this.daysOffSelectedObjArr[i].date == absence.date) {
-          //console.log("found "+date+ " at position "+ i)
-          ifrom = i;
-          //break
-        }
+    let ifrom = 0;
+    for (let i = 0; i < this.daysOffSelectedObjArr.length; i++) {
+      if (this.daysOffSelectedObjArr[i].date == absence.date) {
+        //console.log("found "+date+ " at position "+ i)
+        ifrom = i;
+        //break
       }
-      for (; ifrom < this.daysOffSelectedObjArr.length; ifrom++) {
-        this.daysOffSelectedObjArr[ifrom].typeConge = absence.typeConge;
-        this.decreaseCount(absence);
-      }
+    }
+    for (; ifrom < this.daysOffSelectedObjArr.length; ifrom++) {
+      this.daysOffSelectedObjArr[ifrom].typeConge = absence.typeConge;
+      this.decreaseCount(absence);
+    }
+    if (this.daysOffSelectedObjArr.length > 1) {
       this.toastr.warning('Le motif d\'absence "' + absence.typeConge + '" a été appliqué à toutes les dates sélectionnées à partir du ' + absence.date + '. Veuillez le préciser si nécessaire.', 'Attention');
     }
   }
@@ -227,6 +214,7 @@ export class DemandeCongeComponent implements OnInit {
             date: moment(d.date).format('DD/MM/YYYY').toString(),
             typeConge: d.typeConge,
             demiJournee: d.demiJournee,
+            typeDemiJournee: d.typeDemiJournee,
             valideRH: d.valideRH
           }));
         }
@@ -260,7 +248,7 @@ export class DemandeCongeComponent implements OnInit {
       return;
     } else {
       //this.daysOff.push(day);
-      this.daysOffSelectedObjArr.push({date: day, typeConge: '', demiJournee: false, commentaires: '', valideRH: false});
+      this.daysOffSelectedObjArr.push({date: day, typeConge: '', demiJournee: false, typeDemiJournee: '', commentaires: '', valideRH: false});
       this.daysOffSelectedObjArr.sort((a, b) => a.date.localeCompare(b.date));
       //this.daysOff.sort();
     }
@@ -360,7 +348,14 @@ export class DemandeCongeComponent implements OnInit {
           conge.commentaires = form.value[key];
           this.congeService.addConge(conge).subscribe(
             () => {
-              this.toastr.success('Ajouté');
+              this.userService.editUser(this.currentUser).subscribe(
+                ()=> {
+                  this.toastr.success('Ajouté');
+                  this.userService.getUser(this.currentUser.id).subscribe(
+
+                  )
+                }
+              )
             },
             (error) => {
               this.toastr.error('Erreur d\'ajout');
@@ -495,6 +490,44 @@ export class DemandeCongeComponent implements OnInit {
   countJoursNonTravailles(form: NgForm) {
     return this.countAbsences(form) + this.countConges(form) +
       +this.countMaladie(form) + this.countRTTE(form) + this.countRTTS(form) + this.countSansSolde(form);
+  }
+
+  handleFile(){
+    console.log("handleFile");
+    for(let i=0; i < this.inputFileComponent.files.length;i++) {
+      var file = this.inputFileComponent.files[i];
+      console.log (file.file.name,i);
+      this.filename=file.file.name;
+      if (file) {
+        var reader = new FileReader();
+
+        if (reader.readAsBinaryString === undefined) {
+          reader.onload = this._handleReaderLoadedIE.bind(this);
+          reader.readAsArrayBuffer(file.file);
+        } else {
+          reader.onload = this._handleReaderLoaded.bind(this);
+          reader.readAsBinaryString(file.file);
+        }
+        this.selectedFiles.splice(i,1)
+        i--
+      }
+    }
+  }
+
+  _handleReaderLoadedIE(readerEvt) {
+    console.log("_handleReaderLoadedIE");
+
+    var bytes = new Uint8Array(readerEvt.target.result);
+    var binary = "";
+    var length = bytes.byteLength;
+    for (var i = 0; i < length; i++)
+      binary += String.fromCharCode(bytes[i]);
+  }
+  _handleReaderLoaded(readerEvt) {
+    //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
+    console.log(readerEvt);
+    console.log("_handleReaderLoaded");
+    console.log(this.s(this.selectedFiles));
   }
 
 }

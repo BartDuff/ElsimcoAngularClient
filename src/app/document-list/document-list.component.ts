@@ -133,7 +133,6 @@ export class DocumentListComponent implements OnInit {
     this.documentService.uploadDocument(btoa(binary), this.filename);
   }
   _handleReaderLoaded(readerEvt) {
-    //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
 console.log(readerEvt)
     console.log("_handleReaderLoaded");
     console.log(this.s(this.selectedFiles));

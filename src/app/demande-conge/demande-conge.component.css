@@ -35,3 +35,7 @@ mat-card.calendar-card {
 .legend {
   margin-top: 10em;
 }
+
+.input-icon mat-icon .material-icons {
+  color: black !important;
+}

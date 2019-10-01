@@ -2,9 +2,10 @@
   Outils demande de congés
 </h1>
 <div>
-  <div><strong>Solde CP année N: </strong>{{currentUser.cpN}}</div>
   <div><strong>Solde CP année N-1: </strong>{{currentUser.cpNMoins1}}</div>
-  <div><strong>Solde RTT: </strong>{{currentUser.rttn}}</div>
+  <div><strong>Solde CP année N: </strong>{{currentUser.cpN}}</div>
+  <div><strong>Solde RTT (h): </strong>{{currentUser.rttn}}</div>
+  <div><strong>Solde Ancienneté: </strong>{{currentUser.congeAnciennete}}</div>
 </div>
 <br>
 <div style="display: flex; justify-content: center; align-items: center">
@@ -79,7 +80,7 @@
             <div *ngFor="let dayOff of daysOffSelectedObjArr" style="margin: 3em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
               <mat-form-field>
                 <span class="prefix" matPrefix>{{dayOff.date}}</span>
-                <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="decreaseCount(dayOff);autoFillType(dayOff)">
+                <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="autoFillType(dayOff)">
                   <mat-option *ngFor="let absence of absTypes" [value]="absence">
                     <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.cpNMoins1>0?'darkblue':'red'}">{{currentUser.cpNMoins1}}</span>
                     <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.rttn>0?'darkblue':'red'}">{{currentUser.rttn}}</span> {{absence}}
@@ -88,18 +89,29 @@
               </mat-form-field>
               <mat-checkbox [(ngModel)]="dayOff.demiJournee" [name]="dayOff.date + ' boolean'">Demi-journée?</mat-checkbox>
               <br>
+              <mat-form-field *ngIf="dayOff.demiJournee">
+                <span class="prefix" matPrefix>Type de demi-journée: </span>
+                <mat-select [(ngModel)]="dayOff.typeDemiJournee" [name]="dayOff.typeDemiJournee" [ngModelOptions]="{standalone: true}" placeholder="Type de demi-journée">
+                  <mat-option value="Matin">Matin</mat-option>
+                  <mat-option value="Après-midi">Après-midi</mat-option>
+                </mat-select>
+              </mat-form-field>
               <mat-form-field class="commentaires">
                 <input matInput placeholder="Commentaires {{(raison.value && raison.value !== 'Absences exceptionnelle'?'facultatif':'')}}" [(ngModel)]="dayOff.commentaires" [name]="dayOff.date + ' comm'" [required]="raison.value === 'Absences exceptionnelle'">
               </mat-form-field>
+              <div *ngIf="dayOff.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
+                <label>Document justificatif</label>
+                <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="selectedFiles" (ngModelChange)="handleFile()" [ngModelOptions]="{standalone: true}" id="file" style="align-self: center;"></input-file>
+              </div>
             </div>
             <button mat-raised-button type="submit" [disabled]="f.invalid" style="margin-top: 2em;">Envoyer</button>
           </form>
           <!--  <p>{{f.value | json }}</p>-->
         </div>
       </div>
-<!--
-      <pre>{{s(daysOffObj)}}</pre>
--->
+
+      <pre>{{s(daysOffSelectedObjArr)}}</pre>
+
     </div>
     </ng-template>
   </mat-tab>

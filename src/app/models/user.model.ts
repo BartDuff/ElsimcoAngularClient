@@ -9,6 +9,7 @@ export class UserModel {
   cpNMoins1: number;
   cpN: number;
   rttn: number;
+  congeAnciennete: number;
   dateInscription: Date;
   derniereConnexion: Date;
   role: String;

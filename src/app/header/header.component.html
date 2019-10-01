@@ -46,7 +46,7 @@
           <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token && (currentUser.fonction === 'RH' || currentUser.fonction ==='DIRECTION')"><span *ngIf="currentUser.fonction === 'RH'" matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span><span *ngIf="currentUser.fonction === 'DIRECTION'" matBadge="{{allRHValidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
           <a mat-menu-item routerLink="/conges" *ngIf="token">Remplir une demande de congés</a>
           <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token">Mes congés</a>
-          <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token && (currentUser.fonction === 'RH' || currentUser.fonction ==='DIRECTION')">Valider les congés</a>
+          <a mat-menu-item routerLink="/conges/validation" *ngIf="token && (currentUser.fonction === 'RH' || currentUser.fonction ==='DIRECTION')">Valider les congés</a>
         </mat-menu>
       </li>
     </ul>

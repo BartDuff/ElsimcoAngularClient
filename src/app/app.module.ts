@@ -79,6 +79,7 @@ import { CandidatDetailsComponent } from './candidat-details/candidat-details.co
 import {FicheService} from './services/fiche.service';
 import { CongeListComponent } from './conge-list/conge-list.component';
 import { DemandeCongeComponent } from './demande-conge/demande-conge.component';
+import { ValidationCongesComponent } from './validation-conges/validation-conges.component';
 const config: InputFileConfig = {};
 
 
@@ -118,7 +119,8 @@ const config: InputFileConfig = {};
     AddCandidatComponent,
     CandidatDetailsComponent,
     CongeListComponent,
-    DemandeCongeComponent
+    DemandeCongeComponent,
+    ValidationCongesComponent
   ],
   imports: [
     AppRoutingModule,

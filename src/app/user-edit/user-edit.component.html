@@ -64,6 +64,10 @@
           <input matInput formControlName="rttn" placeholder="RTT" name="rttn" id="rttn">
         </mat-form-field>
 
+        <mat-form-field>
+          <input matInput formControlName="congeAnciennete" placeholder="Congé Ancienneté" name="congeAnciennete" id="congeAnciennete">
+        </mat-form-field>
+
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <mat-label>Role:</mat-label>
           <mat-select formControlName="role">

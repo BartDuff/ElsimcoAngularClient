@@ -27,7 +27,7 @@ export class CandidatModel extends ContactModel {
   niveauAutrelangue: String;
   mobiliteParis: boolean;
   mobiliteFrance: boolean;
-  mobiliteAutresRegions: boolean;
+  regionsFrance: String;
   mobiliteEurope: boolean;
   mobiliteIntl: boolean;
   references: Reference[];
@@ -79,4 +79,6 @@ export class CandidatModel extends ContactModel {
   adequationPosteProfil: String;
   mobiliteGeographique: String;
   delaiDispoFiche: String;
+  ficheProcess: String;
+  ficheRecrutement: String;
 }

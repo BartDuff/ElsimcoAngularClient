@@ -6,6 +6,10 @@ import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
 import {PdfService} from '../services/pdf.service';
 import {FicheService} from '../services/fiche.service';
+import {CommentDialogComponent} from '../dialog/comment-dialog/comment-dialog.component';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
+import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-fiche-list',
@@ -20,7 +24,8 @@ export class FicheListComponent implements OnInit {
   constructor(private userService: UserService,
               private ficheService: FicheService,
               private pdfService:PdfService,
-              private toastrService:ToastrService) { }
+              private toastrService:ToastrService,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -56,22 +61,42 @@ export class FicheListComponent implements OnInit {
 
   validateFicheRH(fiche: FicheModel){
     fiche.valideRH = true;
-    this.ficheService.editFiche(fiche).subscribe(
-      (data)=> {
-        this.getAllFiches();
-        this.toastrService.success('Fiche de présence validée', 'Fiche validée');
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data)=>{
+        if(data){
+          this.ficheService.editFiche(fiche).subscribe(
+            (data)=> {
+              this.getAllFiches();
+              this.toastrService.success('Fiche de présence validée', 'Fiche validée');
+            }
+          )
+        }
       }
-    )
+    );
   }
 
   refuseFicheRH(fiche: FicheModel){
     fiche.valideRH = false;
-    this.ficheService.deleteFiche(fiche).subscribe(
-      (data)=> {
-        this.getAllFiches();
-        this.toastrService.error('Fiche de présence refusée', 'Fiche refusée');
-      }
-    )
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(CommentDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data)=>{
+        this.ficheService.sendComment(fiche.user,data.commentaire).subscribe(
+          (d)=>{
+            this.ficheService.deleteFiche(fiche).subscribe(
+              (d)=> {
+                this.getAllFiches();
+                this.toastrService.error('Fiche de présence refusée', 'Fiche refusée');
+              }
+            )}
+        )}
+    );
   }
 
   // validateFicheDir(fiche: FicheModel){

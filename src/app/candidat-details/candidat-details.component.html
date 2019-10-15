@@ -57,9 +57,9 @@
             <input matInput formControlName="creePar" placeholder="Créé par: " name="creePar"  id="creePar" [(ngModel)]="candidat.creePar" (change)="updateModel(candidat)">
           </mat-form-field>
 
-          <div>
+          <mat-form-field>
             <input matInput formControlName="dateCreation" placeholder="Date de création: " name="dateCreation"  id="dateCreation" [(ngModel)]="candidat.dateCreation" (change)="updateModel(candidat)" disabled>
-          </div>
+          </mat-form-field>
         </div>
       </mat-card-content>
     </form>
@@ -132,9 +132,9 @@
               <input matInput formControlName="delai" placeholder="Délai de préavis: " name="delai"  id="delai" [(ngModel)]="candidat.delai" (change)="updateModel(candidat)">
             </mat-form-field>
 
-            <div>
-              <input matInput formControlName="dateDispo" placeholder="Date de disponibilité: " name="dateDispo"  id="dateDispo" [(ngModel)]="candidat.dateDispo" (change)="updateModel(candidat)">
-            </div>
+            <mat-form-field>
+              <input matInput formControlName="dateDispo" placeholder="Date de disponibilité: " name="dateDispo"  id="dateDispo" [value]="candidat.dateDispo | date: 'dd/MM/yyyy'" (change)="updateModel(candidat)">
+            </mat-form-field>
           </div>
         </mat-card-content>
       </form>
@@ -244,7 +244,7 @@
             </mat-form-field>
 
             <mat-form-field>
-              <input matInput formControlName="mobiliteGeographique" placeholder="Mobilité géographique: " name="mobiliteGeographique"  id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteAutresRegions" (change)="updateModel(candidat)">
+              <input matInput formControlName="mobiliteGeographique" placeholder="Mobilité géographique: " name="mobiliteGeographique"  id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteFrance" (change)="updateModel(candidat)">
             </mat-form-field>
 
             <mat-form-field>
@@ -261,14 +261,15 @@
   </mat-tab>
   <mat-tab label="2 - Dossier de Candidature">
     <p *ngFor="let c of objectKeys(candidat)">
-      <span *ngIf="c !=='fileBase64'">{{c}} :</span>
+      <span *ngIf="c !=='fileBase64'">{{columnsToDisplay[c]}} :</span>
       <span *ngIf="c !=='fileBase64'">{{candidat[c]}}</span>
     </p>
   </mat-tab>
   <mat-tab label="3 - Fiche Info Candidat">
     <div style="text-align: center">
       <h1>Fiche Process</h1>
-              <table id="ficheProcess">
+      <div id="ficheProcess">
+              <table>
                 <tr>
                   <th>Fiche Information Candidat</th>
                   <th>ASN</th>
@@ -276,7 +277,7 @@
                 <tr>
                   <td>Prénom du candidat :</td>
                   <td (click)="checkClickedRow('prenom')"><span [hidden]="cellClicked(candidat, 'prenom')">{{candidat.prenom}}</span>
-                    <input matInput [hidden]="!cellClicked(candidat, 'prenom')" placeholder="{{candidat.prenom}}" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">{{candidat.prenom}}</td>
+                    <input matInput [hidden]="!cellClicked(candidat, 'prenom')" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">{{candidat.prenom}}</td>
                 </tr>
                 <tr>
                   <td>Date des derniers entretiens :</td>
@@ -339,9 +340,12 @@
                   <td>{{candidat.anglais}}</td>
                 </tr>
               </table>
+      </div>
+              <button mat-button (click)="generateProcessDocument(candidat)">Générer la fiche Process</button>
 
               <h1>Fiche Recrutement</h1>
-              <table id="ficheRecrutement">
+      <div id="ficheRecrutement">
+              <table>
                 <tr>
                   <th>Fiche Information Candidat</th>
                   <th>ASN</th>
@@ -383,8 +387,11 @@
                   <td>{{candidat.numSecu}}</td>
                 </tr>
               </table>
+      </div>
+            <button mat-button (click)="generateRecruitmentDocument(candidat)">Générer la fiche Recrutement</button>
             </div>
-          </mat-tab>
+            <button mat-button (click)="generateProcessRecruitementDocument(candidat)">Générer la fiche hybride</button>
+  </mat-tab>
           <mat-tab label="4 - Documents Joints">
 
           </mat-tab>

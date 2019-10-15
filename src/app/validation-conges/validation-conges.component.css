@@ -1,0 +1,17 @@
+#planning tr, #planning td, #planning th {
+  border: black solid;
+}
+
+td {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.mat-button {
+  color: black;
+  font-size: 2em;
+}
+
+.mat-button:hover {
+  background: cornflowerblue;
+}

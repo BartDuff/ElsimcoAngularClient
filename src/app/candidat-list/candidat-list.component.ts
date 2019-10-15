@@ -9,6 +9,7 @@ import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Diplome} from '../models/diplome.model';
+import {hasProperties} from 'codelyzer/util/astQuery';
 
 @Component({
   selector: 'app-candidat-list',
@@ -29,8 +30,56 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   candidats: CandidatModel[];
   public ngUnsubscribe: Subject<void> = new Subject<void>();
   dataSource: any;
-  columnsToDisplay = ['nom', 'prenom', 'dateNaissance', 'nationalite', 'villeNaissance', 'departementNaissance', 'skype', 'telDomicile', 'permisB', 'voiture', 'permis2roues', 'deuxRoues', 'anglais', 'italien', 'allemand', 'espagnol', 'autreLangue', 'email', 'adresse', 'codePostal', 'ville', 'mobile', 'dateEnvoi', 'fileBase64',
-    'mobiliteParis', 'mobiliteFrance', 'mobiliteEurope', 'mobiliteIntl', 'reference1', 'reference2', 'diplome', 'enPoste', 'dateDispo', 'delai', 'raisonDispo', 'preavisNegociable', 'contrat', 'posteSouhaite', 'evolution5ans', 'numSecu', 'fixeDernierSalaireBrut', 'varDernierSalaireBrut', 'pretentionSalaireBrut', 'faitA', 'echangesEffectues'];
+  columnsToIgnore = ['secretid', 'fileBase64', 'accepte', 'ficheProcess','ficheRecrutement','ficheProcessRecrutement'];
+  columnsToDisplay = {
+    'id':'Id',
+    'secretid':'Id Secret',
+    'nom':'Nom',
+    'prenom': 'Prénom',
+    'dateNaissance': 'Date de Naissance',
+    'nationalite': 'Nationalité',
+    'villeNaissance': 'Ville de Naissance',
+    'departementNaissance': 'Département de Naissance',
+    'skype': 'Identifiant Skype',
+    'telDomicile': 'Téléphone domicile',
+    'posteRecherche':'Poste(s) Recherché(s)',
+    'permisB':'Permis B',
+    'voiture':'Voiture',
+    'permis2roues': 'Permis 2 roues',
+    'deuxRoues': '2 roues',
+    'anglais': 'Anglais',
+    'italien': 'Italien',
+    'allemand': 'Allemand',
+    'espagnol': 'Espagnol',
+    'autreLangue': 'Autre Langue',
+    'email': 'E-mail',
+    'adresse': 'Adresse',
+    'codePostal': 'Code postal',
+    'ville': 'Ville',
+    'mobile': 'Téléphone Mobile',
+    'dateEnvoi': 'Date d\'envoi',
+    'fileBase64': 'CV',
+    'mobiliteParis': 'Mobilité Paris-IdF',
+    'mobiliteFrance': 'Mobilité France',
+    'mobiliteEurope': 'Mobilité Europe',
+    'mobiliteIntl': 'Mobilité Internationale',
+    'reference1': 'Référence 1',
+    'reference2': 'Référence 2',
+    'diplome': 'Diplôme',
+    'enPoste': 'En Poste?',
+    'dateDispo': 'Date de disponibilité',
+    'delai': 'Délai disponibilité',
+    'raisonDispo': 'Raison de l\'écoute',
+    'preavisNegociable': 'Préavis négociable',
+    'contrat': 'Contrat',
+    'posteSouhaite': 'Poste souhaité',
+    'evolution5ans': 'Évolution souhaitée dans les 5 ans',
+    'numSecu': 'Numéro INSEE',
+    'fixeDernierSalaireBrut': 'Fixe du dernier salaire en brut',
+    'varDernierSalaireBrut': 'Variable du dernier salaire en brut',
+    'pretentionSalaireBrut': 'Prétentions salariales en brut',
+    'faitA': 'Fait à:',
+    'echangesEffectues': 'Echanges éffectués'};
 
 
   constructor(private candidatService: CandidatService,
@@ -58,7 +107,7 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
         this.totalPages = data.totalElements;
         this.qCandidatExemple = this.qCandidats[0];
         this.spinner = false;
-        this.dataSource = this.qCandidats;
+        this.dataSource = new MatTableDataSource(this.qCandidats);
         this.dataSource.paginator = this.paginator;
       }
     );
@@ -74,6 +123,16 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
         this.getQCandidates();
       }
     )
+  }
+
+  getUniqueValues(key){
+    let uniqueValues = [];
+    for(let c of this.qCandidats){
+      if(uniqueValues.indexOf(c[key]) == -1){
+        uniqueValues.push(c[key]);
+      }
+    }
+    return uniqueValues;
   }
 
   getCandidates() {
@@ -102,7 +161,11 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   }
 
   objectKeys(o){
-    return Object.keys(o);
+    let ok = [];
+    for (let k of Object.keys(o))
+      if (this.columnsToIgnore.indexOf(k) ==-1)
+        ok.push(k);
+    return ok;
   }
 
   applyFilter(filterValue: string) {
@@ -128,14 +191,14 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
       });
   }
 
-  cellClicked(row, column) {
-    let clicked = this.clickedColumn === this.columnsToDisplay.indexOf(column) && this.clickedRow === row.id;
-    return clicked;
-  }
-
-  checkClickedColumn(element){
-    this.clickedColumn = this.columnsToDisplay.indexOf(element);
-  }
+  // cellClicked(row, column) {
+  //   let clicked = this.clickedColumn === this.columnsToDisplay.indexOf(column) && this.clickedRow === row.id;
+  //   return clicked;
+  // }
+  //
+  // checkClickedColumn(element){
+  //   this.clickedColumn = this.columnsToDisplay.indexOf(element);
+  // }
 
   checkClickedRow(element){
     this.clickedRow = element.id;
@@ -163,3 +226,5 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   }
 
 }
+
+

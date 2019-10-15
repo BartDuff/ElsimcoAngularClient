@@ -80,6 +80,9 @@ import {FicheService} from './services/fiche.service';
 import { CongeListComponent } from './conge-list/conge-list.component';
 import { DemandeCongeComponent } from './demande-conge/demande-conge.component';
 import { ValidationCongesComponent } from './validation-conges/validation-conges.component';
+import { UniquePipe } from './unique.pipe';
+import { CommentDialogComponent } from './dialog/comment-dialog/comment-dialog.component';
+import { ConfirmationDialogComponent } from './dialog/confirmation-dialog/confirmation-dialog.component';
 const config: InputFileConfig = {};
 
 
@@ -120,7 +123,11 @@ const config: InputFileConfig = {};
     CandidatDetailsComponent,
     CongeListComponent,
     DemandeCongeComponent,
-    ValidationCongesComponent
+    ValidationCongesComponent,
+    UniquePipe,
+    UniquePipe,
+    CommentDialogComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -169,6 +176,6 @@ const config: InputFileConfig = {};
     {provide: DateAdapter, useClass: CustomDateAdapter }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmDialogComponent, EmailDialogComponent]
+  entryComponents: [ConfirmDialogComponent, EmailDialogComponent, CommentDialogComponent, ConfirmationDialogComponent]
 })
 export class AppModule { }

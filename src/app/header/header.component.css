@@ -23,6 +23,7 @@ a:hover, a:active {
 
 .mat-button {
   color: white;
+  font-size: 1em;
 }
 
 .mat-icon-button {
@@ -34,10 +35,14 @@ a:hover, a:active {
   background-color: black;
 }
 
-@media(max-width: 959px){
+@media(max-width: 800px){
   mat-toolbar{
     border-radius: 0px;
     background-color: black;
+  }
+
+  .mat-button {
+    font-size: 1em;
   }
 }
 

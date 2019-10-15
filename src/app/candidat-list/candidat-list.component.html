@@ -292,50 +292,113 @@
 <!--    <tr *ngFor="let c of qCandidats"><td style="  white-space: pre;" *ngFor="let k of objectKeys(qCandidatExemple)">{{ss(c[k])}}</td></tr>-->
 <!--  </table>-->
 </div>
-<div class="mat-elevation-z8">
-  <mat-paginator [length]="totalPages"
-                 [pageSize]="10"
-                 [pageSizeOptions]="[5, 10, 25, 100]"
-  showFirstLastButtons>
-  </mat-paginator>
-<div style="width: 100vw;overflow: scroll">
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-  <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
-    <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
-      <mat-form-field style="max-width:10em;text-align: center">
-        <input  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [placeholder]="x" [ngModelOptions]="{standalone: true}"
-                [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=1;getQCandidates()"  >
+<mat-tab-group>
+  <mat-tab label="Liste des candidats">
+    <div class="mat-elevation-z8">
+      <mat-paginator [length]="totalPages"
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 25, 100]"
+                     showFirstLastButtons>
+      </mat-paginator>
+      <div style="width: 100vw;overflow: scroll">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
+            <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
+              <mat-form-field style="max-width:10em;text-align: center">
+                <input  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [placeholder]="x" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=1;getQCandidates()"  >
 
-        <button style="z-index:100;  position:absolute;
+                <button style="z-index:100;  position:absolute;
                           top: -0.2em; right: 0px" *ngIf="candidatFiltre[x]"
-                (click)="candidatFiltre[x]='';getQCandidates();" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent mdl-js-ripple-effect ">
-          <i class="material-icons" title="clear filter">clear</i>
-        </button>
+                        (click)="candidatFiltre[x]='';getQCandidates();" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent mdl-js-ripple-effect ">
+                  <i class="material-icons" title="clear filter">clear</i>
+                </button>
 
-      </mat-form-field>
-<!--       {{x}}-->
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <a *ngIf="x === 'id';else others" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon> {{element[x]}}</a>
-      <ng-template #others>
-        {{element[x]}}
-      </ng-template>
-    </td>
-  </ng-container>
-  <td>
-    <mat-icon>remove_red_eye</mat-icon>
-  </td>
-  <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple)"></tr>
-  <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
+              </mat-form-field>
+              <!--       {{x}}-->
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <a *ngIf="x === 'id'" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon> {{element[x]}}</a>
+              <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{element[x] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ'">
+                {{element[x]}}
+              </span>
+            </td>
+          </ng-container>
+          <td>
+            <mat-icon>remove_red_eye</mat-icon>
+          </td>
+          <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple)"></tr>
+          <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
 
-</table>
-</div>
-</div>
-<mat-card *ngIf="spinner"
-          style="display: flex; justify-content: center; align-items: center">
-  <mat-progress-spinner
-    color="accent"
-    mode="indeterminate">
-  </mat-progress-spinner>
-</mat-card>
+        </table>
+      </div>
+    </div>
+    <mat-card *ngIf="spinner"
+              style="display: flex; justify-content: center; align-items: center">
+      <mat-progress-spinner
+        color="accent"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Sourcing">
+    <ng-template matTabContent>
+    <div class="mat-elevation-z8">
+      <mat-paginator [length]="totalPages"
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 25, 100]"
+                     showFirstLastButtons>
+      </mat-paginator>
+      <div style="width: 100vw;overflow: scroll">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
+            <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
+              <mat-form-field style="max-width:10em;text-align: center">
+                <mat-label>{{columnsToDisplay[x]}}</mat-label>
+                <mat-select #selector  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=1;getQCandidates()">
+                  <mat-option *ngFor="let v of getUniqueValues(x)" [value]="v">
+                    <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{v | date: 'dd/MM/yyyy'}}</span>
+                    <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ'">{{v}}</span>
+                  </mat-option>
+                </mat-select>
+
+                <button style="z-index:100;  position:absolute;
+                          top: -0.2em; right: 0px" *ngIf="candidatFiltre[x]"
+                        (click)="candidatFiltre[x]='';getQCandidates();" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent mdl-js-ripple-effect ">
+                  <i class="material-icons" title="clear filter">clear</i>
+                </button>
+
+              </mat-form-field>
+              <!--       {{x}}-->
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <a *ngIf="x === 'id'" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon> {{element[x]}}</a>
+              <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{element[x] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ'">
+                {{element[x]}}
+              </span>
+            </td>
+          </ng-container>
+          <td>
+            <mat-icon>remove_red_eye</mat-icon>
+          </td>
+          <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple)"></tr>
+          <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
+
+        </table>
+      </div>
+    </div>
+    <mat-card *ngIf="spinner"
+              style="display: flex; justify-content: center; align-items: center">
+      <mat-progress-spinner
+        color="accent"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </mat-card>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+
 

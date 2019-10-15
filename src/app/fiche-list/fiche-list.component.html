@@ -35,7 +35,8 @@
       <th>Mois</th>
       <th>Année</th>
       <th>Validée RH</th>
-      <th colspan="2">Télécharger</th>
+      <th>Télécharger</th>
+      <th>Refuser une fiche</th>
     </tr>
     </thead>
     <tbody>
@@ -57,6 +58,10 @@
       <td>
         <button type="button"
                 (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
+      </td>
+      <td>
+        <button type="button"
+                  (click)="refuseFicheRH(fiche)" matTooltip="Supprimer la fiche"><i class="material-icons">delete</i></button>
       </td>
     </tr>
     </tbody>

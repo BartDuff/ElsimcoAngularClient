@@ -57,4 +57,16 @@ export class CandidatService {
     return this.http.delete(`${API_URL}/candidats/${idASupprimer}`);
   }
 
+  downloadFicheProcess(id: string): Observable<any> {
+    return this.http.get(`${API_URL}/candidats/${id}/process`, { responseType: 'blob'});
+  }
+
+  downloadFicheRecrutement(id: string): Observable<any> {
+    return this.http.get(`${API_URL}/candidats/${id}/recruitment`, { responseType: 'blob'});
+  }
+
+  downloadFicheProcessRecrutement(id: string): Observable<any> {
+    return this.http.get(`${API_URL}/candidats/${id}/processrecruitment`, { responseType: 'blob'});
+  }
+
 }

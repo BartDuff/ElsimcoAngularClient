@@ -36,7 +36,7 @@ export class ContactService {
     return this.http.put<ContactModel>(`${API_URL}/contacts/${updateContact.id}`, updateContact);
   }
 
-  getContact(idRecherche: string): Observable<ContactModel> {
+  getContact(idRecherche: String): Observable<ContactModel> {
     return this.http.get<ContactModel>(`${API_URL}/contacts/${idRecherche}`);
   }
 

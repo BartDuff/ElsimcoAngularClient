@@ -4,7 +4,7 @@
 <td>{{ contact.mobile }}</td>
 <td><ul *ngFor="let poste of contact.posteRecherche.split(', ')"><li>{{poste}}</li></ul></td>
 <td>
-  <button type="button"
+  <button type="button" *ngIf="contact.fileBase64"
           (click)="downloadCV()"><i class="material-icons">file_download</i></button>
 </td>
 <td>

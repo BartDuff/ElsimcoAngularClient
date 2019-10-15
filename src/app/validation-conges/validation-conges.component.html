@@ -95,11 +95,15 @@
     </div>
   </mat-tab>
   <mat-tab label="Planning des congés">
-    <table class="bordered mat-elevation-z8" style="margin: auto; ">
+    <h1>Planning des Congés</h1>
+    <table class="bordered mat-elevation-z8" style="margin: auto;margin-top: 2em;" id="planning">
       <thead>
       <tr>
         <th
-          [colSpan]="getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear()).length">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</th>
+          [colSpan]="getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear()).length+2">
+          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1)" style="border: none;"><mat-icon>arrow_left</mat-icon></button>{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}
+          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1)" style="border: none;"><mat-icon>arrow_right</mat-icon></button></th>
+
       </tr>
       <tr>
         <th colspan="2">Jour</th>
@@ -115,13 +119,14 @@
       <tr>
         <td rowSpan="2">{{u.nom}} {{u.prenom}}</td>
         <td>Matin</td>
-        <td *ngFor="let m of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())">{{checkAskedHolidays(m,u)?'OK':''}}</td>
+        <td *ngFor="let m of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" [ngStyle]="{backgroundColor: checkAskedMorningHolidays(m,u)?'green':''}"></td>
       </tr>
       <tr>
         <td>Après-midi</td>
-        <td *ngFor="let j of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())">{{j.getDate()}}</td>
+        <td *ngFor="let j of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" [ngStyle]="{backgroundColor: checkAskedAfternoonHolidays(j,u)? 'green': ''}"></td>
       </tr>
       </tbody>
     </table>
+
   </mat-tab>
 </mat-tab-group>

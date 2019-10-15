@@ -87,7 +87,7 @@ export class ContactListComponent implements OnInit {
   }
 
   downloadCV(contactCV: ContactModel) {
-    this.contactService.getContact(contactCV.id).subscribe(
+    this.contactService.getContact(contactCV.secretid).subscribe(
       (res) => {
         let c : ContactModel = res ;
         console.log(c);
@@ -95,7 +95,8 @@ export class ContactListComponent implements OnInit {
           let blob = this.base64ToBlob(c.fileBase64);
           saveAs(blob, `${contactCV.prenom} ${contactCV.nom}_CV.pdf`);
         }
-      });
+      },
+      (err)=>this.toastrService.error('Erreur', 'Erreur'));
   }
 
   public base64ToBlob(b64Data, contentType='', sliceSize=512) {

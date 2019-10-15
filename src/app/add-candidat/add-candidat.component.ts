@@ -44,6 +44,7 @@ export class AddCandidatComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.clear();
     this.contactForm1 = this.formBuilder.group({
       nom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
       prenom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
@@ -79,6 +80,7 @@ export class AddCandidatComponent implements OnInit {
     this.contactForm4 = this.formBuilder.group({
       mobiliteParis: ['', Validators.required],
       mobiliteFrance: ['', Validators.required],
+      regionsFrance:[''],
       mobiliteEurope: ['', Validators.required],
       mobiliteIntl: ['', Validators.required]
     });

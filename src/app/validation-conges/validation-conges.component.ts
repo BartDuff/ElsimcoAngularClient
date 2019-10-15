@@ -105,19 +105,26 @@ refuseCongeRH(conge: CongeModel){
     );
   }
 
-  checkAskedHolidays(day: Date, user: UserModel) {
-    this.getHolidays(user);
-    let d = moment(day).format('DD/MM/YYYY').toString();
-    // console.log(this.mesConges.indexOf(d));
-    // console.log(d);
-    // console.log(this.mesConges);
-    for (let x of this.daysOffSavedObjArr) {
-      if (x.date == d) {
-        return true;
+  checkAskedMorningHolidays(day, user: UserModel) {
+    for (let x of this.congesValides) {
+      if (new Date(x.date).toDateString() == day.toDateString() && x.user.id == user.id) {
+        if(x.demiJournee && x.typeDemiJournee == 'Matin' || !x.demiJournee){
+          return true;
+        }
       }
     }
     return false;
-    //return this.mesConges.indexOf(d) != -1;
+  }
+
+  checkAskedAfternoonHolidays(day, user: UserModel) {
+    for (let x of this.congesValides) {
+      if (new Date(x.date).toDateString() == day.toDateString() && x.user.id == user.id) {
+        if(x.demiJournee && x.typeDemiJournee == 'Après-midi' || !x.demiJournee){
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 }

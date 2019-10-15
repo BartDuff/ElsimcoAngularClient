@@ -32,7 +32,8 @@ export class UserEditComponent implements OnInit {
       trigramme:['', Validators.required],
       cpNMoins1:['', Validators.required],
       cpN:['', Validators.required],
-      rttn:['', Validators.required]
+      rttn:['', Validators.required],
+      congeAnciennete:['', Validators.required]
     });
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
@@ -46,6 +47,7 @@ export class UserEditComponent implements OnInit {
           this.editForm.controls.cpNMoins1.setValue(data.cpNMoins1);
           this.editForm.controls.cpN.setValue(data.cpN);
           this.editForm.controls.rttn.setValue(data.rttn);
+          this.editForm.controls.rttn.setValue(data.congeAnciennete);
         }
       )
     );

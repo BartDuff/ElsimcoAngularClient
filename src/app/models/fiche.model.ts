@@ -21,4 +21,5 @@ export class FicheModel {
   commentaires:any = {};
   tableImg:any;
   valideRH: boolean;
+  commentaireSup: String;
 }

@@ -44,4 +44,8 @@ export class FicheService {
     const idASupprimer = fiche.id;
     return this.http.delete(`${API_URL}/fiches/${idASupprimer}`);
   }
+
+  sendComment(user, comment: String): Observable<any> {
+    return this.http.post(`${API_URL}/emails/${user.id}/comment`, comment);
+  }
 }

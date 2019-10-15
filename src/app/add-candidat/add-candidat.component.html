@@ -373,6 +373,25 @@
               <mat-option [value]="false">Non</mat-option>
             </mat-select>
           </mat-form-field>
+
+          <mat-form-field *ngIf="contactForm4.controls.mobiliteFrance.value">
+            <mat-label>Mobilité dans les régions suivantes:</mat-label>
+            <mat-select formControlName="regionsFrance" multiple>
+              <mat-option value="" disabled selected>Sélectionnez une ou plusieurs option(s)</mat-option>
+              <mat-option value="Hauts-de-France">Hauts-de-France</mat-option>
+              <mat-option value="Normandie">Normandie</mat-option>
+              <mat-option value="Bretagne">Bretagne</mat-option>
+              <mat-option value="Grand-Est">Grand-Est</mat-option>
+              <mat-option value="Pays de la Loire">Pays de la Loire</mat-option>
+              <mat-option value="Centre-Val de Loire">Centre-Val de Loire</mat-option>
+              <mat-option value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</mat-option>
+              <mat-option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</mat-option>
+              <mat-option value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</mat-option>
+              <mat-option value="Occitanie">Occitanie</mat-option>
+              <mat-option value="Provence-Alpes-Côte d'Azur">Provence-Alpes-Côte d'Azur</mat-option>
+              <mat-option value="Corse">Corse</mat-option>
+            </mat-select>
+          </mat-form-field>
           <!--          <div class="form-field">-->
           <!--            <label for="mobiliteFrance">Mobilité France-->
           <!--              <select id="mobiliteFrance" formControlName="mobiliteFrance" required>-->
@@ -592,7 +611,7 @@
           <mat-form-field>
             <label>
               <input matInput
-                     placeholder="Évolution souhaitée ?"
+                     placeholder="Évolution souhaitée dans les 5 ans à venir?"
                      formControlName="evolution5ans" required>
             </label>
           </mat-form-field>

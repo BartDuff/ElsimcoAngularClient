@@ -35,7 +35,8 @@ export class UserAddComponent implements OnInit {
       trigramme:['', Validators.required],
       cpNMoins1:['', Validators.required],
       cpN:['', Validators.required],
-      rttn:['', Validators.required]
+      rttn:['', Validators.required],
+      congeAnciennete:['', Validators.required]
     });
 
   }
@@ -48,6 +49,7 @@ export class UserAddComponent implements OnInit {
     this.user.cpNMoins1 = this.f.cpNMoins1;
     this.user.cpN = this.f.cpN;
     this.user.rttn = this.f.rttn;
+    this.user.congeAnciennete = this.f.congeAnciennete;
     this.user.role = this.addForm.get('role').value;
     this.user.fonction = this.addForm.get('fonction').value;
     this.userService.addUser(this.user)

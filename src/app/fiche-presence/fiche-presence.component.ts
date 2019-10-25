@@ -1,7 +1,7 @@
 import {Component, ChangeDetectorRef, OnInit, ViewChild, AfterViewChecked} from '@angular/core';
 import * as moment from 'moment';
 import {Moment} from 'moment';
-import {DateAdapter, MatDateFormats, MatMonthView} from '@angular/material';
+import {DateAdapter, MatDateFormats, MatDialog, MatDialogConfig, MatMonthView} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {NgForm} from '@angular/forms';
 import {PdfService} from '../services/pdf.service';
@@ -10,6 +10,8 @@ import htmlToImage from 'html-to-image';
 import {image} from 'html2canvas/dist/types/css/types/image';
 import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
+import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
+import {CommentFicheDialogComponent} from '../dialog/comment-fiche-dialog/comment-fiche-dialog.component';
 
 @Component({
   selector: 'app-fiche-presence',
@@ -25,8 +27,9 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
   daysOff = [];
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
-  absTypes= ["RTT E", "RTT S", "Congés payés", "Absence exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
-  absShortTypes= ["RTT E.", "RTT S.", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
+  absTypes= ["RTT", "Congés payés", "Absence exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
+  absences= ["RTT E","RTT S", "Congés payés", "Absence exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
+  absShortTypes= ["RTT", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
   dateNow : Date;
   FicheEnvoyee:boolean;
   daysOffSavedObjArr = [];
@@ -37,11 +40,10 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   }
 
   creatArray(number){
-    console.log(new Array(number));
      return new Array(number);
   }
 
-  getAbsTypeShort(date) {
+  getAbsTypeShort(date, formval?) {
     for (let x of this.daysOffSavedObjArr) {
       if (x.date == date) {
         return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
@@ -112,14 +114,20 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       (data) => {
         for (let d of data) {
           //this.mesConges.push(moment(d.date).format('DD/MM/YYYY').toString());
-          this.daysOffSavedObjArr.push(({
-            date: moment(d.date).format('DD/MM/YYYY').toString(),
-            typeConge: d.typeConge,
-            demiJournee: d.demiJournee,
-            typeDemiJournee: d.typeDemiJournee,
-            valideRH: d.valideRH
-          }));
+          if (d.valideRH){
+            this.daysOffSavedObjArr.push(({
+              date: moment(d.date).format('DD/MM/YYYY').toString(),
+              typeConge: d.typeConge,
+              demiJournee: d.demiJournee,
+              typeDemiJournee: d.typeDemiJournee,
+              valideRH: d.valideRH,
+              commentaires: d.commentaires
+            }));
+          }
         }
+        // for(let day of this.daysOffSavedObjArr){
+        //   this.daysOff.push(day.date);
+        // }
       }
     );
   }
@@ -140,7 +148,6 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
 
   addCells(){
      let d = this.getWeekday(moment().startOf('month').toDate());
-     console.log(moment().startOf('month').toDate());
      return d;
   }
 
@@ -150,7 +157,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   c(cc){
     console.log(cc)
   }
-  constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService, private userService:UserService) {
+  constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService, private userService:UserService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -208,7 +215,7 @@ checkWeekends(day:Date){
      return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString());
 }
   addRemoveDay(event) {
-     if(this.checkWeekends(event)){
+     if(this.checkWeekends(event) || this.checkAskedHolidays(event)){
         return;
      } else {
        this.selectedDate = event;
@@ -283,7 +290,7 @@ checkWeekends(day:Date){
   sendFiche(form: NgForm){
     let fiche = new FicheModel();
     let table = document.getElementById('calendrier');
-    htmlToImage.toPng(table).then((image)=>{
+    htmlToImage.toPng(table).then((image)=> {
       fiche.tableImg = image;
       fiche.annee = this.dateNow.getFullYear();
       fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
@@ -299,22 +306,34 @@ checkWeekends(day:Date){
       fiche.user = JSON.parse(localStorage.getItem('currentUser'));
       fiche.joursOuvres = this.joursOuvres().length;
       fiche.joursTravailles = this.joursOuvres().length - this.countJoursNonTravailles(form);
-      for(let key in form.value){
+      for (let key in form.value) {
         if (form.value.hasOwnProperty(key)) {
           if (key.endsWith(" comm")) {
-            console.log(form.value[key]);
-            fiche.commentaires[form.value[key.substr(0,10)]+" "+ key.substr(0,10)] = form.value[key];
+            fiche.commentaires[form.value[key.substr(0, 10)] + " " + key.substr(0, 10)] = form.value[key];
           }
         }
       }
+      for (let c of this.daysOffSavedObjArr) {
+          if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()) {
+            fiche.commentaires[c.typeConge + " " + c.date] = c.commentaires;
+          }
+        }
       fiche.uri = `${fiche.user.prenom}_${fiche.user.nom}_${fiche.user.trigramme}_${fiche.mois}${fiche.annee}.pdf`;
-      this.pdfService.sendFiche(fiche).subscribe(
+      fiche.valideRH = false;
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      const dialogRef = this.dialog.open(CommentFicheDialogComponent, dialogConfig);
+      dialogRef.afterClosed().subscribe(
         (data) => {
-          this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
-          this.getFichesForUser();
-        });
+          fiche.commentaireSup = data.commentaire;
+          this.pdfService.sendFiche(fiche).subscribe(
+            (data) => {
+              this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
+              this.getFichesForUser();
+            })
+        })
     });
-
   }
 
   countRTTE(form: NgForm) {
@@ -337,6 +356,14 @@ checkWeekends(day:Date){
 
   countRTTS(form: NgForm) {
     let count = 0;
+    for(let c of this.daysOffSavedObjArr){
+      if(c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+        if(c.demiJournee)
+          count = count + 0.5;
+        else
+          count++;
+      }
+    }
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
@@ -355,6 +382,14 @@ checkWeekends(day:Date){
 
   countConges(form: NgForm) {
     let count = 0;
+    for(let c of this.daysOffSavedObjArr){
+      if(c.typeConge == 'Congés payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+        if(c.demiJournee)
+          count = count + 0.5;
+        else
+          count++;
+      }
+    }
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
@@ -373,11 +408,19 @@ checkWeekends(day:Date){
 
   countAbsences(form: NgForm) {
     let count = 0;
+    for(let c of this.daysOffSavedObjArr){
+      if(c.typeConge == 'Absence exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+        if(c.demiJournee)
+          count = count + 0.5;
+        else
+          count++;
+      }
+    }
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];
         let nextValue = form.value[key + " boolean"];
-        if (value === "Absences exceptionnelle") {
+        if (value === "Absence exceptionnelle") {
           if (nextValue){
             count = count + 0.5;
           } else {
@@ -391,6 +434,14 @@ checkWeekends(day:Date){
 
   countSansSolde(form: NgForm) {
     let count = 0;
+    for(let c of this.daysOffSavedObjArr){
+      if(c.typeConge == 'Congé sans solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+        if(c.demiJournee)
+          count = count + 0.5;
+        else
+          count++;
+      }
+    }
     for(let key in form.value){
       if(form.value.hasOwnProperty(key)) {
         let value = form.value[key];

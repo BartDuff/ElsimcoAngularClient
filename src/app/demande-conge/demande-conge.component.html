@@ -2,10 +2,10 @@
   Outils demande de congés
 </h1>
 <div>
-  <div><strong>Solde CP année N-1: </strong>{{currentUser.cpNMoins1}}</div>
-  <div><strong>Solde CP année N: </strong>{{currentUser.cpN}}</div>
-  <div><strong>Solde RTT (h): </strong>{{currentUser.rttn}}</div>
-  <div><strong>Solde Ancienneté: </strong>{{currentUser.congeAnciennete}}</div>
+  <div><strong>Solde CP année N-1: </strong>{{countConges()}}</div>
+  <div><strong>Solde CP année N: </strong>{{countCongesAnticipes()}}</div>
+  <div><strong>Solde RTT (h): </strong>{{countRTT()}}</div>
+  <div><strong>Solde Ancienneté: </strong>{{countAnciennete()}}</div>
 </div>
 <br>
 <div style="display: flex; justify-content: center; align-items: center">
@@ -39,7 +39,7 @@
                style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day)}">
             <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
               <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
-              <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{absShortTypes[absTypes.indexOf(f.value[toMomentFormat(day)])]}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+              <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
             </div>
 
           </div>
@@ -82,8 +82,8 @@
                 <span class="prefix" matPrefix>{{dayOff.date}}</span>
                 <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="autoFillType(dayOff)">
                   <mat-option *ngFor="let absence of absTypes" [value]="absence">
-                    <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.cpNMoins1>0?'darkblue':'red'}">{{currentUser.cpNMoins1}}</span>
-                    <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':currentUser.rttn>0?'darkblue':'red'}">{{currentUser.rttn}}</span> {{absence}}
+                    <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>
+                    <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> {{absence}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

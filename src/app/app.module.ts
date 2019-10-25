@@ -83,6 +83,8 @@ import { ValidationCongesComponent } from './validation-conges/validation-conges
 import { UniquePipe } from './unique.pipe';
 import { CommentDialogComponent } from './dialog/comment-dialog/comment-dialog.component';
 import { ConfirmationDialogComponent } from './dialog/confirmation-dialog/confirmation-dialog.component';
+import { CommentFicheDialogComponent } from './dialog/comment-fiche-dialog/comment-fiche-dialog.component';
+import { AllowAnticipationDialogComponent } from './dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
 const config: InputFileConfig = {};
 
 
@@ -127,7 +129,9 @@ const config: InputFileConfig = {};
     UniquePipe,
     UniquePipe,
     CommentDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    CommentFicheDialogComponent,
+    AllowAnticipationDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -176,6 +180,6 @@ const config: InputFileConfig = {};
     {provide: DateAdapter, useClass: CustomDateAdapter }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmDialogComponent, EmailDialogComponent, CommentDialogComponent, ConfirmationDialogComponent]
+  entryComponents: [ConfirmDialogComponent, EmailDialogComponent, CommentDialogComponent, ConfirmationDialogComponent, CommentFicheDialogComponent, AllowAnticipationDialogComponent]
 })
 export class AppModule { }

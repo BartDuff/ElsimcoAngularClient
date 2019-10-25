@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatMonthView} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatMonthView} from '@angular/material';
 import {Moment} from 'moment';
 import {NgForm} from '@angular/forms';
 import {UserModel} from '../models/user.model';
@@ -13,6 +13,8 @@ import * as moment from 'moment';
 import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
 import {xdescribe} from '@angular/core/testing/src/testing_internal';
+import {CommentFicheDialogComponent} from '../dialog/comment-fiche-dialog/comment-fiche-dialog.component';
+import {AllowAnticipationDialogComponent} from '../dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
 
 @Component({
   selector: 'app-demande-conge',
@@ -25,9 +27,8 @@ export class DemandeCongeComponent implements OnInit {
   @ViewChild('f') f: NgForm;
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
-  previousCount: String;
-  previousDate: String;
   //selectedDate: Moment;
+  allowAnticipation = false;
   mouseDown: boolean = false;
   joursDeLaSemaine = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
   //daysOff = [];
@@ -45,6 +46,11 @@ export class DemandeCongeComponent implements OnInit {
 
   getAbsTypeShort(date) {
     for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
+      }
+    }
+    for (let x of this.daysOffSelectedObjArr) {
       if (x.date == date) {
         return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
       }
@@ -69,10 +75,17 @@ export class DemandeCongeComponent implements OnInit {
         }
       }
     }
+    for (let x of this.daysOffSelectedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return '1/2';
+        }
+      }
+    }
     return '';
   }
 
-  constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService) {
+  constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService, private dialog:MatDialog) {
   }
 
   getDayColor(day) {
@@ -145,34 +158,88 @@ export class DemandeCongeComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  decreaseCount(absence) {
-    if (absence.typeConge === 'Congés payés') {
-      if (this.previousCount === 'RTT' && this.previousDate === absence.date && this.currentUser.rttn != 0) {
-        this.currentUser.rttn += 1;
-      }
-      if (this.currentUser.cpNMoins1 > 0) {
-        this.currentUser.cpNMoins1 -= 1;
-      } else {
-        this.toastr.error('Votre solde est insuffisant', 'Avertissement');
-      }
-      this.previousCount = 'Congés payés';
-    }
-    if (absence.typeConge === 'RTT') {
-      if (this.previousCount === 'Congés payés' && this.previousDate === absence.date && this.currentUser.cpNMoins1 != 0) {
-        this.currentUser.cpNMoins1 += 1;
-      }
-      if (this.currentUser.rttn > 0) {
-        this.currentUser.rttn -= 1;
-      } else {
-        this.toastr.error('Votre solde est insuffisant', 'Avertissement');
-      }
-      this.previousCount = 'RTT';
-    }
-    this.previousDate = absence.date;
-  }
+  // decreaseCount(absence) {
+  //   if (absence.typeConge === 'Congés payés') {
+  //     if (this.previousCount === 'RTT' && this.previousDate === absence.date && this.currentUser.rttn != 0) {
+  //       if(absence.demiJournee)
+  //         this.currentUser.rttn += 3.5;
+  //       else
+  //         this.currentUser.rttn +=7;
+  //     }
+  //     if (this.currentUser.cpNMoins1 > 0) {
+  //       this.currentUser.cpNMoins1 -= 1;
+  //     } else {
+  //       this.toastr.error('Votre solde est insuffisant', 'Avertissement');
+  //     }
+  //     this.previousCount = 'Congés payés';
+  //   }
+  //   if (absence.typeConge === 'RTT') {
+  //     if (this.previousCount === 'Congés payés' && this.previousDate === absence.date && this.currentUser.cpNMoins1 != 0) {
+  //       this.currentUser.cpNMoins1 += 1;
+  //     }
+  //     if (this.currentUser.rttn >=3.5) {
+  //       if(absence.demiJournee)
+  //         this.currentUser.rttn -= 3.5;
+  //       else
+  //         this.currentUser.rttn -= 7;
+  //     } else {
+  //       this.toastr.error('Votre solde est insuffisant', 'Avertissement');
+  //     }
+  //     this.previousCount = 'RTT';
+  //   }
+  //   this.previousDate = absence.date;
+  // }
+
+  // decreaseCountNew(absence) {
+  //   if (absence.typeConge === this.previousCount && this.previousDate === absence.date) {
+  //     this.previousDate = absence.date;
+  //     this.previousCount = absence.typeConge;
+  //     return;
+  //   }
+  //   if (absence.typeConge === 'Congés payés'){
+  //     if (this.previousCount === 'RTT' && this.previousDate === absence.date && this.countRTTN != 0) {
+  //         this.countRTTN = this.previousCountRTTN;
+  //     }
+  //     if (this.currentUser.cpNMoins1 > 0) {
+  //       if(absence.demiJournee){
+  //         this.previousCountCPNmoins1 = this.countCPNmoins1;
+  //         this.countCPNmoins1 -= 0.5;
+  //       } else {
+  //         this.previousCountCPNmoins1 = this.countCPNmoins1;
+  //         this.countCPNmoins1 -= 1;
+  //       }
+  //     } else {
+  //       this.toastr.error('Votre solde est insuffisant', 'Avertissement');
+  //     }
+  //     this.previousCount = 'Congés payés';
+  //   }
+  //   if (absence.typeConge === 'RTT') {
+  //     if (this.previousCount === 'Congés payés' && this.previousDate === absence.date && this.countCPNmoins1 != 0) {
+  //       this.countCPNmoins1 = this.previousCountCPNmoins1;
+  //     }
+  //     if(absence.demiJournee){
+  //       if (this.countRTTN >=3.5) {
+  //         this.previousCountRTTN = this.countRTTN;
+  //         this.countRTTN -= 3.5;
+  //       } else {
+  //         this.toastr.error('Votre solde est insuffisant', 'Avertissement');
+  //       }
+  //     } else {
+  //         if (this.countRTTN >=7){
+  //           this.previousCountRTTN = this.countRTTN;
+  //           this.countRTTN -= 7;
+  //         } else {
+  //           this.toastr.error('Votre solde est insuffisant', 'Avertissement');
+  //         }
+  //     }
+  //     this.previousCount = 'RTT';
+  //   }
+  //   this.previousDate = absence.date;
+  // }
 
   autoFillType(absence) {
     let ifrom = 0;
+    let countConges = this.countConges();
     for (let i = 0; i < this.daysOffSelectedObjArr.length; i++) {
       if (this.daysOffSelectedObjArr[i].date == absence.date) {
         //console.log("found "+date+ " at position "+ i)
@@ -181,8 +248,23 @@ export class DemandeCongeComponent implements OnInit {
       }
     }
     for (; ifrom < this.daysOffSelectedObjArr.length; ifrom++) {
+      let half = absence.demiJournee ? 0.5 : 1;
+      if(absence.typeConge == 'Congés payés' && countConges - half < 0 && !this.allowAnticipation){
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+          (data) => {
+            this.allowAnticipation = data;
+          });
+        break;
+      }
       this.daysOffSelectedObjArr[ifrom].typeConge = absence.typeConge;
-      this.decreaseCount(absence);
+      // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
+      if(this.daysOffSelectedObjArr[ifrom+1].typeConge == absence.typeConge){
+        break;
+      }
     }
     if (this.daysOffSelectedObjArr.length > 1) {
       this.toastr.warning('Le motif d\'absence "' + absence.typeConge + '" a été appliqué à toutes les dates sélectionnées à partir du ' + absence.date + '. Veuillez le préciser si nécessaire.', 'Attention');
@@ -348,11 +430,14 @@ export class DemandeCongeComponent implements OnInit {
           conge.commentaires = form.value[key];
           this.congeService.addConge(conge).subscribe(
             () => {
+              this.currentUser.cpNMoins1 = this.countConges();
+              this.currentUser.cpN = this.countCongesAnticipes();
+              this.currentUser.rttn = this.countRTT();
               this.userService.editUser(this.currentUser).subscribe(
                 ()=> {
                   this.toastr.success('Ajouté');
                   this.userService.getUser(this.currentUser.id).subscribe(
-
+                    (user)=>localStorage.setItem('currentUser', JSON.stringify(user))
                   )
                 }
               )
@@ -378,54 +463,75 @@ export class DemandeCongeComponent implements OnInit {
     this.ngOnInit();
   }
 
-  countRTTE(form: NgForm) {
-    let count = 0;
-    for (let key in form.value) {
-      if (form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + ' boolean'];
-        if (value === 'RTT E') {
-          if (nextValue) {
-            count = count + 0.5;
-          } else {
-            count++;
-          }
-        }
+  countRTT() {
+    let count = this.currentUser.rttn;
+    for (let d of this.daysOffSelectedObjArr) {
+      let half = d.demiJournee ? 3.5 : 7;
+      if (d.typeConge == 'RTT') {
+        count -= half;
       }
     }
     return count;
   }
 
-  countRTTS(form: NgForm) {
-    let count = 0;
-    for (let key in form.value) {
-      if (form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + ' boolean'];
-        if (value === 'RTT S') {
-          if (nextValue) {
-            count = count + 0.5;
-          } else {
-            count++;
+  countConges() {
+    let count = this.currentUser.cpNMoins1;
+    let countAnciente = this.currentUser.congeAnciennete;
+    for (let d of this.daysOffSelectedObjArr) {
+      let half = d.demiJournee ? 0.5 : 1;
+      if (d.typeConge == 'Congés payés') {
+        if (countAnciente - half <0){
+          if(count-half<0){
+            break;
           }
+          count -= half;
+        } else {
+          countAnciente -=half;
         }
       }
+    }
+    if(count == 0 && this.countCongesAnticipes()==this.currentUser.cpN){
+      this.allowAnticipation = false;
     }
     return count;
   }
 
-  countConges(form: NgForm) {
-    let count = 0;
-    for (let key in form.value) {
-      if (form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + ' boolean'];
-        if (value === 'Congés payés') {
-          if (nextValue) {
-            count = count + 0.5;
-          } else {
-            count++;
+  countAnciennete(){
+    let count = this.currentUser.congeAnciennete;
+    for (let d of this.daysOffSelectedObjArr) {
+        let half = d.demiJournee ? 0.5 : 1;
+        if (d.typeConge == 'Congés payés') {
+          if(count - half<0){
+            break;
           }
+          count -= half;
+        }
+      }
+    return count;
+  }
+
+  countCongesAnticipes(){
+    let count = this.currentUser.cpN;
+    let countCPNmoins1 = this.currentUser.cpNMoins1;
+    let countAnciente = this.currentUser.congeAnciennete;
+    for (let d of this.daysOffSelectedObjArr) {
+      let half = d.demiJournee ? 0.5 : 1;
+      if (d.typeConge == 'Congés payés') {
+        if (countAnciente - half <0){
+          if(countCPNmoins1-half<0){
+            if(this.allowAnticipation){
+              if (count - half < 0){
+                break;
+              }
+              count -= half;
+            } else {
+             break;
+            }
+          } else {
+            countCPNmoins1 -= half;
+          }
+        } else {
+          countAnciente -=half;
         }
       }
     }
@@ -485,11 +591,6 @@ export class DemandeCongeComponent implements OnInit {
       }
     }
     return count;
-  }
-
-  countJoursNonTravailles(form: NgForm) {
-    return this.countAbsences(form) + this.countConges(form) +
-      +this.countMaladie(form) + this.countRTTE(form) + this.countRTTS(form) + this.countSansSolde(form);
   }
 
   handleFile(){

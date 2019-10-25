@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Envoyer votre fiche?</h2>
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field>
+    <input matInput
+           placeholder="Commentaire général"
+           formControlName="commentaire">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button id="yes" class="mat-raised-button" (click)="envoyer()">Envoyer</button>
+  <button id="no" class="mat-raised-button mat-accent" (click)="fermer()">Annuler</button>
+</mat-dialog-actions>

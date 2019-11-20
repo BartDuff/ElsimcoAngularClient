@@ -597,7 +597,6 @@ export class DemandeCongeComponent implements OnInit {
     console.log("handleFile");
     for(let i=0; i < this.inputFileComponent.files.length;i++) {
       var file = this.inputFileComponent.files[i];
-      console.log (file.file.name,i);
       this.filename=file.file.name;
       if (file) {
         var reader = new FileReader();
@@ -623,12 +622,11 @@ export class DemandeCongeComponent implements OnInit {
     var length = bytes.byteLength;
     for (var i = 0; i < length; i++)
       binary += String.fromCharCode(bytes[i]);
+    btoa(binary)
   }
   _handleReaderLoaded(readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
-    console.log(readerEvt);
-    console.log("_handleReaderLoaded");
-    console.log(this.s(this.selectedFiles));
+    btoa(readerEvt.target.result)
   }
 
 }

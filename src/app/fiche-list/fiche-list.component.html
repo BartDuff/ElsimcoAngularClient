@@ -1,8 +1,7 @@
-<h2 *ngIf="currentUser.fonction ==='CONSULTANT'">Mes Fiches de présence:</h2>
-<h2 *ngIf="currentUser.fonction ==='RH' || currentUser.fonction ==='DIRECTION'">Fiches de présence des collaborateurs:</h2>
+<h2>Mes Fiches de présence:</h2>
 
 <div style="margin-top: 2em;">
-  <table *ngIf="currentUser.fonction ==='CONSULTANT'" class="bordered mat-elevation-z8" style="margin: auto; ">
+  <table class="bordered mat-elevation-z8" style="margin: auto; ">
     <thead>
     <tr>
       <th>Mois</th>
@@ -17,82 +16,11 @@
       <td>{{fiche.annee}}</td>
       <td><mat-icon *ngIf="fiche.valideRH; else unvalid">check</mat-icon></td>
       <ng-template #unvalid>
-        <mat-icon>close</mat-icon>
+        <mat-icon>access_time</mat-icon>
       </ng-template>
       <td>
         <button type="button"
                 (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <table *ngIf="currentUser.fonction ==='RH'" class="bordered mat-elevation-z8" style="margin: auto; ">
-    <thead>
-    <tr>
-      <th>Nom</th>
-      <th>Prénom</th>
-      <th>Trigramme</th>
-      <th>Mois</th>
-      <th>Année</th>
-      <th>Validée RH</th>
-      <th>Télécharger</th>
-      <th>Refuser une fiche</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let fiche of allFiches">
-      <td>{{fiche.user.nom}}</td>
-      <td>{{fiche.user.prenom}}</td>
-      <td>{{fiche.user.trigramme}}</td>
-      <td>{{fiche.mois}}</td>
-      <td>{{fiche.annee}}</td>
-      <td>
-        <button type="button" *ngIf="!fiche.valideRH;else valid"
-                (click)="validateFicheRH(fiche)" matTooltip="Valider la fiche"><mat-icon>check_circle</mat-icon></button>
-        <button type="button" *ngIf="!fiche.valideRH"
-                (click)="refuseFicheRH(fiche)" matTooltip="Refuser la fiche"><mat-icon>close_circle</mat-icon></button>
-      </td>
-      <ng-template #valid>
-        <mat-icon>check</mat-icon>
-      </ng-template>
-      <td>
-        <button type="button"
-                (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
-      </td>
-      <td>
-        <button type="button"
-                  (click)="refuseFicheRH(fiche)" matTooltip="Supprimer la fiche"><i class="material-icons">delete</i></button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <table *ngIf="currentUser.fonction ==='DIRECTION'" class="bordered mat-elevation-z8" style="margin: auto; ">
-    <thead>
-    <tr>
-      <th>Nom</th>
-      <th>Prénom</th>
-      <th>Trigramme</th>
-      <th>Mois</th>
-      <th>Année</th>
-      <th>Validée RH</th>
-      <th>Validée Direction</th>
-      <th colspan="2">Télécharger</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let fiche of allRHValidFiches">
-      <td>{{fiche.user.nom}}</td>
-      <td>{{fiche.user.prenom}}</td>
-      <td>{{fiche.user.trigramme}}</td>
-      <td>{{fiche.mois}}</td>
-      <td>{{fiche.annee}}</td>
-      <td><mat-icon *ngIf="fiche.valideRH; else unvalid">check</mat-icon></td>
-      <ng-template #unvalid>
-        <mat-icon>close</mat-icon>
-      </ng-template>
-      <td>
-        <button type="button"
-                (click)="downloadDocument(fiche)"><i class="material-icons">file_download</i></button>
       </td>
     </tr>
     </tbody>

@@ -305,7 +305,7 @@
           <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
             <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
               <mat-form-field style="max-width:10em;text-align: center">
-                <input  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [placeholder]="x" [ngModelOptions]="{standalone: true}"
+                <input  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [placeholder]="columnsToDisplay[x]" [ngModelOptions]="{standalone: true}"
                         [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=1;getQCandidates()"  >
 
                 <button style="z-index:100;  position:absolute;
@@ -352,15 +352,14 @@
       </mat-paginator>
       <div style="width: 100vw;overflow: scroll">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-          <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
+          <ng-container *ngFor="let x of objectKeysFiltered(qCandidatExemple)" [matColumnDef]="x">
             <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
               <mat-form-field style="max-width:10em;text-align: center">
                 <mat-label>{{columnsToDisplay[x]}}</mat-label>
                 <mat-select #selector  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [ngModelOptions]="{standalone: true}"
                         [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=1;getQCandidates()">
                   <mat-option *ngFor="let v of getUniqueValues(x)" [value]="v">
-                    <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{v | date: 'dd/MM/yyyy'}}</span>
-                    <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ'">{{v}}</span>
+                    <span>{{v}}</span>
                   </mat-option>
                 </mat-select>
 
@@ -384,8 +383,8 @@
           <td>
             <mat-icon>remove_red_eye</mat-icon>
           </td>
-          <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple)"></tr>
-          <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
+          <tr mat-header-row *matHeaderRowDef="objectKeysFiltered(qCandidatExemple)"></tr>
+          <tr mat-row *matRowDef="let row; columns: objectKeysFiltered(qCandidatExemple);"></tr>
 
         </table>
       </div>

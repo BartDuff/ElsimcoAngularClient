@@ -50,7 +50,7 @@ export class CandidatModel extends ContactModel {
   creePar: String;
   dateCreation: Date;
   statut:String;
-  sourceCV:String;
+  sourceCv:String;
   dateMAJ: Date;
   majPar: String;
   alerteMAJ: Date;

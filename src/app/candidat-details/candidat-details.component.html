@@ -1,398 +1,711 @@
-<button mat-icon-button routerLink="/candidats" style="color: black;">RETOUR <mat-icon>arrow_back</mat-icon></button>
+<button mat-icon-button routerLink="/candidats" style="color: black;">RETOUR
+  <mat-icon>arrow_back</mat-icon>
+</button>
 <mat-tab-group>
   <mat-tab label="1 - Fiche de Renseignement">
-    <mat-card>
-      <mat-card-title>ETAT CIVIL</mat-card-title>
-      <form [formGroup]="formulaire" (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
+    <div style="display: flex; flex-direction: row; justify-content: space-evenly;align-items: stretch;">
+      <mat-card>
+        <mat-card-title>ETAT CIVIL</mat-card-title>
+        <form [formGroup]="formulaire" (ngSubmit)="onSubmit()">
+          <mat-card-content>
+            <div fxLayout="column" fxLayoutAlign="space-around center">
 
-            <mat-form-field>
-              <input matInput formControlName="nom" placeholder="Nom" name="nom"  id="nom" [(ngModel)]="candidat.nom" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="nom" placeholder="Nom" name="nom" id="nom" [(ngModel)]="candidat.nom"
+                       (change)="updateModel(candidat)">
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="prenom" placeholder="Prénom" name="prenom"  id="prenom" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="prenom" placeholder="Prénom" name="prenom" id="prenom"
+                       [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">
+              </mat-form-field>
 
-            <div>
-              <label>
-                <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance:"
-                       formControlName="dateNaissance" [(ngModel)]="candidat.dateNaissance" (change)="updateModel(candidat)">
-              </label>
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <div>
+                <label>
+                  <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance:"
+                         formControlName="dateNaissance" [(ngModel)]="candidat.dateNaissance"
+                         (change)="updateModel(candidat)">
+                </label>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </div>
+
+              <mat-form-field>
+                <input matInput formControlName="codePostal" placeholder="Code Postal" name="codePostal" id="codePostal"
+                       [(ngModel)]="candidat.codePostal" (change)="updateModel(candidat)">
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput formControlName="ville" placeholder="Ville" name="ville" id="ville"
+                       [(ngModel)]="candidat.ville" (change)="updateModel(candidat)">
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput formControlName="mobile" placeholder="Téléphone Mobile" name="mobile" id="mobile"
+                       [(ngModel)]="candidat.mobile" (change)="updateModel(candidat)">
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput formControlName="skype" placeholder="Identifiant Skype" name="skype" id="skype"
+                       [(ngModel)]="candidat.skype" (change)="updateModel(candidat)">
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput formControlName="email" placeholder="E-mail" name="email" id="email"
+                       [(ngModel)]="candidat.email" (change)="updateModel(candidat)">
+              </mat-form-field>
             </div>
+          </mat-card-content>
+        </form>
+      </mat-card>
+      <div style="display: flex; flex-direction: column;">
+        <mat-card>
+          <mat-card-title>CREATION</mat-card-title>
+          <form [formGroup]="formulaire2" (ngSubmit)="onSubmit()">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="space-around center">
 
-            <mat-form-field>
-              <input matInput formControlName="codePostal" placeholder="Code Postal" name="codePostal"  id="codePostal" [(ngModel)]="candidat.codePostal" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Créé par :</mat-label>
+                  <mat-select formControlName="creePar" [(ngModel)]="candidat.creePar"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="Martin">Martin</mat-option>
+                    <mat-option value="Gino">Gino</mat-option>
+                    <mat-option value="Majoline">Majoline</mat-option>
+                    <mat-option value="Franck">Franck</mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="ville" placeholder="Ville" name="ville"  id="ville" [(ngModel)]="candidat.ville" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <input matInput formControlName="dateCreation" placeholder="Date de création: " name="dateCreation"
+                         id="dateCreation" [(ngModel)]="candidat.dateCreation" (change)="updateModel(candidat)"
+                         disabled>
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+          </form>
+        </mat-card>
+        <mat-card>
+          <mat-card-title>STATUT</mat-card-title>
+          <form [formGroup]="formulaire3" (ngSubmit)="onSubmit()">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="space-around center">
 
-            <mat-form-field>
-              <input matInput formControlName="mobile" placeholder="Téléphone Mobile" name="mobile"  id="mobile" [(ngModel)]="candidat.mobile" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Statut :</mat-label>
+                  <mat-select formControlName="statut" [(ngModel)]="candidat.statut"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="Contact téléphonique">Contact téléphonique</mat-option>
+                    <mat-option value="Reçu cabinet">Reçu cabinet</mat-option>
+                    <mat-option value="Visio skype">Visio Skype</mat-option>
+                    <mat-option value="Message">Message</mat-option>
+                    <mat-option value="Pas contacté">Pas contacté</mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="skype" placeholder="Identifiant Skype" name="skype"  id="skype" [(ngModel)]="candidat.skype" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Source du CV :</mat-label>
+                  <mat-select formControlName="sourceCV" [(ngModel)]="candidat.sourceCv"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="CV Aden">CV Aden</mat-option>
+                    <mat-option value="Apec">Apec</mat-option>
+                    <mat-option value="Autre job board">Autre job board</mat-option>
+                    <mat-option value="Pôle emploi">Pôle emploi</mat-option>
+                    <mat-option value="LinkedIn">LinkedIn</mat-option>
+                    <mat-option value="Viadeo">Viadeo</mat-option>
+                    <mat-option value="Notre réseau">Notre réseau</mat-option>
+                    <mat-option value="Candidature spontanée">Candidature spontanée</mat-option>
+                    <mat-option value="Réponse à annonce">Réponse à annonce</mat-option>
+                    <mat-option value="Ecoles">Ecoles</mat-option>
+                    <mat-option value="Autre source">Autre source</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+          </form>
+        </mat-card>
+      </div>
+      <mat-card>
+        <mat-card-title>DOCUMENTS ET MISE A JOUR</mat-card-title>
+        <form [formGroup]="formulaire4" (ngSubmit)="onSubmit()">
+          <mat-card-content>
+            <div fxLayout="column" fxLayoutAlign="space-around center">
+              <mat-checkbox matInput formControlName="cvJoint" placeholder="CV joint: " name="cvJoint" id="cvJoint"
+                            [ngModel]="candidat.fileBase64 != null" (ngModelChange)="$event"
+                            (change)="updateModel(candidat)">CV Joint
+              </mat-checkbox>
+              <div>
+                <input matInput formControlName="dateMAJ" placeholder="Date de MAJ: " name="dateMAJ" id="dateMAJ"
+                       [(ngModel)]="candidat.dateMAJ" (change)="updateModel(candidat)" disabled>
+              </div>
 
-            <mat-form-field>
-              <input matInput formControlName="email" placeholder="E-mail" name="email"  id="email" [(ngModel)]="candidat.email" (change)="updateModel(candidat)">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
-    <mat-card>
-    <mat-card-title>CREATION</mat-card-title>
-    <form [formGroup]="formulaire2" (ngSubmit)="onSubmit()">
-      <mat-card-content>
-        <div fxLayout="column" fxLayoutAlign="space-around center">
+              <mat-form-field>
+                <mat-label>Par :</mat-label>
+                <mat-select formControlName="majPar" [(ngModel)]="candidat.majPar"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Martin">Martin</mat-option>
+                  <mat-option value="Gino">Gino</mat-option>
+                  <mat-option value="Majoline">Majoline</mat-option>
+                  <mat-option value="Franck">Franck</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-          <mat-form-field>
-            <input matInput formControlName="creePar" placeholder="Créé par: " name="creePar"  id="creePar" [(ngModel)]="candidat.creePar" (change)="updateModel(candidat)">
-          </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="alerteMAJ" placeholder="Alerte mise à jour: " name="alerteMAJ"
+                       id="alerteMAJ" [(ngModel)]="candidat.alerteMAJ" (change)="updateModel(candidat)" disabled>
+              </mat-form-field>
 
-          <mat-form-field>
-            <input matInput formControlName="dateCreation" placeholder="Date de création: " name="dateCreation"  id="dateCreation" [(ngModel)]="candidat.dateCreation" (change)="updateModel(candidat)" disabled>
-          </mat-form-field>
-        </div>
-      </mat-card-content>
-    </form>
-  </mat-card>
-    <mat-card>
-      <mat-card-title>STATUT</mat-card-title>
-      <form [formGroup]="formulaire3" (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
-
-            <mat-form-field>
-              <input matInput formControlName="statut" placeholder="Statut: " name="statut"  id="statut" [(ngModel)]="candidat.statut" (change)="updateModel(candidat)">
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput formControlName="sourceCV" placeholder="Source du CV: " name="sourceCV"  id="sourceCV" [(ngModel)]="candidat.sourceCV" (change)="updateModel(candidat)">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
-    <mat-card>
-      <mat-card-title>DOCUMENTS ET MISE A JOUR</mat-card-title>
-      <form [formGroup]="formulaire4" (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
-            <mat-checkbox matInput formControlName="cvJoint" placeholder="CV joint: " name="cvJoint"  id="cvJoint" [ngModel]="candidat.fileBase64 != null" (ngModelChange)="$event" (change)="updateModel(candidat)">CV Joint</mat-checkbox>
-            <div>
-              <input matInput formControlName="dateMAJ" placeholder="Date de MAJ: " name="dateMAJ"  id="dateMAJ" [(ngModel)]="candidat.dateMAJ" (change)="updateModel(candidat)" disabled>
+              <mat-form-field>
+                <input matInput formControlName="commentairesCV" placeholder="Commentaires: " name="commentairesCV"
+                       id="commentairesCV" [(ngModel)]="candidat.commentairesCV" (change)="updateModel(candidat)">
+              </mat-form-field>
             </div>
+          </mat-card-content>
+        </form>
+      </mat-card>
+      <div style="display: flex; flex-direction: column;">
+        <mat-card style="align-self: stretch;">
+          <mat-card-title>SITUATION ACTUELLE</mat-card-title>
+          <form [formGroup]="formulaire5" (ngSubmit)="onSubmit()">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="space-around center">
 
-            <mat-form-field>
-              <input matInput formControlName="majPar" placeholder="Par: " name="majPar"  id="majPar" [(ngModel)]="candidat.majPar" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>En poste ?</mat-label>
+                  <mat-select formControlName="enPoste" [(ngModel)]="candidat.enPoste"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option [value]=true>Oui</mat-option>
+                    <mat-option [value]=false>Non</mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="alerteMAJ" placeholder="Alerte mise à jour: " name="alerteMAJ"  id="alerteMAJ" [(ngModel)]="candidat.alerteMAJ" (change)="updateModel(candidat)" disabled>
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Contrat :</mat-label>
+                  <mat-select formControlName="contrat" [(ngModel)]="candidat.contrat"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="CDI (PE validée)">CDI (PE validée)</mat-option>
+                    <mat-option value="CDI (en PE)">CDI (en PE)</mat-option>
+                    <mat-option value="CDD">CDD</mat-option>
+                    <mat-option value="Interim">Interim</mat-option>
+                    <mat-option value="Formation">Formation</mat-option>
+                    <mat-option value="Indépendant">Indépendant</mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="commentairesCV" placeholder="Commentaires: " name="commentairesCV"  id="commentairesCV" [(ngModel)]="candidat.commentairesCV" (change)="updateModel(candidat)">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
-    <mat-card>
-      <mat-card-title>SITUATION ACTUELLE</mat-card-title>
-      <form [formGroup]="formulaire5" (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
+                <mat-form-field>
+                  <input matInput formControlName="raisonDispo" placeholder="Raison de la Recherche: "
+                         name="raisonDispo" id="raisonDispo" [(ngModel)]="candidat.raisonDispo"
+                         (change)="updateModel(candidat)">
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="enPoste" placeholder="En poste ?" name="enPoste"  id="enPoste" [(ngModel)]="candidat.enPoste" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <input matInput formControlName="posteSouhaite" placeholder="Postes souhaités: " name="posteSouhaite"
+                         id="posteSouhaite" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)">
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="contrat" placeholder="Contrat: " name="contrat"  id="contrat" [(ngModel)]="candidat.contrat" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Délai de préavis :</mat-label>
+                  <mat-select formControlName="delai" [(ngModel)]="candidat.delai"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="1 semaine">1 semaine</mat-option>
+                    <mat-option value="2 semaines">2 semaines</mat-option>
+                    <mat-option value="3 semaines">3 semaines</mat-option>
+                    <mat-option value="Sous 1 mois">Sous 1 mois</mat-option>
+                    <mat-option value="Sous 2 mois">Sous 2 mois</mat-option>
+                    <mat-option value="Sous 3 mois">Sous 3 mois</mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="raisonDispo" placeholder="Raison de la Recherche: " name="raisonDispo"  id="raisonDispo" [(ngModel)]="candidat.raisonDispo" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <input matInput formControlName="dateDispo" placeholder="Date de disponibilité: " name="dateDispo"
+                         id="dateDispo" [value]="candidat.dateDispo | date: 'dd/MM/yyyy'"
+                         (change)="updateModel(candidat)">
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+          </form>
+        </mat-card>
+        <mat-card style="align-self: stretch;">
+          <mat-card-title>EXPERIENCE</mat-card-title>
+          <form [formGroup]="formulaire6" (ngSubmit)="onSubmit()">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="space-around center">
 
-            <mat-form-field>
-              <input matInput formControlName="posteSouhaite" placeholder="Postes souhaités: " name="posteSouhaite"  id="posteSouhaite" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Expérience :</mat-label>
+                  <mat-select formControlName="experience" [(ngModel)]="candidat.experience"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="0 / 2 ans">0 / 2 ans</mat-option>
+                    <mat-option value="Sup à 2 / 5 ans">Sup à 2 / 5 ans</mat-option>
+                    <mat-option value="Sup à 5 / 10 ans">Sup à 5 / 10 ans</mat-option>
+                    <mat-option value="Sup à 10 ans">Sup à 10 ans</mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="delai" placeholder="Délai de préavis: " name="delai"  id="delai" [(ngModel)]="candidat.delai" (change)="updateModel(candidat)">
-            </mat-form-field>
+                <mat-form-field>
+                  <input matInput formControlName="tags" placeholder="Tags: " name="tags" id="tags"
+                         [(ngModel)]="candidat.tags" (change)="updateModel(candidat)">
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+          </form>
+        </mat-card>
+      </div>
+      <mat-card>
+        <mat-card-title>COMPETENCES TECHNIQUES</mat-card-title>
+        <form [formGroup]="formulaire7" (ngSubmit)="onSubmit()">
+          <mat-card-content>
+            <div fxLayout="column" fxLayoutAlign="space-around center">
 
-            <mat-form-field>
-              <input matInput formControlName="dateDispo" placeholder="Date de disponibilité: " name="dateDispo"  id="dateDispo" [value]="candidat.dateDispo | date: 'dd/MM/yyyy'" (change)="updateModel(candidat)">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
-    <mat-card>
-      <mat-card-title>EXPERIENCE</mat-card-title>
-      <form [formGroup]="formulaire6" (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
+              <mat-form-field>
+                <mat-label>Domaine 1 :</mat-label>
+                <mat-select formControlName="domaine1" [(ngModel)]="candidat.domaine1"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="Chimie">Chimie</mat-option>
+                  <mat-option value="Cosmétique / Parfum">Cosmétique / Parfum</mat-option>
+                  <mat-option value="Cuir / Maro">Cuir / Maro</mat-option>
+                  <mat-option value="Galva / TS">Galva / TS</mat-option>
+                  <mat-option value="Horlogerie">Horlogerie</mat-option>
+                  <mat-option value="Joaillerie / Bijoux">Joaillerie / Bijoux</mat-option>
+                  <mat-option value="Lunetterie">Lunetterie</mat-option>
+                  <mat-option value="Mécanique">Mécanique</mat-option>
+                  <mat-option value="Packaging">Packaging</mat-option>
+                  <mat-option value="Pièces métalliques">Pièces métalliques</mat-option>
+                  <mat-option value="Plasturgie">Plasturgie</mat-option>
+                  <mat-option value="Textile maro">Textile maro</mat-option>
+                  <mat-option value="Textile PAP">Textile PAP</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="experience" placeholder="Expérience: " name="experience"  id="experience" [(ngModel)]="candidat.experience" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Domaine 2 :</mat-label>
+                <mat-select formControlName="domaine2" [(ngModel)]="candidat.domaine2"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="Chimie">Chimie</mat-option>
+                  <mat-option value="Cosmétique / Parfum">Cosmétique / Parfum</mat-option>
+                  <mat-option value="Cuir / Maro">Cuir / Maro</mat-option>
+                  <mat-option value="Galva / TS">Galva / TS</mat-option>
+                  <mat-option value="Horlogerie">Horlogerie</mat-option>
+                  <mat-option value="Joaillerie / Bijoux">Joaillerie / Bijoux</mat-option>
+                  <mat-option value="Lunetterie">Lunetterie</mat-option>
+                  <mat-option value="Mécanique">Mécanique</mat-option>
+                  <mat-option value="Packaging">Packaging</mat-option>
+                  <mat-option value="Pièces métalliques">Pièces métalliques</mat-option>
+                  <mat-option value="Plasturgie">Plasturgie</mat-option>
+                  <mat-option value="Textile maro">Textile maro</mat-option>
+                  <mat-option value="Textile PAP">Textile PAP</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="tags" placeholder="Tags: " name="tags"  id="tags" [(ngModel)]="candidat.tags" (change)="updateModel(candidat)">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
-    <mat-card>
-      <mat-card-title>COMPETENCES TECHNIQUES</mat-card-title>
-      <form [formGroup]="formulaire7" (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
+              <mat-form-field>
+                <mat-label>Domaine 3 :</mat-label>
+                <mat-select formControlName="domaine3" [(ngModel)]="candidat.domaine3"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="Chimie">Chimie</mat-option>
+                  <mat-option value="Cosmétique / Parfum">Cosmétique / Parfum</mat-option>
+                  <mat-option value="Cuir / Maro">Cuir / Maro</mat-option>
+                  <mat-option value="Galva / TS">Galva / TS</mat-option>
+                  <mat-option value="Horlogerie">Horlogerie</mat-option>
+                  <mat-option value="Joaillerie / Bijoux">Joaillerie / Bijoux</mat-option>
+                  <mat-option value="Lunetterie">Lunetterie</mat-option>
+                  <mat-option value="Mécanique">Mécanique</mat-option>
+                  <mat-option value="Packaging">Packaging</mat-option>
+                  <mat-option value="Pièces métalliques">Pièces métalliques</mat-option>
+                  <mat-option value="Plasturgie">Plasturgie</mat-option>
+                  <mat-option value="Textile maro">Textile maro</mat-option>
+                  <mat-option value="Textile PAP">Textile PAP</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="domaine1" placeholder="Domaine 1: " name="domaine1"  id="domaine1" [(ngModel)]="candidat.domaine1" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Métier 1 :</mat-label>
+                <mat-select formControlName="metier1" [(ngModel)]="candidat.metier1"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Achat / Sourcing">Achat / Sourcing</mat-option>
+                  <mat-option value="Affaires règlementaires">Affaires règlementaires</mat-option>
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="R&D / Formulation">R&D / Formulation</mat-option>
+                  <mat-option value="Conception">Conception</mat-option>
+                  <mat-option value="Design">Design</mat-option>
+                  <mat-option value="Développement / Projet">Développement / Projet</mat-option>
+                  <mat-option value="Méthodes / Indus">Méthodes / Indus</mat-option>
+                  <mat-option value="Production / atelier">Production / atelier</mat-option>
+                  <mat-option value="Qualité / Amélioration continue">Qualité / Amélioration continue</mat-option>
+                  <mat-option value="Supply Chain / Logistique">Supply Chain / Logistique</mat-option>
+                  <mat-option value="CFAO / Programmation">CFAO / Programmation</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="domaine2" placeholder="Domaine 2: " name="domaine2"  id="domaine2" [(ngModel)]="candidat.domaine2" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Métier 2 :</mat-label>
+                <mat-select formControlName="metier2" [(ngModel)]="candidat.metier2"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Achat / Sourcing">Achat / Sourcing</mat-option>
+                  <mat-option value="Affaires règlementaires">Affaires règlementaires</mat-option>
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="R&D / Formulation">R&D / Formulation</mat-option>
+                  <mat-option value="Conception">Conception</mat-option>
+                  <mat-option value="Design">Design</mat-option>
+                  <mat-option value="Développement / Projet">Développement / Projet</mat-option>
+                  <mat-option value="Méthodes / Indus">Méthodes / Indus</mat-option>
+                  <mat-option value="Production / atelier">Production / atelier</mat-option>
+                  <mat-option value="Qualité / Amélioration continue">Qualité / Amélioration continue</mat-option>
+                  <mat-option value="Supply Chain / Logistique">Supply Chain / Logistique</mat-option>
+                  <mat-option value="CFAO / Programmation">CFAO / Programmation</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="domaine3" placeholder="Domaine 3: " name="domaine3"  id="domaine3" [(ngModel)]="candidat.domaine3" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Métier 3 :</mat-label>
+                <mat-select formControlName="metier3" [(ngModel)]="candidat.metier3"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Achat / Sourcing">Achat / Sourcing</mat-option>
+                  <mat-option value="Affaires règlementaires">Affaires règlementaires</mat-option>
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="R&D / Formulation">R&D / Formulation</mat-option>
+                  <mat-option value="Conception">Conception</mat-option>
+                  <mat-option value="Design">Design</mat-option>
+                  <mat-option value="Développement / Projet">Développement / Projet</mat-option>
+                  <mat-option value="Méthodes / Indus">Méthodes / Indus</mat-option>
+                  <mat-option value="Production / atelier">Production / atelier</mat-option>
+                  <mat-option value="Qualité / Amélioration continue">Qualité / Amélioration continue</mat-option>
+                  <mat-option value="Supply Chain / Logistique">Supply Chain / Logistique</mat-option>
+                  <mat-option value="CFAO / Programmation">CFAO / Programmation</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="metier1" placeholder="Métier 1: " name="metier1"  id="metier1" [(ngModel)]="candidat.metier1" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Outils 1 :</mat-label>
+                <mat-select formControlName="outils1" [(ngModel)]="candidat.outils1"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="Autres CAO / DAO">Autres CAO / DAO</mat-option>
+                  <mat-option value="Catia">Catia</mat-option>
+                  <mat-option value="Creo / Pro E / Wildfire">Creo / Pro E / Wildfire</mat-option>
+                  <mat-option value="Solidworks">Solidworks</mat-option>
+                  <mat-option value="Inventor">Inventor</mat-option>
+                  <mat-option value="Autocad">Autocad</mat-option>
+                  <mat-option value="Rhinoceros / Alias">Rhinoceros / Alias</mat-option>
+                  <mat-option value="Lectra">Lectra</mat-option>
+                  <mat-option value="Mastercam / Top solid">Mastercam / Top solid</mat-option>
+                  <mat-option value="MS Project">MS Project</mat-option>
+                  <mat-option value="Windchill">Windchill</mat-option>
+                  <mat-option value="Gitis">Gitis</mat-option>
+                  <mat-option value="Linkit">Linkit</mat-option>
+                  <mat-option value="Lean">Lean</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="metier2" placeholder="Métier 2: " name="metier2"  id="metier2" [(ngModel)]="candidat.metier2" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Outils 2 :</mat-label>
+                <mat-select formControlName="outils2" [(ngModel)]="candidat.outils2"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="Autres CAO / DAO">Autres CAO / DAO</mat-option>
+                  <mat-option value="Catia">Catia</mat-option>
+                  <mat-option value="Creo / Pro E / Wildfire">Creo / Pro E / Wildfire</mat-option>
+                  <mat-option value="Solidworks">Solidworks</mat-option>
+                  <mat-option value="Inventor">Inventor</mat-option>
+                  <mat-option value="Autocad">Autocad</mat-option>
+                  <mat-option value="Rhinoceros / Alias">Rhinoceros / Alias</mat-option>
+                  <mat-option value="Lectra">Lectra</mat-option>
+                  <mat-option value="Mastercam / Top solid">Mastercam / Top solid</mat-option>
+                  <mat-option value="MS Project">MS Project</mat-option>
+                  <mat-option value="Windchill">Windchill</mat-option>
+                  <mat-option value="Gitis">Gitis</mat-option>
+                  <mat-option value="Linkit">Linkit</mat-option>
+                  <mat-option value="Lean">Lean</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="metier3" placeholder="Métier 3: " name="metier3"  id="metier3" [(ngModel)]="candidat.metier3" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Outils 3 :</mat-label>
+                <mat-select formControlName="outils3" [(ngModel)]="candidat.outils3"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Autres">Autres</mat-option>
+                  <mat-option value="Autres CAO / DAO">Autres CAO / DAO</mat-option>
+                  <mat-option value="Catia">Catia</mat-option>
+                  <mat-option value="Creo / Pro E / Wildfire">Creo / Pro E / Wildfire</mat-option>
+                  <mat-option value="Solidworks">Solidworks</mat-option>
+                  <mat-option value="Inventor">Inventor</mat-option>
+                  <mat-option value="Autocad">Autocad</mat-option>
+                  <mat-option value="Rhinoceros / Alias">Rhinoceros / Alias</mat-option>
+                  <mat-option value="Lectra">Lectra</mat-option>
+                  <mat-option value="Mastercam / Top solid">Mastercam / Top solid</mat-option>
+                  <mat-option value="MS Project">MS Project</mat-option>
+                  <mat-option value="Windchill">Windchill</mat-option>
+                  <mat-option value="Gitis">Gitis</mat-option>
+                  <mat-option value="Linkit">Linkit</mat-option>
+                  <mat-option value="Lean">Lean</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="outils1" placeholder="Outils 1: " name="outils1"  id="outils1" [(ngModel)]="candidat.outils1" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Anglais :</mat-label>
+                <mat-select formControlName="anglais" [(ngModel)]="candidat.anglais"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                  <mat-option value="Courant">Courant</mat-option>
+                  <mat-option value="Bilingue">Bilingue</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="outils2" placeholder="Outils 2: " name="outils2"  id="outils2" [(ngModel)]="candidat.outils2" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Italien :</mat-label>
+                <mat-select formControlName="italien" [(ngModel)]="candidat.italien"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                  <mat-option value="Courant">Courant</mat-option>
+                  <mat-option value="Bilingue">Bilingue</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="outils3" placeholder="Outils 3: " name="outils3"  id="outils3" [(ngModel)]="candidat.outils3" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Allemand :</mat-label>
+                <mat-select formControlName="allemand" [(ngModel)]="candidat.allemand"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                  <mat-option value="Courant">Courant</mat-option>
+                  <mat-option value="Bilingue">Bilingue</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="anglais" placeholder="Anglais: " name="anglais"  id="anglais" [(ngModel)]="candidat.anglais" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Espagnol :</mat-label>
+                <mat-select formControlName="espagnol" [(ngModel)]="candidat.espagnol"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                  <mat-option value="Courant">Courant</mat-option>
+                  <mat-option value="Bilingue">Bilingue</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="italien" placeholder="Italien: " name="italien"  id="italien" [(ngModel)]="candidat.italien" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="autreLangue" placeholder="Autre langue: " name="autreLangue"
+                       id="autreLangue" [(ngModel)]="candidat.autreLangue" (change)="updateModel(candidat)">
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="allemand" placeholder="Allemand: " name="allemand"  id="allemand" [(ngModel)]="candidat.allemand" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <mat-label>Niveau {{candidat.autreLangue}} :</mat-label>
+                <mat-select formControlName="niveauAutreLangue" [(ngModel)]="candidat.niveauAutrelangue"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                  <mat-option value="Courant">Courant</mat-option>
+                  <mat-option value="Bilingue">Bilingue</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </form>
+      </mat-card>
+      <mat-card>
+        <mat-card-title>SOUHAITS DU CANDIDAT</mat-card-title>
+        <form [formGroup]="formulaire8" (ngSubmit)="onSubmit()">
+          <mat-card-content>
+            <div fxLayout="column" fxLayoutAlign="space-around center">
 
-            <mat-form-field>
-              <input matInput formControlName="espagnol" placeholder="Espagnol: " name="espagnol"  id="espagnol" [(ngModel)]="candidat.espagnol" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="fixeDernierSalaireBrut" placeholder="Dernier salaire annuel brut: "
+                       name="fixeDernierSalaireBrut" id="fixeDernierSalaireBrut"
+                       [(ngModel)]="candidat.fixeDernierSalaireBrut" (change)="updateModel(candidat)">
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="autreLangue" placeholder="Autre langue: " name="autreLangue"  id="autreLangue" [(ngModel)]="candidat.autreLangue" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="varDernierSalaireBrut" placeholder="Part variable: "
+                       name="varDernierSalaireBrut" id="varDernierSalaireBrut"
+                       [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)">
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="niveauAutreLangue" placeholder="Niveau autre langue: " name="niveauAutreLangue"  id="niveauAutreLangue" [(ngModel)]="candidat.niveauAutrelangue" (change)="updateModel(candidat)">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
-    <mat-card>
-      <mat-card-title>SOUHAITS DU CANDIDAT</mat-card-title>
-      <form [formGroup]="formulaire8" (ngSubmit)="onSubmit()">
-        <mat-card-content>
-          <div fxLayout="column" fxLayoutAlign="space-around center">
+              <mat-form-field>
+                <mat-label>Prétentions brut salariales en k€ :</mat-label>
+                <mat-select formControlName="fourchetteSalariale" [(ngModel)]="candidat.fourchetteSalariale"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option value="moins de 30k">moins de 30k</mat-option>
+                  <mat-option value="31 / 35k">31 / 35k</mat-option>
+                  <mat-option value="36 / 40">36 / 40k</mat-option>
+                  <mat-option value="41 / 45k">41 / 45k</mat-option>
+                  <mat-option value="46 / 50k">46 / 50k</mat-option>
+                  <mat-option value="Plus de 50k">Plus de 50k</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="fixeDernierSalaireBrut" placeholder="Dernier salaire annuel brut: " name="fixeDernierSalaireBrut"  id="fixeDernierSalaireBrut" [(ngModel)]="candidat.fixeDernierSalaireBrut" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="mobiliteGeographique" placeholder="Mobilité géographique: "
+                       name="mobiliteGeographique" id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteFrance"
+                       (change)="updateModel(candidat)">
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="varDernierSalaireBrut" placeholder="Part variable: " name="varDernierSalaireBrut"  id="varDernierSalaireBrut" [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)">
-            </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="region1" placeholder="Région 1: " name="region1" id="region1"
+                       [(ngModel)]="candidat.region1" (change)="updateModel(candidat)">
+              </mat-form-field>
 
-            <mat-form-field>
-              <input matInput formControlName="fourchetteSalariale" placeholder="Prétentions brut salariales en k€: " name="fourchetteSalariale"  id="fourchetteSalariale" [(ngModel)]="candidat.fourchetteSalariale" (change)="updateModel(candidat)">
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput formControlName="mobiliteGeographique" placeholder="Mobilité géographique: " name="mobiliteGeographique"  id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteFrance" (change)="updateModel(candidat)">
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput formControlName="region1" placeholder="Région 1: " name="region1"  id="region1" [(ngModel)]="candidat.region1" (change)="updateModel(candidat)">
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput formControlName="region2" placeholder="Région 2: " name="region2"  id="region2" [(ngModel)]="candidat.region2" (change)="updateModel(candidat)">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </form>
-    </mat-card>
+              <mat-form-field>
+                <input matInput formControlName="region2" placeholder="Région 2: " name="region2" id="region2"
+                       [(ngModel)]="candidat.region2" (change)="updateModel(candidat)">
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </form>
+      </mat-card>
+    </div>
   </mat-tab>
   <mat-tab label="2 - Dossier de Candidature">
-    <p *ngFor="let c of objectKeys(candidat)">
-      <span *ngIf="c !=='fileBase64'">{{columnsToDisplay[c]}} :</span>
-      <span *ngIf="c !=='fileBase64'">{{candidat[c]}}</span>
-    </p>
+    <div style="display: flex;flex-direction: row;align-content: center;justify-content: center;">
+      <div style="display: flex;flex-direction: column;align-items: flex-end;">
+        <div *ngFor="let c of objectKeys(candidat)" class="labels">
+          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{columnsToDisplay[c]}} :</span>
+        </div>
+      </div>
+      <div style="display: flex;flex-direction: column;align-items: center;">
+        <div *ngFor="let c of objectKeys(candidat)" class="answers" style="display: flex;flex-direction: column;font-weight: bold;">
+          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}}</span>
+          <span *ngIf="c =='dateNaissance'">{{candidat[c] | date: 'dd/MM/yyyy'}}</span>
+          <span *ngIf="c =='diplome'">{{candidat[c].annee}} {{candidat[c].intitule}} {{candidat[c].obtenu == true?"Obtenu":"Non obtenu"}}</span>
+          <span *ngIf="c =='references'">{{candidat[c].annee}} {{candidat[c].intitule}} {{candidat[c].obtenu == true?"Obtenu":"Non obtenu"}}</span>
+        </div>
+      </div>
+    </div>
   </mat-tab>
   <mat-tab label="3 - Fiche Info Candidat">
     <div style="text-align: center">
       <h1>Fiche Process</h1>
       <div id="ficheProcess">
-              <table>
-                <tr>
-                  <th>Fiche Information Candidat</th>
-                  <th>ASN</th>
-                </tr>
-                <tr>
-                  <td>Prénom du candidat :</td>
-                  <td (click)="checkClickedRow('prenom')"><span [hidden]="cellClicked(candidat, 'prenom')">{{candidat.prenom}}</span>
-                    <input matInput [hidden]="!cellClicked(candidat, 'prenom')" [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">{{candidat.prenom}}</td>
-                </tr>
-                <tr>
-                  <td>Date des derniers entretiens :</td>
-                  <td>{{candidat.dateDerniersEntretiens | date: 'short'}}</td>
-                </tr>
-                <tr>
-                  <td>Intitulé du poste concerné :</td>
-                  <td>{{candidat.intitulePosteConcerne}}</td>
-                </tr>
-                <tr>
-                  <td>Fonction et Employeur actuel :</td>
-                  <td>{{candidat.fonctionEmployeurActuel}}</td>
-                </tr>
-                <tr>
-                  <td>Nombres d'années d'expérience :</td>
-                  <td>{{candidat.nombreAnneesExperiences}}</td>
-                </tr>
-                <tr>
-                  <td>Raison du départ de la société :</td>
-                  <td>{{candidat.raisonDepartSociete}}</td>
-                </tr>
-                <tr>
-                  <td>Projet professionnel :</td>
-                  <td>{{candidat.posteSouhaite}}</td>
-                </tr>
-                <tr>
-                  <td>Etat des recherches :</td>
-                  <td>{{candidat.etatRecherches}}</td>
-                </tr>
-                <tr>
-                  <td>Adéquation poste/profil :</td>
-                  <td>{{candidat.adequationPosteProfil}}</td>
-                </tr>
-                <tr>
-                  <td>Lieu de résidence :</td>
-                  <td>{{candidat.ville}}</td>
-                </tr>
-                <tr>
-                  <td>Mobilité géographique :</td>
-                  <td>{{candidat.mobiliteGeographique}}</td>
-                </tr>
-                <tr>
-                  <td>Délai de disponibilité :</td>
-                  <td>{{candidat.delaiDispoFiche}}</td>
-                </tr>
-                <tr>
-                  <td>Rémunération actuelle fixe :</td>
-                  <td>{{candidat.fixeDernierSalaireBrut}}</td>
-                </tr>
-                <tr>
-                  <td>Rémunération actuelle part variable :</td>
-                  <td>{{candidat.varDernierSalaireBrut}}</td>
-                </tr>
-                <tr>
-                  <td>Rémunération souhaitée :</td>
-                  <td>{{candidat.pretentionSalaireBrut}}</td>
-                </tr>
-                <tr>
-                  <td>Connaissance langues et niveaux :</td>
-                  <td>{{candidat.anglais}}</td>
-                </tr>
-              </table>
+        <table>
+          <tr>
+            <th>Fiche Information Candidat</th>
+            <th>ASN</th>
+          </tr>
+          <tr>
+            <td>Prénom du candidat :</td>
+<!--            <td (click)="checkClickedRow('prenom')"><span-->
+<!--              [hidden]="cellClicked(candidat, 'prenom')">{{candidat.prenom}}</span>-->
+<!--              <input matInput [hidden]="!cellClicked(candidat, 'prenom')" [(ngModel)]="candidat.prenom"-->
+<!--                     (change)="updateModel(candidat)">-->
+              <td>{{candidat.prenom}}</td>
+          </tr>
+          <tr>
+            <td>Date des derniers entretiens :</td>
+            <td>{{candidat.dateDerniersEntretiens | date: 'short'}}</td>
+          </tr>
+          <tr>
+            <td>Intitulé du poste concerné :</td>
+            <td>{{candidat.intitulePosteConcerne}}</td>
+          </tr>
+          <tr>
+            <td>Fonction et Employeur actuel :</td>
+            <td>{{candidat.fonctionEmployeurActuel}}</td>
+          </tr>
+          <tr>
+            <td>Nombres d'années d'expérience :</td>
+            <td>{{candidat.nombreAnneesExperiences}}</td>
+          </tr>
+          <tr>
+            <td>Raison du départ de la société :</td>
+            <td>{{candidat.raisonDepartSociete}}</td>
+          </tr>
+          <tr>
+            <td>Projet professionnel :</td>
+            <td>{{candidat.posteSouhaite}}</td>
+          </tr>
+          <tr>
+            <td>Etat des recherches :</td>
+            <td>{{candidat.etatRecherches}}</td>
+          </tr>
+          <tr>
+            <td>Adéquation poste/profil :</td>
+            <td>{{candidat.adequationPosteProfil}}</td>
+          </tr>
+          <tr>
+            <td>Lieu de résidence :</td>
+            <td>{{candidat.ville}}</td>
+          </tr>
+          <tr>
+            <td>Mobilité géographique :</td>
+            <td>{{candidat.mobiliteGeographique}}</td>
+          </tr>
+          <tr>
+            <td>Délai de disponibilité :</td>
+            <td>{{candidat.delaiDispoFiche}}</td>
+          </tr>
+          <tr>
+            <td>Rémunération actuelle fixe :</td>
+            <td>{{candidat.fixeDernierSalaireBrut}}</td>
+          </tr>
+          <tr>
+            <td>Rémunération actuelle part variable :</td>
+            <td>{{candidat.varDernierSalaireBrut}}</td>
+          </tr>
+          <tr>
+            <td>Rémunération souhaitée :</td>
+            <td>{{candidat.pretentionSalaireBrut}}</td>
+          </tr>
+          <tr>
+            <td>Connaissance langues et niveaux :</td>
+            <td>{{candidat.anglais}}</td>
+          </tr>
+        </table>
       </div>
-              <button mat-button (click)="generateProcessDocument(candidat)">Générer la fiche Process</button>
+      <button mat-button (click)="generateProcessDocument(candidat)">Générer la fiche Process</button>
 
-              <h1>Fiche Recrutement</h1>
+      <h1>Fiche Recrutement</h1>
       <div id="ficheRecrutement">
-              <table>
-                <tr>
-                  <th>Fiche Information Candidat</th>
-                  <th>ASN</th>
-                </tr>
-                <tr>
-                  <td>Prénom, Nom :</td>
-                  <td>{{candidat.prenom}} {{candidat.nom}}</td>
-                </tr>
-                <tr>
-                  <td>Date de naissance :</td>
-                  <td>{{candidat.dateNaissance | date: 'short'}}</td>
-                </tr>
-                <tr>
-                  <td>Lieu de niassance :</td>
-                  <td>{{candidat.villeNaissance}}</td>
-                </tr>
-                <tr>
-                  <td>Département de naissance :</td>
-                  <td>{{candidat.departementNaissance}}</td>
-                </tr>
-                <tr>
-                  <td>Nationalité :</td>
-                  <td>{{candidat.nationalite}}</td>
-                </tr>
-                <tr>
-                  <td>Adresse :</td>
-                  <td>{{candidat.adresse}}</td>
-                </tr>
-                <tr>
-                  <td>Téléphone :</td>
-                  <td>{{candidat.mobile}}</td>
-                </tr>
-                <tr>
-                  <td>Adresse e-mail :</td>
-                  <td>{{candidat.email}}</td>
-                </tr>
-                <tr>
-                  <td>Numéro Sécurité Sociale :</td>
-                  <td>{{candidat.numSecu}}</td>
-                </tr>
-              </table>
+        <table>
+          <tr>
+            <th>Fiche Information Candidat</th>
+            <th>ASN</th>
+          </tr>
+          <tr>
+            <td>Prénom, Nom :</td>
+            <td>{{candidat.prenom}} {{candidat.nom}}</td>
+          </tr>
+          <tr>
+            <td>Date de naissance :</td>
+            <td>{{candidat.dateNaissance | date: 'short'}}</td>
+          </tr>
+          <tr>
+            <td>Lieu de niassance :</td>
+            <td>{{candidat.villeNaissance}}</td>
+          </tr>
+          <tr>
+            <td>Département de naissance :</td>
+            <td>{{candidat.departementNaissance}}</td>
+          </tr>
+          <tr>
+            <td>Nationalité :</td>
+            <td>{{candidat.nationalite}}</td>
+          </tr>
+          <tr>
+            <td>Adresse :</td>
+            <td>{{candidat.adresse}}</td>
+          </tr>
+          <tr>
+            <td>Téléphone :</td>
+            <td>{{candidat.mobile}}</td>
+          </tr>
+          <tr>
+            <td>Adresse e-mail :</td>
+            <td>{{candidat.email}}</td>
+          </tr>
+          <tr>
+            <td>Numéro Sécurité Sociale :</td>
+            <td>{{candidat.numSecu}}</td>
+          </tr>
+        </table>
       </div>
-            <button mat-button (click)="generateRecruitmentDocument(candidat)">Générer la fiche Recrutement</button>
-            </div>
-            <button mat-button (click)="generateProcessRecruitementDocument(candidat)">Générer la fiche hybride</button>
+      <button mat-button (click)="generateRecruitmentDocument(candidat)">Générer la fiche Recrutement</button>
+    </div>
+    <button mat-button (click)="generateProcessRecruitementDocument(candidat)">Générer la fiche hybride</button>
   </mat-tab>
-          <mat-tab label="4 - Documents Joints">
+  <mat-tab label="4 - Documents Joints">
 
-          </mat-tab>
-        </mat-tab-group>
+  </mat-tab>
+</mat-tab-group>

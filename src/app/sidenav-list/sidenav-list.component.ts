@@ -4,6 +4,8 @@ import {Subscription} from 'rxjs';
 import {UserModel} from '../models/user.model';
 import {AuthenticationService} from '../services/authentication.service';
 import {Router} from '@angular/router';
+import {FicheModel} from '../models/fiche.model';
+import {FicheService} from '../services/fiche.service';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -16,8 +18,10 @@ export class SidenavListComponent implements OnInit {
   currentUserSubscription: Subscription;
   currentUser: UserModel;
   token: any;
+  allRHUnvalidFiches: FicheModel[];
   @Output() sidenavClose = new EventEmitter();
   constructor(private authService: AuthenticationService,
+              private ficheService: FicheService,
               private router: Router) {
     this.currentUser = null;
   }
@@ -30,11 +34,23 @@ export class SidenavListComponent implements OnInit {
       }
     );
     this.authService.emitCurrentUserSubject();
+    this.getAllUnvalidRHFiches();
   }
 
   public onSidenavClose = () => {
       this.sidenavClose.emit();
     };
+
+  getAllUnvalidRHFiches() {
+    this.ficheService.getFiches().subscribe(
+      (data) => {
+        this.allRHUnvalidFiches = data;
+        this.allRHUnvalidFiches = this.allRHUnvalidFiches.filter(function (value) {
+          return value.valideRH === false;
+        })
+      }
+    );
+  }
 
   onLogout() {
     this.authService.logout().subscribe(

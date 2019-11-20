@@ -85,6 +85,7 @@ import { CommentDialogComponent } from './dialog/comment-dialog/comment-dialog.c
 import { ConfirmationDialogComponent } from './dialog/confirmation-dialog/confirmation-dialog.component';
 import { CommentFicheDialogComponent } from './dialog/comment-fiche-dialog/comment-fiche-dialog.component';
 import { AllowAnticipationDialogComponent } from './dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
+import { ValidationFicheComponent } from './validation-fiche/validation-fiche.component';
 const config: InputFileConfig = {};
 
 
@@ -131,7 +132,8 @@ const config: InputFileConfig = {};
     CommentDialogComponent,
     ConfirmationDialogComponent,
     CommentFicheDialogComponent,
-    AllowAnticipationDialogComponent
+    AllowAnticipationDialogComponent,
+    ValidationFicheComponent
   ],
   imports: [
     AppRoutingModule,

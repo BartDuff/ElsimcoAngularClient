@@ -36,7 +36,12 @@ export class UserAddComponent implements OnInit {
       cpNMoins1:['', Validators.required],
       cpN:['', Validators.required],
       rttn:['', Validators.required],
-      congeAnciennete:['', Validators.required]
+      congeAnciennete:[''],
+      adressePostale:['', Validators.required],
+      telephone:['', [Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
+      emailPerso:['', [Validators.email, Validators.required]],
+      dateArrivee:['', Validators.required],
+      metier:['', Validators.required]
     });
 
   }
@@ -50,6 +55,11 @@ export class UserAddComponent implements OnInit {
     this.user.cpN = this.f.cpN;
     this.user.rttn = this.f.rttn;
     this.user.congeAnciennete = this.f.congeAnciennete;
+    this.user.adressePostale = this.f.adressePostale;
+    this.user.telephone = this.f.telephone;
+    this.user.emailPerso = this.f.emailPerso;
+    this.user.dateArrivee = this.f.dateArrivee;
+    this.user.metier = this.f.metier;
     this.user.role = this.addForm.get('role').value;
     this.user.fonction = this.addForm.get('fonction').value;
     this.userService.addUser(this.user)

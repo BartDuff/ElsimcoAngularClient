@@ -7,7 +7,7 @@ export class CongeModel {
   demiJournee: boolean;
   typeDemiJournee: String;
   typeConge: String;
-  typeCE: String;
+  typeCe: String;
   documentJointUri: String;
   valideRH: boolean;
   user: UserModel;

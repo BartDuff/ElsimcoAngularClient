@@ -42,8 +42,8 @@
         <button mat-button [matMenuTriggerFor]="menu" *ngIf="token">Outils <mat-icon style="color: white">expand_more</mat-icon></button>
         <mat-menu #menu="matMenu" yPosition="below" backdropClass="toolbar-menu">
           <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de Présence</a>
-          <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token && currentUser.fonction === 'CONSULTANT'">Mes fiches de présence</a>
-          <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token && (currentUser.fonction === 'RH' || currentUser.fonction ==='DIRECTION')"><span *ngIf="currentUser.fonction === 'RH'" matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span><span *ngIf="currentUser.fonction === 'DIRECTION'" matBadge="{{allRHValidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
+          <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token">Mes fiches de présence</a>
+          <a mat-menu-item routerLink="/presence/validation" *ngIf="token && (currentUser.fonction === 'RH' || currentUser.fonction ==='DIRECTION')"><span *ngIf="currentUser.fonction === 'RH'" matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
           <a mat-menu-item routerLink="/conges" *ngIf="token">Remplir une demande de congés</a>
           <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token">Mes congés</a>
           <a mat-menu-item routerLink="/conges/validation" *ngIf="token && (currentUser.fonction === 'RH' || currentUser.fonction ==='DIRECTION')">Valider les congés</a>

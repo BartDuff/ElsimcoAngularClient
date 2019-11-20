@@ -97,23 +97,23 @@
                 </mat-select>
               </mat-form-field>
               <mat-form-field class="commentaires">
-                <input matInput placeholder="Commentaires {{(raison.value && raison.value !== 'Absences exceptionnelle'?'facultatif':'')}}" [(ngModel)]="dayOff.commentaires" [name]="dayOff.date + ' comm'" [required]="raison.value === 'Absences exceptionnelle'">
+                <input matInput placeholder="Commentaire {{(raison.value && raison.value !== 'Absence Exceptionnelle'?'facultatif':'obligatoire')}}" [(ngModel)]="dayOff.commentaires" [name]="dayOff.date + ' comm'" [required]="raison.value === 'Absence Exceptionnelle'">
               </mat-form-field>
               <div *ngIf="dayOff.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
                 <mat-form-field>
                   <span class="prefix" matPrefix>Raison de l'absence exceptionnelle: </span>
-                  <mat-select [(ngModel)]="dayOff.typeCE" [name]="dayOff.typeCE" [ngModelOptions]="{standalone: true}" placeholder="Raison de l'absence exceptionnelle...">
-                    <mat-option value="mariage-pacse">mariage ou pacse : 4 jours ouvrés</mat-option>
-                    <mat-option value="obsèques conjoint-enfants">assister aux obsèques de son conjoint ou d'un de ses enfants : 2 jours ouvrés</mat-option>
-                    <mat-option value="mariage enfants">assister au mariage d'un de ses enfants : 1 jour ouvré</mat-option>
-                    <mat-option value="obsèques ascendants">assister aux obsèques de ses ascendants parents, grands-parents, arrières grands-parents  : 2 jours ouvrés</mat-option>
-                    <mat-option value="obsèques collatéraux">assister aux obsèques de ses collatéraux jusqu'au 2ème degré (frère et sœur) : 1 jour ouvré</mat-option>
-                    <mat-option value="obsèques beau-parents">assister aux obsèques de son beau-père, de sa belle-mère : 1 jour ouvré</mat-option>
-                    <mat-option value="Naissance-adoption">Père : - Naissance survenue à son foyer ou Arrivée d'un enfant adopté : 3 jours ouvrés consécutifs ou non, inclus dans une période de quinze jours entourant la date de naissance ou suivant l'arrivée au foyer de l'enfant placé en vue de son adoption.</mat-option>
+                  <mat-select [(ngModel)]="dayOff.typeCe" [name]="dayOff.typeCe" [ngModelOptions]="{standalone: true}" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value === 'Absence Exceptionnelle'">
+                    <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage ou pacse : 4 jours ouvrés</mat-option>
+                    <mat-option value="obsèques conjoint-enfants" matTooltip="2 jours ouvrés">assister aux obsèques de son conjoint ou d'un de ses enfants : 2 jours ouvrés</mat-option>
+                    <mat-option value="mariage enfants" matTooltip="1 jour ouvré">assister au mariage d'un de ses enfants : 1 jour ouvré</mat-option>
+                    <mat-option value="obsèques ascendants" matTooltip="2 jours ouvrés">assister aux obsèques de ses ascendants parents, grands-parents, arrières grands-parents  : 2 jours ouvrés</mat-option>
+                    <mat-option value="obsèques collatéraux" matTooltip="1 jour ouvré">assister aux obsèques de ses collatéraux jusqu'au 2ème degré (frère et sœur) : 1 jour ouvré</mat-option>
+                    <mat-option value="obsèques beau-parents" matTooltip="1 jours ouvré">assister aux obsèques de son beau-père, de sa belle-mère : 1 jour ouvré</mat-option>
+                    <mat-option value="Naissance-adoption" matTooltip="3 jours ouvrés consécutifs ou non, inclus dans une période de quinze jours entourant la date de naissance ou suivant l'arrivée au foyer de l'enfant placé en vue de son adoption.">Père : - Naissance survenue à son foyer ou Arrivée d'un enfant adopté : 3 jours ouvrés consécutifs ou non, inclus dans une période de quinze jours entourant la date de naissance ou suivant l'arrivée au foyer de l'enfant placé en vue de son adoption.</mat-option>
                   </mat-select>
                 </mat-form-field>
                 <label>Document justificatif</label>
-                <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="selectedFiles" (ngModelChange)="handleFile()" [ngModelOptions]="{standalone: true}" id="file" style="align-self: center;"></input-file>
+                <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="dayOff.documentJointUri" [name]="dayOff.documentJointUri" (ngModelChange)="handleFile()" [ngModelOptions]="{standalone: true}" id="file" style="align-self: center;"></input-file>
               </div>
             </div>
             <button mat-raised-button type="submit" [disabled]="f.invalid" style="margin-top: 2em;">Envoyer</button>

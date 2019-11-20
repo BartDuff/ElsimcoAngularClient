@@ -24,8 +24,7 @@ export class FicheListComponent implements OnInit {
   constructor(private userService: UserService,
               private ficheService: FicheService,
               private pdfService:PdfService,
-              private toastrService:ToastrService,
-              private dialog: MatDialog) { }
+              private toastrService:ToastrService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -58,56 +57,6 @@ export class FicheListComponent implements OnInit {
         }
     );
   }
-
-  validateFicheRH(fiche: FicheModel){
-    fiche.valideRH = true;
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      (data)=>{
-        if(data){
-          this.ficheService.editFiche(fiche).subscribe(
-            (data)=> {
-              this.getAllFiches();
-              this.toastrService.success('Fiche de présence validée', 'Fiche validée');
-            }
-          )
-        }
-      }
-    );
-  }
-
-  refuseFicheRH(fiche: FicheModel){
-    fiche.valideRH = false;
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(CommentDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      (data)=>{
-        this.ficheService.sendComment(fiche.user,data.commentaire).subscribe(
-          (d)=>{
-            this.ficheService.deleteFiche(fiche).subscribe(
-              (d)=> {
-                this.getAllFiches();
-                this.toastrService.error('Fiche de présence refusée', 'Fiche refusée');
-              }
-            )}
-        )}
-    );
-  }
-
-  // validateFicheDir(fiche: FicheModel){
-  //   fiche.valideDir = true;
-  //   this.ficheService.editFiche(fiche).subscribe(
-  //     (data)=> {
-  //       this.getAllFiches();
-  //       this.toastrService.success('Fiche de présence validée', 'Fiche validée');
-  //     }
-  //   )
-  // }
 
 
   downloadDocument(ficheToDownload: FicheModel) {

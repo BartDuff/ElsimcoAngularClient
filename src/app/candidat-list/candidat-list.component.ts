@@ -42,7 +42,8 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'departementNaissance': 'Département de Naissance',
     'skype': 'Identifiant Skype',
     'telDomicile': 'Téléphone domicile',
-    'posteRecherche':'Poste(s) Recherché(s)',
+    'posteRecherche': 'Poste Recherché',
+    'accepte':'Conditions Acceptées',
     'permisB':'Permis B',
     'voiture':'Voiture',
     'permis2roues': 'Permis 2 roues',
@@ -52,6 +53,30 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'allemand': 'Allemand',
     'espagnol': 'Espagnol',
     'autreLangue': 'Autre Langue',
+    'niveauAutrelangue': 'Niveau autre langue',
+    'regionsFrance':'Mobilité Région de France',
+    'references':'Références',
+    'statut': 'Statut',
+    'sourceCv': 'Source du CV',
+    'creePar':'Créé par',
+    'dateCreation':'Date de création',
+    'dateMAJ':'Date de mise à jour',
+    'majPar':'Mis à jour par',
+    'alerteMAJ':'Alerte des mises à jour',
+    'commentairesCV':'Commentaires du CV',
+    'experience':'Expérience',
+    'tags':'Tags',
+    'domaine1':'Domaine 1',
+    'domaine2':'Domaine 2',
+    'domaine3':'Domaine 3',
+    'metier1':'Métier 1',
+    'metier2':'Métier 2',
+    'metier3':'Métier 3',
+    'outils1':'Outils 1',
+    'outils2':'Outils 2',
+    'outils3':'Outils 3',
+    'region1':'Région 1',
+    'region2':'Région 2',
     'email': 'E-mail',
     'adresse': 'Adresse',
     'codePostal': 'Code postal',
@@ -73,13 +98,61 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'preavisNegociable': 'Préavis négociable',
     'contrat': 'Contrat',
     'posteSouhaite': 'Poste souhaité',
-    'evolution5ans': 'Évolution souhaitée dans les 5 ans',
+    'evolution5ans': 'ëvolution souhaitée dans les 5 ans',
     'numSecu': 'Numéro INSEE',
     'fixeDernierSalaireBrut': 'Fixe du dernier salaire en brut',
     'varDernierSalaireBrut': 'Variable du dernier salaire en brut',
     'pretentionSalaireBrut': 'Prétentions salariales en brut',
+    'fourchetteSalariale':'Fourchette Salariale',
+    'autorisationControle':'Autorisation du contrôle de références',
+    'dateDerniersEntretiens':'Date des derniers entretiens',
+    'intitulePosteConcerne':'Intitulé du poste concerné',
+    'fonctionEmployeurActuel':'Fonction chez l\'employeur actuel',
+    'nombreAnneesExperiences':'Nombre d\'années d\'expérience',
+    'raisonDepartSociete':'Raison du départ de la société',
+    'etatRecherches':'Etat des recherches',
+    'adequationPosteProfil':'Adéquation entre le poste et le profil',
+    'mobiliteGeographique':'Mobilité géographique',
+    'delaiDispoFiche':'Délai de disponibilité sur la Fiche',
     'faitA': 'Fait à:',
     'echangesEffectues': 'Echanges éffectués'};
+  columnsToFilter = [
+    'nom',
+    'prenom',
+    'anglais',
+    'italien',
+    'allemand',
+    'espagnol',
+    'autreLangue',
+    'niveauAutrelangue',
+    'regionsFrance',
+    'statut',
+    'sourceCv',
+    'commentairesCV',
+    'experience',
+    'tags',
+    'domaine1',
+    'domaine2',
+    'domaine3',
+    'metier1',
+    'metier2',
+    'metier3',
+    'outils1',
+    'outils2',
+    'outils3',
+    'region1',
+    'region2',
+    'mobiliteParis',
+    'mobiliteFrance',
+    'mobiliteEurope',
+    'mobiliteIntl',
+    'enPoste',
+    'delai',
+    'fourchetteSalariale',
+    'fonctionEmployeurActuel',
+    'nombreAnneesExperiences',
+    'etatRecherches',
+    'mobiliteGeographique'];
 
 
   constructor(private candidatService: CandidatService,
@@ -164,6 +237,14 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     let ok = [];
     for (let k of Object.keys(o))
       if (this.columnsToIgnore.indexOf(k) ==-1)
+        ok.push(k);
+    return ok;
+  }
+
+  objectKeysFiltered(o){
+    let ok = [];
+    for (let k of Object.keys(o))
+      if (this.columnsToFilter.indexOf(k) !=-1)
         ok.push(k);
     return ok;
   }

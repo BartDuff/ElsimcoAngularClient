@@ -42,3 +42,16 @@ html, body {
 .mat-paginator-icon {
   color: gray!important;
 }
+
+.mat-datepicker-toggle-default-icon {
+   color: black;
+ }
+
+.mat-calendar-period-button {
+  color: black!important;
+}
+
+input-file button {
+  background-color: lightgrey!important;
+  color: black !important;
+}

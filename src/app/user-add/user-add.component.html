@@ -54,6 +54,32 @@
         </mat-form-field>
 
         <mat-form-field>
+          <input matInput formControlName="adressePostale" placeholder="Adresse postale" name="adressePostale" id="adressePostale">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="telephone" placeholder="Numéro de téléphone" name="telephone" id="telephone">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="emailPerso" placeholder="Email perso" name="emailPerso" id="emailPerso">
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <input matInput formControlName="metier" placeholder="Métier" name="metier" id="metier">
+        </mat-form-field>
+
+          <mat-form-field>
+            <label>
+              <input matInput readonly [matDatepicker]="picker"
+                     formControlName="dateArrivee" placeholder="Date d'arrivée dans l'entreprise" name="dateArrivee" id="dateArrivee">
+            </label>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+        <mat-form-field>
           <input matInput formControlName="cpNMoins1" placeholder="Congés payés N-1" name="cpNMoins1" id="cpNMoins1">
         </mat-form-field>
 

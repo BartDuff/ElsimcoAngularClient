@@ -46,9 +46,27 @@
         <mat-icon>perm_identity</mat-icon>
         {{ user?.role }} {{user?.fonction }}</p>
       <p>Date d'inscription: {{ user?.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
+      <p>Date d'arrivée dans l'entreprise: {{ user?.dateArrivee | date: 'dd/MM/yyyy' }}</p>
       <p>
         <mat-icon>email</mat-icon>
         {{ user?.email }}</p>
+      <p>
+      <p>
+        <mat-icon>mail_outline</mat-icon>
+        {{ user?.emailPerso }}</p>
+      <p>
+      <p>
+        <mat-icon>home</mat-icon>
+        {{ user?.adressePostale }}</p>
+      <p>
+      <p>
+        <mat-icon>phone</mat-icon>
+        {{ user?.telephone }}</p>
+      <p>
+
+      <p>
+        <mat-icon>business_center</mat-icon>
+        {{ user?.metier }}</p>
       <p>
         <span>Congés N-1: </span>
         {{ user?.cpNMoins1 }}</p>

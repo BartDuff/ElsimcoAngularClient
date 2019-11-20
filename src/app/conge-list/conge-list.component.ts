@@ -6,6 +6,7 @@ import {PdfService} from '../services/pdf.service';
 import {ToastrService} from 'ngx-toastr';
 import {CongeService} from '../services/conge.service';
 import {UserModel} from '../models/user.model';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-conge-list',
@@ -15,6 +16,13 @@ import {UserModel} from '../models/user.model';
 export class CongeListComponent implements OnInit {
   currentUser:UserModel;
   conges : CongeModel[] = [];
+  joursDeLaSemaine = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+  daysOffSavedObjArr = [];
+  nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
+  absShortTypes = ['RTT', 'CP', 'C.E.', 'C.S.S.'];
+  dateNow: Date;
+
   constructor(private userService: UserService,
               private congeService: CongeService,
               private toastrService:ToastrService) { }
@@ -22,7 +30,185 @@ export class CongeListComponent implements OnInit {
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getCongesForUser();
+    this.getHolidays();
+    this.dateNow = new Date();
   }
+
+  getHolidays() {
+    this.userService.getCongeForUser(this.currentUser).subscribe(
+      (data) => {
+        for (let d of data) {
+          //this.mesConges.push(moment(d.date).format('DD/MM/YYYY').toString());
+          this.daysOffSavedObjArr.push(({
+            date: moment(d.date).format('DD/MM/YYYY').toString(),
+            typeConge: d.typeConge,
+            demiJournee: d.demiJournee,
+            typeDemiJournee: d.typeDemiJournee,
+            valideRH: d.valideRH
+          }));
+        }
+      }
+    );
+  }
+
+  checkAskedHolidays(day: Date) {
+    let d = moment(day).format('DD/MM/YYYY').toString();
+    // console.log(this.mesConges.indexOf(d));
+    // console.log(d);
+    // console.log(this.mesConges);
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == d) {
+        return true;
+      }
+    }
+    return false;
+    //return this.mesConges.indexOf(d) != -1;
+  }
+
+  includesDay(arr, date) {
+    for (let x of arr) {
+      if (x.date == date) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getDaysInMonth(month, year) {
+    var date = new Date(Date.UTC(year, month, 1));
+    var days = [];
+    while (date.getMonth() === month) {
+      days.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
+  }
+
+  static joursFeries(an): String[] {
+    const JourAn = new Date(an, 0, 1);
+    const FeteTravail = new Date(an, 4, 1);
+    const Victoire1945 = new Date(an, 4, 8);
+    const FeteNationale = new Date(an, 6, 14);
+    const Assomption = new Date(an, 7, 15);
+    const Toussaint = new Date(an, 10, 1);
+    const Armistice = new Date(an, 10, 11);
+    const Noel = new Date(an, 11, 25);
+    // const SaintEtienne = new Date(an, '11', '26');
+    const G = an % 19;
+    const C = Math.floor(an / 100);
+    const H = (C - Math.floor(C / 4) - Math.floor((8 * C + 13) / 25) + 19 * G + 15) % 30;
+    const I = H - Math.floor(H / 28) * (1 - Math.floor(H / 28) * Math.floor(29 / (H + 1)) * Math.floor((21 - G) / 11));
+    const J = (an * 1 + Math.floor(an / 4) + I + 2 - C + Math.floor(C / 4)) % 7;
+    const L = I - J;
+    const MoisPaques = 3 + Math.floor((L + 40) / 44);
+    const JourPaques = L + 28 - 31 * Math.floor(MoisPaques / 4);
+    const Paques = new Date(an, MoisPaques - 1, JourPaques);
+    const VendrediSaint = new Date(an, MoisPaques - 1, JourPaques - 2);
+    const LundiPaques = new Date(an, MoisPaques - 1, JourPaques + 1);
+    const Ascension = new Date(an, MoisPaques - 1, JourPaques + 39);
+    const Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49);
+    const LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50);
+    let t = [JourAn, VendrediSaint, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let sDates = [];
+    for (let i = 0; i < t.length; i++) {
+      sDates.push(moment(t[i]).format('DD/MM/YYYY'));
+    }
+    return sDates;
+  }
+
+  toMomentFormat(date: Date) {
+    return moment(date).format('DD/MM/YYYY');
+  }
+
+  getWeekday(date: Date) {
+    return date.getUTCDay();
+  }
+
+  creatArray(number) {
+    return new Array(number);
+  }
+
+  getHolidaysOfMonth(mois) {
+    let holidayMonthArr = [];
+    for (let h of this.daysOffSavedObjArr) {
+      if (moment(h.date, 'dd/MM/YYYY').month() == this.nomsDesMois.indexOf(mois)) {
+        holidayMonthArr.push(h);
+      }
+    }
+    holidayMonthArr.sort(function (a, b) {
+      let dateA = moment(a.date).date();
+      let dateB = moment(b.date).date();
+      return dateA - dateB;
+    });
+    return holidayMonthArr;
+  }
+
+  addCells(number) {
+    let d = this.getWeekday(new Date(this.dateNow.getFullYear(), number, 1));
+    return d;
+  }
+
+  getDayColor(day) {
+    if (this.checkWeekends(day)) {
+      return 'grey';
+    }
+    if (this.checkAskedHolidays(day)) {
+      for (let c of this.daysOffSavedObjArr) {
+        if (c.date == moment(day).format('DD/MM/YYYY')) {
+          if (c.valideRH) {
+            return 'greenyellow';
+          }
+        }
+      }
+      return 'yellow';
+    }
+    return 'white';
+  }
+
+  getAbsTypeShort(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
+      }
+    }
+    return '';
+  }
+
+  getAbsTypeLong(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        return x.typeConge;
+      }
+    }
+    return '';
+  }
+
+  getAbsHalfDay(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return '1/2';
+        }
+      }
+    }
+    return '';
+  }
+
+  checkWeekends(day: Date) {
+    let d = day.toLocaleString('fr-FR', {weekday: 'short'});
+    return d === 'dim.' || d === 'sam.' || CongeListComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString());
+  }
+
+  // checkDay(day) {
+  //   let d = moment(day).format('DD/MM/YYYY');
+  //   for (let x of this.daysOffSelectedObjArr) {
+  //     if (x.date == d) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  //   //return this.daysOff.includes(d)
+  // }
 
   getCongesForUser() {
     this.userService.getCongeForUser(this.currentUser).subscribe(

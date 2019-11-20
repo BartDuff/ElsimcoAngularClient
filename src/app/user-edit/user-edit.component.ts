@@ -33,7 +33,12 @@ export class UserEditComponent implements OnInit {
       cpNMoins1:['', Validators.required],
       cpN:['', Validators.required],
       rttn:['', Validators.required],
-      congeAnciennete:['', Validators.required]
+      congeAnciennete:[''],
+      adressePostale:['', Validators.required],
+      telephone:['', [Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
+      emailPerso:['', [Validators.email, Validators.required]],
+      dateArrivee:['', Validators.required],
+      metier:['', Validators.required]
     });
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
@@ -42,6 +47,11 @@ export class UserEditComponent implements OnInit {
           this.editForm.controls.email.setValue(data.email);
           this.editForm.controls.prenom.setValue(data.prenom);
           this.editForm.controls.nom.setValue(data.nom);
+          this.editForm.controls.adressePostale.setValue(data.adressePostale);
+          this.editForm.controls.telephone.setValue(data.telephone);
+          this.editForm.controls.emailPerso.setValue(data.emailPerso);
+          this.editForm.controls.dateArrivee.setValue(data.dateArrivee);
+          this.editForm.controls.metier.setValue(data.metier);
           this.editForm.controls.role.setValue(data.role);
           this.editForm.controls.fonction.setValue(data.fonction);
           this.editForm.controls.cpNMoins1.setValue(data.cpNMoins1);

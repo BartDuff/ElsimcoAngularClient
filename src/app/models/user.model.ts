@@ -6,11 +6,17 @@ export class UserModel {
   prenom: String;
   email: String;
   trigramme: String;
+  adressePostale: String;
+  telephone: String;
+  emailPerso: String;
   cpNMoins1: number;
   cpN: number;
   rttn: number;
   congeAnciennete: number;
   dateInscription: Date;
+  dateArrivee: Date;
+  dateDepart: Date;
+  metier: String;
   derniereConnexion: Date;
   role: String;
   fonction:String;

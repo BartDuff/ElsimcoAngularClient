@@ -15,3 +15,9 @@ td {
 .mat-button:hover {
   background: cornflowerblue;
 }
+
+
+.mat-icon-button {
+  color: black;
+  margin: 1em;
+}

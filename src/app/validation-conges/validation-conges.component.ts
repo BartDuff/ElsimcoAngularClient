@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
 import {FicheModel} from '../models/fiche.model';
@@ -13,64 +13,106 @@ import * as moment from 'moment';
   styleUrls: ['./validation-conges.component.css']
 })
 export class ValidationCongesComponent implements OnInit {
-  congesValides: CongeModel[] = [];
-  congesNonValides: CongeModel[] = [];
+  congesValides: CongeModel[];
+  congesNonValides: CongeModel[];
   daysOffSavedObjArr;
-  dateNow : Date;
+  dateNow: Date;
   users: UserModel[] = [];
-  nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
-  joursDeLaSemaine = ['D','L', 'M', 'M', 'J', 'V', 'S'];
+  selectedUser;
+  nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  joursDeLaSemaine = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+
   constructor(private congeService: CongeService,
               private userService: UserService,
-              private toastrService: ToastrService) { }
+              private toastrService: ToastrService) {
+  }
 
   ngOnInit() {
     this.getNonValidatedConges();
     this.getValidatedConges();
     this.getUsers();
     this.dateNow = new Date();
+    this.selectedUser = null;
   }
 
-  getNonValidatedConges(){
-    this.congeService.getConges().subscribe(
-      (data)=>{
-        for(let c of data)
-          if(!c.valideRH)
-            this.congesNonValides.push(c)
-      }
-    )
+  getNonValidatedConges() {
+    this.congesNonValides = [];
+    if (this.selectedUser == null) {
+      this.congeService.getConges().subscribe(
+        (data) => {
+          for (let c of data) {
+            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth()) {
+              this.congesNonValides.push(c);
+            }
+          }
+        }
+      );
+    } else {
+      this.userService.getCongeForUser(this.selectedUser).subscribe(
+        (d) => {
+          for (let c of d) {
+            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth()) {
+              this.congesNonValides.push(c);
+            }
+          }
+        });
+    }
   }
 
   getValidatedConges() {
+    this.congesValides = [];
+    if (this.selectedUser == null) {
     this.congeService.getConges().subscribe(
-      (data)=>{
-        for(let c of data)
-          if(c.valideRH)
-            this.congesValides.push(c)
+      (data) => {
+        for (let c of data) {
+          if (c.valideRH && new Date(c.date).getMonth() === this.dateNow.getMonth()) {
+            this.congesValides.push(c);
+          }
+        }
       }
-    )
+    )} else {
+      this.userService.getCongeForUser(this.selectedUser).subscribe(
+        (d) => {
+          for (let c of d) {
+            if (c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth()) {
+              this.congesValides.push(c);
+            }
+          }
+        });
+    }
   }
 
-  validateCongeRH(conge: CongeModel){
-      conge.valideRH = true;
-      this.congeService.editConge(conge).subscribe(
-        (data)=> {
-          this.congesNonValides.splice(this.congesNonValides.indexOf(conge),1);
-          this.congesValides.push(conge);
-          this.toastrService.success('Congé validé', 'Congé validé');
-        }
-      )
-    }
+  validateCongeRH(conge: CongeModel) {
+    conge.valideRH = true;
+    this.congeService.editConge(conge).subscribe(
+      (data) => {
+        this.congesNonValides.splice(this.congesNonValides.indexOf(conge), 1);
+        this.congesValides.push(conge);
+        this.toastrService.success('Congé validé', 'Congé validé');
+      }
+    );
+  }
 
-refuseCongeRH(conge: CongeModel){
-  conge.valideRH = false;
-  this.congeService.deleteConge(conge).subscribe(
-    (data)=> {
-      this.congesNonValides.splice(this.congesNonValides.indexOf(conge),1);
-      this.toastrService.error('Congé refusé', 'Congé refusé');
-    }
-  )
-}
+  validateAllCongeRH() {
+    for(let c of this.congesNonValides){
+      c.valideRH = true;
+      this.congeService.editConge(c).subscribe(
+        (data) => {
+          this.congesNonValides.splice(this.congesNonValides.indexOf(c), 1);
+          this.congesValides.push(c)}
+      );}
+    this.toastrService.success('Congés validés', 'Congés validés');
+  }
+
+  refuseCongeRH(conge: CongeModel) {
+    conge.valideRH = false;
+    this.congeService.deleteConge(conge).subscribe(
+      (data) => {
+        this.congesNonValides.splice(this.congesNonValides.indexOf(conge), 1);
+        this.toastrService.error('Congé refusé', 'Congé refusé');
+      }
+    );
+  }
 
   getDaysInMonth(month, year) {
     let date = new Date(Date.UTC(year, month, 1));
@@ -82,10 +124,10 @@ refuseCongeRH(conge: CongeModel){
     return days;
   }
 
-  getUsers(){
+  getUsers() {
     this.userService.getUsers().subscribe(
-      (data)=> this.users = data
-    )
+      (data) => this.users = data
+    );
   }
 
   getHolidays(user: UserModel) {
@@ -108,7 +150,7 @@ refuseCongeRH(conge: CongeModel){
   checkAskedMorningHolidays(day, user: UserModel) {
     for (let x of this.congesValides) {
       if (new Date(x.date).toDateString() == day.toDateString() && x.user.id == user.id) {
-        if(x.demiJournee && x.typeDemiJournee == 'Matin' || !x.demiJournee){
+        if (x.demiJournee && x.typeDemiJournee == 'Matin' || !x.demiJournee) {
           return true;
         }
       }
@@ -119,7 +161,7 @@ refuseCongeRH(conge: CongeModel){
   checkAskedAfternoonHolidays(day, user: UserModel) {
     for (let x of this.congesValides) {
       if (new Date(x.date).toDateString() == day.toDateString() && x.user.id == user.id) {
-        if(x.demiJournee && x.typeDemiJournee == 'Après-midi' || !x.demiJournee){
+        if (x.demiJournee && x.typeDemiJournee == 'Après-midi' || !x.demiJournee) {
           return true;
         }
       }

@@ -20,6 +20,7 @@ export class ValidationFicheComponent implements OnInit {
   allFiches: FicheModel[];
   allRHValidFiches: FicheModel[];
   dateNow : Date;
+  dataSource: any;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
   constructor(private userService: UserService,
               private ficheService: FicheService,
@@ -32,6 +33,13 @@ export class ValidationFicheComponent implements OnInit {
     this.getAllFiches();
     this.getAllValidRHFiches();
     this.dateNow = new Date();
+  }
+
+    objectKeys(o){
+      let ok = [];
+      for (let k of Object.keys(o))
+          ok.push(k);
+      return ok;
   }
 
   getAllFiches() {
@@ -79,6 +87,7 @@ export class ValidationFicheComponent implements OnInit {
     );
   }
 
+
   refuseFicheRH(fiche: FicheModel){
     fiche.valideRH = false;
     const dialogConfig = new MatDialogConfig();
@@ -98,6 +107,8 @@ export class ValidationFicheComponent implements OnInit {
         )}
     );
   }
+
+
 
   // validateFicheDir(fiche: FicheModel){
   //   fiche.valideDir = true;

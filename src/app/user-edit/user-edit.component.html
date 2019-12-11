@@ -40,7 +40,7 @@
   <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="space-around center">
-        <mat-form-field>
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <input matInput formControlName="email" placeholder="Email" name="email" id="email">
         </mat-form-field>
 
@@ -50,6 +50,10 @@
 
         <mat-form-field>
           <input matInput formControlName="nom" placeholder="Nom" name="nom" id="nom">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
+          <input matInput formControlName="trigramme" placeholder="Trigramme" name="trigramme" id="trigramme">
         </mat-form-field>
 
         <mat-form-field>
@@ -68,28 +72,28 @@
           <input matInput formControlName="metier" placeholder="Métier" name="metier" id="metier">
         </mat-form-field>
 
-        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'" (click)="picker.open()">
           <label>
             <input matInput readonly [matDatepicker]="picker"
                    formControlName="dateArrivee" placeholder="Date d'arrivée dans l'entreprise" name="dateArrivee" id="dateArrivee">
           </label>
           <mat-datepicker-toggle matSuffix [for]="picker" id="cal"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <mat-datepicker #picker [disabled]="false"></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <input matInput formControlName="cpNMoins1" placeholder="Congés payés N-1" name="cpNMoins1" id="cpNMoins1">
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <input matInput formControlName="cpN" placeholder="Congés payés N" name="cpN" id="cpN">
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <input matInput formControlName="rttn" placeholder="RTT" name="rttn" id="rttn">
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <input matInput formControlName="congeAnciennete" placeholder="Congé Ancienneté" name="congeAnciennete" id="congeAnciennete">
         </mat-form-field>
 
@@ -109,7 +113,7 @@
           </mat-select>
         </mat-form-field>
         <mat-card-actions fxFlexAlign="center">
-          <button mat-icon-button routerLink="/users">RETOUR
+          <button mat-icon-button routerLink="/users/{{user.id}}">RETOUR
             <mat-icon>arrow_back</mat-icon>
           </button>
           <button mat-button>Mettre à jour</button>

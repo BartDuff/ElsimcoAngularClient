@@ -7,6 +7,9 @@ import {ToastrService} from 'ngx-toastr';
 import {CongeService} from '../services/conge.service';
 import {UserModel} from '../models/user.model';
 import * as moment from 'moment';
+import {MatDialog, MatDialogConfig} from '@angular/material';
+import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
+import {EmailService} from '../services/email.service';
 
 @Component({
   selector: 'app-conge-list',
@@ -16,8 +19,13 @@ import * as moment from 'moment';
 export class CongeListComponent implements OnInit {
   currentUser:UserModel;
   conges : CongeModel[] = [];
+  loading = true;
   joursDeLaSemaine = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
   daysOffSavedObjArr = [];
+  congeSansJustif = [];
+  fileEncoded;
+  filename;
+  fileValid = false;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
   absShortTypes = ['RTT', 'CP', 'C.E.', 'C.S.S.'];
@@ -25,13 +33,47 @@ export class CongeListComponent implements OnInit {
 
   constructor(private userService: UserService,
               private congeService: CongeService,
-              private toastrService:ToastrService) { }
+              private toastr:ToastrService,
+              private dialog: MatDialog,
+              private emailService: EmailService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getCongesForUser();
     this.getHolidays();
     this.dateNow = new Date();
+  }
+
+  sendJustif() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (d) => {
+        if (d) {
+          for (let c of this.congeSansJustif) {
+            c.justificatifRecu = c.documentJointUri != '';
+          }
+          this.congeService.editMultipleConge(this.congeSansJustif).subscribe(
+            () => {
+              this.emailService.sendMail('Une nouvelle pièce justificative a été envoyée par '+ this.currentUser.prenom + ' '+this.currentUser.nom,'Notification d\'envoi de pièce justificative','florian.bartkowiak@gmail.com').subscribe(
+                ()=>{
+                  for (let c of this.congeSansJustif) {
+                    if(c.justificatifRecu){
+                      this.congeSansJustif.splice(this.congeSansJustif.indexOf(c),1);
+                    }
+                  }
+                  this.toastr.success('Fichier envoyé');
+                }
+              );
+            },
+            (error) => {
+              this.toastr.error('Erreur d\'envoi');
+            }
+          );
+        }
+      });
   }
 
   getHolidays() {
@@ -46,7 +88,11 @@ export class CongeListComponent implements OnInit {
             typeDemiJournee: d.typeDemiJournee,
             valideRH: d.valideRH
           }));
+          if (d.typeConge == 'Absence Exceptionnelle' && !d.justificatifRecu) {
+            this.congeSansJustif.push(d);
+          }
         }
+        this.loading = false;
       }
     );
   }
@@ -230,6 +276,52 @@ export class CongeListComponent implements OnInit {
       if(c.valideRH)
         congesValide.push(c)
     return congesValide;
+  }
+
+  handleFile(dayoff) {
+    let file = dayoff.rawFile[0];
+    if (file) {
+      this.fileValid = false;
+      let reader = new FileReader();
+      if (reader.readAsBinaryString === undefined) {
+        reader.onload = this._handleReaderLoadedIE.bind(this);
+        reader.readAsArrayBuffer(file.file);
+        reader.onloadend = () => {
+          dayoff.documentJointUri = this.fileEncoded;
+          this.fileEncoded = null;
+          dayoff.documentJointType = this.filename.split('.')[file.file.name.split('.').length - 1];
+          this.fileValid = true;
+        };
+      } else {
+        reader.onload = this._handleReaderLoaded.bind(this);
+        reader.readAsBinaryString(file.file);
+        reader.onloadend = () => {
+          dayoff.documentJointUri = this.fileEncoded;
+          this.fileEncoded = null;
+          dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          this.fileValid = true;
+        };
+      }
+
+      // this.selectedFiles.splice(i,1);
+      // i--
+    }
+  }
+
+  _handleReaderLoadedIE(readerEvt) {
+    console.log('_handleReaderLoadedIE');
+    var bytes = new Uint8Array(readerEvt.target.result);
+    var binary = '';
+    var length = bytes.byteLength;
+    for (var i = 0; i < length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    this.fileEncoded = btoa(binary);
+  }
+
+  _handleReaderLoaded(readerEvt) {
+    //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
+    this.fileEncoded = btoa(readerEvt.target.result);
   }
 
 }

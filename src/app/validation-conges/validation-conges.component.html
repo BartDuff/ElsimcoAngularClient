@@ -4,17 +4,30 @@
     <div style="display: flex;flex: available;justify-content: space-evenly;">
         <mat-tab-group>
           <mat-tab label="Congés en attente">
-            <div style="margin-top: 2em;">
+            <div style="display: flex; justify-content: center; align-items: center" *ngIf="loading">
+              <mat-progress-spinner
+                *ngIf="loading"
+                color="accent"
+                mode="indeterminate">
+              </mat-progress-spinner>
+            </div>
+            <div style="margin-top: 2em;" *ngIf="!loading">
             <h3>Congés en attente de validation</h3>
+              <mat-chip-list>
+                <mat-chip *ngFor="let i of monthArr" style="background-color: black;color: white;">{{i}}</mat-chip>
+              </mat-chip-list>
+<!--              <span *ngFor="let i of monthArr">-->
+<!--                {{nomsDesMois[i]}}-->
+<!--              </span>-->
               <mat-form-field>
                 <span class="prefix" matPrefix>Selectionnez un collaborateur </span>
-                <mat-select [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" (ngModelChange)="getNonValidatedConges()" placeholder="Liste des collaborateurs">
+                <mat-select [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" (ngModelChange)="loading = true;getNonValidatedConges()" placeholder="Liste des collaborateurs">
                   <mat-option *ngFor="let u of users" [value]=u>{{u.prenom}} {{u.nom}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <div style="display: flex;justify-content: center;">
-                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getNonValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h3>
-                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);getNonValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);congesNonValides = [];getNonValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h3>
+                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);congesNonValides = [];getNonValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
               </div>
             <table class="bordered mat-elevation-z8" id="enattente" style="margin: auto; ">
               <thead>
@@ -27,6 +40,7 @@
                 <th>Type de congé</th>
                 <th>Validé RH</th>
                 <th>Commentaires</th>
+                <th>Justificatif reçu</th>
               </tr>
               </thead>
               <tbody>
@@ -34,7 +48,7 @@
                 <td>{{conge.user.nom}}</td>
                 <td>{{conge.user.prenom}}</td>
                 <td>{{conge.user.trigramme}}</td>
-                <td>{{conge.date | date: 'short'}}</td>
+                <td>{{conge.date | date: 'dd/MM/yyyy'}}</td>
                 <td>{{conge.demiJournee ? 'oui' : 'non'}}</td>
                 <td>{{conge.typeConge}}</td>
                 <td>
@@ -43,11 +57,12 @@
                     <mat-icon>check_circle</mat-icon>
                   </button>
                   <button type="button" *ngIf="!conge.valideRH"
-                          (click)="refuseCongeRH(conge)" matTooltip="Refuser la fiche">
+                          (click)="refuseCongeRH(conge)" matTooltip="Refuser le congé">
                     <mat-icon>close_circle</mat-icon>
                   </button>
                 </td>
                 <td>{{conge.commentaires}}</td>
+                <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" (change)="updateModel(conge)"></mat-checkbox></td>
                 <ng-template #valid>
                   <mat-icon>ckeck</mat-icon>
                 </ng-template>
@@ -67,7 +82,7 @@
             </mat-card>
       </div>
           </mat-tab>
-          <mat-tab label="Congés validés">
+          <mat-tab label="Congés validés" (click)="congesValides=[];getValidatedConges()">
             <mat-form-field>
               <span class="prefix" matPrefix>Selectionnez un collaborateur </span>
               <mat-select [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" (ngModelChange)="getValidatedConges()" placeholder="Liste des collaborateurs">
@@ -77,8 +92,8 @@
             <div style="margin-top: 2em;">
               <h3>Congés validés</h3>
               <div style="display: flex;justify-content: center;">
-                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h3>
-                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);getValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h3>
+                <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
               </div>
               <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; ">
                 <thead>
@@ -91,6 +106,7 @@
                   <th>Type de congé</th>
                   <th>Validée RH</th>
                   <th>Commentaires</th>
+                  <th>Justificatif reçu</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -98,13 +114,66 @@
                   <td>{{conge.user.nom}}</td>
                   <td>{{conge.user.prenom}}</td>
                   <td>{{conge.user.trigramme}}</td>
-                  <td>{{conge.date | date: 'short'}}</td>
+                  <td>{{conge.date | date: 'dd/MM/yyyy'}}</td>
                   <td>{{conge.demiJournee ? 'oui' : 'non'}}</td>
                   <td>{{conge.typeConge}}</td>
                   <td>
                     <mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon>
                   </td>
                   <td>{{conge.commentaires}}</td>
+                  <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" (change)="updateModel(conge)"></mat-checkbox></td>
+                  <ng-template #unvalid>
+                    <mat-icon>close</mat-icon>
+                  </ng-template>
+                </tr>
+                </tbody>
+              </table>
+              <mat-card *ngIf="!congesValides"
+                        style="display: flex; justify-content: center; align-items: center">
+                <mat-progress-spinner
+                  color="accent"
+                  mode="indeterminate">
+                </mat-progress-spinner>
+              </mat-card>
+            </div>
+          </mat-tab>
+          <mat-tab label="Justificatifs d'absences">
+            <div style="margin-top: 2em;">
+              <h3>Justificatifs reçus</h3>
+              <div style="display: flex;justify-content: center;">
+                <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()-1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{dateNowFile.getFullYear()}}</h3>
+                <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()+1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+              </div>
+              <table class="bordered mat-elevation-z8" style="margin: auto; ">
+                <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Trigramme</th>
+                  <th>Validée RH</th>
+                  <th>Commentaires</th>
+                  <th>Justificatif reçu</th>
+                  <th>Mois</th>
+                  <th>Type d'absence</th>
+                  <th>Télécharger</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let conge of congesWithFile">
+                  <td>{{conge.user.nom}}</td>
+                  <td>{{conge.user.prenom}}</td>
+                  <td>{{conge.user.trigramme}}</td>
+                  <td>
+                    <mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon>
+                  </td>
+                  <td>{{conge.commentaires}}</td>
+                  <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" (change)="updateModel(conge)"></mat-checkbox></td>
+                  <td>{{nomsDesMois[(conge.date | date:'MM')-1]}}</td>
+                  <td>{{conge.typeCe}}</td>
+                  <td>
+                    <button type="button"
+                            (click)="downloadDocument(conge)"><i class="material-icons">file_download</i></button>
+                  </td>
                   <ng-template #unvalid>
                     <mat-icon>close</mat-icon>
                   </ng-template>

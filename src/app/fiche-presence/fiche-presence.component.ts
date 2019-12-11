@@ -12,6 +12,8 @@ import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {CommentFicheDialogComponent} from '../dialog/comment-fiche-dialog/comment-fiche-dialog.component';
+import {AllowAnticipationDialogComponent} from '../dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
+import {FicheService} from '../services/fiche.service';
 
 @Component({
   selector: 'app-fiche-presence',
@@ -26,14 +28,19 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   mouseDown:boolean = false;
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
   daysOff = [];
+  justifManquant = false;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
-  absTypes= ["RTT", "Congés payés", "Absence exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
-  absences= ["RTT E","RTT S", "Congés payés", "Absence exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
+  absTypes= ["RTT", "Congés payés", "Absence Exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
+  absences= ["RTT", "Congés payés", "Absence Exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
   absShortTypes= ["RTT", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
   dateNow : Date;
   FicheEnvoyee:boolean;
   daysOffSavedObjArr = [];
+  dayoffPlage = [];
   currentUser:UserModel;
+  plage: boolean = false;
+  firstClick: boolean = false;
+  firstDay;
 
   getWeekday(date:Date){
      return date.getUTCDay();
@@ -43,8 +50,30 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
      return new Array(number);
   }
 
-  getAbsTypeShort(date, formval?) {
+  includesArray(arr, arr2) {
+    for (let x of arr) {
+      if(this.isArray(x))
+        if (x[0].date == arr2[0].date && x[x.length-1].date == arr2[arr2.length-1].date) {
+          return true;
+        }
+    }
+    return false;
+  }
+
+  getAbsTypeShort(date) {
     for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
+      }
+    }
+    for (let x of this.daysOff) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == date) {
+            return this.absShortTypes[this.absTypes.indexOf(y.typeConge)];
+          }
+        }
+      }
       if (x.date == date) {
         return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
       }
@@ -58,11 +87,39 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
         return x.typeConge;
       }
     }
+    for (let x of this.daysOff) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == date) {
+            return this.absTypes[this.absTypes.indexOf(y.typeConge)];
+          }
+        }
+      }
+      if (x.date == date) {
+        return this.absTypes[this.absTypes.indexOf(x.typeConge)];
+      }
+    }
     return '';
   }
 
   getAbsHalfDay(date) {
     for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return '1/2';
+        }
+      }
+    }
+    for (let x of this.daysOff) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == date) {
+            if (x.demiJournee) {
+              return '1/2';
+            }
+          }
+        }
+      }
       if (x.date == date) {
         if (x.demiJournee) {
           return '1/2';
@@ -109,6 +166,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     return 'white';
   }
 
+
   getHolidays() {
     this.userService.getCongeForUser(this.currentUser).subscribe(
       (data) => {
@@ -123,6 +181,9 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
               valideRH: d.valideRH,
               commentaires: d.commentaires
             }));
+          }
+          if (d.typeConge == 'Absence Exceptionnelle' && !d.justificatifRecu){
+            this.justifManquant = true;
           }
         }
         // for(let day of this.daysOffSavedObjArr){
@@ -157,7 +218,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   c(cc){
     console.log(cc)
   }
-  constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService, private userService:UserService, private dialog: MatDialog) {
+  constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService, private userService:UserService, private ficheService: FicheService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -187,6 +248,23 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     this.cdRef.detectChanges();
   }
 
+  autoFillTypeInPlage(absence, plageArr) {
+    let ifrom = 0;
+    for (let i = 0; i < plageArr.length; i++) {
+      if (plageArr[i].date == absence.date) {
+        //console.log("found "+date+ " at position "+ i)
+        ifrom = i;
+        //break
+      }
+    }
+    for (; ifrom < plageArr.length; ifrom++) {
+      plageArr[ifrom].typeConge = absence.typeConge;
+      // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
+    }
+    if (plageArr.length > 1) {
+      this.toastr.warning('Le motif d\'absence "' + absence.typeConge + '" a été appliqué à toutes les dates sélectionnées à partir du ' + absence.date + '. Veuillez le préciser si nécessaire.', 'Attention');
+    }
+  }
 
 
   // dateFilter(date: Date) {
@@ -205,30 +283,262 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   //   return !forbiddenDay;
   // }
 
-checkDay(day){
-  let d = moment(day).format('DD/MM/YYYY');
-  return this.daysOff.includes(d)
-}
+  checkDay(day) {
+    let d = moment(day).format('DD/MM/YYYY');
+    for (let x of this.daysOff) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == d) {
+            return true;
+          }
+        }
+      } else {
+        if (x.date == d) {
+          return true;
+        }
+      }
+    }
+    return false;
+    //return this.daysOff.includes(d)
+  }
 
 checkWeekends(day:Date){
      let d = day.toLocaleString('fr-FR', {weekday: 'short'});
      return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString());
 }
+  // addRemoveDay(event) {
+  //    if(this.checkWeekends(event) || this.checkAskedHolidays(event)){
+  //       return;
+  //    } else {
+  //      this.selectedDate = event;
+  //      let day = moment(event).format('DD/MM/YYYY');
+  //      if (this.daysOff.includes(day) && !this.mouseDown) {
+  //        this.daysOff.splice(this.daysOff.indexOf(day),1);
+  //      } else if(this.daysOff.includes(day) && this.mouseDown){
+  //        return;
+  //      } else {
+  //        this.daysOff.push(day);
+  //        this.daysOff.sort()
+  //      }
+  //    }
+  // }
+
+  toDate(s) {
+    return new Date(s.substr(6, 4), s.substr(3, 2) - 1, s.substr(0, 2));
+  }
+
+  isArray(a) {
+    return Array.isArray(a);
+  }
+
   addRemoveDay(event) {
-     if(this.checkWeekends(event) || this.checkAskedHolidays(event)){
+    if (this.checkAskedHolidays(event) || this.checkWeekends(event)) {
+      return;
+    }
+    let day = moment(event).format('DD/MM/YYYY');
+    if (this.plage && this.firstClick) {
+      let stopDate = moment(event);
+      let f = moment(this.firstDay);
+      while (f.toDate() < stopDate.toDate()) {
+        f.add(1, 'd');
+        if (this.checkAskedHolidays(f.toDate()) || this.checkWeekends(f.toDate())) {
+          continue;
+        } else {
+          this.dayoffPlage.push({
+            date: f.format('DD/MM/YYYY'),
+            typeConge: '',
+            demiJournee: false,
+            typeDemiJournee: '',
+            commentaires: '',
+            valideRH: false,
+            typeCe: '',
+            documentJointUri: '',
+            documentJointType: '',
+            rawFile: null,
+            plage: true
+          });
+          this.dayoffPlage.sort((a, b) => a.date.localeCompare(b.date));
+        }
+      }
+      for (let dp of this.dayoffPlage) {
+        if (this.includesDay(this.daysOff, moment(dp).format('DD/MM/YYYY'))) {
+          this.toastr.error('Cette plage contient un jour déjà selectionné. Veuillez faire une nouvelle sélection', 'Erreur de sélection');
+          this.firstDay = null;
+          this.firstClick = false;
+          this.plage = false;
+          this.dayoffPlage = [];
+          return;
+        }
+      }
+      if (this.includesArray(this.daysOff, this.dayoffPlage)) {
+        this.daysOff.splice(this.daysOff.indexOf(this.plage), 1);
+        this.firstDay = null;
+        this.firstClick = false;
+        this.plage = false;
+        this.dayoffPlage = [];
         return;
-     } else {
-       this.selectedDate = event;
-       let day = moment(event).format('DD/MM/YYYY');
-       if (this.daysOff.includes(day) && !this.mouseDown) {
-         this.daysOff.splice(this.daysOff.indexOf(day),1);
-       } else if(this.daysOff.includes(day) && this.mouseDown){
-         return;
-       } else {
-         this.daysOff.push(day);
-         this.daysOff.sort()
-       }
-     }
+      }
+      if (this.firstDay.format('DD/MM/YYYY') == stopDate.format('DD/MM/YYYY')) {
+        for (let arr of this.daysOff) {
+          if (this.isArray(arr)) {
+            if (this.includesDay(arr, day)) {
+              this.toastr.error('Cette date est déjà contenue dans une plage', 'Erreur de sélection');
+              this.firstDay = null;
+              this.firstClick = false;
+              this.plage = false;
+              this.dayoffPlage = [];
+              return;
+            }
+          }
+        }
+        this.daysOff.push({
+          date: day,
+          typeConge: '',
+          demiJournee: false,
+          typeDemiJournee: '',
+          commentaires: '',
+          valideRH: false,
+          typeCe: '',
+          documentJointUri: '',
+          documentJointType: '',
+          rawFile: null,
+          plage: false
+        });
+        this.daysOff.sort((a, b) => a.date.localeCompare(b.date));
+        this.firstDay = null;
+        this.firstClick = false;
+        this.plage = false;
+        this.dayoffPlage = [];
+        return;
+      }
+      for (let dayArr of this.daysOff) {
+        if (this.isArray(dayArr)) {
+          if (this.includesDay(dayArr, this.firstDay.format('DD/MM/YYYY'))) {
+            let lastday = moment(this.toDate(dayArr[dayArr.length - 1].date));
+            if (lastday.toDate().getDate() == stopDate.toDate().getDate()) {
+              this.toastr.error('Ces dates sont déjà contenues dans une plage', 'Erreur de sélection');
+              this.firstDay = null;
+              this.firstClick = false;
+              this.plage = false;
+              this.dayoffPlage = [];
+              return;
+            }
+            while (lastday.toDate() < stopDate.toDate()) {
+              lastday.add(1, 'd');
+              if (this.checkAskedHolidays(lastday.toDate()) || this.checkWeekends(lastday.toDate())) {
+                continue;
+              } else {
+                dayArr.push({
+                  date: lastday.format('DD/MM/YYYY'),
+                  typeConge: '',
+                  demiJournee: false,
+                  typeDemiJournee: '',
+                  commentaires: '',
+                  valideRH: false,
+                  typeCe: '',
+                  documentJointUri: '',
+                  documentJointType: '',
+                  rawFile: null,
+                  plage: true
+                });
+                this.autoFillTypeInPlage(dayArr[0],dayArr);
+                dayArr.sort((a, b) => a.date.localeCompare(b.date));
+              }
+            }
+            this.firstDay = null;
+            this.firstClick = false;
+            this.plage = false;
+            this.dayoffPlage = [];
+            return;
+          }
+          if (this.includesDay(dayArr, stopDate.format('DD/MM/YYYY'))) {
+            let firstArrDay = moment(this.toDate(dayArr[0].date));
+            while (firstArrDay.toDate() > this.firstDay.toDate()) {
+              firstArrDay.subtract(1, 'd');
+              if (this.checkAskedHolidays(firstArrDay.toDate()) || this.checkWeekends(firstArrDay.toDate())) {
+                continue;
+              } else {
+                dayArr.push({
+                  date: firstArrDay.format('DD/MM/YYYY'),
+                  typeConge: '',
+                  demiJournee: false,
+                  typeDemiJournee: '',
+                  commentaires: '',
+                  valideRH: false,
+                  typeCe: '',
+                  documentJointUri: '',
+                  documentJointType: '',
+                  rawFile: null,
+                  plage: true
+                });
+                this.autoFillTypeInPlage(dayArr[0],dayArr);
+                dayArr.sort((a, b) => a.date.localeCompare(b.date));
+              }
+            }
+            this.firstDay = null;
+            this.firstClick = false;
+            this.plage = false;
+            this.dayoffPlage = [];
+            return;
+          }
+        }
+      }
+      this.daysOff.push(this.dayoffPlage);
+      this.firstDay = null;
+      this.firstClick = false;
+      this.plage = false;
+      this.dayoffPlage = [];
+      return;
+    }
+    if (this.plage && !this.firstClick) {
+      this.firstClick = true;
+      this.firstDay = moment(event);
+      this.dayoffPlage.push({
+        date: day,
+        typeConge: '',
+        demiJournee: false,
+        typeDemiJournee: '',
+        commentaires: '',
+        valideRH: false,
+        typeCe: '',
+        documentJointUri: '',
+        documentJointType: '',
+        rawFile: null,
+        plage: true
+      });
+      this.dayoffPlage.sort((a, b) => a.date.localeCompare(b.date));
+      return;
+    }
+    for (let plageArr of this.daysOff) {
+      if (this.isArray(plageArr)) {
+        if (this.includesDay(plageArr, day)) {
+          this.toastr.error('Cette date est déjà contenue dans une plage', 'Erreur de sélection');
+          return;
+        }
+      }
+    }
+    if (this.includesDay(this.daysOff, day) && !this.mouseDown) {
+      this.spliceDay(this.daysOff, day);
+    } else if (this.includesDay(this.daysOff, day) && this.mouseDown) {
+      return;
+    } else {
+      //this.daysOff.push(day);
+      this.daysOff.push({
+        date: day,
+        typeConge: '',
+        demiJournee: false,
+        typeDemiJournee: '',
+        commentaires: '',
+        valideRH: false,
+        typeCe: '',
+        documentJointUri: '',
+        documentJointType: '',
+        rawFile: null,
+        plage: false
+      });
+      this.daysOff.sort((a, b) => a.date.localeCompare(b.date));
+      //this.daysOff.sort();
+    }
   }
 
   getDaysInMonth(month, year) {
@@ -300,8 +610,9 @@ checkWeekends(day:Date){
       fiche.formation = this.countFormation(form);
       fiche.intercontrat = this.countInterContrat(form);
       fiche.maladie = this.countMaladie(form);
-      fiche.rtte = this.countRTTE(form);
-      fiche.rtts = this.countRTTS(form);
+      // fiche.rtte = this.countRTTE(form);
+      // fiche.rtts = this.countRTTS(form);
+      fiche.rtts = this.countRTT();
       fiche.datePublication = new Date();
       fiche.user = JSON.parse(localStorage.getItem('currentUser'));
       fiche.joursOuvres = this.joursOuvres().length;
@@ -331,30 +642,57 @@ checkWeekends(day:Date){
             (data) => {
               this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
               this.getFichesForUser();
+              this.ficheService.emitFicheSubject();
             })
         })
     });
   }
 
-  countRTTE(form: NgForm) {
-    let count = 0;
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "RTT E") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
-          }
-        }
-      }
-    }
-    return count;
-  }
+  // countRTTE(form: NgForm) {
+  //   let count = 0;
+  //   for(let key in form.value){
+  //     if(form.value.hasOwnProperty(key)) {
+  //       let value = form.value[key];
+  //       let nextValue = form.value[key + " boolean"];
+  //       if (value === "RTT E") {
+  //         if (nextValue){
+  //           count = count + 0.5;
+  //         } else {
+  //           count++;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return count;
+  // }
 
-  countRTTS(form: NgForm) {
+  // countRTTS(form: NgForm) {
+  //   let count = 0;
+  //   for(let c of this.daysOffSavedObjArr){
+  //     if(c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+  //       if(c.demiJournee)
+  //         count = count + 0.5;
+  //       else
+  //         count++;
+  //     }
+  //   }
+  //   for(let key in form.value){
+  //     if(form.value.hasOwnProperty(key)) {
+  //       let value = form.value[key];
+  //       let nextValue = form.value[key + " boolean"];
+  //       if (value === "RTT S") {
+  //         if (nextValue){
+  //           count = count + 0.5;
+  //         } else {
+  //           count++;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return count;
+  // }
+
+  countRTT() {
     let count = 0;
     for(let c of this.daysOffSavedObjArr){
       if(c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
@@ -364,16 +702,22 @@ checkWeekends(day:Date){
           count++;
       }
     }
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "RTT S") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
+    for(let c of this.daysOff){
+      if(this.isArray(c)){
+        for(let co of c){
+          if(co.typeConge == 'RTT' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+            if(co.demiJournee)
+              count = count + 0.5;
+            else
+              count++;
           }
+        }
+      } else {
+        if(c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(c.demiJournee)
+            count = count + 0.5;
+          else
+            count++;
         }
       }
     }
@@ -390,16 +734,35 @@ checkWeekends(day:Date){
           count++;
       }
     }
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "Congés payés") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Congés payés") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
+    for(let c of this.daysOff){
+      if(this.isArray(c)){
+        for(let co of c){
+          if(co.typeConge == 'Congés payés' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+            if(co.demiJournee)
+              count = count + 0.5;
+            else
+              count++;
           }
+        }
+      } else {
+        if(c.typeConge == 'Congés payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(c.demiJournee)
+            count = count + 0.5;
+          else
+            count++;
         }
       }
     }
@@ -409,23 +772,42 @@ checkWeekends(day:Date){
   countAbsences(form: NgForm) {
     let count = 0;
     for(let c of this.daysOffSavedObjArr){
-      if(c.typeConge == 'Absence exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+      if(c.typeConge == 'Absence Exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
         if(c.demiJournee)
           count = count + 0.5;
         else
           count++;
       }
     }
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "Absence exceptionnelle") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Absence exceptionnelle") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
+    for(let c of this.daysOff){
+      if(this.isArray(c)){
+        for(let co of c){
+          if(co.typeConge == 'Absence Exceptionnelle' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+            if(co.demiJournee)
+              count = count + 0.5;
+            else
+              count++;
           }
+        }
+      } else {
+        if(c.typeConge == 'Absence Exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(c.demiJournee)
+            count = count + 0.5;
+          else
+            count++;
         }
       }
     }
@@ -442,16 +824,35 @@ checkWeekends(day:Date){
           count++;
       }
     }
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "Congé sans solde") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Congé sans solde") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
+    for(let c of this.daysOff){
+      if(this.isArray(c)){
+        for(let co of c){
+          if(co.typeConge == 'Congé sans solde' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+            if(co.demiJournee)
+              count = count + 0.5;
+            else
+              count++;
           }
+        }
+      } else {
+        if(c.typeConge == 'Congé sans solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(c.demiJournee)
+            count = count + 0.5;
+          else
+            count++;
         }
       }
     }
@@ -461,16 +862,35 @@ checkWeekends(day:Date){
 
   countMaladie(form: NgForm) {
     let count = 0;
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "Arrêt maladie") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Arrêt maladie") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
+    for(let c of this.daysOff){
+      if(this.isArray(c)){
+        for(let co of c){
+          if(co.typeConge == 'Arrêt maladie' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+            if(co.demiJournee)
+              count = count + 0.5;
+            else
+              count++;
           }
+        }
+      } else {
+        if(c.typeConge == 'Arrêt maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(c.demiJournee)
+            count = count + 0.5;
+          else
+            count++;
         }
       }
     }
@@ -479,16 +899,35 @@ checkWeekends(day:Date){
 
   countFormation(form: NgForm) {
     let count = 0;
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "Formation") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Formation") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
+    for(let c of this.daysOff){
+      if(this.isArray(c)){
+        for(let co of c){
+          if(co.typeConge == 'Formation' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+            if(co.demiJournee)
+              count = count + 0.5;
+            else
+              count++;
           }
+        }
+      } else {
+        if(c.typeConge == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(c.demiJournee)
+            count = count + 0.5;
+          else
+            count++;
         }
       }
     }
@@ -497,16 +936,35 @@ checkWeekends(day:Date){
 
   countInterContrat(form: NgForm) {
     let count = 0;
-    for(let key in form.value){
-      if(form.value.hasOwnProperty(key)) {
-        let value = form.value[key];
-        let nextValue = form.value[key + " boolean"];
-        if (value === "Intercontrat") {
-          if (nextValue){
-            count = count + 0.5;
-          } else {
-            count++;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Intercontrat") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
+    for(let c of this.daysOff){
+      if(this.isArray(c)){
+        for(let co of c){
+          if(co.typeConge == 'Intercontrat' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+            if(co.demiJournee)
+              count = count + 0.5;
+            else
+              count++;
           }
+        }
+      } else {
+        if(c.typeConge == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(c.demiJournee)
+            count = count + 0.5;
+          else
+            count++;
         }
       }
     }
@@ -515,6 +973,8 @@ checkWeekends(day:Date){
 
   countJoursNonTravailles(form: NgForm){
     return this.countAbsences(form) + this.countConges(form) + this.countFormation(form)+this.countInterContrat(form)
-      +this.countMaladie(form) + this.countRTTE(form)+this.countRTTS(form)+this.countSansSolde(form);
+      // +this.countMaladie(form) + this.countRTTE(form)+this.countRTTS(form)+this.countSansSolde(form);
+      +this.countMaladie(form) + this.countRTT() +this.countSansSolde(form);
+
   }
 }

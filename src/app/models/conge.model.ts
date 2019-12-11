@@ -9,8 +9,9 @@ export class CongeModel {
   typeConge: String;
   typeCe: String;
   documentJointUri: String;
+  documentJointType: String;
   valideRH: boolean;
   user: UserModel;
   commentaires: String;
-
+  justificatifRecu: boolean;
 }

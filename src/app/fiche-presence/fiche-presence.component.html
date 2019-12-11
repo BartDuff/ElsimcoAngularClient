@@ -19,6 +19,10 @@
     </div>
   </div>-->
 <div id="cont">
+  <div style="display: flex;justify-content: space-evenly;align-content: space-evenly;">
+  <button mat-button (click)="plage = !plage;firstDay = null;firstClick=false;" style="background-color: black;"><span *ngIf="!plage">Sélection de plages de dates</span><span *ngIf="plage">Sélection de date unique</span></button>
+  <button mat-button (click)="daysOff = [];plage = false;firstDay = null;firstClick=false;" style="background-color: black;">Réinitialiser le calendrier</button>
+  </div>
   <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
     <h1 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h1>
     <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
@@ -27,18 +31,19 @@
          style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day)}">
       <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
         <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
-        <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{f.value[toMomentFormat(day)+" boolean"]?"1/2":""}} {{f.value[toMomentFormat(day)] == "RTT E" || f.value[toMomentFormat(day)] == "RTT S"?absShortTypes[absTypes.indexOf("RTT")]:absShortTypes[absTypes.indexOf(f.value[toMomentFormat(day)])]}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+        <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
       </div>
 <!--      <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>-->
 <!--      <span style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{f.value[toMomentFormat(day)+' boolean']?'1/2':''}} {{absShort[absences.indexOf(f.value[toMomentFormat(day)])]}}</span>-->
     </div>
   </div>
   <br>
-  <div *ngIf="!FicheEnvoyee">
+  <div *ngIf="!FicheEnvoyee" style="margin-top: 5em;">
     <p><span matPrefix>Jours ouvrés: </span><span>{{joursOuvres().length}}</span></p>
     <p><span matPrefix>Jours travaillés: </span><span>{{joursOuvres().length - countJoursNonTravailles(f)}}</span></p>
-    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>
-    <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTTS(f) }}</span></p>
+<!--    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>-->
+<!--    <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTTS(f) }}</span></p>-->
+    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTT() }}</span></p>
     <p><span matPrefix>Congés payés: </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>
     <p><span matPrefix>Absences exceptionnelles: </span><span *ngIf="f.value">{{ countAbsences(f) }}</span></p>
     <p><span matPrefix>Formation: </span><span *ngIf="f.value">{{ countFormation(f) }}</span></p>
@@ -62,21 +67,39 @@
   </h4>
   <div>
     <form (ngSubmit)="sendFiche(f)" #f="ngForm">
-      <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés ce mois-ci</div>
-      <div *ngFor="let dayOff of daysOff" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
+      <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés à déclarer ce mois-ci</div>
+      <div *ngIf="justifManquant" style="color: red;font-weight: bold;margin-bottom: 2em;">Une absence exceptionnelle pour ce mois-ci n'a pas sa pièce justificative associée.<br>Merci de fournir cette pièce manquante dans les plus brefs délais.<br>Vous pouvez tout de même envoyer votre fiche de présence </div>
+      <div *ngFor="let dayOff of daysOff; index as i" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
+        <div *ngIf="isArray(dayOff)">
+          <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0">
+            <mat-form-field>
+              <span class="prefix" matPrefix>Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
+              <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="Type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
+                <mat-option *ngFor="let absence of absTypes | slice: 4" [value]="absence">
+                  {{absence}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="commentaires">
+              <input matInput placeholder="Commentaire facultatif" [(ngModel)]="d.commentaires" [name]="d.date + ' comm'">
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="!isArray(dayOff)">
           <mat-form-field>
-            <span class="prefix" matPrefix>{{dayOff}}</span>
-            <mat-select #raison [ngModel] [name]="dayOff" required placeholder="raison d'absence">
-              <mat-option *ngFor="let absence of absences" [value]="absence">
+            <span class="prefix" matPrefix>{{dayOff.date}}</span>
+            <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff" required placeholder="raison d'absence">
+              <mat-option *ngFor="let absence of absences | slice: 4" [value]="absence">
                 {{absence}}
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-checkbox [ngModel] [name]="dayOff + ' boolean'">Demi-journée?</mat-checkbox>
+          <mat-checkbox [(ngModel)]="dayOff.demiJournee" [name]="dayOff + ' boolean'">Demi-journée?</mat-checkbox>
         <br>
         <mat-form-field class="commentaires">
           <input matInput placeholder="Commentaires {{(raison.value&&raison.value !== 'Absence exceptionnelle'?'facultatif':'')}}" [ngModel] [name]="dayOff + ' comm'" [required]="raison.value === 'Absence exceptionnelle'">
         </mat-form-field>
+        </div>
       </div>
       <button mat-raised-button type="submit" [disabled]="f.invalid">Envoyer</button>
     </form>

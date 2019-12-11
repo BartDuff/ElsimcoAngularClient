@@ -54,7 +54,7 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatIconModule,
-  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule, MatBadgeModule, MatTooltipModule
+  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule, MatBadgeModule, MatTooltipModule, MatChipsModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -86,6 +86,7 @@ import { ConfirmationDialogComponent } from './dialog/confirmation-dialog/confir
 import { CommentFicheDialogComponent } from './dialog/comment-fiche-dialog/comment-fiche-dialog.component';
 import { AllowAnticipationDialogComponent } from './dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
 import { ValidationFicheComponent } from './validation-fiche/validation-fiche.component';
+import {EmailService} from './services/email.service';
 const config: InputFileConfig = {};
 
 
@@ -173,9 +174,10 @@ const config: InputFileConfig = {};
     MatRadioModule,
     MatTabsModule,
     MatBadgeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule
   ],
-  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService,
+  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },

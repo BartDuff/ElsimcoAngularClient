@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AuthenticationService} from '../services/authentication.service';
 import {UserModel} from '../models/user.model';
@@ -6,6 +6,8 @@ import {environment} from '../../environments/environment';
 import {Router} from '@angular/router';
 import {FicheService} from '../services/fiche.service';
 import {FicheModel} from '../models/fiche.model';
+import {CongeModel} from '../models/conge.model';
+import {CongeService} from '../services/conge.service';
 
 @Component({
   selector: 'app-header',
@@ -13,17 +15,20 @@ import {FicheModel} from '../models/fiche.model';
   styleUrls: ['./header.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, AfterViewChecked {
   img = `../../${environment.base}/assets/images/elsimco-black.PNG`;
   allRHUnvalidFiches: FicheModel[];
   allRHValidFiches: FicheModel[];
+  allRHUnvalidConges: CongeModel[];
   currentUserSubscription: Subscription;
   currentUser: UserModel;
   token: any;
   @Output() public sidenavToggle = new EventEmitter();
 
   constructor(private authService: AuthenticationService,
+              private cdRef: ChangeDetectorRef,
               private ficheService: FicheService,
+              private congeService: CongeService,
               private router: Router) {
     this.currentUser = null;
   }
@@ -37,7 +42,12 @@ export class HeaderComponent implements OnInit {
     );
     this.authService.emitCurrentUserSubject();
     this.getAllUnvalidRHFiches();
+    this.getAllUnvalidRHConges();
     this.getAllValidRHFiches();
+  }
+
+  ngAfterViewChecked() {
+    this.cdRef.detectChanges();
   }
 
   public onToggleSidenav = () => {
@@ -61,6 +71,17 @@ export class HeaderComponent implements OnInit {
       (data) => {
         this.allRHUnvalidFiches = data;
         this.allRHUnvalidFiches = this.allRHUnvalidFiches.filter(function (value) {
+          return value.valideRH === false;
+        })
+      }
+    );
+  }
+
+  getAllUnvalidRHConges() {
+    this.congeService.getConges().subscribe(
+      (data) => {
+        this.allRHUnvalidConges = data;
+        this.allRHUnvalidConges = this.allRHUnvalidConges.filter(function (value) {
           return value.valideRH === false;
         })
       }

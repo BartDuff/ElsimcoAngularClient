@@ -16,8 +16,8 @@ export class CongeService {
 
   private conges = [];
 
-  emitFicheSubject() {
-    this.congeSubject.next(this.conges.slice());
+  emitCongeSubject(c) {
+    this.congeSubject.next(c);
   }
 
   constructor(private http: HttpClient) { }
@@ -34,6 +34,10 @@ export class CongeService {
 
   editConge(updateConge: CongeModel): Observable<CongeModel> {
     return this.http.put<CongeModel>(`${API_URL}/conges/${updateConge.id}`, updateConge);
+  }
+
+  editMultipleConge(updateConges: CongeModel[]): Observable<CongeModel[]> {
+    return this.http.put<CongeModel[]>(`${API_URL}/conges`, updateConges);
   }
 
   getConge(idRecherche: string): Observable<CongeModel> {

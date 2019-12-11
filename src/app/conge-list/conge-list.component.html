@@ -1,109 +1,144 @@
 <h2>Mes Congés:</h2>
 <mat-tab-group>
-  <mat-tab label="Validation">
-  <div style="justify-content: space-evenly;display: flex">
-    <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
-        <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
-        <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
-        <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" style="border:2px solid;height: 10vh;width: 10vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':checkDay(day)?'orange':checkWeekends(day)?'grey':''}">
-          <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 2em" >{{day | date:'d'}}</span>
-        </div>
-      </div>-->
-    <div id="cont" style="display: flex;flex-direction: column;">
-      <div style="display: flex;justify-content: center;">
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h3>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
-      </div>
-      <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
-        <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
-        <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()])))"></div>
-        <div *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),dateNow.getFullYear())"
-              style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day)}">
-          <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
-            <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
-            <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+  <mat-tab label="Mes Congés Validés">
+    <mat-card *ngIf="loading"
+              style="display: flex; justify-content: center; align-items: center">
+      <mat-progress-spinner
+        color="accent"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </mat-card>
+    <div style="justify-content: space-evenly;display: flex" *ngIf="!loading">
+      <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
+          <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
+          <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
+          <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" style="border:2px solid;height: 10vh;width: 10vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':checkDay(day)?'orange':checkWeekends(day)?'grey':''}">
+            <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 2em" >{{day | date:'d'}}</span>
           </div>
+        </div>-->
 
+      <div id="cont" style="display: flex;flex-direction: column;">
+        <div style="display: flex;justify-content: center;">
+          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;">
+            <mat-icon style="color: black">arrow_left</mat-icon>
+          </button>
+          <h3 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h3>
+          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;">
+            <mat-icon style="color: black">arrow_right</mat-icon>
+          </button>
         </div>
-      </div>
-      <br>
-      <div class="legend">
-        <div style="background: yellow" disabled>Congés en attente de validation</div>
-        <div style="background: greenyellow" disabled>Congés validés</div>
+        <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
+          <div
+            style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;"
+            *ngFor="let d of joursDeLaSemaine">{{d}}</div>
+          <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;"
+               *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()])))"></div>
+          <div
+            *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),dateNow.getFullYear())"
+            style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;"
+            [ngStyle]="{'background-color':getDayColor(day)}">
+            <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
+              <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em">{{day | date:'d'}}</span>
+              <span
+                style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}}
+                <!--{{toMomentFormat(day)}}--></span>
+            </div>
+
+          </div>
+        </div>
+        <br>
+        <div class="legend" style="margin-top: 3em;">
+          <div style="background: yellow" disabled>Congés en attente de validation</div>
+          <div style="background: greenyellow" disabled>Congés validés</div>
+        </div>
       </div>
     </div>
-  </div>
   </mat-tab>
-<mat-tab label="Détails">
-  <div style="display: flex;flex: available;justify-content: space-evenly;">
+  <mat-tab label="Envoi de justificatifs">
+    <form (ngSubmit)="sendJustif()" *ngIf="congeSansJustif.length !=0">
+      <div *ngFor="let c of congeSansJustif">
+        <label>Document justificatif {{c.date | date: 'dd/MM/yyyy'}} {{c.typeCe}}</label>
+        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="c.rawFile" [name]="c.date + 'fichier'"
+                    (ngModelChange)="handleFile(c)" [ngModelOptions]="{standalone: true}"
+                    style="align-self: center;"></input-file>
+      </div>
+      <button mat-raised-button type="submit" [disabled]="!fileValid" style="margin-top: 2em;">Envoyer</button>
+    </form>
+  </mat-tab>
+  <mat-tab label="Détails">
+    <div style="display: flex;flex: available;justify-content: space-evenly;">
 
-<div style="margin-top: 2em;">
-  <h3>Congés en attente de validation</h3>
-  <table class="bordered mat-elevation-z8" id="enattente" style="margin: auto; ">
-    <thead>
-    <tr>
-      <th>Date</th>
-      <th>Demi-journée</th>
-      <th>Type de congé</th>
-      <th>Validée RH</th>
-      <th>Commentaires</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let conge of getNonValidatedConges()">
-      <td>{{conge.date | date: 'short'}}</td>
-      <td>{{conge.demiJournee?'oui':'non'}}</td>
-      <td>{{conge.typeConge}}</td>
-      <td><mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon></td>
-      <td>{{conge.commentaires}}</td>
-      <ng-template #unvalid>
-        <mat-icon>close</mat-icon>
-      </ng-template>
-    </tr>
-    </tbody>
-  </table>
-  <mat-card *ngIf="!conges"
-            style="display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner
-      color="accent"
-      mode="indeterminate">
-    </mat-progress-spinner>
-  </mat-card>
-</div>
+      <div style="margin-top: 2em;">
+        <h3>Congés en attente de validation</h3>
+        <table class="bordered mat-elevation-z8" id="enattente" style="margin: auto; ">
+          <thead>
+          <tr>
+            <th>Date</th>
+            <th>Demi-journée</th>
+            <th>Type de congé</th>
+            <th>Validée RH</th>
+            <th>Commentaires</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let conge of getNonValidatedConges()">
+            <td>{{conge.date | date: 'dd/MM/yyyy'}}</td>
+            <td>{{conge.demiJournee ? 'oui' : 'non'}}</td>
+            <td>{{conge.typeConge}}</td>
+            <td>
+              <mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon>
+            </td>
+            <td>{{conge.commentaires}}</td>
+            <ng-template #unvalid>
+              <mat-icon>close</mat-icon>
+            </ng-template>
+          </tr>
+          </tbody>
+        </table>
+        <mat-card *ngIf="!conges"
+                  style="display: flex; justify-content: center; align-items: center">
+          <mat-progress-spinner
+            color="accent"
+            mode="indeterminate">
+          </mat-progress-spinner>
+        </mat-card>
+      </div>
 
-<div style="margin-top: 2em;">
-  <h3>Congés validés</h3>
-  <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; ">
-    <thead>
-    <tr>
-      <th>Date</th>
-      <th>Demi-journée</th>
-      <th>Type de congé</th>
-      <th>Validée RH</th>
-      <th>Commentaires</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let conge of getValidatedConges()">
-      <td>{{conge.date | date: 'short'}}</td>
-      <td>{{conge.demiJournee?'oui':'non'}}</td>
-      <td>{{conge.typeConge}}</td>
-      <td><mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon></td>
-      <td>{{conge.commentaires}}</td>
-      <ng-template #unvalid>
-        <mat-icon>close</mat-icon>
-      </ng-template>
-    </tr>
-    </tbody>
-  </table>
-  <mat-card *ngIf="!conges"
-            style="display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner
-      color="accent"
-      mode="indeterminate">
-    </mat-progress-spinner>
-  </mat-card>
-</div>
-  </div>
-</mat-tab>
+      <div style="margin-top: 2em;">
+        <h3>Congés validés</h3>
+        <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; ">
+          <thead>
+          <tr>
+            <th>Date</th>
+            <th>Demi-journée</th>
+            <th>Type de congé</th>
+            <th>Validée RH</th>
+            <th>Commentaires</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let conge of getValidatedConges()">
+            <td>{{conge.date | date: 'dd/MM/yyyy'}}</td>
+            <td>{{conge.demiJournee ? 'oui' : 'non'}}</td>
+            <td>{{conge.typeConge}}</td>
+            <td>
+              <mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon>
+            </td>
+            <td>{{conge.commentaires}}</td>
+            <ng-template #unvalid>
+              <mat-icon>close</mat-icon>
+            </ng-template>
+          </tr>
+          </tbody>
+        </table>
+        <mat-card *ngIf="!conges"
+                  style="display: flex; justify-content: center; align-items: center">
+          <mat-progress-spinner
+            color="accent"
+            mode="indeterminate">
+          </mat-progress-spinner>
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
 </mat-tab-group>

@@ -51,18 +51,18 @@ export class UserEditComponent implements OnInit {
       email: ['', Validators.required],
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
-      role: ['', Validators.required],
-      fonction: ['', Validators.required],
-      trigramme:['', Validators.required],
-      cpNMoins1:['', Validators.required],
-      cpN:['', Validators.required],
-      rttn:['', Validators.required],
+      role: [''],
+      fonction: [''],
+      trigramme:[''],
+      cpNMoins1:[''],
+      cpN:[''],
+      rttn:[''],
       congeAnciennete:[''],
-      adressePostale:['', Validators.required],
-      telephone:['', [Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
-      emailPerso:['', [Validators.email, Validators.required]],
-      dateArrivee:['', Validators.required],
-      metier:['', Validators.required]
+      adressePostale:[''],
+      telephone:['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
+      emailPerso:['', Validators.email],
+      dateArrivee:[''],
+      metier:['']
     });
     this.route.params.subscribe(
       params => this.userService.getUser(params['id']).subscribe(
@@ -125,7 +125,7 @@ export class UserEditComponent implements OnInit {
               if(sDetails == ""){
                 this.router.navigate(['users/',this.user.id]);
               } else {
-                this.emailService.sendMail(this.user.prenom + ' ' +this.user.nom + ' a modifié ses infos personnelles sur l\'application: \n' + sDetails,'Notification de changement de situation: '+this.user.prenom + ' ' +this.user.nom, "florian.bartkowiak@elsimco.com").subscribe(
+                this.emailService.sendMail(this.user.prenom + ' ' +this.user.nom + ' a modifié ses infos personnelles sur l\'application: \n' + sDetails,'Notification de changement de situation: '+this.user.prenom + ' ' +this.user.nom, "majoline.domingos@elsimco.com").subscribe(
                   ()=> {
                     this.toastr.success('Vos infos ont bien été modifiées. \nUn mail d\'information a été envoyé aux RH','Modification effectuée');
                     this.router.navigate(['users/',this.user.id]);

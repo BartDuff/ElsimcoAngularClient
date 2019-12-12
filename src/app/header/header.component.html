@@ -20,14 +20,14 @@
   <!--      </mat-menu>-->
   <!--    </li>-->
   <!--  </ul>-->
-  <div fxHide.gt-xs>
+  <div fxHide.gt-sm>
     <button mat-icon-button (click)="onToggleSidenav()">
       <mat-icon>menu</mat-icon>
     </button>
   </div>
     <img [src]=img alt="Brand logo" class="brand-logo"/>
-  <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
-    <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+  <div fxFlex fxLayout fxLayoutAlign="flex-end center" fxFlexFill fxHide.lt-md>
+    <ul fxLayout fxLayoutGap="15px" fxLayoutGap.lt-xl="5px" fxLayoutGap.lt-lg="1em" class="navigation-items" [ngStyle.lt-xl]="{'font-size.em': 0.6}" [ngStyle.lt-lg]="{'font-size.em': 0.4}">
       <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Contacter</a></li>
       <li><a mat-button routerLink="/login" *ngIf="!token">Connexion</a></li>
       <li><a mat-button (click)="onLogout()" *ngIf="token">Déconnexion</a></li>

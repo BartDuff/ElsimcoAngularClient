@@ -59,8 +59,8 @@
   <mat-tab label="Résumé">
     <div style="overflow-x: auto;margin-top: 2em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
       </div>
       <p *ngIf="allFiches.length==0">Pas de fiches pour ce mois-ci</p>
     <table *ngIf="currentUser.fonction ==='RH' && allFiches.length!=0" class="bordered mat-elevation-z8 resume" style="margin: auto;">
@@ -69,22 +69,19 @@
         <th>Nom</th>
         <th>Prénom</th>
         <th>Trigramme</th>
-        <th>Mois</th>
-        <th>Année</th>
-        <th>RTTE</th>
-        <th>RTTS</th>
+        <th>Nb Jours Travaillés</th>
         <th>Congés Payés</th>
-        <th>Absences Exceptionnelles</th>
-        <th>Date de Publication</th>
-        <th>Congés Sans Solde</th>
+        <th>RTT</th>
         <th>Arrêt Maladie</th>
+        <th>Absences Exceptionnelles</th>
+        <th>Congés Sans Solde</th>
         <th>Formation</th>
         <th>Intercontrat</th>
         <th>Jours Ouvrés</th>
-        <th>Jours Travaillés</th>
         <th>Commentaires</th>
         <th>Validé RH</th>
         <th>commentaireSup</th>
+        <th>Date de Réception</th>
       </tr>
       </thead>
       <tbody>
@@ -92,22 +89,19 @@
         <td>{{fiche.user.nom}}</td>
         <td>{{fiche.user.prenom}}</td>
         <td>{{fiche.user.trigramme}}</td>
-        <td>{{fiche.mois}}</td>
-        <td>{{fiche.annee}}</td>
-        <td>{{fiche.rtte}}</td>
-        <td>{{fiche.rtts}}</td>
+        <td>{{fiche.joursTravailles}}</td>
         <td>{{fiche.conges}}</td>
-        <td>{{fiche.absences}}</td>
-        <td>{{fiche.datePublication | date: 'dd/MM/yyyy'}}</td>
-        <td>{{fiche.congesSansSolde}}</td>
+        <td>{{fiche.rtts + fiche.rtte }}</td>
         <td>{{fiche.maladie}}</td>
+        <td>{{fiche.absences}}</td>
+        <td>{{fiche.congesSansSolde}}</td>
         <td>{{fiche.formation}}</td>
         <td>{{fiche.intercontrat}}</td>
         <td>{{fiche.joursOuvres}}</td>
-        <td>{{fiche.joursTravailles}}</td>
-        <td>{{fiche.commentaires}}</td>
-        <td>{{fiche.valideRH}}</td>
+        <td><ul *ngFor="let com of objectKeys(fiche.commentaires)"><li *ngIf="fiche.commentaires[com] != null && fiche.commentaires[com] != ''">{{com}} : {{fiche.commentaires[com]}}</li></ul></td>
+        <td>{{fiche.valideRH? 'oui': 'non'}}</td>
         <td>{{fiche.commentaireSup}}</td>
+        <td>{{fiche.datePublication | date: 'dd/MM/yyyy'}}</td>
       </tr>
       </tbody>
     </table>

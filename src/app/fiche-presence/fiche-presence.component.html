@@ -68,7 +68,8 @@
   <div>
     <form (ngSubmit)="sendFiche(f)" #f="ngForm">
       <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés à déclarer ce mois-ci</div>
-      <div *ngIf="justifManquant" style="color: red;font-weight: bold;margin-bottom: 2em;">Une absence exceptionnelle pour ce mois-ci n'a pas sa pièce justificative associée.<br>Merci de fournir cette pièce manquante dans les plus brefs délais.<br>Vous pouvez tout de même envoyer votre fiche de présence </div>
+      <div *ngIf="justifManquant" style="color: red;font-weight: bold;margin-bottom: 2em;">Vous avez déclaré une absence exceptionnelle sans fournir de justificatif.<br>
+        Merci de nous fournir un justificatif dans les meilleurs délais.</div>
       <div *ngFor="let dayOff of daysOff; index as i" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
         <div *ngIf="isArray(dayOff)">
           <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0">

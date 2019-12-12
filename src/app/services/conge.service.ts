@@ -48,4 +48,14 @@ export class CongeService {
     const idASupprimer = conge.id;
     return this.http.delete(`${API_URL}/conges/${idASupprimer}`);
   }
+
+  deleteMultipleConge(conges: CongeModel[]): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: conges
+    };
+    return this.http.delete(`${API_URL}/conges`,options);
+  }
 }

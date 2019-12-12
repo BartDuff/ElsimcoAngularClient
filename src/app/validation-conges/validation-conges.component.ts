@@ -24,6 +24,7 @@ export class ValidationCongesComponent implements OnInit {
   congesWithFile: CongeModel[];
   monthArr = [];
   loading = true;
+  monthLoading = false;
   daysOffSavedObjArr;
   dateNow: Date;
   dateNowFile;
@@ -58,6 +59,7 @@ export class ValidationCongesComponent implements OnInit {
       }
     );
   }
+
 
   downloadDocument(conge){
         if (conge.documentJointUri) {
@@ -97,6 +99,7 @@ export class ValidationCongesComponent implements OnInit {
 
   getNonValidatedConges() {
     this.congesNonValides = [];
+    this.monthLoading = true;
     if (this.selectedUser == null) {
       this.congeService.getConges().subscribe(
         (data) => {
@@ -104,22 +107,25 @@ export class ValidationCongesComponent implements OnInit {
             if(!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()]+ ' '+ new Date(c.date).getFullYear()) == -1){
               this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' '+ new Date(c.date).getFullYear());
             }
-            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth()) {
+            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth() && this.congesNonValides.indexOf(c) == -1) {
               this.congesNonValides.push(c);
             }
           }
           this.loading = false;
+          this.monthLoading = false;
         }
       );
     } else {
       this.userService.getCongeForUser(this.selectedUser).subscribe(
         (d) => {
           for (let c of d) {
-            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth()) {
+            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth() && this.congesNonValides.indexOf(c) == -1) {
               this.congesNonValides.push(c);
             }
           }
           this.loading = false;
+          this.monthLoading = false;
+
         });
     }
   }
@@ -240,6 +246,32 @@ export class ValidationCongesComponent implements OnInit {
     this.usersId = [];
   }
 
+  sendRejectionEmail(arr) {
+    for (let u of this.usersToSend) {
+      let userCong = [];
+      for (let c of arr) {
+        if (c.user.id == u.id) {
+          userCong.push(c);
+        }
+      }
+      let sUserCong = '';
+      for (let ob of userCong) {
+        let dem = ob.demiJournee ? '1/2 ' : '';
+        let sLine = new Date(ob.date).toLocaleDateString() + ' : ' + dem + ob.typeConge + '\n';
+        sUserCong += sLine;
+      }
+      this.emailService.sendMail('Votre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines:\n' + sUserCong, 'Notification de refus de congés', u.email).subscribe(
+        () => {
+          this.congesNonValides = [];
+          this.getValidatedConges();
+        },
+        (err) => console.log(err)
+      );
+    }
+    this.usersToSend = [];
+    this.usersId = [];
+  }
+
   refuseCongeRH(conge: CongeModel) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -269,6 +301,34 @@ export class ValidationCongesComponent implements OnInit {
         }
       });
   }
+
+  refuseAllCongeRH() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (d) => {
+        if (d) {
+          let arr = this.congesNonValides;
+          for (let c of arr) {
+            c.valideRH = false;
+            if (this.usersId.indexOf(c.user.id) == -1) {
+              this.usersId.push(c.user.id);
+              this.usersToSend.push(c.user);
+            }
+          }
+          this.congeService.deleteMultipleConge(this.congesNonValides).subscribe(
+            () => {
+              this.sendRejectionEmail(arr);
+              this.toastrService.error('Congés refusés', 'Congés refusés');
+            },
+            (err) => console.log(err)
+          );
+        }
+      });
+  }
+
 
   getDaysInMonth(month, year) {
     let date = new Date(Date.UTC(year, month, 1));

@@ -14,7 +14,7 @@
             <div style="margin-top: 2em;" *ngIf="!loading">
             <h3>Congés en attente de validation</h3>
               <mat-chip-list>
-                <mat-chip *ngFor="let i of monthArr" style="background-color: black;color: white;">{{i}}</mat-chip>
+                <mat-chip *ngFor="let i of monthArr" style="background-color: black;color: white;" (click)="dateNow.setMonth(nomsDesMois.indexOf(i.split(' ')[0]));dateNow.setFullYear(i.split(' ')[1]);congesNonValides = [];getNonValidatedConges();">{{i}}</mat-chip>
               </mat-chip-list>
 <!--              <span *ngFor="let i of monthArr">-->
 <!--                {{nomsDesMois[i]}}-->
@@ -22,6 +22,7 @@
               <mat-form-field>
                 <span class="prefix" matPrefix>Selectionnez un collaborateur </span>
                 <mat-select [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" (ngModelChange)="loading = true;getNonValidatedConges()" placeholder="Liste des collaborateurs">
+                  <mat-option [value]="null">Tous les utilisateurs</mat-option>
                   <mat-option *ngFor="let u of users" [value]=u>{{u.prenom}} {{u.nom}}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -29,6 +30,10 @@
                 <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);congesNonValides = [];getNonValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h3>
                 <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);congesNonValides = [];getNonValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
               </div>
+              <div *ngIf="congesNonValides.length == 0 && !monthLoading">
+                Pas de congés en attente de validation
+              </div>
+              <div *ngIf="congesNonValides.length >0">
             <table class="bordered mat-elevation-z8" id="enattente" style="margin: auto; ">
               <thead>
               <tr>
@@ -62,18 +67,25 @@
                   </button>
                 </td>
                 <td>{{conge.commentaires}}</td>
-                <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" (change)="updateModel(conge)"></mat-checkbox></td>
+                <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" *ngIf="conge.typeConge == 'Absence Exceptionnelle'" (change)="updateModel(conge)"></mat-checkbox><span *ngIf="conge.typeConge != 'Absence Exceptionnelle'"> - </span></td>
                 <ng-template #valid>
                   <mat-icon>ckeck</mat-icon>
                 </ng-template>
               </tr>
               </tbody>
             </table>
-              <button mat-icon-button type="button" *ngIf="congesNonValides"
-                      (click)="validateAllCongeRH()" matTooltip="Valider tous les congés">
+              <div style="display: flex;justify-content: space-around;">
+                <button mat-icon-button type="button" *ngIf="congesNonValides"
+                                                                (click)="validateAllCongeRH()" matTooltip="Valider tous les congés">
                 <mat-icon>check_circle</mat-icon> Tout valider
               </button>
-            <mat-card *ngIf="!congesNonValides"
+                <button mat-icon-button type="button" *ngIf="congesNonValides"
+                        (click)="refuseAllCongeRH()" matTooltip="Refuser tous les congés">
+                  <mat-icon>close_circle</mat-icon> Tout refuser
+                </button>
+              </div>
+              </div>
+            <mat-card *ngIf="monthLoading"
                       style="display: flex; justify-content: center; align-items: center">
               <mat-progress-spinner
                 color="accent"
@@ -121,7 +133,7 @@
                     <mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon>
                   </td>
                   <td>{{conge.commentaires}}</td>
-                  <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" (change)="updateModel(conge)"></mat-checkbox></td>
+                  <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" *ngIf="conge.typeConge == 'Absence Exceptionnelle'" (change)="updateModel(conge)"></mat-checkbox><span *ngIf="conge.typeConge != 'Absence Exceptionnelle'"> - </span></td>
                   <ng-template #unvalid>
                     <mat-icon>close</mat-icon>
                   </ng-template>

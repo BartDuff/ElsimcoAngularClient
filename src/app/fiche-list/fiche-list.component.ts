@@ -42,8 +42,7 @@ export class FicheListComponent implements OnInit {
 
   getAllFiches() {
     this.ficheService.getFiches().subscribe(
-      (data) => {this.allFiches = data;
-        console.log(data);}
+      (data) => {this.allFiches = data;}
     );
   }
 

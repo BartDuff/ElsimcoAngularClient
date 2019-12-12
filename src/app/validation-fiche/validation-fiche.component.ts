@@ -37,9 +37,20 @@ export class ValidationFicheComponent implements OnInit {
 
     objectKeys(o){
       let ok = [];
+      if(o == null){
+        return ok;
+      }
       for (let k of Object.keys(o))
           ok.push(k);
       return ok;
+  }
+
+  s(o){
+    JSON.stringify(o);
+  }
+
+  c(o){
+    console.log(o);
   }
 
   getAllFiches() {
@@ -47,7 +58,7 @@ export class ValidationFicheComponent implements OnInit {
     this.ficheService.getFiches().subscribe(
       (data) => {
         for(let f of data){
-          if(f.mois == this.nomsDesMois[this.dateNow.getMonth()] && f.annee === this.dateNow.getFullYear())
+          if(f.mois == this.nomsDesMois[this.dateNow.getMonth()] && f.annee === this.dateNow.getFullYear() && this.allFiches.indexOf(f)==-1)
             this.allFiches.push(f);
           // else
           //   this.allFiches.splice(this.allFiches.indexOf(f),1);

@@ -1,6 +1,7 @@
 <h2 style="align-self: center;">Missions:</h2>
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_missions"><mat-icon>add</mat-icon></button>
-<table class="bordered mat-elevation-z8" style="margin: auto; ">
+<div *ngIf="missions.length == 0">Aucune mission n'a encore été publiée</div>
+<table class="bordered mat-elevation-z8" style="margin: auto; " *ngIf="missions.length >0">
   <thead>
   <tr>
     <th>Mission</th>

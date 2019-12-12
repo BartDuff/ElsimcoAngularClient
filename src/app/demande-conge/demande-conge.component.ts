@@ -18,6 +18,7 @@ import {AllowAnticipationDialogComponent} from '../dialog/allow-anticipation-dia
 import {forEach} from '@angular/router/src/utils/collection';
 import {EmailService} from '../services/email.service';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
+import {groupBy} from 'rxjs/operators';
 
 const config: InputFileConfig = {
   fileAccept: '*',
@@ -357,6 +358,11 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return d === 'dim.' || d === 'sam.' || DemandeCongeComponent.joursFeries(this.dateNow.getFullYear()+iteration).includes(moment(day).format('DD/MM/YYYY').toString());
   }
 
+  checkWeekendsWithYear(day: Date, year) {
+    let d = day.toLocaleString('fr-FR', {weekday: 'short'});
+    return d === 'dim.' || d === 'sam.' || DemandeCongeComponent.joursFeries(year).includes(moment(day).format('DD/MM/YYYY').toString());
+  }
+
   getHolidays() {
     this.userService.getCongeForUser(this.currentUser).subscribe(
       (data) => {
@@ -371,8 +377,56 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             documentJointUri: d.documentJointUri
           }));
         }
+        console.log(this.splitArrayInRanges(this.daysOffSavedObjArr));
       }
     );
+  }
+
+  splitArrayInRanges(arr) {
+    // return arr.reduce(function (obj, item) {
+    //   obj[item.typeConge] = obj[item.typeConge] || [];
+    //   obj[item.typeConge].push(item.date);
+    //   return obj;
+    // }, {});
+    let newArr = [];
+    let plage = [];
+    arr.sort((a, b) => this.toDate(a.date).valueOf() - this.toDate(b.date).valueOf());
+    for (let i = 0; i < arr.length; i++) {
+      if (i > 0) {
+        if (this.isFollowingDay(arr[i - 1].date, arr[i].date) && arr[i - 1].typeConge == arr[i].typeConge) {
+          if (i - 1 == 0) {
+            plage.push(arr[i - 1]);
+          }
+          plage.push(arr[i]);
+          if (i == arr.length-1 || !(this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge)) {
+            newArr.push(plage);
+            plage = [];
+          }
+        } else {
+          if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
+            plage.push(arr[i]);
+          } else {
+            newArr.push(arr[i]);
+          }
+        }
+      }
+    }
+    return newArr;
+  }
+
+  isFollowingDay(date1:Date,date2:Date){
+    let d1 = this.toDate(date1);
+    let d2 = this.toDate(date2);
+    let d3 = new Date(d2);
+    d3.setDate(d2.getDate() - 1);
+    let year = d3.getFullYear();
+    let i = 1;
+    while(this.checkWeekendsWithYear(d3,year)){
+      d3.setDate(d3.getDate() - 1);
+      year = d3.getFullYear();
+      i++;
+    }
+    return d2.getDate() == d1.getDate() + i;
   }
 
   checkAskedHolidays(day: Date) {

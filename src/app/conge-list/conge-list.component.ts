@@ -57,7 +57,7 @@ export class CongeListComponent implements OnInit {
           }
           this.congeService.editMultipleConge(this.congeSansJustif).subscribe(
             () => {
-              this.emailService.sendMail('Une nouvelle pièce justificative a été envoyée par '+ this.currentUser.prenom + ' '+this.currentUser.nom,'Notification d\'envoi de pièce justificative','florian.bartkowiak@gmail.com').subscribe(
+              this.emailService.sendMail('Une nouvelle pièce justificative a été envoyée par '+ this.currentUser.prenom + ' '+this.currentUser.nom,'Notification d\'envoi de pièce justificative','majoline.domingos@elsimco.com').subscribe(
                 ()=>{
                   for (let c of this.congeSansJustif) {
                     if(c.justificatifRecu){

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Injectable, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {Subscription} from 'rxjs';
 import {UserModel} from '../models/user.model';
@@ -6,6 +6,8 @@ import {AuthenticationService} from '../services/authentication.service';
 import {Router} from '@angular/router';
 import {FicheModel} from '../models/fiche.model';
 import {FicheService} from '../services/fiche.service';
+import {CongeModel} from '../models/conge.model';
+import {CongeService} from '../services/conge.service';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -13,15 +15,18 @@ import {FicheService} from '../services/fiche.service';
   styleUrls: ['./sidenav-list.component.css'],
   encapsulation: ViewEncapsulation.None
 })
+
 export class SidenavListComponent implements OnInit {
   img = `../../${environment.base}/assets/images/elsimco-black.PNG`;
   currentUserSubscription: Subscription;
   currentUser: UserModel;
+  allRHUnvalidConges: CongeModel[];
   token: any;
   allRHUnvalidFiches: FicheModel[];
   @Output() sidenavClose = new EventEmitter();
   constructor(private authService: AuthenticationService,
               private ficheService: FicheService,
+              private congeService: CongeService,
               private router: Router) {
     this.currentUser = null;
   }
@@ -35,6 +40,7 @@ export class SidenavListComponent implements OnInit {
     );
     this.authService.emitCurrentUserSubject();
     this.getAllUnvalidRHFiches();
+    this.getAllUnvalidRHConges();
   }
 
   public onSidenavClose = () => {
@@ -46,6 +52,17 @@ export class SidenavListComponent implements OnInit {
       (data) => {
         this.allRHUnvalidFiches = data;
         this.allRHUnvalidFiches = this.allRHUnvalidFiches.filter(function (value) {
+          return value.valideRH === false;
+        })
+      }
+    );
+  }
+
+  getAllUnvalidRHConges() {
+    this.congeService.getConges().subscribe(
+      (data) => {
+        this.allRHUnvalidConges = data;
+        this.allRHUnvalidConges = this.allRHUnvalidConges.filter(function (value) {
           return value.valideRH === false;
         })
       }

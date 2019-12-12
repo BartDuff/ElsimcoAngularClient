@@ -82,13 +82,14 @@
           </thead>
           <tbody>
           <tr *ngFor="let conge of getNonValidatedConges()">
-            <td>{{conge.date | date: 'dd/MM/yyyy'}}</td>
-            <td>{{conge.demiJournee ? 'oui' : 'non'}}</td>
-            <td>{{conge.typeConge}}</td>
-            <td>
+            <td><span *ngIf="!isArray(conge)">{{conge.date | date: 'dd/MM/yyyy'}}</span></td>
+            <td><span *ngIf="!isArray(conge)">{{conge.demiJournee ? 'oui' : 'non'}}</span></td>
+            <td><span *ngIf="!isArray(conge)">{{conge.typeConge}}</span></td>
+            <td><span *ngIf="!isArray(conge)">
               <mat-icon *ngIf="conge.valideRH; else unvalid">check</mat-icon>
+            </span>
             </td>
-            <td>{{conge.commentaires}}</td>
+            <td><span *ngIf="!isArray(conge)">{{conge.commentaires}}</span></td>
             <ng-template #unvalid>
               <mat-icon>close</mat-icon>
             </ng-template>

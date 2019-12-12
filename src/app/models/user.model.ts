@@ -8,6 +8,7 @@ export class UserModel {
   trigramme: String;
   adressePostale: String;
   telephone: String;
+  telPro: String;
   emailPerso: String;
   cpNMoins1: number;
   cpN: number;

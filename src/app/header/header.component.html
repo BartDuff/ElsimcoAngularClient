@@ -25,7 +25,7 @@
       <mat-icon>menu</mat-icon>
     </button>
   </div>
-    <img [src]=img alt="Brand logo" class="brand-logo"/>
+  <a mat-button routerLink="/news" *ngIf="token"><img [src]=img alt="Brand logo" class="brand-logo"/></a>
   <div fxFlex fxLayout fxLayoutAlign="flex-end center" fxFlexFill fxHide.lt-md>
     <ul fxLayout fxLayoutGap="15px" fxLayoutGap.lt-xl="5px" fxLayoutGap.lt-lg="1em" class="navigation-items" [ngStyle.lt-xl]="{'font-size.em': 0.6}" [ngStyle.lt-lg]="{'font-size.em': 0.4}">
       <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Contacter</a></li>
@@ -34,7 +34,7 @@
       <li><a mat-button routerLink="/news" *ngIf="token">Actualités</a></li>
       <li><a mat-button routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profil</a></li>
       <li><a mat-button routerLink="/documents" *ngIf="token">Pack Collaborateurs</a></li>
-      <li><a mat-button routerLink="/missions" *ngIf="token">Missions</a></li>
+      <li><a mat-button disabled *ngIf="token" style="color: dimgray" m matTooltip="Ce lien n\'est pas encore accessible">Missions</a></li>
       <li><a mat-button routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
       <li><a mat-button routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures spontanées</a></li>
       <li><a mat-button routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>

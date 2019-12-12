@@ -9,6 +9,8 @@ import {ToastrService} from 'ngx-toastr';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {CommentDialogComponent} from '../dialog/comment-dialog/comment-dialog.component';
+import * as moment from 'moment';
+import {ValidationCongesComponent} from '../validation-conges/validation-conges.component';
 
 @Component({
   selector: 'app-validation-fiche',
@@ -143,5 +145,87 @@ export class ValidationFicheComponent implements OnInit {
         this.toastrService.error("Erreur", "Erreur de téléchargement");
       }
     )
+  }
+
+  getCP(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+      if(typeConge == 'Congés payés'){
+        arr.push(date);
+      }
+    }
+    return arr;
+  }
+
+  getRTT(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+      if(typeConge == 'RTT'){
+        arr.push(date);
+      }
+    }
+    return arr;
+  }
+
+  getMaladie(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+        arr.push(typeConge);
+    }
+    return arr;
+  }
+
+  getCSS(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+      if(typeConge == 'Congés payés'){
+        arr.push(date);
+      }
+    }
+    return arr;
+  }
+
+  getAbsences(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+      if(typeConge == 'Congés payés'){
+        arr.push(date);
+      }
+    }
+    return arr;
+  }
+
+  getFormation(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+      if(typeConge == 'Congés payés'){
+        arr.push(date);
+      }
+    }
+    return arr;
+  }
+
+  getIntercontrat(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+      if(typeConge == 'Congés payés'){
+        arr.push(date);
+      }
+    }
+    return arr;
   }
 }

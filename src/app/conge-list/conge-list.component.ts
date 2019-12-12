@@ -264,18 +264,92 @@ export class CongeListComponent implements OnInit {
 
   getNonValidatedConges(){
     let congesAttente = [];
-    for(let c of this.conges)
-      if(!c.valideRH)
-        congesAttente.push(c)
+    for(let c of this.conges) {
+      if (!c.valideRH)
+        congesAttente.push(c);
+    }
     return congesAttente;
   }
 
   getValidatedConges(){
     let congesValide = [];
-    for(let c of this.conges)
-      if(c.valideRH)
-        congesValide.push(c)
+    for(let c of this.conges) {
+      if (c.valideRH)
+        congesValide.push(c);
+    }
     return congesValide;
+  }
+
+
+  splitArrayInRanges(arr) {
+    // return arr.reduce(function (obj, item) {
+    //   obj[item.typeConge] = obj[item.typeConge] || [];
+    //   obj[item.typeConge].push(item.date);
+    //   return obj;
+    // }, {});
+    let newArr = [];
+    let plage = [];
+    arr.sort((a, b) => this.toDate(a.date).valueOf() - this.toDate(b.date).valueOf());
+    for (let i = 0; i < arr.length; i++) {
+      if (i > 0) {
+        if (this.isFollowingDay(arr[i - 1].date, arr[i].date) && arr[i - 1].typeConge == arr[i].typeConge) {
+          plage.push(arr[i]);
+          if (i == arr.length - 1 || !(this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge)) {
+            newArr.push(plage);
+            plage = [];
+          }
+        } else {
+          if (i != arr.length - 1) {
+            if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
+              plage.push(arr[i]);
+            } else {
+              newArr.push(arr[i]);
+            }
+          } else {
+            newArr.push(arr[i]);
+          }
+        }
+      } else {
+        if(arr.length>1){
+          if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
+            plage.push(arr[i]);
+          } else {
+            newArr.push(arr[i]);
+          }
+        } else {
+          newArr.push(arr[i]);
+        }
+      }
+    }
+    return newArr;
+  }
+
+  isFollowingDay(date1:Date,date2:Date){
+    let d1 = this.toDate(date1);
+    let d2 = this.toDate(date2);
+    let d3 = new Date(d2);
+    d3.setDate(d2.getDate() - 1);
+    let year = d3.getFullYear();
+    let i = 1;
+    while(this.checkWeekendsWithYear(d3,year)){
+      d3.setDate(d3.getDate() - 1);
+      year = d3.getFullYear();
+      i++;
+    }
+    return d2.getDate() == d1.getDate() + i;
+  }
+
+  toDate(s) {
+    return new Date(s.substr(6, 4), s.substr(3, 2) - 1, s.substr(0, 2));
+  }
+
+  checkWeekendsWithYear(day: Date, year) {
+    let d = day.toLocaleString('fr-FR', {weekday: 'short'});
+    return d === 'dim.' || d === 'sam.' || CongeListComponent.joursFeries(year).includes(moment(day).format('DD/MM/YYYY').toString());
+  }
+
+  isArray(a) {
+    return Array.isArray(a);
   }
 
   handleFile(dayoff) {

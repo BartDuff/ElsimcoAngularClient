@@ -1,13 +1,13 @@
 <h2 style="align-self: center">Actualités:</h2>
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_news"><mat-icon>add</mat-icon></button>
 <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
-  <div *ngIf="news.length == 0">Pas encore d'actualités publiées</div>
+  <div *ngIf="news?.length == 0">Pas encore d'actualités publiées</div>
   <app-news-item *ngFor="let newsitem of news" [newsitem]="newsitem" class="news-card"></app-news-item>
 </div>
-<mat-card *ngIf="!news"
-          style="display: flex; justify-content: center; align-items: center">
+<div style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner
+    *ngIf="loading"
     color="accent"
     mode="indeterminate">
   </mat-progress-spinner>
-</mat-card>
+</div>

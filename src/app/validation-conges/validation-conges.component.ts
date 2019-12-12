@@ -22,6 +22,7 @@ export class ValidationCongesComponent implements OnInit {
   congesValides: CongeModel[];
   congesNonValides: CongeModel[];
   congesWithFile: CongeModel[];
+  allNonValidatedConges : CongeModel[];
   monthArr = [];
   loading = true;
   monthLoading = false;
@@ -58,6 +59,104 @@ export class ValidationCongesComponent implements OnInit {
 
       }
     );
+  }
+
+  async splitArrayInRanges(arr) {
+    let newArr = [];
+    let plage = [];
+    arr.sort((a, b) => this.toDate(a.date).valueOf() - this.toDate(b.date).valueOf());
+    for (let i = 0; i < arr.length; i++) {
+      if (i > 0) {
+        if (this.isFollowingDay(arr[i - 1].date, arr[i].date) && arr[i - 1].typeConge == arr[i].typeConge) {
+          plage.push(arr[i]);
+          if (i == arr.length - 1 || !(this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge)) {
+            newArr.push(plage);
+            plage = [];
+          }
+        } else {
+          if (i != arr.length - 1) {
+            if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
+              plage.push(arr[i]);
+            } else {
+              newArr.push(arr[i]);
+            }
+          } else {
+            newArr.push(arr[i]);
+          }
+        }
+      } else {
+        if(arr.length>1){
+          if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
+            plage.push(arr[i]);
+          } else {
+            newArr.push(arr[i]);
+          }
+        } else {
+          newArr.push(arr[i]);
+        }
+      }
+    }
+    return newArr;
+  }
+
+  isFollowingDay(date1:Date,date2:Date){
+    let d1 = this.toDate(date1);
+    let d2 = this.toDate(date2);
+    let d3 = new Date(d2);
+    d3.setDate(d2.getDate() - 1);
+    let year = d3.getFullYear();
+    let i = 1;
+    while(this.checkWeekendsWithYear(d3,year)){
+      d3.setDate(d3.getDate() - 1);
+      year = d3.getFullYear();
+      i++;
+    }
+    return d2.getDate() == d1.getDate() + i;
+  }
+
+  toDate(s) {
+    return new Date(s.substr(6, 4), s.substr(3, 2) - 1, s.substr(0, 2));
+  }
+
+  checkWeekendsWithYear(day: Date, year) {
+    let d = day.toLocaleString('fr-FR', {weekday: 'short'});
+    return d === 'dim.' || d === 'sam.' || ValidationCongesComponent.joursFeries(year).includes(moment(day).format('DD/MM/YYYY').toString());
+  }
+
+  isArray(a) {
+    return Array.isArray(a);
+  }
+
+  static joursFeries(an): String[] {
+    const JourAn = new Date(an, 0, 1);
+    const FeteTravail = new Date(an, 4, 1);
+    const Victoire1945 = new Date(an, 4, 8);
+    const FeteNationale = new Date(an, 6, 14);
+    const Assomption = new Date(an, 7, 15);
+    const Toussaint = new Date(an, 10, 1);
+    const Armistice = new Date(an, 10, 11);
+    const Noel = new Date(an, 11, 25);
+    // const SaintEtienne = new Date(an, '11', '26');
+    const G = an % 19;
+    const C = Math.floor(an / 100);
+    const H = (C - Math.floor(C / 4) - Math.floor((8 * C + 13) / 25) + 19 * G + 15) % 30;
+    const I = H - Math.floor(H / 28) * (1 - Math.floor(H / 28) * Math.floor(29 / (H + 1)) * Math.floor((21 - G) / 11));
+    const J = (an * 1 + Math.floor(an / 4) + I + 2 - C + Math.floor(C / 4)) % 7;
+    const L = I - J;
+    const MoisPaques = 3 + Math.floor((L + 40) / 44);
+    const JourPaques = L + 28 - 31 * Math.floor(MoisPaques / 4);
+    const Paques = new Date(an, MoisPaques - 1, JourPaques);
+    // const VendrediSaint = new Date(an, MoisPaques - 1, JourPaques - 2);
+    const LundiPaques = new Date(an, MoisPaques - 1, JourPaques + 1);
+    const Ascension = new Date(an, MoisPaques - 1, JourPaques + 39);
+    const Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49);
+    const LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50);
+    let t = [JourAn, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let sDates = [];
+    for (let i = 0; i < t.length; i++) {
+      sDates.push(moment(t[i]).format('DD/MM/YYYY'));
+    }
+    return sDates;
   }
 
 
@@ -99,11 +198,16 @@ export class ValidationCongesComponent implements OnInit {
 
   getNonValidatedConges() {
     this.congesNonValides = [];
+    this.allNonValidatedConges = [];
+    this.monthArr = [];
     this.monthLoading = true;
     if (this.selectedUser == null) {
       this.congeService.getConges().subscribe(
         (data) => {
           for (let c of data) {
+            if (!c.valideRH){
+              this.allNonValidatedConges.push(c);
+            }
             if(!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()]+ ' '+ new Date(c.date).getFullYear()) == -1){
               this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' '+ new Date(c.date).getFullYear());
             }
@@ -125,7 +229,6 @@ export class ValidationCongesComponent implements OnInit {
           }
           this.loading = false;
           this.monthLoading = false;
-
         });
     }
   }
@@ -167,17 +270,23 @@ export class ValidationCongesComponent implements OnInit {
           this.congeService.editConge(conge).subscribe(
             (data) => {
               this.congesNonValides.splice(this.congesNonValides.indexOf(conge), 1);
+              this.allNonValidatedConges.splice(this.allNonValidatedConges.indexOf(conge),1);
               user = conge.user;
               this.congesValides.push(conge);
               let sUserCong = '';
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail('Votre demande pour les dates de congés suivantes a été validée par les Ressources Humaines:\n' + sUserCong, 'Notification de validation de congés', user.email).subscribe(
+              this.emailService.sendMail('Votre demande pour la date de congés suivante a été validée par les Ressources Humaines:\n' + sUserCong, 'Notification de validation de congés', user.email).subscribe(
                 () => {
                   this.toastrService.success('Congés validés', 'Congés validés');
                   this.getCongesWithFile();
-                  this.getValidatedConges();
+                  this.monthArr = [];
+                  for (let c of this.allNonValidatedConges) {
+                    if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
+                      this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
+                    }
+                  }
                 },
                 (err) => console.log(err)
               );
@@ -200,7 +309,6 @@ export class ValidationCongesComponent implements OnInit {
       (d) => {
         if (d) {
           let arr = this.congesNonValides;
-          console.log(arr);
           for (let c of this.congesNonValides) {
             c.valideRH = true;
             if (this.usersId.indexOf(c.user.id) == -1) {
@@ -212,15 +320,14 @@ export class ValidationCongesComponent implements OnInit {
           }
           this.congeService.editMultipleConge(this.congesNonValides).subscribe(
             ()=>{
-              this.sendValidationEmail(this.congesNonValides);
-              this.toastrService.success('Congés validés', 'Congés validés');
+              this.sendValidationEmail(this.congesNonValides).then(()=>this.toastrService.success('Congés validés', 'Congés validés'));
             }
           );
         }
       });
   }
 
-  sendValidationEmail(arr) {
+  async sendValidationEmail(arr) {
     for (let u of this.usersToSend) {
       let userCong = [];
       for (let c of arr) {
@@ -228,16 +335,31 @@ export class ValidationCongesComponent implements OnInit {
           userCong.push(c);
         }
       }
+      // let sortedArr = await this.splitArrayInRanges(userCong);
       let sUserCong = '';
+      let sLine;
       for (let ob of userCong) {
-        let dem = ob.demiJournee ? '1/2 ' : '';
-        let sLine = new Date(ob.date).toLocaleDateString() + ' : ' + dem + ob.typeConge + '\n';
+        if(this.isArray(ob)){
+          sLine = 'Du '+ new Date(ob[0].date).toLocaleDateString() + ' au ' + new Date(ob[ob.length-1].date).toLocaleDateString() + ' : ' + ob[0].typeConge + '\n';
+        } else {
+          let dem = ob.demiJournee ? '1/2 ' : '';
+          sLine = new Date(ob.date).toLocaleDateString() + ' : ' + dem + ob.typeConge + '\n';
+        }
         sUserCong += sLine;
       }
       this.emailService.sendMail('Votre demande pour les dates de congés suivantes a été validée par les Ressources Humaines:\n' + sUserCong, 'Notification de validation de congés', u.email).subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
+          for(let cong of arr){
+            this.allNonValidatedConges.splice(this.allNonValidatedConges.indexOf(cong),1);
+          }
+          this.monthArr = [];
+          for (let c of this.allNonValidatedConges) {
+            if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
+              this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
+            }
+          }
         },
         (err) => console.log(err)
       );
@@ -254,16 +376,31 @@ export class ValidationCongesComponent implements OnInit {
           userCong.push(c);
         }
       }
+      // let sortedArr = this.splitArrayInRanges(userCong);
       let sUserCong = '';
+      let sLine;
       for (let ob of userCong) {
-        let dem = ob.demiJournee ? '1/2 ' : '';
-        let sLine = new Date(ob.date).toLocaleDateString() + ' : ' + dem + ob.typeConge + '\n';
+        if(this.isArray(ob)){
+          sLine = 'Du '+ new Date(ob[0].date).toLocaleDateString() + ' au ' + new Date(ob[ob.length-1].date).toLocaleDateString() + ' : ' + ob[0].typeConge + '\n';
+        } else {
+          let dem = ob.demiJournee ? '1/2 ' : '';
+          sLine = new Date(ob.date).toLocaleDateString() + ' : ' + dem + ob.typeConge + '\n';
+        }
         sUserCong += sLine;
       }
       this.emailService.sendMail('Votre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines:\n' + sUserCong, 'Notification de refus de congés', u.email).subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
+          for(let cong of arr){
+            this.allNonValidatedConges.splice(this.allNonValidatedConges.indexOf(cong),1);
+          }
+          this.monthArr = [];
+          for (let c of this.allNonValidatedConges) {
+            if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
+              this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
+            }
+          }
         },
         (err) => console.log(err)
       );
@@ -288,11 +425,12 @@ export class ValidationCongesComponent implements OnInit {
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail('Votre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines:\n' + sUserCong, 'Notification de refus de congés', conge.user.email).subscribe(
+              this.emailService.sendMail('Votre demande pour la date de congés suivante a été refusée par les Ressources Humaines:\n' + sUserCong, 'Notification de refus de congés', conge.user.email).subscribe(
                 () => {
                   this.toastrService.error('Congé refusé', 'Congé refusé');
                   this.getCongesWithFile();
                   this.getValidatedConges();
+                  this.getNonValidatedConges();
                 },
                 (err) => console.log(err)
               );

@@ -15,6 +15,7 @@ import {NewsService} from '../services/news.service';
 export class NewsListComponent implements OnInit {
   news: NewsModel[];
   currentUser: UserModel;
+  loading = true;
   constructor(private newsService: NewsService,
               private dialog: MatDialog) { }
 
@@ -25,7 +26,10 @@ export class NewsListComponent implements OnInit {
 
   getNews() {
     this.newsService.getNews().subscribe(
-      (data) => this.news = data
+      (data) => {
+        this.news = data;
+        this.loading=false;
+      }
     );
   }
 }

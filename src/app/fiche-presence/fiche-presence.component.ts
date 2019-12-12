@@ -26,13 +26,15 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   @ViewChild('f') f: NgForm;
   selectedDate: Moment;
   mouseDown:boolean = false;
+  loading = true;
+  sending = false;
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
   daysOff = [];
   justifManquant = false;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
   absTypes= ["RTT", "Congés payés", "Absence Exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
   absences= ["RTT", "Congés payés", "Absence Exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
-  absShortTypes= ["RTT", "CP", "C.E.", "C.S.S.", "A.M.", "F", "I"];
+  absShortTypes= ["RTT", "CP", "A.E.", "C.S.S.", "A.M.", "F", "I"];
   dateNow : Date;
   FicheEnvoyee:boolean;
   daysOffSavedObjArr = [];
@@ -186,6 +188,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
             this.justifManquant = true;
           }
         }
+        this.loading = false;
         // for(let day of this.daysOffSavedObjArr){
         //   this.daysOff.push(day.date);
         // }
@@ -637,10 +640,12 @@ checkWeekends(day:Date){
       const dialogRef = this.dialog.open(CommentFicheDialogComponent, dialogConfig);
       dialogRef.afterClosed().subscribe(
         (data) => {
+          this.sending = true;
           fiche.commentaireSup = data.commentaire;
           this.pdfService.sendFiche(fiche).subscribe(
             (data) => {
               this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
+              this.sending = false;
               this.getFichesForUser();
               this.ficheService.emitFicheSubject();
             })

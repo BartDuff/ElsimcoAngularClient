@@ -85,13 +85,13 @@
                 </button>
               </div>
               </div>
-            <mat-card *ngIf="monthLoading"
+            <div *ngIf="monthLoading"
                       style="display: flex; justify-content: center; align-items: center">
               <mat-progress-spinner
                 color="accent"
                 mode="indeterminate">
               </mat-progress-spinner>
-            </mat-card>
+            </div>
       </div>
           </mat-tab>
           <mat-tab label="Congés validés" (click)="congesValides=[];getValidatedConges()">
@@ -140,13 +140,13 @@
                 </tr>
                 </tbody>
               </table>
-              <mat-card *ngIf="!congesValides"
+              <div *ngIf="!congesValides"
                         style="display: flex; justify-content: center; align-items: center">
                 <mat-progress-spinner
                   color="accent"
                   mode="indeterminate">
                 </mat-progress-spinner>
-              </mat-card>
+              </div>
             </div>
           </mat-tab>
           <mat-tab label="Justificatifs d'absences">
@@ -237,6 +237,5 @@
       </tr>
       </tbody>
     </table>
-
   </mat-tab>
 </mat-tab-group>

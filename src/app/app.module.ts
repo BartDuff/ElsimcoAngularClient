@@ -87,6 +87,7 @@ import { CommentFicheDialogComponent } from './dialog/comment-fiche-dialog/comme
 import { AllowAnticipationDialogComponent } from './dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
 import { ValidationFicheComponent } from './validation-fiche/validation-fiche.component';
 import {EmailService} from './services/email.service';
+import {TooltipModule} from 'ngx-bootstrap';
 const config: InputFileConfig = {};
 
 
@@ -175,7 +176,8 @@ const config: InputFileConfig = {};
     MatTabsModule,
     MatBadgeModule,
     MatTooltipModule,
-    MatChipsModule
+    MatChipsModule,
+    TooltipModule
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

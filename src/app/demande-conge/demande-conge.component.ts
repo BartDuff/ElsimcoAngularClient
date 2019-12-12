@@ -156,12 +156,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         holidayMonthArr.push(h);
       }
     }
-    holidayMonthArr.sort(function (a, b) {
-      let dateA = moment(a.date).date();
-      let dateB = moment(b.date).date();
-      return dateA - dateB;
-    });
-    return holidayMonthArr;
+    return this.splitArrayInRanges(holidayMonthArr);
   }
 
   addCells(number,iteration) {
@@ -377,7 +372,6 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             documentJointUri: d.documentJointUri
           }));
         }
-        console.log(this.splitArrayInRanges(this.daysOffSavedObjArr));
       }
     );
   }
@@ -394,20 +388,31 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     for (let i = 0; i < arr.length; i++) {
       if (i > 0) {
         if (this.isFollowingDay(arr[i - 1].date, arr[i].date) && arr[i - 1].typeConge == arr[i].typeConge) {
-          if (i - 1 == 0) {
-            plage.push(arr[i - 1]);
-          }
           plage.push(arr[i]);
-          if (i == arr.length-1 || !(this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge)) {
+          if (i == arr.length - 1 || !(this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge)) {
             newArr.push(plage);
             plage = [];
           }
         } else {
+          if (i != arr.length - 1) {
+            if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
+              plage.push(arr[i]);
+            } else {
+              newArr.push(arr[i]);
+            }
+          } else {
+            newArr.push(arr[i]);
+          }
+        }
+      } else {
+        if(arr.length>1){
           if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
             plage.push(arr[i]);
           } else {
             newArr.push(arr[i]);
           }
+        } else {
+          newArr.push(arr[i]);
         }
       }
     }

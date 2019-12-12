@@ -58,7 +58,7 @@
         <div *ngIf="daysOffSavedObjArr.length == 0; else conges" class="emptyDaysoff">Pas de jours de congés demandés ce mois-ci</div>
         <ng-template #conges>
           <ul style="list-style-type: none;">
-            <li *ngFor="let c of getHolidaysOfMonth(mois)">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</li>
+            <li *ngFor="let c of getHolidaysOfMonth(mois)"><span *ngIf="!isArray(c)">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</span><span *ngIf="isArray(c)">Du {{c[0].date}} au {{c[c.length-1].date}} - {{c[0].typeConge}}</span></li>
           </ul>
         </ng-template>
       </div>

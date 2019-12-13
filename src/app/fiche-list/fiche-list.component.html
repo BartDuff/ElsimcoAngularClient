@@ -1,7 +1,8 @@
 <h2>Mes Fiches de présence:</h2>
 
 <div style="margin-top: 2em;">
-  <table class="bordered mat-elevation-z8" style="margin: auto; ">
+  <p *ngIf="fiches?.length == 0">Pas de fiches disponibles</p>
+  <table class="bordered mat-elevation-z8" style="margin: auto; " *ngIf="fiches && fiches?.length !=0">
     <thead>
     <tr>
       <th>Mois</th>

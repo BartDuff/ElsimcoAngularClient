@@ -8,7 +8,7 @@
         mode="indeterminate">
       </mat-progress-spinner>
     </mat-card>
-    <div style="justify-content: space-evenly;display: flex" *ngIf="!loading">
+    <div style="justify-content: space-evenly;display: flex" *ngIf="!loading" id="maincont">
       <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
           <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
           <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
@@ -30,17 +30,17 @@
         <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
           <div
             style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;"
-            *ngFor="let d of joursDeLaSemaine">{{d}}</div>
+            *ngFor="let d of joursDeLaSemaine" class="daysofweek">{{d}}</div>
           <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;"
-               *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()])))"></div>
+               *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()])))" class="caldivs"></div>
           <div
             *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),dateNow.getFullYear())"
             style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;"
-            [ngStyle]="{'background-color':getDayColor(day)}">
+            [ngStyle]="{'background-color':getDayColor(day)}" class="caldivs">
             <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
               <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em">{{day | date:'d'}}</span>
               <span
-                style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}}
+                style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}}
                 <!--{{toMomentFormat(day)}}--></span>
             </div>
 

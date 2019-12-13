@@ -2,6 +2,10 @@
   /* For mobile phones: */
   #calendrier {
     margin: auto;
+    border: none;
+    width: 77vw!important;
+    height: 25vh!important;
+    text-align: left;
   }
 
   #listcontainer{
@@ -9,6 +13,42 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-content: center;
+  }
+
+  #maincont{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-content: center;
+  }
+
+  .daysofweek{
+    border: 1px solid;
+    width: 11vw!important;
+    height: 2em;
+    display: inline-block;
+    text-align: center;
+    vertical-align: center;
+  }
+
+  .caldivs {
+    border: 1px solid;
+    width: 11vw!important;
+    height: 2em;
+    display: inline-block;
+    text-align: center;
+    vertical-align: center;
+  }
+
+  .typec {
+    position: absolute;
+    top: 1vw!important;
+    right: 4.5vw!important;
+    font-size: 0.6em!important;
+  }
+
+  .legend {
+    margin-top: 8em!important;
   }
 }
 

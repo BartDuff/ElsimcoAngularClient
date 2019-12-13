@@ -42,8 +42,8 @@
           <div  (mousedown)="addRemoveDay(day,x);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day,x):''" *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(mois),dateNow.getFullYear()+x)"
                style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day,x)}" class="caldivs">
             <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
-              <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>
-              <span  style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+              <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" class="dayc">{{day | date:'d'}}</span>
+              <span  style="position: absolute;top:1vh;right:2vw;font-size: 1.2em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
               </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
             <div>
               Sélectionnez les dates de congés/absences à poser sur le calendrier joint. Pour changer de mois, sélectionnez l'onglet correspondant.
             </div>
-            <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" style="margin: 3em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
+            <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" style="margin: 3em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;" class="boxes">
               <div *ngIf="isArray(dayOff)">
                 <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0" class="champs">
                 <mat-form-field>
@@ -97,7 +97,7 @@
                 </mat-form-field>
                 <div *ngIf="d.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
                   <mat-form-field>
-                    <span class="prefix" matPrefix>Raison de l'absence exceptionnelle: </span>
+                    <span class="prefix" matPrefix *ngIf="d.typeCe == null">Raison de l'absence exceptionnelle: </span>
                     <mat-select [(ngModel)]="d.typeCe" [name]="d.date + ' typeCe'" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value == 'Absence Exceptionnelle'">
                       <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage/pacse : 4j</mat-option>
                       <mat-option value="obsèques conjoint-enfants" matTooltip="2 jours ouvrés">obsèques conjoint/enfants : 2j</mat-option>
@@ -119,7 +119,7 @@
                 <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="autoFillType(dayOff)">
                   <mat-option *ngFor="let absence of absTypes" [value]="absence">
                     <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>
-                    <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> {{absence}} (h)
+                    <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> {{absence == 'RTT'?absence + ' (h)': absence}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -137,7 +137,7 @@
               </mat-form-field>
               <div *ngIf="dayOff.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
                 <mat-form-field>
-                  <span class="prefix" matPrefix>Raison de l'absence exceptionnelle: </span>
+                  <span class="prefix" matPrefix *ngIf="dayOff.typeCe == null">Raison de l'absence exceptionnelle: </span>
                   <mat-select [(ngModel)]="dayOff.typeCe" [name]="dayOff.date + ' typeCe'" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value == 'Absence Exceptionnelle'">
                     <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage/pacse : 4j</mat-option>
                     <mat-option value="obsèques conjoint-enfants" matTooltip="2 jours ouvrés">obsèques conjoint/enfants : 2j</mat-option>

@@ -67,15 +67,20 @@ mat-card.calendar-card {
 
   #detailform{
     margin: auto;
-    width: 77vw;
+    width: 84vw;
     position: absolute;
-    left: 11vw;
+    left: 8vw;
   }
 
   .champs{
     display: flex;
     flex-direction: column;
     place-content: center;
+    width: 60vw!important;
+  }
+
+  .prefix {
+    font-size: 0.8em;
   }
 
   .daysofweek{
@@ -111,4 +116,20 @@ mat-card.calendar-card {
     margin-bottom: 1vh;
   }
 
+}
+
+@media only screen and (max-height: 800px) {
+  .typec {
+    position: absolute;
+    top: 1vw!important;
+    right: 1vw!important;
+    font-size: 0.8em!important;
+  }
+
+  .dayc {
+    position: absolute;
+    top: 0.5em!important;
+    right: 0.5em!important;
+    font-size: 0.5em!important;
+  }
 }

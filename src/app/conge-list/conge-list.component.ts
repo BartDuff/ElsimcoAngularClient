@@ -268,6 +268,7 @@ export class CongeListComponent implements OnInit {
       if (!c.valideRH)
         congesAttente.push(c);
     }
+    congesAttente = congesAttente.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
     return congesAttente;
   }
 
@@ -277,6 +278,7 @@ export class CongeListComponent implements OnInit {
       if (c.valideRH)
         congesValide.push(c);
     }
+    congesValide = congesValide.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
     return congesValide;
   }
 

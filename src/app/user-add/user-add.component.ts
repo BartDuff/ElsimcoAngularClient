@@ -39,6 +39,7 @@ export class UserAddComponent implements OnInit {
       congeAnciennete:[''],
       adressePostale:['', Validators.required],
       telephone:['', [Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
+      telPro:['', [Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
       emailPerso:['', [Validators.email, Validators.required]],
       dateArrivee:['', Validators.required],
       metier:['', Validators.required]
@@ -51,12 +52,14 @@ export class UserAddComponent implements OnInit {
     this.user.email = this.f.email;
     this.user.prenom = this.f.prenom;
     this.user.nom = this.f.nom;
+    this.user.trigramme = this.f.trigramme;
     this.user.cpNMoins1 = this.f.cpNMoins1;
     this.user.cpN = this.f.cpN;
     this.user.rttn = this.f.rttn;
     this.user.congeAnciennete = this.f.congeAnciennete;
     this.user.adressePostale = this.f.adressePostale;
     this.user.telephone = this.f.telephone;
+    this.user.telPro = this.f.telPro;
     this.user.emailPerso = this.f.emailPerso;
     this.user.dateArrivee = this.f.dateArrivee;
     this.user.metier = this.f.metier;

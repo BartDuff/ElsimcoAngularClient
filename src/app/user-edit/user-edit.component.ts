@@ -40,6 +40,7 @@ export class UserEditComponent implements OnInit {
     congeAnciennete: 'Congés Ancienneté',
     adressePostale:'Adresse postale',
     telephone:'Téléphone',
+    telPro: 'Téléphone Pro',
     emailPerso:'Email perso',
     dateArrivee:'Date d\'arrivée',
     metier:'Métier'};
@@ -60,6 +61,7 @@ export class UserEditComponent implements OnInit {
       congeAnciennete:[''],
       adressePostale:[''],
       telephone:['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
+      telPro:['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
       emailPerso:['', Validators.email],
       dateArrivee:[''],
       metier:['']
@@ -75,6 +77,7 @@ export class UserEditComponent implements OnInit {
           this.editForm.controls.trigramme.setValue(data.trigramme);
           this.editForm.controls.adressePostale.setValue(data.adressePostale);
           this.editForm.controls.telephone.setValue(data.telephone);
+          this.editForm.controls.telPro.setValue(data.telPro);
           this.editForm.controls.emailPerso.setValue(data.emailPerso);
           this.editForm.controls.dateArrivee.setValue(new Date(data.dateArrivee));
           this.editForm.controls.metier.setValue(data.metier);

@@ -192,6 +192,7 @@ export class ValidationCongesComponent implements OnInit {
               this.congesWithFile.push(c);
             }
           }
+          this.congesWithFile = this.congesWithFile.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
         }
       );
   }
@@ -211,10 +212,16 @@ export class ValidationCongesComponent implements OnInit {
             if(!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()]+ ' '+ new Date(c.date).getFullYear()) == -1){
               this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' '+ new Date(c.date).getFullYear());
             }
-            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth() && this.congesNonValides.indexOf(c) == -1) {
+            if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && this.congesNonValides.indexOf(c) == -1) {
               this.congesNonValides.push(c);
             }
           }
+          this.congesNonValides = this.congesNonValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+          this.monthArr = this.monthArr.sort((a, b) => {
+            a = a.split(" ");
+            b = b.split(" ");
+            return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+          });
           this.loading = false;
           this.monthLoading = false;
         }
@@ -223,10 +230,11 @@ export class ValidationCongesComponent implements OnInit {
       this.userService.getCongeForUser(this.selectedUser).subscribe(
         (d) => {
           for (let c of d) {
-            if (!c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth() && this.congesNonValides.indexOf(c) == -1) {
+            if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && this.congesNonValides.indexOf(c) == -1) {
               this.congesNonValides.push(c);
             }
           }
+          this.congesNonValides = this.congesNonValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
           this.loading = false;
           this.monthLoading = false;
         });
@@ -243,6 +251,7 @@ export class ValidationCongesComponent implements OnInit {
               this.congesValides.push(c);
             }
           }
+          this.congesValides = this.congesValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
         }
       );
     } else {
@@ -253,6 +262,7 @@ export class ValidationCongesComponent implements OnInit {
               this.congesValides.push(c);
             }
           }
+          this.congesValides = this.congesValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
         });
     }
   }
@@ -287,6 +297,11 @@ export class ValidationCongesComponent implements OnInit {
                       this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
                     }
                   }
+                  this.monthArr = this.monthArr.sort((a, b) => {
+                    a = a.split(" ");
+                    b = b.split(" ");
+                    return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+                  });
                 },
                 (err) => console.log(err)
               );
@@ -348,6 +363,11 @@ export class ValidationCongesComponent implements OnInit {
               this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
             }
           }
+          this.monthArr = this.monthArr.sort((a, b) => {
+            a = a.split(" ");
+            b = b.split(" ");
+            return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+          });
         },
         (err) => console.log(err)
       );
@@ -377,6 +397,11 @@ export class ValidationCongesComponent implements OnInit {
               this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
             }
           }
+          this.monthArr = this.monthArr.sort((a, b) => {
+            a = a.split(" ");
+            b = b.split(" ");
+            return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+          });
         },
         (err) => console.log(err)
       );

@@ -2,3 +2,7 @@
   border: solid black 1px;
   padding: 2em;
 }
+
+th {
+  padding: 1em;
+}

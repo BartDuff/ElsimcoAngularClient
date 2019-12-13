@@ -56,3 +56,7 @@ mat-card {
   color: white;
   background-color: black;
 }
+
+.labels {
+  margin-right: 0.5em;
+}

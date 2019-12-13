@@ -43,29 +43,33 @@
     </mat-card-header>
     <mat-card-content fxLayout="column" fxLayoutAlign="space-between start">
       <p>
-        <mat-icon>perm_identity</mat-icon>
+        <mat-icon class="labels">perm_identity</mat-icon>
         {{ user?.role }} {{user?.fonction }}</p>
       <p>Date d'inscription: {{ user?.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
       <p>Date d'arrivée dans l'entreprise: {{ user?.dateArrivee | date: 'dd/MM/yyyy' }}</p>
       <p>
-        <mat-icon>email</mat-icon><b>Email Pro:</b>
+        <mat-icon class="labels">email</mat-icon><b>Email Pro:</b>
         {{ user?.email }}</p>
       <p>
       <p>
-      <mat-icon>mail_outline</mat-icon><b>Email perso:</b>
+      <mat-icon class="labels">mail_outline</mat-icon><b>Email perso:</b>
         {{ user?.emailPerso }}</p>
       <p>
       <p>
-      <mat-icon>home</mat-icon><b>Adresse Postale:</b>
+      <mat-icon class="labels">home</mat-icon><b>Adresse Postale:</b>
         {{ user?.adressePostale }}</p>
       <p>
       <p>
-      <mat-icon>phone</mat-icon><b>Téléphone Mobile:</b>
+      <mat-icon class="labels">phone</mat-icon><b>Téléphone Mobile:</b>
         {{ user?.telephone }}</p>
       <p>
 
       <p>
-      <mat-icon>business_center</mat-icon><b>Métier:</b>
+        <mat-icon class="labels">contact_phone</mat-icon><b>Téléphone Pro:</b>
+        {{ user?.telPro }}</p>
+      <p>
+      <p>
+      <mat-icon class="labels">business_center</mat-icon><b>Métier:</b>
         {{ user?.metier }}</p>
       <p>
         <span>Congés N-1: </span>
@@ -73,7 +77,7 @@
       <p>
         <span>Congés N: </span>
         {{ user?.cpN }}</p>
-      <p>
+      <p class="labels">
         <span>RTT (h): </span>
         {{ user?.rttn }}</p>
       <p>

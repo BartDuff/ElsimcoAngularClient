@@ -34,4 +34,14 @@ export class EmailService {
     return this.http.post(`${API_URL}/emails/range`, mess, {headers: headers});
   }
 
+  sendMailWithRangeForFile(message: String, obj: String, recipient: String, range:any): Observable<any> {
+    let mess = new EmailModel();
+    mess.message = message;
+    mess.obj = obj;
+    mess.recipient = recipient;
+    mess.range = range;
+    const headers = new HttpHeaders ({'Content-Type': 'application/json'});
+    return this.http.post(`${API_URL}/emails/missingfile`, mess, {headers: headers});
+  }
+
 }

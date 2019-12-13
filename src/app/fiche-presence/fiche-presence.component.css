@@ -31,3 +31,84 @@ mat-card.calendar-card {
   width: 50em;
   height: 50em;
 }
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  #calendrier {
+    margin: auto;
+    border: none;
+    width: 77vw!important;
+    height: 25vh!important;
+    text-align: left;
+  }
+
+  #maincont{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-content: center;
+  }
+
+  #resum {
+    margin-top: 10em!important;
+  }
+
+  .selectbut {
+    font-size: 0.45em!important;
+  }
+
+  #choice {
+    margin: auto;
+  }
+
+  #formulaire{
+    margin: auto;
+  }
+
+  #detailform{
+    margin: auto;
+    width: 77vw;
+    position: absolute;
+    left: 11vw;
+  }
+
+  .champs{
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+  }
+
+  .daysofweek{
+    border: 1px solid;
+    width: 11vw!important;
+    height: 2em;
+    display: inline-block;
+    text-align: center;
+    vertical-align: center;
+  }
+
+  .caldivs {
+    border: 1px solid;
+    width: 11vw!important;
+    height: 2em;
+    display: inline-block;
+    text-align: center;
+    vertical-align: center;
+  }
+
+  .typec {
+    position: absolute;
+    top: 1vw!important;
+    right: 4.5vw!important;
+    font-size: 0.6em!important;
+  }
+
+  .commentaires{
+    width: 50vw;
+  }
+
+  #envoyerbut {
+    margin-bottom: 1vh;
+  }
+
+}

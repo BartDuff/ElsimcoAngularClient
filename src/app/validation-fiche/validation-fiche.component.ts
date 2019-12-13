@@ -147,6 +147,14 @@ export class ValidationFicheComponent implements OnInit {
     )
   }
 
+  toDate(s) {
+    return new Date(s.substr(6, 4), s.substr(3, 2) - 1, s.substr(0, 2));
+  }
+
+  isArray(a) {
+    return Array.isArray(a);
+  }
+
   getCP(ob){
     let arr = [];
     for(let k of Object.keys(ob)){
@@ -156,7 +164,11 @@ export class ValidationFicheComponent implements OnInit {
         arr.push(date);
       }
     }
-    return arr;
+    if(arr.length == 0){
+      return arr;
+    }
+    // return arr.sort((a, b) => this.toDate(a).valueOf() - this.toDate(b).valueOf());
+    return this.splitArrayInRanges(arr);
   }
 
   getRTT(ob){
@@ -168,7 +180,10 @@ export class ValidationFicheComponent implements OnInit {
         arr.push(date);
       }
     }
-    return arr;
+    if(arr.length == 0){
+      return arr;
+    }
+    return this.splitArrayInRanges(arr);
   }
 
   getMaladie(ob){
@@ -176,9 +191,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-        arr.push(typeConge);
+      if(typeConge == 'Arrêt maladie'){
+        arr.push(date);
+      }
     }
-    return arr;
+    if(arr.length == 0){
+      return arr;
+    }
+    return this.splitArrayInRanges(arr);
   }
 
   getCSS(ob){
@@ -186,11 +206,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés payés'){
+      if(typeConge == 'Congés sans solde'){
         arr.push(date);
       }
     }
-    return arr;
+    if(arr.length == 0){
+      return arr;
+    }
+    return this.splitArrayInRanges(arr);
   }
 
   getAbsences(ob){
@@ -198,11 +221,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés payés'){
+      if(typeConge == 'Absence Exceptionnelle'){
         arr.push(date);
       }
     }
-    return arr;
+    if(arr.length == 0){
+      return arr;
+    }
+    return this.splitArrayInRanges(arr);
   }
 
   getFormation(ob){
@@ -210,11 +236,15 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés payés'){
+      if(typeConge == 'Formation'){
         arr.push(date);
       }
     }
-    return arr;
+    if(arr.length == 0){
+      return arr;
+    }
+    return this.splitArrayInRanges(arr);
+
   }
 
   getIntercontrat(ob){
@@ -222,10 +252,103 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés payés'){
+      if(typeConge == 'Intercontrat'){
         arr.push(date);
       }
     }
-    return arr;
+    if(arr.length == 0){
+      return arr;
+    }
+    return this.splitArrayInRanges(arr);
+  }
+
+  splitArrayInRanges(arr) {
+    let newArr = [];
+    let plage = [];
+    arr.sort((a, b) => this.toDate(a).valueOf() - this.toDate(b).valueOf());
+    for (let i = 0; i < arr.length; i++) {
+      if (i > 0) {
+        if (this.isFollowingDay(arr[i - 1], arr[i])) {
+          plage.push(arr[i]);
+          if (i == arr.length - 1 || !(this.isFollowingDay(arr[i], arr[i + 1]))) {
+            newArr.push(plage);
+            plage = [];
+          }
+        } else {
+          if (i != arr.length - 1) {
+            if (this.isFollowingDay(arr[i], arr[i + 1])) {
+              plage.push(arr[i]);
+            } else {
+              newArr.push(arr[i]);
+            }
+          } else {
+            newArr.push(arr[i]);
+          }
+        }
+      } else {
+        if(arr.length>1){
+          if (this.isFollowingDay(arr[i], arr[i + 1])) {
+            plage.push(arr[i]);
+          } else {
+            newArr.push(arr[i]);
+          }
+        } else {
+          newArr.push(arr[i]);
+        }
+      }
+    }
+    return newArr;
+  }
+
+  isFollowingDay(date1:Date,date2:Date){
+    let d1 = this.toDate(date1);
+    let d2 = this.toDate(date2);
+    let d3 = new Date(d2);
+    d3.setDate(d2.getDate() - 1);
+    let year = d3.getFullYear();
+    let i = 1;
+    while(this.checkWeekendsWithYear(d3,year)){
+      d3.setDate(d3.getDate() - 1);
+      year = d3.getFullYear();
+      i++;
+    }
+    return d2.getDate() == d1.getDate() + i;
+  }
+
+  checkWeekendsWithYear(day: Date, year) {
+    let d = day.toLocaleString('fr-FR', {weekday: 'short'});
+    return d === 'dim.' || d === 'sam.' || ValidationFicheComponent.joursFeries(year).includes(moment(day).format('DD/MM/YYYY').toString());
+  }
+
+  static joursFeries(an): String[] {
+    const JourAn = new Date(an, 0, 1);
+    const FeteTravail = new Date(an, 4, 1);
+    const Victoire1945 = new Date(an, 4, 8);
+    const FeteNationale = new Date(an, 6, 14);
+    const Assomption = new Date(an, 7, 15);
+    const Toussaint = new Date(an, 10, 1);
+    const Armistice = new Date(an, 10, 11);
+    const Noel = new Date(an, 11, 25);
+    // const SaintEtienne = new Date(an, '11', '26');
+    const G = an % 19;
+    const C = Math.floor(an / 100);
+    const H = (C - Math.floor(C / 4) - Math.floor((8 * C + 13) / 25) + 19 * G + 15) % 30;
+    const I = H - Math.floor(H / 28) * (1 - Math.floor(H / 28) * Math.floor(29 / (H + 1)) * Math.floor((21 - G) / 11));
+    const J = (an * 1 + Math.floor(an / 4) + I + 2 - C + Math.floor(C / 4)) % 7;
+    const L = I - J;
+    const MoisPaques = 3 + Math.floor((L + 40) / 44);
+    const JourPaques = L + 28 - 31 * Math.floor(MoisPaques / 4);
+    const Paques = new Date(an, MoisPaques - 1, JourPaques);
+    const VendrediSaint = new Date(an, MoisPaques - 1, JourPaques - 2);
+    const LundiPaques = new Date(an, MoisPaques - 1, JourPaques + 1);
+    const Ascension = new Date(an, MoisPaques - 1, JourPaques + 39);
+    const Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49);
+    const LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50);
+    let t = [JourAn, VendrediSaint, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let sDates = [];
+    for(let i=0;i<t.length;i++){
+      sDates.push(moment(t[i]).format('DD/MM/YYYY'));
+    }
+    return sDates;
   }
 }

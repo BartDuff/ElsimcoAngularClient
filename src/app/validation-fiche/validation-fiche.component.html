@@ -65,7 +65,7 @@
       <p *ngIf="allFiches.length==0">Pas de fiches pour ce mois-ci</p>
     <table *ngIf="currentUser.fonction ==='RH' && allFiches.length!=0" class="bordered mat-elevation-z8 resume" style="margin: auto;">
       <thead>
-      <tr>
+      <tr style="padding: 2em;">
         <th>Nom</th>
         <th>Prénom</th>
         <th>Trigramme</th>
@@ -90,13 +90,45 @@
         <td>{{fiche.user.prenom}}</td>
         <td>{{fiche.user.trigramme}}</td>
         <td>{{fiche.joursTravailles}}</td>
-        <td>{{fiche.conges}}</td>{{c(getCP(fiche.commentaires))}}
-        <td>{{fiche.rtts + fiche.rtte }}</td>
-        <td>{{fiche.maladie}}</td>
-        <td>{{fiche.absences}}</td>
-        <td>{{fiche.congesSansSolde}}</td>
-        <td>{{fiche.formation}}</td>
-        <td>{{fiche.intercontrat}}</td>
+        <td>Total: {{fiche.conges}} <br>
+          <ul *ngFor="let cp of getCP(fiche.commentaires)">
+            <li *ngIf="!isArray(cp)">{{cp}}</li>
+            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
+          </ul>
+        </td>
+        <td>Total: {{fiche.rtts + fiche.rtte }} <br>
+          <ul *ngFor="let cp of getRTT(fiche.commentaires)">
+            <li *ngIf="!isArray(cp)">{{cp}}</li>
+            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
+          </ul>
+        </td>
+        <td>Total: {{fiche.maladie}} <br>
+          <ul *ngFor="let cp of getMaladie(fiche.commentaires)">
+            <li *ngIf="!isArray(cp)">{{cp}}</li>
+            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
+          </ul>
+        </td>
+        <td>Total: {{fiche.absences}} <br>
+          <ul *ngFor="let cp of getAbsences(fiche.commentaires)">
+            <li *ngIf="!isArray(cp)">{{cp}}</li>
+            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
+          </ul>
+        </td>
+        <td>Total: {{fiche.congesSansSolde}}  <br>
+          <ul *ngFor="let cp of getCSS(fiche.commentaires)">
+            <li *ngIf="!isArray(cp)">{{cp}}</li>
+            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
+          </ul></td>
+        <td>Total: {{fiche.formation}}  <br>
+          <ul *ngFor="let cp of getFormation(fiche.commentaires)">
+            <li *ngIf="!isArray(cp)">{{cp}}</li>
+            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
+          </ul></td>
+        <td>Total: {{fiche.intercontrat}}  <br>
+          <ul *ngFor="let cp of getIntercontrat(fiche.commentaires)">
+            <li *ngIf="!isArray(cp)">{{cp}}</li>
+            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
+          </ul></td>
         <td>{{fiche.joursOuvres}}</td>
         <td><ul *ngFor="let com of objectKeys(fiche.commentaires)"><li *ngIf="fiche.commentaires[com] != null && fiche.commentaires[com] != ''">{{com}} : {{fiche.commentaires[com]}}</li></ul></td>
         <td>{{fiche.valideRH? 'oui': 'non'}}</td>

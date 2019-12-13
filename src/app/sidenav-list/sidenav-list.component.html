@@ -8,7 +8,7 @@
      class="nav-caption">Mon Profile</a>
   <a mat-list-item routerLink="/documents" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Pack
     Collaborateurs</a>
-  <a mat-list-item disabled *ngIf="token" (click)="onSidenavClose()" class="nav-caption" style="color: dimgray" matTooltip="Ce lien n\'est pas encore accessible">Missions</a>
+  <a mat-list-item disabled *ngIf="token" (click)="onSidenavClose()" class="nav-caption" style="color: dimgray" matTooltip="Ce lien n'est pas encore accessible">Missions</a>
   <a mat-list-item routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"
      class="nav-caption">Utilisateurs</a>
   <a mat-list-item routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"

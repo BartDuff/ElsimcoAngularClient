@@ -30,11 +30,11 @@
     <ul fxLayout fxLayoutGap="15px" fxLayoutGap.lt-xl="5px" fxLayoutGap.lt-lg="1em" class="navigation-items" [ngStyle.lt-xl]="{'font-size.em': 0.6}" [ngStyle.lt-lg]="{'font-size.em': 0.4}">
       <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Contacter</a></li>
       <li><a mat-button routerLink="/login" *ngIf="!token">Connexion</a></li>
-      <li><a mat-button (click)="onLogout()" *ngIf="token">Déconnexion</a></li>
+      <li><a mat-button (click)="onLogout()" *ngIf="token" style="color: white">Déconnexion</a></li>
       <li><a mat-button routerLink="/news" *ngIf="token">Actualités</a></li>
       <li><a mat-button routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profil</a></li>
       <li><a mat-button routerLink="/documents" *ngIf="token">Pack Collaborateurs</a></li>
-      <li><a mat-button disabled *ngIf="token" style="color: dimgray" m matTooltip="Ce lien n\'est pas encore accessible">Missions</a></li>
+      <li><a mat-button disabled *ngIf="token" style="color: dimgray" matTooltip="Ce lien n'est pas encore accessible">Missions</a></li>
       <li><a mat-button routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
       <li><a mat-button routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures spontanées</a></li>
       <li><a mat-button routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>

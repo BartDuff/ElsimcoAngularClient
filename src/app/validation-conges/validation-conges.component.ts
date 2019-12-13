@@ -335,19 +335,7 @@ export class ValidationCongesComponent implements OnInit {
           userCong.push(c);
         }
       }
-      // let sortedArr = await this.splitArrayInRanges(userCong);
-      let sUserCong = '';
-      let sLine;
-      for (let ob of userCong) {
-        if(this.isArray(ob)){
-          sLine = 'Du '+ new Date(ob[0].date).toLocaleDateString() + ' au ' + new Date(ob[ob.length-1].date).toLocaleDateString() + ' : ' + ob[0].typeConge + '\n';
-        } else {
-          let dem = ob.demiJournee ? '1/2 ' : '';
-          sLine = new Date(ob.date).toLocaleDateString() + ' : ' + dem + ob.typeConge + '\n';
-        }
-        sUserCong += sLine;
-      }
-      this.emailService.sendMail('Votre demande pour les dates de congés suivantes a été validée par les Ressources Humaines:\n' + sUserCong, 'Notification de validation de congés', u.email).subscribe(
+      this.emailService.sendMailWithRange('Votre demande pour les dates de congés suivantes a été validée par les Ressources Humaines:\n', 'Notification de validation de congés', u.email,userCong).subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
@@ -376,19 +364,7 @@ export class ValidationCongesComponent implements OnInit {
           userCong.push(c);
         }
       }
-      // let sortedArr = this.splitArrayInRanges(userCong);
-      let sUserCong = '';
-      let sLine;
-      for (let ob of userCong) {
-        if(this.isArray(ob)){
-          sLine = 'Du '+ new Date(ob[0].date).toLocaleDateString() + ' au ' + new Date(ob[ob.length-1].date).toLocaleDateString() + ' : ' + ob[0].typeConge + '\n';
-        } else {
-          let dem = ob.demiJournee ? '1/2 ' : '';
-          sLine = new Date(ob.date).toLocaleDateString() + ' : ' + dem + ob.typeConge + '\n';
-        }
-        sUserCong += sLine;
-      }
-      this.emailService.sendMail('Votre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines:\n' + sUserCong, 'Notification de refus de congés', u.email).subscribe(
+      this.emailService.sendMailWithRange('Votre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines:\n', 'Notification de refus de congés', u.email,userCong).subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
@@ -428,6 +404,37 @@ export class ValidationCongesComponent implements OnInit {
               this.emailService.sendMail('Votre demande pour la date de congés suivante a été refusée par les Ressources Humaines:\n' + sUserCong, 'Notification de refus de congés', conge.user.email).subscribe(
                 () => {
                   this.toastrService.error('Congé refusé', 'Congé refusé');
+                  this.getCongesWithFile();
+                  this.getValidatedConges();
+                  this.getNonValidatedConges();
+                },
+                (err) => console.log(err)
+              );
+            }
+          );
+        }
+      });
+  }
+
+  supprimerConge(conge: CongeModel) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (d) => {
+        if (d) {
+          conge.valideRH = false;
+          this.congeService.deleteConge(conge).subscribe(
+            (data) => {
+              this.congesValides.splice(this.congesValides.indexOf(conge), 1);
+              let sUserCong = '';
+              let dem = conge.demiJournee ? '1/2 ' : '';
+              let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
+              sUserCong += sLine;
+              this.emailService.sendMail('Votre congé pour la date suivante a été refusé par les Ressources Humaines:\n' + sUserCong, 'Notification de suppression de congés', conge.user.email).subscribe(
+                () => {
+                  this.toastrService.error('Congé supprimé', 'Congé supprimé');
                   this.getCongesWithFile();
                   this.getValidatedConges();
                   this.getNonValidatedConges();

@@ -119,6 +119,7 @@
                   <th>Validée RH</th>
                   <th>Commentaires</th>
                   <th>Justificatif reçu</th>
+                  <th>Supression</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -134,6 +135,12 @@
                   </td>
                   <td>{{conge.commentaires}}</td>
                   <td><mat-checkbox [(ngModel)]="conge.justificatifRecu" *ngIf="conge.typeConge == 'Absence Exceptionnelle'" (change)="updateModel(conge)"></mat-checkbox><span *ngIf="conge.typeConge != 'Absence Exceptionnelle'"> - </span></td>
+                  <td>
+                    <button mat-icon-button
+                          (click)="supprimerConge(conge)" matTooltip="Supprimer le congé">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                  </td>
                   <ng-template #unvalid>
                     <mat-icon>close</mat-icon>
                   </ng-template>

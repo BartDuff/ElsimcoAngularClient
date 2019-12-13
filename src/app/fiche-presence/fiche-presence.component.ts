@@ -607,7 +607,7 @@ checkWeekends(day:Date){
       fiche.tableImg = image;
       fiche.annee = this.dateNow.getFullYear();
       fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
-      fiche.absences = this.countSansSolde(form);
+      fiche.absences = this.countAbsences(form);
       fiche.conges = this.countConges(form);
       fiche.congesSansSolde = this.countSansSolde(form);
       fiche.formation = this.countFormation(form);
@@ -739,19 +739,6 @@ checkWeekends(day:Date){
           count++;
       }
     }
-    // for(let key in form.value){
-    //   if(form.value.hasOwnProperty(key)) {
-    //     let value = form.value[key];
-    //     let nextValue = form.value[key + " boolean"];
-    //     if (value === "Congés payés") {
-    //       if (nextValue){
-    //         count = count + 0.5;
-    //       } else {
-    //         count++;
-    //       }
-    //     }
-    //   }
-    // }
     for(let c of this.daysOff){
       if(this.isArray(c)){
         for(let co of c){
@@ -772,6 +759,19 @@ checkWeekends(day:Date){
       }
     }
     return count;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Congés payés") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   countAbsences(form: NgForm) {
@@ -784,19 +784,6 @@ checkWeekends(day:Date){
           count++;
       }
     }
-    // for(let key in form.value){
-    //   if(form.value.hasOwnProperty(key)) {
-    //     let value = form.value[key];
-    //     let nextValue = form.value[key + " boolean"];
-    //     if (value === "Absence exceptionnelle") {
-    //       if (nextValue){
-    //         count = count + 0.5;
-    //       } else {
-    //         count++;
-    //       }
-    //     }
-    //   }
-    // }
     for(let c of this.daysOff){
       if(this.isArray(c)){
         for(let co of c){
@@ -817,6 +804,19 @@ checkWeekends(day:Date){
       }
     }
     return count;
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Absence exceptionnelle") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   countSansSolde(form: NgForm) {

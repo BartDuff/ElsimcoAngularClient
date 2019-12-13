@@ -15,13 +15,13 @@
       <td>{{fiche.mois}}</td>
       <td>{{fiche.annee}}</td>
       <td><mat-icon *ngIf="fiche.valideRH; else unvalid">check</mat-icon></td>
-      <ng-template #unvalid>
-        <mat-icon>access_time</mat-icon>
-      </ng-template>
       <td>
         <button type="button"
                 (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
       </td>
+      <ng-template #unvalid>
+        <mat-icon>access_time</mat-icon>
+      </ng-template>
     </tr>
     </tbody>
   </table>

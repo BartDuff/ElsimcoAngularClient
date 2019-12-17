@@ -77,7 +77,9 @@ export class UserEditComponent implements OnInit {
           this.user.dateArrivee = new Date(data.dateArrivee);
           this.user.derniereConnexion = new Date(data.derniereConnexion);
           this.user.rawFile = [];
-          this.user.rawFile.push({'file' : new File([this.base64ToBlob(data.avatar)],'exemple.'+data.avatarType, { type: 'image/'+data.avatarType })});
+          if(data.avatar != null ) {
+            this.user.rawFile.push({'file': new File([this.base64ToBlob(data.avatar)], 'exemple.' + data.avatarType, {type: 'image/' + data.avatarType})});
+          }
           this.formerUser = {...this.user};
           this.editForm.controls.id.setValue(data.id);
           this.editForm.controls.email.setValue(data.email);
@@ -132,16 +134,14 @@ export class UserEditComponent implements OnInit {
             let sLine = Object.keys(ob)[0] + " : "+ob[Object.keys(ob)[0]]+"\n";
             sDetails += sLine;
           }
-          console.log(this.editForm.value);
           console.log(this.user);
           console.log(this.formerUser);
-          console.log(sDetails);
           this.userService.editUser(this.user)
             .subscribe(data => {
               if(sDetails == ""){
                 this.router.navigate(['users/',this.user.id]);
               } else {
-                this.emailService.sendMail(this.user.prenom + ' ' +this.user.nom + ' a modifié ses infos personnelles sur l\'application: \n' + sDetails,'Notification de changement de situation: '+this.user.prenom + ' ' +this.user.nom, "florian.bartkowiak@elsimco.com").subscribe(
+                this.emailService.sendMail(this.user.prenom + ' ' +this.user.nom + ' a modifié ses infos personnelles sur l\'application: \n' + sDetails,'Notification de changement de situation: '+this.user.prenom + ' ' +this.user.nom, "majoline.domingos@elsimco.com").subscribe(
                   ()=> {
                     this.toastr.success('Vos infos ont bien été modifiées. \nUn mail d\'information a été envoyé aux RH','Modification effectuée');
                     this.router.navigate(['users/',this.user.id]);

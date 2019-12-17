@@ -30,7 +30,7 @@ export class CongeListComponent implements OnInit {
   fileValid = false;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
-  absShortTypes = ['RTT', 'CP', 'C.E.', 'C.S.S.'];
+  absShortTypes = ['RTT', 'CP', 'A.E.', 'C.S.S.'];
   dateNow: Date;
 
   constructor(private userService: UserService,

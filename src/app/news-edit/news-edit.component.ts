@@ -41,7 +41,9 @@ export class NewsEditComponent implements OnInit {
         data => {
           this.newsitem = data;
           this.newsitem.rawFile = [];
-          this.newsitem.rawFile.push({'file' : new File([this.base64ToBlob(data.imageJointe)],'exemple.'+data.imageJointeType, { type: 'image/'+data.imageJointeType })});
+          if(data.imageJointe != null){
+            this.newsitem.rawFile.push({'file' : new File([this.base64ToBlob(data.imageJointe)],'exemple.'+data.imageJointeType, { type: 'image/'+data.imageJointeType })});
+          }
           this.editForm.controls.id.setValue(data.id);
           this.editForm.controls.contenu.setValue(data.contenu);
           this.editForm.controls.titre.setValue(data.titre);

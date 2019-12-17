@@ -8,14 +8,16 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="titre" placeholder="Titre" name="titre"  id="titre">
+          <input matInput formControlName="titre" [(ngModel)]="newsitem.titre" placeholder="Titre" name="titre"  id="titre">
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Contenu de l'article</mat-label>
-          <textarea matInput formControlName="contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..."
+          <textarea matInput formControlName="contenu" [(ngModel)]="newsitem.contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..."
                     name="contenu" id="contenu"></textarea>
         </mat-form-field>
+        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" fileLimit=1 [(ngModel)]="newsitem.rawFile" (ngModelChange)="handleFile(newsitem)" [ngModelOptions]="{standalone: true}"></input-file>
+        <img [src]="itemImg" alt="" style="width: 25%;height: 25%; margin-top: 2em;margin-bottom: 2em;"/>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/news">RETOUR <mat-icon>arrow_back</mat-icon></button>
           <button mat-button>Modifier</button>

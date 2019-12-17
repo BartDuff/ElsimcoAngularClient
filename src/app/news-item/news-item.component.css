@@ -22,3 +22,8 @@ mat-card-content {
   text-align: left;
   white-space: pre-wrap;
 }
+
+.newsimage{
+  width: 100%;
+  padding: 0.5em;
+}

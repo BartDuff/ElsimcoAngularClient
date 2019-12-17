@@ -19,13 +19,16 @@ export class UserAddComponent implements OnInit {
 
   addForm: FormGroup;
   user: UserModel;
+  fileEncoded;
+  fileValid = true;
+  filename;
 
   get f() {
     return this.addForm.value;
   }
 
   ngOnInit() {
-
+    this.user = new UserModel();
     this.addForm = this.formBuilder.group({
       email: ['', Validators.required],
       prenom: ['', Validators.required],
@@ -48,7 +51,6 @@ export class UserAddComponent implements OnInit {
   }
 
   onSubmit() {
-    this.user = new UserModel();
     this.user.email = this.f.email;
     this.user.prenom = this.f.prenom;
     this.user.nom = this.f.nom;
@@ -69,5 +71,67 @@ export class UserAddComponent implements OnInit {
       .subscribe( data => {
         this.router.navigate(['users']);
       });
+  }
+
+  handleFile(user) {
+    let file = user.rawFile[0];
+    if (file) {
+      this.fileValid = false;
+      let reader = new FileReader();
+      if (reader.readAsBinaryString === undefined) {
+        reader.onload = this._handleReaderLoadedIE.bind(this);
+        reader.readAsArrayBuffer(file.file);
+        reader.onloadend = () => {
+          user.avatar = this.fileEncoded;
+          this.fileEncoded = null;
+          user.avatarType = this.filename.split('.')[file.file.name.split('.').length - 1];
+          this.fileValid = true;
+        };
+      } else {
+        reader.onload = this._handleReaderLoaded.bind(this);
+        reader.readAsBinaryString(file.file);
+        reader.onloadend = () => {
+          user.avatar = this.fileEncoded;
+          this.fileEncoded = null;
+          user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          this.fileValid = true;
+        };
+      }
+
+      // this.selectedFiles.splice(i,1);
+      // i--
+    }
+  }
+
+  _handleReaderLoadedIE(readerEvt) {
+    console.log('_handleReaderLoadedIE');
+    var bytes = new Uint8Array(readerEvt.target.result);
+    var binary = '';
+    var length = bytes.byteLength;
+    for (var i = 0; i < length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    this.fileEncoded = btoa(binary);
+  }
+
+  _handleReaderLoaded(readerEvt) {
+    //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
+    this.fileEncoded = btoa(readerEvt.target.result);
+  }
+
+  public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {
+    b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+    let byteCharacters = atob(b64Data);
+    let byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
+      let byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, {type: contentType});
   }
 }

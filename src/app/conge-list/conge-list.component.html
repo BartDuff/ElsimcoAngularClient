@@ -56,10 +56,11 @@
   </mat-tab>
   <mat-tab label="Envoi de justificatifs">
     <form (ngSubmit)="sendJustif()" *ngIf="congeSansJustif.length !=0">
-      <div *ngFor="let c of congeSansJustif">
-        <label>Document justificatif {{c.date | date: 'dd/MM/yyyy'}} {{c.typeCe}}</label>
-        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="c.rawFile" [name]="c.date + 'fichier'"
-                    (ngModelChange)="handleFile(c)" [ngModelOptions]="{standalone: true}"
+      <div *ngFor="let c of objectKeys(sortedCSJ)">
+<!--        <label>Document justificatif {{c.date | date: 'dd/MM/yyyy'}} {{c.typeCe}}</label>-->
+        <label>Document justificatif {{c}} {{findWithDate(c).typeCe}}</label>
+        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="findWithDate(c).rawFile"
+                    (ngModelChange)="handleFile(findWithDate(c))" [ngModelOptions]="{standalone: true}"
                     style="align-self: center;"></input-file>
       </div>
       <button mat-raised-button type="submit" [disabled]="!fileValid" style="margin-top: 2em;">Envoyer</button>

@@ -16,6 +16,7 @@
     </mat-card-title>
     <mat-card-subtitle>Publié le {{newsitem.datePublication | date: 'dd/MM/yyyy à HH:mm'}} par {{ newsitem.auteur.prenom }} {{ newsitem.auteur.nom }}</mat-card-subtitle>
   </mat-card-header>
+  <img mat-card-image [src]="sourceImg" alt="" class="newsimage">
   <mat-card-content>
     <p [innerHTML]="newsitem.contenu">
     </p>

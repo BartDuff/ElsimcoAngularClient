@@ -78,6 +78,8 @@
           <input matInput formControlName="metier" placeholder="Métier" name="metier" id="metier">
         </mat-form-field>
 
+        <input-file placeholder="Insérer un avatar..." fileLimit=1 [(ngModel)]="user.rawFile" (ngModelChange)="handleFile(user)" [ngModelOptions]="{standalone: true}"></input-file>
+
           <mat-form-field>
             <label>
               <input matInput readonly [matDatepicker]="picker"

@@ -87,8 +87,16 @@ export class DocumentListComponent implements OnInit {
       (res) => {
         let d : DocumentModel = res ;
         if (d.fileBase64) {
-          var blob = this.base64ToBlob(d.fileBase64, 'text/plain');
-          saveAs(blob, d.originalFileName);
+          let blob = this.base64ToBlob(d.fileBase64, 'text/plain');
+          if(!navigator.userAgent.match('CriOS')) {
+            saveAs(blob, d.originalFileName);
+          } else {
+            let reader = new FileReader();
+            reader.onload = function(e){
+              window.location.href = reader.result
+            };
+            reader.readAsDataURL(blob);
+          }
         }
       });
   }

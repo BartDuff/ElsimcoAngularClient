@@ -88,7 +88,7 @@
                   <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="Type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
                     <mat-option *ngFor="let absence of absTypes" [value]="absence">
                       <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>
-                      <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> {{absence}} (h)
+                      <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> {{absence == 'RTT'?absence + ' (h)': absence}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

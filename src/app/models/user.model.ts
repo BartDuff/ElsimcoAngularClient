@@ -18,6 +18,9 @@ export class UserModel {
   dateArrivee: Date;
   dateDepart: Date;
   metier: String;
+  avatar: String;
+  avatarType: String;
+  rawFile: any;
   derniereConnexion: Date;
   role: String;
   fonction:String;

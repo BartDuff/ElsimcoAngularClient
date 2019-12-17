@@ -138,7 +138,14 @@ export class ValidationFicheComponent implements OnInit {
     this.pdfService.downloadFiche(ficheToDownload.id).subscribe(
       (res) => {
         // let blob = new Blob([res],{type:"application/octet-stream"});
-        saveAs(res, ficheToDownload.uri);
+        if(!navigator.userAgent.match('CriOS')) {
+          saveAs(res, ficheToDownload.uri);
+        } else {
+          let reader = new FileReader();
+          reader.onload = function(e){
+            window.location.href = reader.result
+          };
+        }
         this.toastrService.success("Téléchargé", "Téléchargé")},
       (err) => {
         console.log(err);

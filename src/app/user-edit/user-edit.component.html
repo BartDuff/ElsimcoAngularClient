@@ -40,77 +40,79 @@
   <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field *ngIf="currentUser?.role=='ADMIN'">
+          <input matInput formControlName="email" [(ngModel)]="user.email" placeholder="Email" name="email" id="email">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="prenom" [(ngModel)]="user.prenom" placeholder="Prénom" name="prenom" id="prenom">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="nom" [(ngModel)]="user.nom" placeholder="Nom" name="nom" id="nom">
+        </mat-form-field>
+
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <input matInput formControlName="email" placeholder="Email" name="email" id="email">
+          <input matInput formControlName="trigramme" [(ngModel)]="user.trigramme" placeholder="Trigramme" name="trigramme" id="trigramme">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="prenom" placeholder="Prénom" name="prenom" id="prenom">
+          <input matInput formControlName="adressePostale" [(ngModel)]="user.adressePostale" placeholder="Adresse postale" name="adressePostale" id="adressePostale">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="nom" placeholder="Nom" name="nom" id="nom">
-        </mat-form-field>
-
-        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <input matInput formControlName="trigramme" placeholder="Trigramme" name="trigramme" id="trigramme">
+          <input matInput formControlName="telephone" [(ngModel)]="user.telephone" placeholder="Numéro de téléphone" name="telephone" id="telephone">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="adressePostale" placeholder="Adresse postale" name="adressePostale" id="adressePostale">
+          <input matInput formControlName="telPro" [(ngModel)]="user.telPro" placeholder="Num de téléphone pro" name="telPro" id="telPro">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="telephone" placeholder="Numéro de téléphone" name="telephone" id="telephone">
+          <input matInput formControlName="emailPerso" [(ngModel)]="user.emailPerso" placeholder="Email perso" name="emailPerso" id="emailPerso">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="telPro" placeholder="Num de téléphone pro" name="telPro" id="telPro">
+          <input matInput formControlName="metier" [(ngModel)]="user.metier" placeholder="Métier" name="metier" id="metier">
         </mat-form-field>
 
-        <mat-form-field>
-          <input matInput formControlName="emailPerso" placeholder="Email perso" name="emailPerso" id="emailPerso">
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput formControlName="metier" placeholder="Métier" name="metier" id="metier">
-        </mat-form-field>
+        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer un avatar..." fileLimit=1 [(ngModel)]="user.rawFile" (ngModelChange)="handleFile(user)" [ngModelOptions]="{standalone: true}"></input-file>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'" (click)="picker.open()">
           <label>
             <input matInput readonly [matDatepicker]="picker"
-                   formControlName="dateArrivee" placeholder="Date d'arrivée dans l'entreprise" name="dateArrivee" id="dateArrivee">
+                   formControlName="dateArrivee" [(ngModel)]="user.dateArrivee" placeholder="Date d'arrivée dans l'entreprise" name="dateArrivee" id="dateArrivee">
           </label>
           <mat-datepicker-toggle matSuffix [for]="picker" id="cal"></mat-datepicker-toggle>
           <mat-datepicker #picker [disabled]="false"></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <input matInput formControlName="cpNMoins1" placeholder="Congés payés N-1" name="cpNMoins1" id="cpNMoins1">
+          <input matInput formControlName="cpNMoins1" [(ngModel)]="user.cpNMoins1" placeholder="Congés payés N-1" name="cpNMoins1" id="cpNMoins1">
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <input matInput formControlName="cpN" placeholder="Congés payés N" name="cpN" id="cpN">
+          <input matInput formControlName="cpN" [(ngModel)]="user.cpN" placeholder="Congés payés N" name="cpN" id="cpN">
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <input matInput formControlName="rttn" placeholder="RTT" name="rttn" id="rttn">
+          <input matInput formControlName="rttn" [(ngModel)]="user.rttn" placeholder="RTT" name="rttn" id="rttn">
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <input matInput formControlName="congeAnciennete" placeholder="Congé Ancienneté" name="congeAnciennete" id="congeAnciennete">
+          <input matInput formControlName="congeAnciennete" [(ngModel)]="user.congeAnciennete" placeholder="Congé Ancienneté" name="congeAnciennete" id="congeAnciennete">
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <mat-label>Role:</mat-label>
-          <mat-select formControlName="role">
+          <mat-select formControlName="role" [(ngModel)]="user.role">
             <mat-option value="ADMIN">ADMIN</mat-option>
             <mat-option value="USER">UTILISATEUR</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <mat-label>Fonction:</mat-label>
-          <mat-select formControlName="fonction">
+          <mat-select formControlName="fonction" [(ngModel)]="user.fonction">
             <mat-option value="RH">RH</mat-option>
             <mat-option value="DIRECTION">DIRECTION</mat-option>
             <mat-option value="CONSULTANT">CONSULTANT</mat-option>

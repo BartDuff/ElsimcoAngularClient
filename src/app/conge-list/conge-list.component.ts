@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {EmailService} from '../services/email.service';
+import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
 
 @Component({
   selector: 'app-conge-list',
@@ -23,6 +24,7 @@ export class CongeListComponent implements OnInit {
   joursDeLaSemaine = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
   daysOffSavedObjArr = [];
   congeSansJustif = [];
+  sortedCSJ;
   fileEncoded;
   filename;
   fileValid = false;
@@ -52,16 +54,50 @@ export class CongeListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       (d) => {
         if (d) {
+          let dates = [];
+          for (let ok of Object.keys(this.sortedCSJ)) {
+            if(isNaN(new Date(parseInt(ok.split('/')[2]), parseInt(ok.split('/')[1]) - 1, parseInt(ok.split('/')[0])).getTime())){
+              let deb = ok.substr(3,10);
+              let dateDeb = new Date(parseInt(ok.substr(3,10).split('/')[2]), parseInt(ok.substr(3,10).split('/')[1]) - 1, parseInt(ok.substr(3,10).split('/')[0]));
+              let fin = ok.substr(17,10);
+              let dateFin = new Date(parseInt(ok.substr(17,10).split('/')[2]), parseInt(ok.substr(17,10).split('/')[1]) - 1, parseInt(ok.substr(17,10).split('/')[0]));
+              while (dateDeb <= dateFin) {
+                dates.push(new Date (dateDeb));
+                dateDeb.setDate(dateDeb.getDate() +1);
+              }
+            }
+          }
           for (let c of this.congeSansJustif) {
             c.justificatifRecu = c.documentJointUri != '';
           }
+          for(let d of dates){
+            if(this.congeSansJustif.find((x => new Date(x.date).toLocaleDateString() === new Date(d).toLocaleDateString()))){
+              let c = this.congeSansJustif.find((x => new Date(x.date).toLocaleDateString() === new Date(d).toLocaleDateString()));
+              let nDate = new Date(c.date);
+              nDate.setDate(nDate.getDate()-1);
+              // for(let csj of this.congeSansJustif){
+              //   console.log((new Date(csj.date).toLocaleDateString()));
+              //   console.log(new Date(nDate).toLocaleDateString());
+              // }
+              let bc = this.congeSansJustif.find((x => new Date(x.date).toLocaleDateString() === new Date(nDate).toLocaleDateString()));
+              if(bc != undefined && bc.justificatifRecu){
+                c.justificatifRecu = true;
+              }
+            }
+          }
           this.congeService.editMultipleConge(this.congeSansJustif).subscribe(
             () => {
-              this.emailService.sendMail('Une nouvelle pièce justificative a été envoyée par '+ this.currentUser.prenom + ' '+this.currentUser.nom,'Notification d\'envoi de pièce justificative','majoline.domingos@elsimco.com').subscribe(
-                ()=>{
+              this.emailService.sendMail('Une nouvelle pièce justificative a été envoyée par ' + this.currentUser.prenom + ' ' + this.currentUser.nom, 'Notification d\'envoi de pièce justificative', 'majoline.domingos@elsimco.com').subscribe(
+                () => {
                   for (let c of this.congeSansJustif) {
-                    if(c.justificatifRecu){
-                      this.congeSansJustif.splice(this.congeSansJustif.indexOf(c),1);
+                    if (c.justificatifRecu) {
+                      this.congeSansJustif.splice(this.congeSansJustif.indexOf(c), 1);
+                      this.congeService.sortConges(this.congeSansJustif).subscribe(
+                        (data)=>{
+                          this.sortedCSJ = data;
+                          this.ngOnInit();
+                        }
+                      );
                     }
                   }
                   this.toastr.success('Fichier envoyé');
@@ -74,6 +110,22 @@ export class CongeListComponent implements OnInit {
           );
         }
       });
+  }
+
+  objectKeys(o){
+    return Object.keys(o);
+  }
+
+  s(o){
+    return JSON.stringify(o);
+  }
+
+  findWithDate(date){
+    if(!isNaN(new Date(date.split('/')[2], date.split('/')[1] - 1, date.split('/')[0]).getTime())){
+      return this.congeSansJustif.find((x => new Date(x.date).toLocaleDateString() === new Date(date.split('/')[2], date.split('/')[1] - 1, date.split('/')[0]).toLocaleDateString()));
+    } else {
+      return this.congeSansJustif.find((x => new Date(x.date).toLocaleDateString() === new Date(date.substr(3,10).split('/')[2], date.substr(3,10).split('/')[1] - 1, date.substr(3,10).split('/')[0]).toLocaleDateString()));
+    }
   }
 
   getHolidays() {
@@ -92,6 +144,11 @@ export class CongeListComponent implements OnInit {
             this.congeSansJustif.push(d);
           }
         }
+        this.congeService.sortConges(this.congeSansJustif).subscribe(
+          (data)=>{
+            this.sortedCSJ = data;
+          }
+        );
         this.loading = false;
       }
     );

@@ -27,7 +27,7 @@ export class NewsListComponent implements OnInit {
   getNews() {
     this.newsService.getNews().subscribe(
       (data) => {
-        this.news = data;
+        this.news = data.filter((a)=>!a.isPublic);
         this.loading=false;
       }
     );

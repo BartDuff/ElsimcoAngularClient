@@ -7,6 +7,8 @@ import {UserService} from '../services/user.service';
 import {AuthenticationService} from '../services/authentication.service';
 import {Router} from '@angular/router';
 import {NewsService} from '../services/news.service';
+import {environment} from '../../environments/environment';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-news-item',
@@ -16,10 +18,12 @@ import {NewsService} from '../services/news.service';
 export class NewsItemComponent implements OnInit {
   currentUserSubscription: Subscription;
   currentUser: UserModel;
+  sourceImg;
   @Input() newsitem: NewsModel;
 
   constructor(private newsService: NewsService,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService,
+              private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -28,6 +32,7 @@ export class NewsItemComponent implements OnInit {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
       }
     );
+    this.sourceImg = this.newsitem.imageJointe == '' || this.newsitem.imageJointe == null?'': this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64, '+ this.newsitem.imageJointe);
     this.authService.emitCurrentUserSubject();
     this.newsService.emitNewsSubject();
   }

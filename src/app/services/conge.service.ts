@@ -40,6 +40,10 @@ export class CongeService {
     return this.http.put<CongeModel[]>(`${API_URL}/conges`, updateConges);
   }
 
+  sortConges(congesToSort: CongeModel[]): Observable<any> {
+    return this.http.post<CongeModel[]>(`${API_URL}/conges/sorted`, congesToSort);
+  }
+
   getConge(idRecherche: string): Observable<CongeModel> {
     return this.http.get<CongeModel>(`${API_URL}/conges/${idRecherche}`);
   }

@@ -14,3 +14,11 @@
   color: white;
   margin: 1em;
 }
+
+@media only screen and (min-width: 768px) {
+  .news-card {
+    width: 40vw;
+    margin-bottom: 5%;
+    justify-content: center;
+  }
+}

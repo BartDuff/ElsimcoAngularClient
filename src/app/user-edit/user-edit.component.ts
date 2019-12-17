@@ -26,6 +26,10 @@ export class UserEditComponent implements OnInit {
   editForm: FormGroup;
   currentUser: UserModel;
   user: UserModel;
+  formerUser: UserModel;
+  fileEncoded;
+  filename;
+  fileValid = true;
   keysDict = {
     id: 'Id',
     email: 'Email professionelle',
@@ -70,6 +74,11 @@ export class UserEditComponent implements OnInit {
       params => this.userService.getUser(params['id']).subscribe(
         data => {
           this.user = data;
+          this.user.dateArrivee = new Date(data.dateArrivee);
+          this.user.derniereConnexion = new Date(data.derniereConnexion);
+          this.user.rawFile = [];
+          this.user.rawFile.push({'file' : new File([this.base64ToBlob(data.avatar)],'exemple.'+data.avatarType, { type: 'image/'+data.avatarType })});
+          this.formerUser = {...this.user};
           this.editForm.controls.id.setValue(data.id);
           this.editForm.controls.email.setValue(data.email);
           this.editForm.controls.prenom.setValue(data.prenom);
@@ -79,7 +88,7 @@ export class UserEditComponent implements OnInit {
           this.editForm.controls.telephone.setValue(data.telephone);
           this.editForm.controls.telPro.setValue(data.telPro);
           this.editForm.controls.emailPerso.setValue(data.emailPerso);
-          this.editForm.controls.dateArrivee.setValue(new Date(data.dateArrivee));
+          // this.editForm.controls.dateArrivee.setValue(new Date(data.dateArrivee));
           this.editForm.controls.metier.setValue(data.metier);
           this.editForm.controls.role.setValue(data.role);
           this.editForm.controls.fonction.setValue(data.fonction);
@@ -109,12 +118,12 @@ export class UserEditComponent implements OnInit {
           }
           let details = [];
           for(let k of Object.keys(this.user)){
-            if(this.user[k] != this.editForm.value[k] && k !='missions' && k != 'dateArrivee' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='congeAnciennete'){
+            if(this.formerUser[k] != this.editForm.value[k] && k !='missions' && k != 'dateArrivee' && k !='rawFile' && k !='avatar' && k !='avatarType' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='congeAnciennete'){
               let key = k.toString();
               let val = this.editForm.value[k];
               details.push({[this.keysDict[key]]:val});
             }
-            if(k.toString() == 'dateArrivee' && new Date(this.user[k]).toString() != this.editForm.value[k].toString()){
+            if(k.toString() == 'dateArrivee' && new Date(this.formerUser[k]).toString() != this.editForm.value[k].toString()){
               details.push({[this.keysDict[k.toString()]]:this.editForm.value[k]});
             }
           }
@@ -123,12 +132,16 @@ export class UserEditComponent implements OnInit {
             let sLine = Object.keys(ob)[0] + " : "+ob[Object.keys(ob)[0]]+"\n";
             sDetails += sLine;
           }
-          this.userService.editUser(this.editForm.value)
+          console.log(this.editForm.value);
+          console.log(this.user);
+          console.log(this.formerUser);
+          console.log(sDetails);
+          this.userService.editUser(this.user)
             .subscribe(data => {
               if(sDetails == ""){
                 this.router.navigate(['users/',this.user.id]);
               } else {
-                this.emailService.sendMail(this.user.prenom + ' ' +this.user.nom + ' a modifié ses infos personnelles sur l\'application: \n' + sDetails,'Notification de changement de situation: '+this.user.prenom + ' ' +this.user.nom, "majoline.domingos@elsimco.com").subscribe(
+                this.emailService.sendMail(this.user.prenom + ' ' +this.user.nom + ' a modifié ses infos personnelles sur l\'application: \n' + sDetails,'Notification de changement de situation: '+this.user.prenom + ' ' +this.user.nom, "florian.bartkowiak@elsimco.com").subscribe(
                   ()=> {
                     this.toastr.success('Vos infos ont bien été modifiées. \nUn mail d\'information a été envoyé aux RH','Modification effectuée');
                     this.router.navigate(['users/',this.user.id]);
@@ -140,4 +153,82 @@ export class UserEditComponent implements OnInit {
         }
       })
   }
+
+  handleFile(user) {
+    let file = user.rawFile[0];
+    if (file) {
+      this.fileValid = false;
+      let reader = new FileReader();
+      if (reader.readAsBinaryString === undefined) {
+        reader.onload = this._handleReaderLoadedIE.bind(this);
+        reader.readAsArrayBuffer(file.file);
+        reader.onloadend = () => {
+          user.avatar = this.fileEncoded;
+          this.fileEncoded = null;
+          user.avatarType = this.filename.split('.')[file.file.name.split('.').length - 1];
+          this.fileValid = true;
+        };
+      } else {
+        reader.onload = this._handleReaderLoaded.bind(this);
+        reader.readAsBinaryString(file.file);
+        reader.onloadend = () => {
+          user.avatar = this.fileEncoded;
+          this.fileEncoded = null;
+          user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          this.fileValid = true;
+        };
+      }
+
+      // this.selectedFiles.splice(i,1);
+      // i--
+    }
+  }
+
+  _handleReaderLoadedIE(readerEvt) {
+    console.log('_handleReaderLoadedIE');
+    var bytes = new Uint8Array(readerEvt.target.result);
+    var binary = '';
+    var length = bytes.byteLength;
+    for (var i = 0; i < length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    this.fileEncoded = btoa(binary);
+  }
+
+  _handleReaderLoaded(readerEvt) {
+    //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
+    this.fileEncoded = btoa(readerEvt.target.result);
+  }
+
+  public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {
+    b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+    let byteCharacters = atob(b64Data);
+    let byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
+      let byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    return new Blob(byteArrays, {type: contentType});
+  }
+
+  // public base64ToBlyteArray(b64Data, contentType = '', sliceSize = 512) {
+  //   b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+  //   let byteCharacters = atob(b64Data);
+  //   let byteArrays = [];
+  //   for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+  //     let slice = byteCharacters.slice(offset, offset + sliceSize);
+  //     let byteNumbers = new Array(slice.length);
+  //     for (var i = 0; i < slice.length; i++) {
+  //       byteNumbers[i] = slice.charCodeAt(i);
+  //     }
+  //     let byteArray = new Uint8Array(byteNumbers);
+  //     byteArrays.push(byteArray);
+  //   }
+  //   return byteArrays;
+  // }
 }

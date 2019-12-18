@@ -28,7 +28,7 @@
   <a mat-button routerLink="/news" *ngIf="token"><img [src]=img alt="Brand logo" class="brand-logo"/></a>
   <div fxFlex fxLayout fxLayoutAlign="flex-end center" fxFlexFill fxHide.lt-md>
     <ul fxLayout fxLayoutGap="15px" fxLayoutGap.lt-xl="5px" fxLayoutGap.lt-lg="1em" class="navigation-items" [ngStyle.lt-xl]="{'font-size.em': 0.6}" [ngStyle.lt-lg]="{'font-size.em': 0.4}">
-      <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Contacter</a></li>
+      <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Rejoindre</a></li>
       <li><a mat-button routerLink="/login" *ngIf="!token">Connexion</a></li>
       <li><a mat-button (click)="onLogout()" *ngIf="token" style="color: white">Déconnexion</a></li>
       <li><a mat-button routerLink="/news" *ngIf="token">Actualités</a></li>

@@ -1,14 +1,14 @@
 <mat-nav-list>
   <a mat-list-item routerLink="/contact_form" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Nous
-    Contacter</a>
+    Rejoindre</a>
   <a mat-list-item routerLink="/login" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Connexion</a>
   <a mat-list-item (click)="onLogout()" *ngIf="token" class="nav-caption">Déconnexion</a>
   <a mat-list-item routerLink="/news" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Actualités</a>
   <a mat-list-item routerLink="/users/{{ currentUser.id }}" *ngIf="token" (click)="onSidenavClose()"
-     class="nav-caption">Mon Profile</a>
+     class="nav-caption">Mon Profil</a>
   <a mat-list-item routerLink="/documents" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Pack
     Collaborateurs</a>
-  <a mat-list-item disabled *ngIf="token" (click)="onSidenavClose()" class="nav-caption" style="color: dimgray" matTooltip="Ce lien n'est pas encore accessible">Missions</a>
+  <a mat-list-item disabled *ngIf="token" (click)="onSidenavClose()" class="nav-caption" id="disabledlink" matTooltip="Ce lien n'est pas encore accessible">Missions</a>
   <a mat-list-item routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"
      class="nav-caption">Utilisateurs</a>
   <a mat-list-item routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"

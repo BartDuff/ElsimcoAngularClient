@@ -1,4 +1,4 @@
-<h2 style="align-self: center">Actualités:</h2>
+<h2 style="align-self: center">Actualités</h2>
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_news"><mat-icon>add</mat-icon></button>
 <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
   <div *ngIf="news?.length == 0">Pas encore d'actualités publiées</div>

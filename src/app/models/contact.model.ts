@@ -10,5 +10,7 @@ export class ContactModel {
   mobile: number;
   posteRecherche: String;
   fileBase64: String;
+  fileType: String;
+  fileName: String;
   accepte: boolean;
 }

@@ -84,7 +84,7 @@ export class UserAddComponent implements OnInit {
         reader.onloadend = () => {
           user.avatar = this.fileEncoded;
           this.fileEncoded = null;
-          user.avatarType = this.filename.split('.')[file.file.name.split('.').length - 1];
+          user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       } else {

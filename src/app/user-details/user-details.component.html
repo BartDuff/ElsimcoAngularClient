@@ -44,33 +44,33 @@
     <mat-card-content fxLayout="column" fxLayoutAlign="space-between start">
       <p>
         <mat-icon class="labels">perm_identity</mat-icon>
-        {{ user?.role }} {{user?.fonction }}</p>
+        {{ user?.role == 'ADMIN'?'ADMINISTRATEUR':'UTILISATEUR' }} {{user?.fonction }}</p>
       <p>Date d'inscription: {{ user?.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
-      <p>Date d'arrivée dans l'entreprise: {{ user?.dateArrivee | date: 'dd/MM/yyyy' }}</p>
+      <p>Date d'entrée dans l'entreprise: {{ user?.dateArrivee | date: 'dd/MM/yyyy' }}</p>
       <p>
-        <mat-icon class="labels">email</mat-icon><b>Email Pro:</b>
-        {{ user?.email }}</p>
-      <p>
-      <p>
-      <mat-icon class="labels">mail_outline</mat-icon><b>Email perso:</b>
-        {{ user?.emailPerso }}</p>
-      <p>
-      <p>
-      <mat-icon class="labels">home</mat-icon><b>Adresse Postale:</b>
-        {{ user?.adressePostale }}</p>
-      <p>
-      <p>
-      <mat-icon class="labels">phone</mat-icon><b>Téléphone Mobile:</b>
-        {{ user?.telephone }}</p>
-      <p>
-
+        <mat-icon class="labels">business_center</mat-icon><b>Métier:</b>
+        {{ user?.metier }}</p>
       <p>
         <mat-icon class="labels">contact_phone</mat-icon><b>Téléphone Pro:</b>
         {{ user?.telPro }}</p>
       <p>
       <p>
-      <mat-icon class="labels">business_center</mat-icon><b>Métier:</b>
-        {{ user?.metier }}</p>
+        <mat-icon class="labels">email</mat-icon><b>Email Pro:</b>
+        {{ user?.email }}</p>
+      <p>
+      <p>
+        <mat-icon class="labels">home</mat-icon><b>Adresse Postale:</b>
+        {{ user?.adressePostale }}</p>
+      <p>
+      <p>
+      <p>
+        <mat-icon class="labels">phone</mat-icon><b>Téléphone Perso:</b>
+        {{ user?.telephone }}</p>
+      <p>
+      <p>
+      <mat-icon class="labels">mail_outline</mat-icon><b>Email perso:</b>
+        {{ user?.emailPerso }}</p>
+      <p>
       <p>
         <span>Congés N-1: </span>
         {{ user?.cpNMoins1 }}</p>
@@ -95,7 +95,10 @@
     </mat-card-content>
     <mat-card-actions>
 <!--      <button mat-icon-button routerLink="/users">RETOUR <mat-icon>arrow_back</mat-icon></button>-->
-      <button mat-mini-fab aria-label="Example icon-button with a heart icon" *ngIf="user?.id != currentUser.id" routerLink="/users">
+        <button mat-mini-fab aria-label="Example icon-button with a heart icon" *ngIf="currentUser.role != 'ADMIN'" routerLink="/users">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button mat-mini-fab aria-label="Example icon-button with a heart icon" *ngIf="user?.id == currentUser.id && currentUser.role != 'ADMIN'" routerLink="/news">
         <mat-icon>arrow_back</mat-icon>
       </button>
     </mat-card-actions>

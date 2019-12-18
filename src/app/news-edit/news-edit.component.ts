@@ -71,7 +71,7 @@ export class NewsEditComponent implements OnInit {
         reader.onloadend = () => {
           newsitem.imageJointe = this.fileEncoded;
           this.fileEncoded = null;
-          newsitem.imageJointeType = this.filename.split('.')[file.file.name.split('.').length - 1];
+          newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
           this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
         };

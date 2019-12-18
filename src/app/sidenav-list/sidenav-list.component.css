@@ -16,6 +16,10 @@ a:hover, a:active{
   color: white;
 }
 
+/*.mat-list-item-content {*/
+/*  color: dimgray!important;*/
+/*}*/
+
 .mat-sidenav {
   background-color: black;
 }

@@ -47,7 +47,7 @@
             </mat-select>
           </mat-form-field>
           <div>
-              <input-file id="fileBase64" placeholder="CV en PDF" formControlName="fileBase64"
+              <input-file id="fileBase64" placeholder="Déposer votre CV" formControlName="fileBase64"
                           (change)="onFileChange()"></input-file>
               <div *ngIf="submitted && f.fileBase64.errors" class="help-block">
                 <div *ngIf="f.fileBase64.errors.required">Votre CV est requis pour pouvoir vous recontacter</div>

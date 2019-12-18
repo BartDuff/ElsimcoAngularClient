@@ -1110,7 +1110,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         reader.onloadend = () => {
           dayoff.documentJointUri = this.fileEncoded;
           this.fileEncoded = null;
-          dayoff.documentJointType = this.filename.split('.')[file.file.name.split('.').length - 1];
+          dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       } else {

@@ -21,6 +21,8 @@ export class AddContactComponent implements OnInit {
   submitted: boolean;
   loading: boolean = false;
   fileEncoded:String;
+  fileType:String;
+  fileName:String;
 
   @ViewChild(InputFileComponent) fileInput: InputFileComponent;
 
@@ -66,6 +68,8 @@ export class AddContactComponent implements OnInit {
       }
     }
     c.fileBase64 = this.fileEncoded;
+    c.fileName = this.fileName;
+    c.fileType = this.fileType;
     this.contactService.addContact(c)
       .subscribe(data => {
         this.router.navigate(['login']);
@@ -79,17 +83,21 @@ export class AddContactComponent implements OnInit {
   onFileChange() {
     for(let i=0; i < this.fileInput.files.length;i++) {
       let file = this.fileInput.files[i];
-      if (file.file.type !== 'application/pdf'){
-        this.fileInput.placeholder = "Le fichier doit etre en PDF";
-        this.fileInput.files.splice(i,1);
-      }
+      // if (file.file.type !== 'application/pdf'){
+      //   this.fileInput.placeholder = "Le fichier doit etre en PDF";
+      //   this.fileInput.files.splice(i,1);
+      // }
       let reader = new FileReader();
       if (reader.readAsBinaryString === undefined) {
         reader.onload = this._handleReaderLoadedIE.bind(this);
         reader.readAsArrayBuffer(file.file);
+        this.fileName = file.file.name;
+        this.fileType = this.fileName.split('.')[file.file.name.split('.').length - 1];
       } else {
         reader.onload = this._handleReaderLoaded.bind(this);
         reader.readAsBinaryString(file.file);
+        this.fileName = file.file.name;
+        this.fileType = this.fileName.split('.')[file.file.name.split('.').length - 1];
       }
     }
   }

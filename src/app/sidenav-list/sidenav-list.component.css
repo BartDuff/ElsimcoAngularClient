@@ -16,8 +16,32 @@ a:hover, a:active{
   color: white;
 }
 
-/*.mat-list-item-content {*/
-/*  color: dimgray!important;*/
+.priority {
+  color: dimgray!important;
+  /*display: flex;*/
+  /*flex-direction: row;*/
+  /*align-items: center;*/
+  /*box-sizing: border-box;*/
+  /*padding: 0 16px;*/
+  /*position: relative;*/
+  /*height: inherit;*/
+}
+
+/*.prioritydiv{*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  right: 0;*/
+/*  bottom: 0;*/
+/*  position: absolute;*/
+/*  pointer-events: none;*/
+/*}*/
+
+/*.prioritytext{*/
+/*  flex-direction: column;*/
+/*  width: 100%;*/
+/*  box-sizing: border-box;*/
+/*  overflow: hidden;*/
+/*  padding: 0;*/
 /*}*/
 
 .mat-sidenav {

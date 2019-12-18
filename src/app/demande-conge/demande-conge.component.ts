@@ -38,6 +38,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   private inputFileComponent: InputFileComponent;
   //selectedDate: Moment;
   allowAnticipation = false;
+  counter;
   mouseDown: boolean = false;
   rttValid = true;
   fileValid = true;
@@ -175,6 +176,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     //this.selectedDate = moment(new Date());
+    this.counter = this.currentUser.cpNMoins1 > 0? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete: this.currentUser.cpN;
     this.dateNow = new Date();
     this.FicheEnvoyee = null;
     this.getHolidays();
@@ -317,9 +319,12 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(
           (data) => {
-            this.allowAnticipation = data;
+            if(data){
+              this.allowAnticipation = data;
+            } else {
+             this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence),1);
+            }
           });
-        break;
       }
       plageArr[ifrom].typeConge = absence.typeConge;
       // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
@@ -965,6 +970,27 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     }
     return count;
   }
+
+  // countConges() {
+  //   this.counter = this.currentUser.cpNMoins1 > 0? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete: this.currentUser.cpN;
+  //   for (let d of this.daysOffSelectedObjArr) {
+  //     if (this.isArray(d)) {
+  //       for (let det of d) {
+  //         let half = det.demiJournee ? 0.5 : 1;
+  //         if (det.typeConge == 'Congés payés') {
+  //             this.counter -= half;
+  //
+  //         }
+  //       }
+  //     } else {
+  //       let half = d.demiJournee ? 0.5 : 1;
+  //       if (d.typeConge == 'Congés payés') {
+  //           this.counter -= half;
+  //       }
+  //     }
+  //   }
+  //   return this.counter;
+  // }
 
   countAnciennete() {
     let count = this.currentUser.congeAnciennete;

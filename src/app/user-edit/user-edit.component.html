@@ -118,11 +118,13 @@
             <mat-option value="CONSULTANT">CONSULTANT</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-card-actions fxFlexAlign="center">
-          <button mat-icon-button routerLink="/users/{{user.id}}">RETOUR
-            <mat-icon>arrow_back</mat-icon>
-          </button>
-          <button mat-button>Mettre à jour</button>
+        <mat-card-actions>
+          <div class="buttoncontainer">
+            <button mat-icon-button routerLink="/users/{{user.id}}">RETOUR
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+            <button mat-button>Mettre à jour</button>
+          </div>
         </mat-card-actions>
       </div>
     </mat-card-content>

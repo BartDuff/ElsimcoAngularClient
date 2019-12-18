@@ -17,3 +17,17 @@ textarea {
   margin: 6em;
 }
 
+@media only screen and (max-width: 768px) {
+
+  .buttoncontainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .mat-icon-button  {
+    margin: 1em;
+    width: fit-content!important;
+  }
+
+}

@@ -161,9 +161,24 @@ export class ValidationCongesComponent implements OnInit {
 
 
   downloadDocument(conge){
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
         if (conge.documentJointUri) {
-          let blob = this.base64ToBlob(conge.documentJointUri, 'text/plain');
-          saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
+          // let blob = this.base64ToBlob(conge.documentJointUri, 'text/plain');
+          // saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
+          let blob = this.base64ToBlob(conge.documentJointUri, 'application/'+ conge.documentJointType);
+          if(!navigator.userAgent.match('CriOS') || !isSafari) {
+            saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
+          } else {
+            // let reader = new FileReader();
+            // reader.onload = function(e){
+            //   window.location.href = reader.result
+            // };
+            // reader.readAsDataURL(blob);
+            window.open(URL.createObjectURL(blob));
+          }
         }
   }
 

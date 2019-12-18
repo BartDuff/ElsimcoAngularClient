@@ -87,13 +87,27 @@ export class ContactListComponent implements OnInit {
   }
 
   downloadCV(contactCV: ContactModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
     this.contactService.getContact(contactCV.secretid).subscribe(
       (res) => {
         let c : ContactModel = res ;
-        console.log(c);
         if (c.fileBase64) {
-          let blob = this.base64ToBlob(c.fileBase64);
-          saveAs(blob, `${contactCV.prenom} ${contactCV.nom}_CV.pdf`);
+          // let blob = this.base64ToBlob(c.fileBase64);
+          // saveAs(blob, `${contactCV.prenom} ${contactCV.nom}_CV.pdf`);
+          let blob = this.base64ToBlob(c.fileBase64, 'application/'+ c.fileType);
+          if(!navigator.userAgent.match('CriOS') || !isSafari) {
+            saveAs(blob, c.fileName);
+          } else {
+            // let reader = new FileReader();
+            // reader.onload = function(e){
+            //   window.location.href = reader.result
+            // };
+            // reader.readAsDataURL(blob);
+            window.open(URL.createObjectURL(blob));
+          }
         }
       },
       (err)=>this.toastrService.error('Erreur', 'Erreur'));

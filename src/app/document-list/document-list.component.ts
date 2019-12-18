@@ -83,19 +83,24 @@ export class DocumentListComponent implements OnInit {
   }
 
   getDocument(documentToDownload: DocumentModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
     this.documentService.getDocument(documentToDownload.id).subscribe(
       (res) => {
         let d : DocumentModel = res ;
         if (d.fileBase64) {
-          let blob = this.base64ToBlob(d.fileBase64, 'text/plain');
-          if(!navigator.userAgent.match('CriOS')) {
+          let blob = this.base64ToBlob(d.fileBase64, 'application/'+ d.originalFileName.split('.'[2]));
+          if(!navigator.userAgent.match('CriOS') || !isSafari) {
             saveAs(blob, d.originalFileName);
           } else {
-            let reader = new FileReader();
-            reader.onload = function(e){
-              window.location.href = reader.result
-            };
-            reader.readAsDataURL(blob);
+            // let reader = new FileReader();
+            // reader.onload = function(e){
+            //   window.location.href = reader.result
+            // };
+            // reader.readAsDataURL(blob);
+            window.open(URL.createObjectURL(blob));
           }
         }
       });

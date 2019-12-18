@@ -59,18 +59,42 @@ export class FicheListComponent implements OnInit {
 
 
   downloadDocument(ficheToDownload: FicheModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
     this.pdfService.downloadFiche(ficheToDownload.id).subscribe(
       (res) => {
         // let blob = new Blob([res],{type:"application/octet-stream"});
-        if(!navigator.userAgent.match('CriOS')) {
+        // let blob = new Blob([res],{type:"application/octet-stream"});
+        // if(!navigator.userAgent.match('CriOS')) {
+        //   saveAs(res, ficheToDownload.uri);
+        // } else {
+        //   let reader = new FileReader();
+        //   reader.onload = function(e){
+        //     window.location.href = reader.result
+        //   };
+        // }
+        // let blob = this.base64ToBlob(d.fileBase64, 'application/'+ d.originalFileName.split('.'[2]));
+        if(!navigator.userAgent.match('CriOS') || !isSafari) {
           saveAs(res, ficheToDownload.uri);
         } else {
-          let reader = new FileReader();
-          reader.onload = function(e){
-            window.location.href = reader.result
-          };
-          reader.readAsDataURL(res);
+          // let reader = new FileReader();
+          // reader.onload = function(e){
+          //   window.location.href = reader.result
+          // };
+          // reader.readAsDataURL(blob);
+          window.open(URL.createObjectURL(res));
         }
+        // if(!navigator.userAgent.match('CriOS')) {
+        //   saveAs(res, ficheToDownload.uri);
+        // } else {
+        //   let reader = new FileReader();
+        //   reader.onload = function(e){
+        //     window.location.href = reader.result
+        //   };
+        //   reader.readAsDataURL(res);
+        // }
         this.toastrService.success("Téléchargé", "Téléchargé")},
       (err) => {
         console.log(err);

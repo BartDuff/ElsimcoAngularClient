@@ -1,6 +1,12 @@
 <h1>
   Outils demande de congés
 </h1>
+<!--<div style="border: 2px solid;height: 5vh;width: 5vw;display: block;position: relative;background-color: greenyellow;">-->
+<!--  <div>-->
+<!--    <div style="position: absolute; top: 0; right: 0.2vw;">12</div>-->
+<!--    <div style="justify-content: center;text-align: center;position: relative;top:1.5vh;margin: auto;">1/2 C.S.S</div>-->
+<!--  </div>-->
+<!--</div>-->
 <div>
   <div><strong>Solde CP année N-1: </strong>{{countConges()}}</div>
   <div><strong>Solde CP année N: </strong>{{countCongesAnticipes()}}</div>
@@ -19,7 +25,7 @@
   <div *ngFor = "let x of [0,1]">
   <mat-tab *ngFor="let mois of nomsDesMois"  [disabled]="disableTabs(nomsDesMois.indexOf(mois),dateNow.getFullYear()+x)" >
     <ng-template mat-tab-label>
-     <span [matTooltip]="disableTabs(nomsDesMois.indexOf(mois), dateNow.getFullYear()+x)?'Ce mois est déjà passé':''">{{mois}} {{dateNow.getFullYear() + x}}</span>
+     <span [matTooltip]="disableTabs(nomsDesMois.indexOf(mois), dateNow.getFullYear()+x)?'Ce mois est déjà passé':''">{{changeCaseFirstLetter(mois)}} {{dateNow.getFullYear() + x}}</span>
     </ng-template>
     <ng-template matTabContent>
     <div style="justify-content: space-evenly;display: flex" id="maincont">
@@ -36,7 +42,7 @@
         <button mat-button (click)="daysOffSelectedObjArr = [];plage = false;firstDay = null;firstClick=false;this.zeroIndicator = countConges();" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
         </div>
         <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
-          <h1 style="text-align: center">{{mois}} {{dateNow.getFullYear()+x}}</h1>
+          <h1 style="text-align: center">{{changeCaseFirstLetter(mois)}} {{dateNow.getFullYear()+x}}</h1>
           <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine" class="daysofweek">{{d}}</div>
           <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(mois),x))" class="caldivs"></div>
           <div  (mousedown)="addRemoveDay(day,x);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day,x):''" *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(mois),dateNow.getFullYear()+x)"

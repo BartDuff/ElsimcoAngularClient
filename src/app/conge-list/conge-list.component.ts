@@ -46,6 +46,10 @@ export class CongeListComponent implements OnInit {
     this.dateNow = new Date();
   }
 
+  changeCaseFirstLetter(params) {
+    return params.charAt(0).toUpperCase() + params.slice(1);
+  }
+
   sendJustif() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;

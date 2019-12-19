@@ -24,7 +24,7 @@
   <button mat-button (click)="daysOff = [];plage = false;firstDay = null;firstClick=false;" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
   </div>
   <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
-    <h1 style="text-align: center">{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}</h1>
+    <h1 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h1>
     <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine" class="daysofweek">{{d}}</div>
     <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells())" class="caldivs"></div>
     <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())"

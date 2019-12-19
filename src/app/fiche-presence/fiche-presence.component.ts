@@ -221,6 +221,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   c(cc){
     console.log(cc)
   }
+
+  changeCaseFirstLetter(params) {
+    return params.charAt(0).toUpperCase() + params.slice(1);
+  }
+
   constructor(private toastr: ToastrService, private cdRef:ChangeDetectorRef, private pdfService:PdfService, private userService:UserService, private ficheService: FicheService, private dialog: MatDialog) {
   }
 

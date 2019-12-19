@@ -3,7 +3,7 @@
   <mat-tab label="Validation des fiches">
     <div style="margin-top: 2em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
         <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
       </div>
       <p *ngIf="allFiches.length==0">Pas de fiches pour ce mois-ci</p>
@@ -59,7 +59,7 @@
   <mat-tab label="Résumé">
     <div style="overflow-x: auto;margin-top: 2em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{nomsDesMois[dateNow.getMonth()]}} {{dateNow.getFullYear()}}
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
         <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
       </div>
       <p *ngIf="allFiches.length==0">Pas de fiches pour ce mois-ci</p>

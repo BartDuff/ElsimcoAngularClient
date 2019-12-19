@@ -55,6 +55,10 @@ export class ValidationFicheComponent implements OnInit {
     console.log(o);
   }
 
+  changeCaseFirstLetter(params) {
+    return params.charAt(0).toUpperCase() + params.slice(1);
+  }
+
   getAllFiches() {
     this.allFiches = [];
     this.ficheService.getFiches().subscribe(

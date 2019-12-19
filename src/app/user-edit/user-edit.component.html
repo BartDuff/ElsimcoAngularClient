@@ -61,11 +61,11 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="telephone" [(ngModel)]="user.telephone" placeholder="Numéro de téléphone" name="telephone" id="telephone">
+          <input matInput formControlName="telephone" [(ngModel)]="user.telephone" placeholder="Téléphone perso" name="telephone" id="telephone">
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="telPro" [(ngModel)]="user.telPro" placeholder="Num de téléphone pro" name="telPro" id="telPro">
+          <input matInput formControlName="telPro" [(ngModel)]="user.telPro" placeholder="Téléphone pro" name="telPro" id="telPro">
         </mat-form-field>
 
         <mat-form-field>
@@ -81,7 +81,7 @@
         <mat-form-field *ngIf="currentUser.role=='ADMIN'" (click)="picker.open()">
           <label>
             <input matInput readonly [matDatepicker]="picker"
-                   formControlName="dateArrivee" [(ngModel)]="user.dateArrivee" placeholder="Date d'arrivée dans l'entreprise" name="dateArrivee" id="dateArrivee">
+                   formControlName="dateArrivee" [(ngModel)]="user.dateArrivee" placeholder="Date d'entrée dans l'entreprise" name="dateArrivee" id="dateArrivee">
           </label>
           <mat-datepicker-toggle matSuffix [for]="picker" id="cal"></mat-datepicker-toggle>
           <mat-datepicker #picker [disabled]="false"></mat-datepicker>

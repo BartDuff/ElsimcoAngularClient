@@ -61,6 +61,10 @@ export class ValidationCongesComponent implements OnInit {
     );
   }
 
+  changeCaseFirstLetter(params) {
+    return params.charAt(0).toUpperCase() + params.slice(1);
+  }
+
   async splitArrayInRanges(arr) {
     let newArr = [];
     let plage = [];

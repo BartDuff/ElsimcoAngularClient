@@ -119,6 +119,10 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return '';
   }
 
+  changeCaseFirstLetter(params) {
+    return params.charAt(0).toUpperCase() + params.slice(1);
+  }
+
   constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService, private emailService: EmailService, private dialog: MatDialog) {
   }
 

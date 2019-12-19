@@ -13,6 +13,7 @@ export class UserModel {
   cpNMoins1: number;
   cpN: number;
   rttn: number;
+  anticipation:number;
   congeAnciennete: number;
   dateInscription: Date;
   dateArrivee: Date;

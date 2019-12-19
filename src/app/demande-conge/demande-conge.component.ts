@@ -47,6 +47,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   daysOffSelectedObjArr = [];
   daysOffSavedObjArr = [];
   dayoffPlage = [];
+  zeroIndicator;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
   absShortTypes = ['RTT', 'CP', 'A.E.', 'C.S.S.'];
@@ -177,6 +178,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     //this.selectedDate = moment(new Date());
     this.counter = this.currentUser.cpNMoins1 > 0? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete: this.currentUser.cpN;
+    this.zeroIndicator = this.countConges();
     this.dateNow = new Date();
     this.FicheEnvoyee = null;
     this.getHolidays();
@@ -267,8 +269,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   // }
 
   autoFillType(absence) {
-    let ifrom = 0;
-    let countConges = this.countConges();
+
     // for (let i = 0; i < this.daysOffSelectedObjArr.length; i++) {
     //   if (this.daysOffSelectedObjArr[i].date == absence.date) {
     //     //console.log("found "+date+ " at position "+ i)
@@ -278,17 +279,24 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     // }
     // for (; ifrom < this.daysOffSelectedObjArr.length; ifrom++) {
     let half = absence.demiJournee ? 0.5 : 1;
-    if (absence.typeConge == 'Congés payés' && countConges - half < 0 && !this.allowAnticipation) {
+    if (absence.typeConge == 'Congés payés' && this.zeroIndicator < 0 && !this.allowAnticipation) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
       const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
       dialogRef.afterClosed().subscribe(
         (data) => {
-          this.allowAnticipation = data;
+          if(data){
+            this.allowAnticipation = data;
+          } else {
+        this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence),1);
+        this.zeroIndicator+=half;
+      }
         });
       // break;
     }
+    this.zeroIndicator -= half;
+    console.log(this.zeroIndicator);
     // this.daysOffSelectedObjArr[ifrom].typeConge = absence.typeConge;
     // // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
     // if(this.daysOffSelectedObjArr[ifrom+1].typeConge == absence.typeConge){
@@ -312,7 +320,12 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     }
     for (; ifrom < plageArr.length; ifrom++) {
       let half = absence.demiJournee ? 0.5 : 1;
-      if (absence.typeConge == 'Congés payés' && countConges - half < 0 && !this.allowAnticipation) {
+      console.log(this.zeroIndicator);
+      console.log(absence.typeConge == 'Congés payés' && this.zeroIndicator < 0 && !this.allowAnticipation);
+      console.log(absence.typeConge == 'Congés payés', "cp");
+      console.log(+this.zeroIndicator < 0, "zero");
+      console.log(!this.allowAnticipation, "antici");
+      if (absence.typeConge == 'Congés payés' && this.zeroIndicator < 0  && !this.allowAnticipation) {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
@@ -322,11 +335,14 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             if(data){
               this.allowAnticipation = data;
             } else {
-             this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence),1);
+             this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(plageArr),1);
+              this.zeroIndicator+=plageArr.length;
+              return;
             }
           });
       }
       plageArr[ifrom].typeConge = absence.typeConge;
+      this.zeroIndicator -= half;
       // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
     }
     if (plageArr.length > 1) {
@@ -501,7 +517,11 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         }
       }
       if (this.includesArray(this.daysOffSelectedObjArr, this.dayoffPlage)) {
-        this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(this.plage), 1);
+        this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(this.dayoffPlage), 1);
+        this.zeroIndicator += this.dayoffPlage.length;
+        if(this.countCongesAnticipes() == this.currentUser.cpN){
+          this.allowAnticipation = false;
+        }
         this.firstDay = null;
         this.firstClick = false;
         this.plage = false;
@@ -674,7 +694,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   spliceDay(arr, date) {
     for (let x of arr) {
       if (x.date == date) {
+        let half = x.demiJournee ? 0.5 : 1;
         arr.splice(arr.indexOf(x), 1);
+        this.zeroIndicator += half;
       }
     }
   }
@@ -823,9 +845,12 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
               }
             );
           }
+          let antici = this.countCongesAnticipes();
           this.currentUser.cpNMoins1 = this.countConges();
+          this.currentUser.anticipation = this.currentUser.cpN - antici;
           this.currentUser.cpN = this.countCongesAnticipes();
           this.currentUser.rttn = this.countRTT();
+          this.currentUser.congeAnciennete = this.countAnciennete();
           this.userService.editUser(this.currentUser).subscribe(
             () => {
               this.toastr.success('Demande envoyée', 'Confirmation d\'envoi');
@@ -997,8 +1022,8 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     for (let d of this.daysOffSelectedObjArr) {
       if (this.isArray(d)) {
         for (let det of d) {
-          let half = d.demiJournee ? 0.5 : 1;
-          if (d.typeConge == 'Congés payés') {
+          let half = det.demiJournee ? 0.5 : 1;
+          if (det.typeConge == 'Congés payés') {
             if (count - half < 0) {
               break;
             }

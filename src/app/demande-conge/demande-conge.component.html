@@ -33,7 +33,7 @@
       <div id="cont">
         <div style="display: flex;justify-content: space-evenly;align-content: space-evenly;">
         <button mat-button (click)="plage = !plage;firstDay = null;firstClick=false;" style="background-color: black;" class="selectbut"><span *ngIf="!plage">Sélection de plages de dates</span><span *ngIf="plage">Sélection de date unique</span></button>
-        <button mat-button (click)="daysOffSelectedObjArr = [];plage = false;firstDay = null;firstClick=false;" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
+        <button mat-button (click)="daysOffSelectedObjArr = [];plage = false;firstDay = null;firstClick=false;this.zeroIndicator = countConges();" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
         </div>
         <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
           <h1 style="text-align: center">{{mois}} {{dateNow.getFullYear()+x}}</h1>

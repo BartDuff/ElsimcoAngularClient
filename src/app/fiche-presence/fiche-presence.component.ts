@@ -374,7 +374,7 @@ checkWeekends(day:Date){
         }
       }
       if (this.includesArray(this.daysOff, this.dayoffPlage)) {
-        this.daysOff.splice(this.daysOff.indexOf(this.plage), 1);
+        this.daysOff.splice(this.daysOff.indexOf(this.dayoffPlage), 1);
         this.firstDay = null;
         this.firstClick = false;
         this.plage = false;

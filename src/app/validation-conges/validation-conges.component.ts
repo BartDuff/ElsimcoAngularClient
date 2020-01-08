@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
 import {FicheModel} from '../models/fiche.model';
@@ -19,6 +19,7 @@ import {DocumentModel} from '../models/document.model';
   styleUrls: ['./validation-conges.component.css']
 })
 export class ValidationCongesComponent implements OnInit {
+  @ViewChild('planning') pRef: ElementRef;
   congesValides: CongeModel[];
   congesNonValides: CongeModel[];
   congesWithFile: CongeModel[];
@@ -40,7 +41,8 @@ export class ValidationCongesComponent implements OnInit {
               private userService: UserService,
               private toastrService: ToastrService,
               private emailService: EmailService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private changeDetectorRefs: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -60,6 +62,7 @@ export class ValidationCongesComponent implements OnInit {
       }
     );
   }
+
 
   changeCaseFirstLetter(params) {
     return params.charAt(0).toUpperCase() + params.slice(1);

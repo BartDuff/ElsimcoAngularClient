@@ -218,8 +218,8 @@
       <tr>
         <th
           [colSpan]="getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear()).length+2">
-          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1)" style="border: none;"><mat-icon>arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
-          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1)" style="border: none;"><mat-icon>arrow_right</mat-icon></button></th>
+          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getValidatedConges();" style="border: none;"><mat-icon>arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
+          <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);getValidatedConges();" style="border: none;"><mat-icon>arrow_right</mat-icon></button></th>
 
       </tr>
       <tr>

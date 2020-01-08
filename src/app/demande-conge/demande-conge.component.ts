@@ -51,6 +51,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
   absShortTypes = ['RTT', 'CP', 'A.E.', 'C.S.S.'];
+  fixedDateNow:Date;
   dateNow: Date;
   FicheEnvoyee: boolean = false;
   currentUser: UserModel;
@@ -184,6 +185,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     this.counter = this.currentUser.cpNMoins1 > 0? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete: this.currentUser.cpN;
     this.zeroIndicator = this.countConges();
     this.dateNow = new Date();
+    this.fixedDateNow = new Date();
     this.FicheEnvoyee = null;
     this.getHolidays();
     // this.dateFilter(this.dateNow);

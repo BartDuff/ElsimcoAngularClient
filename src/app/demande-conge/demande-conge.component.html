@@ -22,7 +22,7 @@
   </mat-progress-spinner>
 </div>
 <div>
-  <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
+  <button mat-button [disabled]="dateNow.getMonth()-1 < fixedDateNow.getMonth()" (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon [ngStyle]="{color: dateNow.getMonth()-1 < fixedDateNow.getMonth()? 'grey':'black'}" [matTooltip]="dateNow.getMonth()-1 < fixedDateNow.getMonth()?'Ce mois est déjà passé':''">arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
   <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
 </div>
         <div style="justify-content: space-evenly;display: flex" id="maincont">
@@ -81,7 +81,7 @@
                   Faire une demande
                 </h4>
                 <div>
-                  Sélectionnez les dates de congés/absences à poser sur le calendrier joint. Pour changer de mois, sélectionnez l'onglet correspondant.
+                  Sélectionnez les dates de congés/absences à poser sur le calendrier joint. Pour changer de mois, sélectionnez le mois correspondant avec les flèches.
                 </div>
                 <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" style="margin: 3em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;" class="boxes">
                   <div *ngIf="isArray(dayOff)">

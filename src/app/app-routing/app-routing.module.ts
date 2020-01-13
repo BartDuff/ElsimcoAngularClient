@@ -35,6 +35,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'contact_form', component: AddContactComponent},
   { path: 'candidat_form/:secretid', component: AddCandidatComponent},
+  { path: 'candidat_form', canActivate: [AuthGuardService], component: AddCandidatComponent},
   { path: 'contacts', canActivate: [AuthGuardService], component: ContactListComponent},
   { path: 'candidats', canActivate: [AuthGuardService], component: CandidatListComponent},
   { path: 'candidats/:id', canActivate: [AuthGuardService], component: CandidatDetailsComponent},

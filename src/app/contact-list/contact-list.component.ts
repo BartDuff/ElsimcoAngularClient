@@ -38,6 +38,7 @@ export class ContactListComponent implements OnInit {
     );
   }
 
+
   AcceptContact(contactAccepted: ContactModel){
     contactAccepted.accepte = true;
     this.contactService.editContact(contactAccepted).subscribe(

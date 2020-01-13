@@ -7,3 +7,6 @@
 td {
   padding: 15em!important;
 }
+tr {
+  border: solid;
+}

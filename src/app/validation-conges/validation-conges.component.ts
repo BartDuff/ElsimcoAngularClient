@@ -26,6 +26,8 @@ export class ValidationCongesComponent implements OnInit {
   allNonValidatedConges : CongeModel[];
   monthArr = [];
   loading = true;
+  lastCall1 = true;
+  lastCall2 = true;
   monthLoading = false;
   daysOffSavedObjArr;
   dateNow: Date;
@@ -61,6 +63,10 @@ export class ValidationCongesComponent implements OnInit {
 
       }
     );
+  }
+
+  changeLastCall(lc){
+    lc = false;
   }
 
 

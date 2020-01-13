@@ -32,6 +32,12 @@ export class ContactService {
     return this.http.post(`${API_URL}/contacts`, newContact, { headers: headers});
   }
 
+  addContactManual(newContact: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.post(`${API_URL}/contacts/manual`, newContact, { headers: headers});
+  }
+
   editContact(updateContact: ContactModel): Observable<ContactModel> {
     return this.http.put<ContactModel>(`${API_URL}/contacts/${updateContact.id}`, updateContact);
   }

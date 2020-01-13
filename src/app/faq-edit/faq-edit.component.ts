@@ -23,6 +23,7 @@ export class FaqEditComponent implements OnInit {
               private faqService: FaqService,) { }
 
   ngOnInit() {
+    this.loading = true;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.editForm = this.formBuilder.group({
       id: [],
@@ -36,6 +37,7 @@ export class FaqEditComponent implements OnInit {
           this.editForm.controls.id.setValue(data.id);
           this.editForm.controls.question.setValue(data.question);
           this.editForm.controls.reponse.setValue(data.reponse);
+          this.loading = false;
         }
       )
     );

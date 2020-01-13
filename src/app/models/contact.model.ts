@@ -9,6 +9,7 @@ export class ContactModel {
   email: String;
   mobile: number;
   posteRecherche: String;
+  dateCandidature: Date;
   fileBase64: String;
   fileType: String;
   fileName: String;

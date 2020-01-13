@@ -6,10 +6,13 @@ import {saveAs} from 'file-saver';
 import {ToastrService} from 'ngx-toastr';
 import {CandidatModel} from '../models/candidat.model';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Diplome} from '../models/diplome.model';
 import {hasProperties} from 'codelyzer/util/astQuery';
+import {HttpHeaders} from '@angular/common/http';
+import {ContactService} from '../services/contact.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-candidat-list',
@@ -117,6 +120,7 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'faitA': 'Fait à:',
     'echangesEffectues': 'Echanges éffectués'};
   columnsToFilter = [
+    'id',
     'nom',
     'prenom',
     'anglais',
@@ -156,6 +160,8 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
 
 
   constructor(private candidatService: CandidatService,
+              private contactService: ContactService,
+              private router: Router,
               private toastrService: ToastrService,
               private cdRef:ChangeDetectorRef,) {
   }

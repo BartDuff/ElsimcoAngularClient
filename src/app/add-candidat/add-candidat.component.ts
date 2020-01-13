@@ -44,7 +44,7 @@ export class AddCandidatComponent implements OnInit {
   }
 
   ngOnInit() {
-    localStorage.clear();
+    // localStorage.clear();
     this.contactForm1 = this.formBuilder.group({
       nom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
       prenom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
@@ -117,15 +117,21 @@ export class AddCandidatComponent implements OnInit {
       faitA: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]]
     });
     this.route.params.subscribe(
-      params => this.contactService.getContact(params['secretid']).subscribe(
-        data => {
-          this.contact = data;
-          this.contactForm1.controls.nom.setValue(data.nom);
-          this.contactForm1.controls.prenom.setValue(data.prenom);
-          this.contactForm1.controls.email.setValue(data.email);
-          this.contactForm1.controls.mobile.setValue(data.mobile);
+      params => {
+        if(!params) {
+          this.contact = new ContactModel();
+        } else {
+          this.contactService.getContact(params['secretid']).subscribe(
+            data => {
+              this.contact = data;
+              this.contactForm1.controls.nom.setValue(data.nom);
+              this.contactForm1.controls.prenom.setValue(data.prenom);
+              this.contactForm1.controls.email.setValue(data.email);
+              this.contactForm1.controls.mobile.setValue(data.mobile);
+            }
+          );
         }
-      )
+      }
     );
   }
 

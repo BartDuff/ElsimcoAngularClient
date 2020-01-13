@@ -24,4 +24,14 @@ td{
   flex-wrap: wrap-reverse;
 }
 
+.btn-floating {
+  background-color: black;
+  color: white;
+}
+
+.mat-fab {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
 

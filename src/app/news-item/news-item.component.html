@@ -8,17 +8,25 @@
 <!--  </div>-->
 <!--</div>-->
 
-<mat-card>
+<mat-card style="border-radius: 15px;">
   <mat-card-header>
-    <div mat-card-avatar> <button mat-icon-button [routerLink]="['/edit_news/', newsitem.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button></div>
     <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column">
-      <span >{{newsitem.titre}}</span>
+      <span style="font-weight: bold;">{{newsitem.titre}}</span>
     </mat-card-title>
-    <mat-card-subtitle>Publié le {{newsitem.datePublication | date: 'dd/MM/yyyy à HH:mm'}} par {{ newsitem.auteur.prenom }} {{ newsitem.auteur.nom }}</mat-card-subtitle>
   </mat-card-header>
   <img mat-card-image [src]="sourceImg" alt="" class="newsimage">
+<!--  <iframe width="560" height="500" src="https://www.youtube.com/embed/vFViy4-w3nY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
   <mat-card-content>
     <p [innerHTML]="newsitem.contenu">
     </p>
   </mat-card-content>
+  <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publié le {{newsitem.datePublication | date: 'dd/MM/yyyy à HH:mm'}} par {{ newsitem.auteur.prenom }} {{ newsitem.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button></mat-card-subtitle>
+  <button style="text-transform: none!important;color: black!important"   (click)="(isLiked)?deleteNewsFromList():addNewsToList();"
+          class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect">
+    <i class="material-icons">{{(isLiked)?'favorite':'favorite_border'}}</i>
+    <span *ngIf="likes?.length >0"> {{likes?.length}} {{ likes?.length <=1?'personne a aimé':'personnes ont aimé'}}</span>
+  </button>
+  <div *ngIf="likes?.length >0">
+    {{getPrenoms(likes)}}
+  </div>
 </mat-card>

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {NewsModel} from '../models/news.model';
+import {UserModel} from '../models/user.model';
 
 const API_URL = environment.apiUrl;
 @Injectable({
@@ -39,6 +40,24 @@ export class NewsService {
   deleteSingleNews(newsitem: NewsModel): Observable<any> {
     const idASupprimer = newsitem.id;
     return this.http.delete(`${API_URL}/news/${idASupprimer}`);
+  }
+
+  getLikesForNews(news: NewsModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.get(`${API_URL}/news/${news.id}/likes`, { headers: headers});
+  }
+
+  addNewsInterestToUser(user: UserModel, news: NewsModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.post(`${API_URL}/news/${news.id}/likes`, user, { headers: headers});
+  }
+
+  removeNewsInterestFromUser(user: UserModel, news: NewsModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.delete(`${API_URL}/news/${news.id}/likes/${user.id}`, { headers: headers});
   }
 
 }

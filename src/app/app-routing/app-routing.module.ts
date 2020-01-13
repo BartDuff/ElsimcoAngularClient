@@ -27,6 +27,9 @@ import {DemandeCongeComponent} from '../demande-conge/demande-conge.component';
 import {CongeListComponent} from '../conge-list/conge-list.component';
 import {ValidationCongesComponent} from '../validation-conges/validation-conges.component';
 import {ValidationFicheComponent} from '../validation-fiche/validation-fiche.component';
+import {FaqListComponent} from '../faq-list/faq-list.component';
+import {FaqAddComponent} from '../faq-add/faq-add.component';
+import {FaqEditComponent} from '../faq-edit/faq-edit.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -54,6 +57,9 @@ const routes: Routes = [
   { path: 'presence/validation', canActivate: [AuthGuardService], component: ValidationFicheComponent },
   { path: 'conges', canActivate: [AuthGuardService], component: DemandeCongeComponent },
   { path: 'conges/validation', canActivate: [AuthGuardService], component: ValidationCongesComponent },
+  { path: 'faq', canActivate: [AuthGuardService], component: FaqListComponent },
+  { path: 'add_faq', canActivate: [AuthGuardService], component: FaqAddComponent },
+  { path: 'edit_faq/:id', canActivate: [AuthGuardService], component: FaqEditComponent },
   { path: '', redirectTo: 'news', pathMatch: 'full'},
   { path: 'error', redirectTo: 'login', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }

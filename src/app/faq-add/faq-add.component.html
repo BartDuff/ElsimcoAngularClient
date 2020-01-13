@@ -1,0 +1,31 @@
+<mat-card *ngIf="!loading">
+  <mat-card-title>Publier une question/réponse sur la FAQ</mat-card-title>
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field hidden>
+          <input matInput disabled formControlName="id" placeholder="id" name="id"  id="id">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="question" placeholder="Question" name="question"  id="question">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Réponse</mat-label>
+          <textarea matInput formControlName="reponse" placeholder="Veuillez écrire votre réponse dans ce cadre..."
+                    name="reponse" id="reponse"></textarea>
+        </mat-form-field>
+        <mat-card-actions fxFlexAlign="center">
+          <button mat-icon-button routerLink="/faq">RETOUR <mat-icon>arrow_back</mat-icon></button>
+          <button mat-button>Publier</button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>
+<mat-progress-spinner
+  *ngIf="loading"
+  color="accent"
+  mode="indeterminate">
+</mat-progress-spinner>

@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MissionModel} from '../models/mission.model';
 import {UserModel} from '../models/user.model';
 import {environment} from '../../environments/environment';
+import {NewsModel} from '../models/news.model';
 
 const API_URL = environment.apiUrl;
 
@@ -57,10 +58,29 @@ export class UserService {
     return this.http.delete(`${API_URL}/users/${user.id}/missions/${mission.id}`, { headers: headers});
   }
 
+
   getMissionInterestsForUser(user: UserModel): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type'  : 'application/json'});
     return this.http.get(`${API_URL}/users/${user.id}/missions`, { headers: headers});
+  }
+
+  addNewsInterestToUser(user: UserModel, news: NewsModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.post(`${API_URL}/users/${user.id}/likes`, news, { headers: headers});
+  }
+
+  removeNewsInterestFromUser(user: UserModel, news: NewsModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.delete(`${API_URL}/users/${user.id}/likes/${news.id}`, { headers: headers});
+  }
+
+  getNewsInterestsForUser(user: UserModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.get(`${API_URL}/users/${user.id}/likes`, { headers: headers});
   }
 
   getFicheForUser(user: UserModel): Observable<any> {

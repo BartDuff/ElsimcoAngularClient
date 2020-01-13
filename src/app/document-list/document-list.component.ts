@@ -24,6 +24,7 @@ export class DocumentListComponent implements OnInit {
   selectedDocument: DocumentModel;
   selectedFiles;
   filename;
+  sending = false;
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
 
@@ -107,9 +108,16 @@ export class DocumentListComponent implements OnInit {
   }
 
   sendDocumentByEmail(documentToSend: DocumentModel) {
+    this.sending = true;
     this.documentService.sendDocumentByEmail(this.currentUser,documentToSend).subscribe(
-      (res) => this.toastrService.success(documentToSend.originalFileName + " envoyé avec succès!", "Envoyé"),
-      (err)=> this.toastrService.error(documentToSend.originalFileName + ": echec de l'envoi!","Erreur d'envoi")
+      (res) => {
+        this.sending = false;
+        this.toastrService.success(documentToSend.originalFileName + " envoyé avec succès!", "Envoyé");
+      },
+      (err)=> {
+        this.sending = false;
+        this.toastrService.error(documentToSend.originalFileName + ": echec de l'envoi!", "Erreur d'envoi");
+      }
     );
   }
 

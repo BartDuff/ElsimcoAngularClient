@@ -1,0 +1,28 @@
+<h2 style="align-self: center">FAQ</h2>
+<button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_faq"><mat-icon>add</mat-icon></button>
+<div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
+  <div *ngIf="faq?.length == 0">Pas encore de publication</div>
+  <mat-accordion class="example-headers-align">
+    <mat-expansion-panel *ngFor="let f of faq" style="margin-bottom: 5px;">
+      <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'" style="padding: 3em;">
+        <mat-panel-title style="font-weight: bold;">
+          {{ f.question }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>{{f.reponse}}</p>
+      <p *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;"><button type="button"
+                 (click)="deleteFaq(f)"><mat-icon>delete</mat-icon></button>
+      </p>
+      <p *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;"><button type="button"
+                                                                                [routerLink]="['/edit_faq/', f.id]"><mat-icon>edit</mat-icon></button>
+      </p>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="loading"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>

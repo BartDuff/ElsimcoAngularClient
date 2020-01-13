@@ -2,7 +2,11 @@
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_news"><mat-icon>add</mat-icon></button>
 <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
   <div *ngIf="news?.length == 0">Pas encore d'actualités publiées</div>
-  <app-news-item *ngFor="let newsitem of news" [newsitem]="newsitem" class="news-card"></app-news-item>
+  <app-news-item *ngFor="let newsitem of news"
+                 [newsitem]="newsitem"
+                 (newsSelected)="addNewsToList($event)"
+                 (newsToDeleteInList)="deleteNewsFromList($event)"
+                 class="news-card"></app-news-item>
 </div>
 <div style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner

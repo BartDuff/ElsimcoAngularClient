@@ -6,6 +6,7 @@ import {UserService} from '../services/user.service';
 import {AuthenticationService} from '../services/authentication.service';
 import {MatDialog} from '@angular/material';
 import {NewsService} from '../services/news.service';
+import {MissionModel} from '../models/mission.model';
 
 @Component({
   selector: 'app-news-list',
@@ -17,6 +18,7 @@ export class NewsListComponent implements OnInit {
   currentUser: UserModel;
   loading = true;
   constructor(private newsService: NewsService,
+              private userService: UserService,
               private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -29,6 +31,22 @@ export class NewsListComponent implements OnInit {
       (data) => {
         this.news = data.filter((a)=>!a.isPublic);
         this.loading=false;
+      }
+    );
+  }
+
+  addNewsToList(addedNews: NewsModel) {
+    this.newsService.addNewsInterestToUser(JSON.parse(localStorage.getItem('currentUser')), addedNews).subscribe(
+      () => {
+        this.getNews();
+      }
+    );
+  }
+
+  deleteNewsFromList(deletedNews: NewsModel) {
+    this.newsService.removeNewsInterestFromUser(JSON.parse(localStorage.getItem('currentUser')), deletedNews).subscribe(
+      () => {
+        this.getNews();
       }
     );
   }

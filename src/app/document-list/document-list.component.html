@@ -1,4 +1,4 @@
-<h2 style="align-self: center">Pack Collaborateurs</h2>
+<h2 style="align-self: center">Espace Téléchargement</h2>
 <div *ngIf="currentUser.role=='ADMIN'" style="align-self: center;">
 <!--
   <input #fileInput type="file" ng2FileSelect [uploader]="uploader"/>
@@ -16,7 +16,7 @@
 <table class="bordered mat-elevation-z8" style="margin: auto; " *ngIf="documents">
   <thead>
   <tr>
-    <th>Nom</th>
+    <th>Nom du fichier</th>
     <th>Année</th>
     <th>Télécharger</th>
     <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
@@ -33,7 +33,7 @@
   </tr>
   </tbody>
 </table>
-<div *ngIf="!documents"
+<div *ngIf="!documents || sending"
           style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner
     color="accent"

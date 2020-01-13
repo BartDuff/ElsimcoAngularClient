@@ -1,5 +1,5 @@
 .mat-icon-button {
-  color: white;
+  color: black;
 }
 
 mat-card-header {
@@ -26,4 +26,5 @@ mat-card-content {
 .newsimage{
   width: 100%;
   padding: 0.5em;
+  border-radius: 25px;
 }

@@ -2,27 +2,33 @@
   <a mat-list-item routerLink="/contact_form" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Nous
     Rejoindre</a>
   <a mat-list-item routerLink="/login" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Connexion</a>
-  <a mat-list-item (click)="onLogout()" *ngIf="token" class="nav-caption">Déconnexion</a>
   <a mat-list-item routerLink="/news" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Actualités</a>
   <a mat-list-item routerLink="/users/{{ currentUser.id }}" *ngIf="token" (click)="onSidenavClose()"
      class="nav-caption">Mon Profil</a>
-  <a mat-list-item routerLink="/documents" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Pack
-    Collaborateurs</a>
+  <mat-list-item class="nav-caption">
+    <a matLine [matMenuTriggerFor]="menu" *ngIf="token">Mon Activité <mat-icon style="position: relative;left: 2em;top: 0.25em;">keyboard_arrow_right</mat-icon></a>
+  </mat-list-item>
+  <mat-menu #menu="matMenu" xPosition="after">
+    <a mat-menu-item [matMenuTriggerFor]="menu2" *ngIf="token" style="color: white">Présence <mat-icon style="position: relative;left: 2em;color: white;">keyboard_arrow_right</mat-icon></a>
+    <mat-menu #menu2="matMenu" xPosition="after">
+      <a mat-menu-item routerLink="/presence" *ngIf="token" (click)="onSidenavClose()">Remplir ma fiche de Présence</a>
+      <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token" (click)="onSidenavClose()">Mes fiches de présence</a>
+      <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role=='ADMIN'" (click)="onSidenavClose()"><span *ngIf="currentUser.fonction === 'RH'" matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
+    </mat-menu>
+    <a mat-menu-item [matMenuTriggerFor]="menu3" *ngIf="token" style="color: white">Congés <mat-icon style="position: relative;left: 2em;color: white;vertical-align: center;">keyboard_arrow_right</mat-icon></a>
+    <mat-menu #menu3="matMenu" xPosition="after">
+      <a mat-menu-item routerLink="/conges" *ngIf="token" (click)="onSidenavClose()">Remplir une demande de congés</a>
+      <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token" (click)="onSidenavClose()">Mes congés</a>
+      <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role=='ADMIN'" (click)="onSidenavClose()"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Valider les congés</span></a>
+    </mat-menu>
+  </mat-menu>
   <a mat-list-item disabled *ngIf="token" (click)="onSidenavClose()" class="nav-caption" matTooltip="Ce lien n'est pas encore accessible"><span class="priority">Missions</span></a>
+  <a mat-list-item routerLink="/documents" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Espace Téléchargement</a>
   <a mat-list-item routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"
      class="nav-caption">Utilisateurs</a>
   <a mat-list-item routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"
      class="nav-caption">Candidatures spontannées</a>
   <a mat-list-item routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'" class="nav-caption">Candidathèque</a>
-  <mat-list-item class="nav-caption">
-    <a matLine [matMenuTriggerFor]="menu" *ngIf="token">Outils <mat-icon style="position: relative;left: 2em;top: 0.25em;">keyboard_arrow_right</mat-icon></a>
-  </mat-list-item>
-  <mat-menu #menu="matMenu" yPosition="below">
-    <a mat-menu-item routerLink="/presence" *ngIf="token" (click)="onSidenavClose()">Remplir ma fiche de Présence</a>
-    <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token" (click)="onSidenavClose()">Mes fiches de présence</a>
-    <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role=='ADMIN'" (click)="onSidenavClose()"><span *ngIf="currentUser.fonction === 'RH'" matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
-    <a mat-menu-item routerLink="/conges" *ngIf="token" (click)="onSidenavClose()">Remplir une demande de congés</a>
-    <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token" (click)="onSidenavClose()">Mes congés</a>
-    <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role=='ADMIN'" (click)="onSidenavClose()"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Valider les congés</span></a>
-  </mat-menu>
+  <a mat-list-item routerLink="/faq" *ngIf="token" class="nav-caption">FAQ</a>
+  <a mat-list-item (click)="onLogout()" *ngIf="token" class="nav-caption">Déconnexion</a>
 </mat-nav-list>

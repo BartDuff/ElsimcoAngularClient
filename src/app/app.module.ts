@@ -54,7 +54,7 @@ import {
   MatSidenavModule,
   MatToolbarModule,
   MatIconModule,
-  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule, MatBadgeModule, MatTooltipModule, MatChipsModule
+  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule, MatBadgeModule, MatTooltipModule, MatChipsModule, MatExpansionModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -88,6 +88,10 @@ import { AllowAnticipationDialogComponent } from './dialog/allow-anticipation-di
 import { ValidationFicheComponent } from './validation-fiche/validation-fiche.component';
 import {EmailService} from './services/email.service';
 import {TooltipModule} from 'ngx-bootstrap';
+import { FaqListComponent } from './faq-list/faq-list.component';
+import { FaqAddComponent } from './faq-add/faq-add.component';
+import { FaqEditComponent } from './faq-edit/faq-edit.component';
+import {FaqService} from './services/faq.service';
 const config: InputFileConfig = {};
 
 
@@ -135,7 +139,10 @@ const config: InputFileConfig = {};
     ConfirmationDialogComponent,
     CommentFicheDialogComponent,
     AllowAnticipationDialogComponent,
-    ValidationFicheComponent
+    ValidationFicheComponent,
+    FaqListComponent,
+    FaqAddComponent,
+    FaqEditComponent
   ],
   imports: [
     AppRoutingModule,
@@ -177,9 +184,10 @@ const config: InputFileConfig = {};
     MatBadgeModule,
     MatTooltipModule,
     MatChipsModule,
-    TooltipModule
+    TooltipModule,
+    MatExpansionModule
   ],
-  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService,
+  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService, FaqService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },

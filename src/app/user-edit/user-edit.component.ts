@@ -47,7 +47,8 @@ export class UserEditComponent implements OnInit {
     telPro: 'Téléphone Pro',
     emailPerso:'Email perso',
     dateArrivee:'Date d\'arrivée',
-    metier:'Métier'};
+    metier:'Métier',
+    avatar: 'Avatar'};
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));

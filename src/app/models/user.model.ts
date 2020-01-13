@@ -1,4 +1,5 @@
 import {MissionModel} from './mission.model';
+import {NewsModel} from './news.model';
 
 export class UserModel {
   id: any;
@@ -26,5 +27,5 @@ export class UserModel {
   role: String;
   fonction:String;
   missions: MissionModel[];
-
+  likes: NewsModel[];
 }

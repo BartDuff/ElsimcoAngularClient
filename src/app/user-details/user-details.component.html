@@ -37,14 +37,15 @@
       <mat-card-title>
         {{ user?.nom }} {{ user?.prenom }}
       </mat-card-title>
-      <mat-card-subtitle>
-        Dernière connexion: {{ user?.derniereConnexion | date: 'dd/MM/yyyy, HH:mm' }}
+      <mat-card-subtitle class="identity">
+        <mat-icon class="labels">perm_identity</mat-icon>
+        {{ user?.role == 'ADMIN'?'ADMINISTRATEUR':'UTILISATEUR' }} {{user?.fonction }}
       </mat-card-subtitle>
+<!--      <mat-card-subtitle>-->
+<!--        Dernière connexion: {{ user?.derniereConnexion | date: 'dd/MM/yyyy, HH:mm' }}-->
+<!--      </mat-card-subtitle>-->
     </mat-card-header>
     <mat-card-content fxLayout="column" fxLayoutAlign="space-between start">
-      <p class="identity">
-        <mat-icon class="labels">perm_identity</mat-icon>
-        {{ user?.role == 'ADMIN'?'ADMINISTRATEUR':'UTILISATEUR' }} {{user?.fonction }}</p>
       <p>Date d'inscription:&ensp;  {{ user?.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
       <p>Date d'entrée dans l'entreprise:  &ensp;{{ user?.dateArrivee | date: 'dd/MM/yyyy' }}</p>
       <p class="identity">

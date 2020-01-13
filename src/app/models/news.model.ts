@@ -6,6 +6,7 @@ export class NewsModel {
   contenu: String;
   datePublication: Date;
   auteur: UserModel;
+  likes: UserModel[];
   isPublic: boolean;
   imageJointe: String;
   imageJointeType: String;

@@ -1,0 +1,18 @@
+.mat-button {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
+
+mat-form-field {
+  width: 80%;
+}
+
+textarea {
+  height: 30em;
+}
+
+.mat-icon-button {
+  color: black;
+  margin: 6em;
+}

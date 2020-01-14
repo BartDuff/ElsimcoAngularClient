@@ -538,9 +538,12 @@
               </mat-form-field>
 
               <mat-form-field>
-                <input matInput formControlName="mobiliteGeographique" placeholder="Mobilité géographique: "
-                       name="mobiliteGeographique" id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteFrance"
-                       (change)="updateModel(candidat)">
+                <mat-label>Mobilité géographique:</mat-label>
+                <mat-select formControlName="mobiliteGeographique" id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteFrance"
+                       (selectionChange)="updateModel(candidat)">
+                <mat-option [value]=true>oui</mat-option>
+                <mat-option [value]=false>non</mat-option>
+                </mat-select>
               </mat-form-field>
 
               <mat-form-field>

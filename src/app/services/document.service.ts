@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DocumentModel} from '../models/document.model';
 import {environment} from '../../environments/environment';
 import {UserModel} from '../models/user.model';
+import {ResponseContentType} from '@angular/http';
 
 const API_URL = environment.apiUrl;
 
@@ -49,5 +50,9 @@ export class DocumentService {
 
   sendDocumentByEmail(user:UserModel, document:DocumentModel) {
     return this.http.post(`${API_URL}/emails/${user.id}/${document.id}`, null);
+  }
+
+  openDocument(idRecherche: string): Observable<DocumentModel> {
+    return this.http.get<DocumentModel>(`${API_URL}/documents/${idRecherche}`);
   }
 }

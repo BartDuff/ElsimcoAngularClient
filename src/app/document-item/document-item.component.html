@@ -4,11 +4,15 @@
   <button type="button"
           (click)="downloadDocument()"><i class="material-icons">file_download</i></button>
 </td>
-<td *ngIf="currentUser.role=='ADMIN'">
+<td>
   <button type="button"
-          (click)="deleteDocument()"><i class="material-icons">delete</i></button>
+          (click)="openDocument()"><mat-icon>remove_red_eyes</mat-icon></button>
 </td>
 <td>
   <button type="button"
           (click)="sendDocumentByEmail()"><i class="material-icons">mail</i></button>
+</td>
+<td *ngIf="currentUser.role=='ADMIN'">
+  <button type="button"
+          (click)="deleteDocument()"><i class="material-icons">delete</i></button>
 </td>

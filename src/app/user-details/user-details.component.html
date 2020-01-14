@@ -53,25 +53,19 @@
           {{ user?.metier }}</p>
       <p class="identity">
         <mat-icon class="labels">contact_phone</mat-icon><b class="labels">Téléphone Pro:&ensp;  </b>
-          {{ user?.telPro }}</p>
-      <p>
+          {{ formatTel(user?.telPro) }}</p>
       <p class="identity">
         <mat-icon class="labels">email</mat-icon><b class="labels">Email Pro:&ensp;  </b>
           {{ user?.email }}</p>
-      <p>
       <p class="identity">
         <mat-icon class="labels">home</mat-icon><b class="labels">Adresse Postale:&ensp;  </b>
           {{ user?.adressePostale }}</p>
-      <p>
-      <p>
       <p class="identity">
         <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso:&ensp;  </b>
-          {{ user?.telephone }}</p>
-      <p>
+          {{ formatTel(user?.telephone) }}</p>
       <p class="identity">
       <mat-icon class="labels">mail_outline</mat-icon><b class="labels">Email perso:&ensp;  </b>
           {{ user?.emailPerso }}</p>
-      <p>
       <p>
         <span class="labels">Congés N-1:&ensp; </span>
           {{ user?.cpNMoins1 }}</p>

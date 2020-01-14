@@ -33,4 +33,19 @@ export class UserDetailsComponent implements OnInit {
     );
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
+
+   formatTel(element) {
+    let separator = " ";
+    let newvalue = "";
+    if(element != undefined){
+      for (let i = 0; i < element.length; i++) {
+        if ((i > 0) && (i % 2 == 0)) {
+          newvalue += separator;
+        }
+        newvalue += element.charAt(i);
+      }
+      element = newvalue;
+    }
+    return element;
+  }
 }

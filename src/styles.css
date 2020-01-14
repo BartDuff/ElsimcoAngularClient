@@ -2,6 +2,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+.mat-sidenav-container, .mat-sidenav-content, .mat-tab-body-content {
+  transform: none !important;
+}
+
 .mat-calendar-body-cell-content:hover{
   background-color: orange !important;
   color: black !important;

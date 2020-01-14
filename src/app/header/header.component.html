@@ -37,15 +37,20 @@
         <mat-menu #menu="matMenu" yPosition="below" backdropClass="toolbar-menu">
           <button mat-menu-item [matMenuTriggerFor]="menu2" *ngIf="token">Présence<mat-icon style="color: white">chevron_right</mat-icon></button>
           <mat-menu #menu2="matMenu" xPosition="after" backdropClass="toolbar-menu">
-            <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de Présence</a>
+            <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de présence</a>
             <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token">Mes fiches de présence</a>
             <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role =='ADMIN'"><span matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
           </mat-menu>
           <button mat-menu-item [matMenuTriggerFor]="menu3" *ngIf="token">Congés<mat-icon style="color: white">chevron_right</mat-icon></button>
           <mat-menu #menu3="matMenu" xPosition="after" backdropClass="toolbar-menu">
-            <a mat-menu-item routerLink="/conges" *ngIf="token">Remplir une demande de congés</a>
+            <a mat-menu-item routerLink="/conges" *ngIf="token">Demande de congés</a>
             <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token">Mes congés</a>
-            <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role =='ADMIN'"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Valider les congés</span></a>
+            <button mat-menu-item [matMenuTriggerFor]="menu4" *ngIf="token">Valider les congés<mat-icon style="color: white">chevron_right</mat-icon></button>
+            <mat-menu #menu4="matMenu" xPosition="after" backdropClass="toolbar-menu">
+              <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role =='ADMIN'"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Congés en attente</span></a>
+              <a mat-menu-item *ngIf="token">Congés validés</a>
+            </mat-menu>
+            <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role =='ADMIN'"><span>Planning</span></a>
           </mat-menu>
         </mat-menu>
       </li>

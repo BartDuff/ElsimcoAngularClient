@@ -5,11 +5,11 @@
   <mat-accordion class="example-headers-align">
     <mat-expansion-panel *ngFor="let f of faq" style="margin-bottom: 5px;">
       <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'" style="padding: 3em;">
-        <mat-panel-title style="font-weight: bold;">
+        <mat-panel-title style="font-weight: bold;font-size: 1.5em;text-align: justify;">
           {{ f.question }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <p>{{f.reponse}}</p>
+      <p style="font-size: 1.2em;text-align: justify;padding: 1em;">{{f.reponse}}</p>
       <p *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;"><button type="button"
                  (click)="deleteFaq(f)"><mat-icon>delete</mat-icon></button>
       </p>

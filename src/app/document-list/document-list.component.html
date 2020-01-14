@@ -19,8 +19,9 @@
     <th>Nom du fichier</th>
     <th>Année</th>
     <th>Télécharger</th>
-    <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
+    <th>Ouvrir</th>
     <th>Recevoir par mail</th>
+    <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
   </tr>
   </thead>
   <tbody>
@@ -29,6 +30,7 @@
       (documentSelected)="selectDocument($event)"
       (documentDeleted)="deleteDocument($event)"
       (documentDownloaded)="getDocument($event)"
+      (documentOpened)="openDocument($event)"
       (documentToSend)="sendDocumentByEmail($event)">
   </tr>
   </tbody>

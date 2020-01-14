@@ -8,5 +8,5 @@ td {
   padding: 15em!important;
 }
 tr {
-  border: solid;
+  border: solid 0.2em;
 }

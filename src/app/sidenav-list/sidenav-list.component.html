@@ -17,7 +17,7 @@
     </mat-menu>
     <a mat-menu-item [matMenuTriggerFor]="menu3" *ngIf="token" style="color: white">Congés <mat-icon style="position: relative;left: 2em;color: white;vertical-align: center;">keyboard_arrow_right</mat-icon></a>
     <mat-menu #menu3="matMenu" xPosition="after">
-      <a mat-menu-item routerLink="/conges" *ngIf="token" (click)="onSidenavClose()">Remplir une demande de congés</a>
+      <a mat-menu-item routerLink="/conges" *ngIf="token" (click)="onSidenavClose()">Demande de congés</a>
       <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token" (click)="onSidenavClose()">Mes congés</a>
       <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role=='ADMIN'" (click)="onSidenavClose()"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Valider les congés</span></a>
     </mat-menu>

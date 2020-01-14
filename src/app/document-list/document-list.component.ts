@@ -92,7 +92,7 @@ export class DocumentListComponent implements OnInit {
       (res) => {
         let d : DocumentModel = res ;
         if (d.fileBase64) {
-          let blob = this.base64ToBlob(d.fileBase64, 'application/'+ d.originalFileName.split('.'[2]));
+          let blob = this.base64ToBlob(d.fileBase64, 'application/'+ d.originalFileName.split('.')[2]);
           if(!navigator.userAgent.match('CriOS') || !isSafari) {
             saveAs(blob, d.originalFileName);
           } else {
@@ -106,6 +106,22 @@ export class DocumentListComponent implements OnInit {
         }
       });
   }
+
+  openDocument(documentToOpen: DocumentModel) {
+    this.documentService.openDocument(documentToOpen.id).subscribe(
+      (res) => {
+        let d: DocumentModel = res;
+        if (d.fileBase64) {
+          // let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.'[2]));
+          // let reader = new FileReader();
+          // reader.onload = function (e) {
+          //   window.location.href = reader.result
+          // };
+          // reader.readAsDataURL(blob);
+          window.open("data:application/" + d.originalFileName.split('.')[2]+ ";base64, "+d.fileBase64, '_blank');
+        }
+      });
+      }
 
   sendDocumentByEmail(documentToSend: DocumentModel) {
     this.sending = true;

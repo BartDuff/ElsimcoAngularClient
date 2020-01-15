@@ -1,4 +1,5 @@
 import {UserModel} from './user.model';
+import {ImageModel} from './image.model';
 
 export class NewsModel {
   id: any;
@@ -11,4 +12,5 @@ export class NewsModel {
   imageJointe: String;
   imageJointeType: String;
   rawFile:any;
+  images: ImageModel[];
 }

@@ -48,9 +48,9 @@
             <button mat-menu-item [matMenuTriggerFor]="menu4" *ngIf="token">Valider les congés<mat-icon style="color: white">chevron_right</mat-icon></button>
             <mat-menu #menu4="matMenu" xPosition="after" backdropClass="toolbar-menu">
               <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role =='ADMIN'"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Congés en attente</span></a>
-              <a mat-menu-item *ngIf="token">Congés validés</a>
+              <a mat-menu-item routerLink="/conges/valides" *ngIf="token && currentUser.role =='ADMIN'">Congés validés</a>
             </mat-menu>
-            <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role =='ADMIN'"><span>Planning</span></a>
+            <a mat-menu-item routerLink="/conges/planning" *ngIf="token && currentUser.role =='ADMIN'"><span>Planning</span></a>
           </mat-menu>
         </mat-menu>
       </li>

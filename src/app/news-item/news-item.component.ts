@@ -10,6 +10,7 @@ import {NewsService} from '../services/news.service';
 import {environment} from '../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MissionModel} from '../models/mission.model';
+import {NgxGalleryAnimation, NgxGalleryArrowsComponent, NgxGalleryImage, NgxGalleryImageSize, NgxGalleryOptions} from 'ngx-gallery';
 
 @Component({
   selector: 'app-news-item',
@@ -19,6 +20,8 @@ import {MissionModel} from '../models/mission.model';
 export class NewsItemComponent implements OnInit {
   currentUserSubscription: Subscription;
   currentUser: UserModel;
+  galleryOptions: NgxGalleryOptions[];
+  galleryImages: NgxGalleryImage[];
   sourceImg;
   isLiked: boolean;
   likes : UserModel[];
@@ -43,6 +46,60 @@ export class NewsItemComponent implements OnInit {
     this.authService.emitCurrentUserSubject();
     this.newsService.emitNewsSubject();
     this.getLikes();
+    this.galleryOptions = [
+      {
+        width: '100%',
+        height: '50vh',
+        thumbnailsColumns: 4,
+        imageSize: NgxGalleryImageSize.Contain,
+        imageAnimation: NgxGalleryAnimation.Slide
+      },
+      // max-width 800
+      {
+        breakpoint: 800,
+        width: '100%',
+        height: '200px',
+        imageSize: NgxGalleryImageSize.Contain,
+        imageSwipe: true,
+        imagePercent: 100,
+        thumbnailsPercent: 20,
+        thumbnailsMargin: 20,
+        thumbnailMargin: 20
+      },
+      // max-width 400
+      {
+        breakpoint: 200,
+        preview: true,
+        width: '100%',
+        height: '200px',
+        imageSize: NgxGalleryImageSize.Contain,
+        imageSwipe: true,
+        imagePercent: 100,
+        thumbnailsPercent: 20,
+        thumbnailsMargin: 20,
+        thumbnailMargin: 20.,
+        thumbnailsColumns: 4,
+        imageAnimation: NgxGalleryAnimation.Slide
+      }
+    ];
+
+    this.galleryImages = [
+      {
+        small: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe,
+        medium: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe,
+        big: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe
+      },
+      {
+        small: `/../../${environment.base}/assets/images/resume.jpg`,
+        medium: `/../../${environment.base}/assets/images/resume.jpg`,
+        big: `/../../${environment.base}/assets/images/resume.jpg`
+      },
+      {
+        small: `/../../${environment.base}/assets/images/resume2.png`,
+        medium: `/../../${environment.base}/assets/images/resume2.png`,
+        big: `/../../${environment.base}/assets/images/resume2.png`
+      }
+    ];
   }
 
   getLikes() {

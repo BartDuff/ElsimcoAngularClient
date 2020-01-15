@@ -55,6 +55,7 @@ export class NewsAddComponent implements OnInit {
 
   handleFile(newsitem:NewsModel) {
     let file = this.newsitem.rawFile[0];
+    // this.resizeFiles(file.file);
     if (file) {
       this.fileValid = false;
       let reader = new FileReader();
@@ -84,6 +85,68 @@ export class NewsAddComponent implements OnInit {
       // i--
     }
   }
+
+  // resizeFiles(file: File) {
+  //   let dataurl = null;
+  //   // Create an image
+  //   let img = document.createElement("img");
+  //   // Create a file reader
+  //   let reader = new FileReader();
+  //   // Set the image once loaded into file reader
+  //   reader.onload = function (e) {
+  //     img.src = e.target.result;
+  //
+  //     img.onload = function () {
+  //       let canvas = document.createElement("canvas");
+  //       let ctx = canvas.getContext("2d");
+  //       ctx.drawImage(img, 0, 0);
+  //
+  //       var MAX_WIDTH = 800;
+  //       var MAX_HEIGHT = 600;
+  //       var width = img.width;
+  //       var height = img.height;
+  //
+  //       if (width > height) {
+  //         if (width > MAX_WIDTH) {
+  //           height *= MAX_WIDTH / width;
+  //           width = MAX_WIDTH;
+  //         }
+  //       } else {
+  //         if (height > MAX_HEIGHT) {
+  //           width *= MAX_HEIGHT / height;
+  //           height = MAX_HEIGHT;
+  //         }
+  //       }
+  //       canvas.width = width;
+  //       canvas.height = height;
+  //       let context = canvas.getContext("2d");
+  //       context.drawImage(img, 0, 0, width, height);
+  //
+  //       dataurl = canvas.toDataURL("image/"+file.type);
+  //
+  //       //   // Post the data
+  //       //   let fd = new FormData();
+  //       //   fd.append("name", "some_filename.jpg");
+  //       //   fd.append("image", dataurl);
+  //       //   fd.append("info", "lah_de_dah");
+  //       //   $.ajax({
+  //       //     url: '/ajax_photo',
+  //       //     data: fd,
+  //       //     cache: false,
+  //       //     contentType: false,
+  //       //     processData: false,
+  //       //     type: 'POST',
+  //       //     success: function(data){
+  //       //       $('#form_photo')[0].reset();
+  //       //       location.reload();
+  //       //     }
+  //       //   });
+  //       // } // img.onload
+  //     };
+  //     // Load files into file reader
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
 
   _handleReaderLoadedIE(readerEvt) {
     console.log('_handleReaderLoadedIE');

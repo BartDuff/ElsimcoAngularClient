@@ -30,6 +30,8 @@ import {ValidationFicheComponent} from '../validation-fiche/validation-fiche.com
 import {FaqListComponent} from '../faq-list/faq-list.component';
 import {FaqAddComponent} from '../faq-add/faq-add.component';
 import {FaqEditComponent} from '../faq-edit/faq-edit.component';
+import {CongesValidesComponent} from '../conges-valides/conges-valides.component';
+import {PlanningCongesComponent} from '../planning-conges/planning-conges.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -58,6 +60,8 @@ const routes: Routes = [
   { path: 'presence/validation', canActivate: [AuthGuardService], component: ValidationFicheComponent },
   { path: 'conges', canActivate: [AuthGuardService], component: DemandeCongeComponent },
   { path: 'conges/validation', canActivate: [AuthGuardService], component: ValidationCongesComponent },
+  { path: 'conges/valides', canActivate: [AuthGuardService], component: CongesValidesComponent },
+  { path: 'conges/planning', canActivate: [AuthGuardService], component: PlanningCongesComponent },
   { path: 'faq', canActivate: [AuthGuardService], component: FaqListComponent },
   { path: 'add_faq', canActivate: [AuthGuardService], component: FaqAddComponent },
   { path: 'edit_faq/:id', canActivate: [AuthGuardService], component: FaqEditComponent },

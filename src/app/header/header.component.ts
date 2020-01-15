@@ -62,6 +62,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         this.allRHValidFiches = this.allRHValidFiches.filter(function (value) {
           return value.valideRH === true;
         })
+        this.cdRef.detectChanges();
       }
     );
   }
@@ -73,6 +74,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         this.allRHUnvalidFiches = this.allRHUnvalidFiches.filter(function (value) {
           return value.valideRH === false;
         })
+        this.cdRef.detectChanges();
       }
     );
   }
@@ -84,6 +86,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         this.allRHUnvalidConges = this.allRHUnvalidConges.filter(function (value) {
           return value.valideRH === false;
         })
+        this.cdRef.detectChanges();
       }
     );
   }

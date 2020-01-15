@@ -31,3 +31,7 @@ mat-card-content {
   border: solid grey 1px;
   margin-top: 0.5em;
 }
+
+ngx-gallery /deep/ .ngx-gallery-icon {
+  color: black;
+}

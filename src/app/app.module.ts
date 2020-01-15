@@ -35,6 +35,7 @@ import {CookieLawModule} from 'angular2-cookie-law';
 import { InputFileConfig, InputFileModule } from 'ngx-input-file';
 import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import 'hammerjs';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -92,6 +93,9 @@ import { FaqListComponent } from './faq-list/faq-list.component';
 import { FaqAddComponent } from './faq-add/faq-add.component';
 import { FaqEditComponent } from './faq-edit/faq-edit.component';
 import {FaqService} from './services/faq.service';
+import {NgxGalleryModule} from 'ngx-gallery';
+import { CongesValidesComponent } from './conges-valides/conges-valides.component';
+import { PlanningCongesComponent } from './planning-conges/planning-conges.component';
 const config: InputFileConfig = {};
 
 
@@ -142,7 +146,9 @@ const config: InputFileConfig = {};
     ValidationFicheComponent,
     FaqListComponent,
     FaqAddComponent,
-    FaqEditComponent
+    FaqEditComponent,
+    CongesValidesComponent,
+    PlanningCongesComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -185,7 +191,8 @@ const config: InputFileConfig = {};
     MatTooltipModule,
     MatChipsModule,
     TooltipModule,
-    MatExpansionModule
+    MatExpansionModule,
+    NgxGalleryModule
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService, FaqService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

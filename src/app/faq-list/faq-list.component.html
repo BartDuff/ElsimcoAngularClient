@@ -9,7 +9,7 @@
           {{ f.question }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <p style="font-size: 1.2em;text-align: justify;padding: 1em;">{{f.reponse}}</p>
+      <p style="font-size: 1.2em;text-align: justify;padding: 1em;text-wrap: normal!important;white-space: pre-wrap!important;" [innerHTML]="f.reponse"></p>
       <p *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;"><button type="button"
                  (click)="deleteFaq(f)"><mat-icon>delete</mat-icon></button>
       </p>

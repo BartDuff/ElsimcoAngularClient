@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {NewsService} from '../services/news.service';
@@ -6,6 +6,8 @@ import {NewsModel} from '../models/news.model';
 import {UserModel} from '../models/user.model';
 import {environment} from '../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
+import {InputFileComponent} from 'ngx-input-file';
+import {ImageModel} from '../models/image.model';
 
 @Component({
   selector: 'app-news-add',
@@ -18,10 +20,13 @@ export class NewsAddComponent implements OnInit {
               private newsService: NewsService,
               private sanitizer: DomSanitizer) { }
 
+  @ViewChild(InputFileComponent)
+  private inputFileComponent: InputFileComponent;
   addForm: FormGroup;
   currentUser: UserModel;
   newsitem: NewsModel;
   fileEncoded;
+  selectedFiles;
   fileValid = true;
   filename;
   itemImg;
@@ -44,47 +49,101 @@ export class NewsAddComponent implements OnInit {
 
   onSubmit() {
     let newsitem:NewsModel = this.f;
+    newsitem.images = [];
     newsitem.auteur = this.currentUser;
-    newsitem.imageJointe = this.newsitem.imageJointe;
-    newsitem.imageJointeType = this.newsitem.imageJointeType;
+    // newsitem.imageJointe = this.newsitem.imageJointe;
+    // newsitem.imageJointeType = this.newsitem.imageJointeType;
+    for(let file of this.selectedFiles){
+      let image = new ImageModel();
+        image.imageJointe = file.preview;
+        image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+        image.originalFilename = file.file.name;
+        image.newsAssoc = newsitem;
+        newsitem.images.push(image);
+    }
+    console.log(newsitem);
     this.newsService.addNews(newsitem)
       .subscribe( () => {
         this.router.navigate(['news']);
-      });
+      },
+        (error)=>console.log(error));
   }
+  //
+  // handleFile(newsitem:NewsModel) {
+  //   let file = this.newsitem.rawFile[0];
+  //   // this.resizeFiles(file.file);
+  //   if (file) {
+  //     this.fileValid = false;
+  //     let reader = new FileReader();
+  //     if (reader.readAsBinaryString === undefined) {
+  //       reader.onload = this._handleReaderLoadedIE.bind(this);
+  //       reader.readAsArrayBuffer(file.file);
+  //       reader.onloadend = () => {
+  //         newsitem.imageJointe = this.fileEncoded;
+  //         this.fileEncoded = null;
+  //         newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+  //         this.fileValid = true;
+  //         this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
+  //       };
+  //     } else {
+  //       reader.onload = this._handleReaderLoaded.bind(this);
+  //       reader.readAsBinaryString(file.file);
+  //       reader.onloadend = () => {
+  //         newsitem.imageJointe = this.fileEncoded;
+  //         this.fileEncoded = null;
+  //         newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+  //         this.fileValid = true;
+  //         this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
+  //       };
+  //     }
+  //
+  //     // this.selectedFiles.splice(i,1);
+  //     // i--
+  //   }
+  // }
 
-  handleFile(newsitem:NewsModel) {
-    let file = this.newsitem.rawFile[0];
-    // this.resizeFiles(file.file);
-    if (file) {
-      this.fileValid = false;
-      let reader = new FileReader();
-      if (reader.readAsBinaryString === undefined) {
-        reader.onload = this._handleReaderLoadedIE.bind(this);
-        reader.readAsArrayBuffer(file.file);
-        reader.onloadend = () => {
-          newsitem.imageJointe = this.fileEncoded;
-          this.fileEncoded = null;
-          newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-          this.fileValid = true;
-          this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
-        };
-      } else {
-        reader.onload = this._handleReaderLoaded.bind(this);
-        reader.readAsBinaryString(file.file);
-        reader.onloadend = () => {
-          newsitem.imageJointe = this.fileEncoded;
-          this.fileEncoded = null;
-          newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-          this.fileValid = true;
-          this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
-        };
+  handleFile(newsitem) {
+    let image = null;
+    for (let i = 0; i < this.inputFileComponent.files.length; i++) {
+      image = new ImageModel();
+      let file = this.inputFileComponent.files[i];
+      this.filename = file.file.name;
+      if (file) {
+        let reader = new FileReader();
+        //   if (reader.readAsBinaryString === undefined) {
+        //     reader.onload = this._handleReaderLoadedIE.bind(this);
+        //     reader.readAsArrayBuffer(file.file);
+        //   } else {
+        //     reader.onload = this._handleReaderLoaded.bind(this);
+        //     reader.readAsBinaryString(file.file);
+        //   }
+        // }
+        if (reader.readAsBinaryString === undefined) {
+          reader.onload = this._handleReaderLoadedIE.bind(this);
+          reader.readAsArrayBuffer(file.file);
+          // reader.onloadend = () => {
+          //   image.imageJointe = this.fileEncoded;
+          //   this.fileEncoded = null;
+          //   image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          //   image.originalFilename = this.filename;
+          //   this.fileValid = true;
+          // };
+        } else {
+          reader.onload = this._handleReaderLoaded.bind(this);
+          reader.readAsBinaryString(file.file);
+          // reader.onloadend = () => {
+          //   image.imageJointe = this.fileEncoded;
+          //   this.fileEncoded = null;
+          //   image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          //   image.originalFilename = this.filename;
+          //   this.fileValid = true;
+          // };
+        }
       }
-
-      // this.selectedFiles.splice(i,1);
-      // i--
+      // newsitem.images.push(image);
     }
   }
+
 
   // resizeFiles(file: File) {
   //   let dataurl = null;
@@ -149,7 +208,6 @@ export class NewsAddComponent implements OnInit {
   // }
 
   _handleReaderLoadedIE(readerEvt) {
-    console.log('_handleReaderLoadedIE');
     var bytes = new Uint8Array(readerEvt.target.result);
     var binary = '';
     var length = bytes.byteLength;
@@ -160,7 +218,10 @@ export class NewsAddComponent implements OnInit {
   }
 
   _handleReaderLoaded(readerEvt) {
-    //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileEncoded = btoa(readerEvt.target.result);
+  }
+
+  s(s){
+    JSON.stringify(s)
   }
 }

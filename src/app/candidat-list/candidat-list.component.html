@@ -355,7 +355,7 @@
       </mat-paginator>
       <div style="width: 100vw;overflow: scroll">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-          <ng-container *ngFor="let x of objectKeysFiltered(qCandidatExemple)" [matColumnDef]="x">
+          <ng-container *ngFor="let x of columnsToFilter" [matColumnDef]="x">
             <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
               <mat-form-field style="max-width:10em;text-align: center">
                 <mat-label>{{columnsToDisplay[x]}}</mat-label>
@@ -386,8 +386,8 @@
           <td>
             <mat-icon>remove_red_eye</mat-icon>
           </td>
-          <tr mat-header-row *matHeaderRowDef="objectKeysFiltered(qCandidatExemple)"></tr>
-          <tr mat-row *matRowDef="let row; columns: objectKeysFiltered(qCandidatExemple);"></tr>
+          <tr mat-header-row *matHeaderRowDef="columnsToFilter"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsToFilter;"></tr>
 
         </table>
       </div>

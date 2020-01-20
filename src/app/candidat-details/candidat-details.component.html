@@ -23,7 +23,7 @@
               <div>
                 <label>
                   <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance:"
-                         formControlName="dateNaissance" [(ngModel)]="candidat.dateNaissance"
+                         formControlName="dateNaissance" [value]="candidat.dateNaissance | date: 'dd/MM/yyyy'"
                          (change)="updateModel(candidat)">
                 </label>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -136,7 +136,7 @@
               </mat-checkbox>
               <div>
                 <input matInput formControlName="dateMAJ" placeholder="Date de MAJ: " name="dateMAJ" id="dateMAJ"
-                       [(ngModel)]="candidat.dateMAJ" (change)="updateModel(candidat)" disabled>
+                       [(ngModel)]="candidat.dateMAJ" (ngModelChange)="updateModel(candidat)" disabled>
               </div>
 
               <mat-form-field>
@@ -152,7 +152,7 @@
 
               <mat-form-field>
                 <input matInput formControlName="alerteMAJ" placeholder="Alerte mise à jour: " name="alerteMAJ"
-                       id="alerteMAJ" [(ngModel)]="candidat.alerteMAJ" (change)="updateModel(candidat)" disabled>
+                       id="alerteMAJ" [value]="candidat.alerteMAJ | date: 'dd/MM/yyyy'" (ngModelChange)="updateModel(candidat)" disabled>
               </mat-form-field>
 
               <mat-form-field>
@@ -217,9 +217,11 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <input matInput formControlName="dateDispo" placeholder="Date de disponibilité: " name="dateDispo"
+                  <input matInput readonly [matDatepicker]="picker2" formControlName="dateDispo" placeholder="Date de disponibilité: " name="dateDispo"
                          id="dateDispo" [value]="candidat.dateDispo | date: 'dd/MM/yyyy'"
-                         (change)="updateModel(candidat)">
+                         (ngModelChange)="updateModel(candidat)">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
               </div>
             </mat-card-content>
@@ -547,13 +549,23 @@
               </mat-form-field>
 
               <mat-form-field>
-                <input matInput formControlName="region1" placeholder="Région 1: " name="region1" id="region1"
-                       [(ngModel)]="candidat.region1" (change)="updateModel(candidat)">
+                <mat-label>Région 1 : </mat-label>
+                <mat-select formControlName="region1" [(ngModel)]="candidat.region1"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option *ngFor="let v of listeRegions" [value]="v">{{v}}</mat-option>
+                </mat-select>
               </mat-form-field>
 
+<!--              <mat-form-field>-->
+<!--                <input matInput formControlName="region2" placeholder="Région 2: " name="region2" id="region2"-->
+<!--                       [(ngModel)]="candidat.region2" (change)="updateModel(candidat)">-->
+<!--              </mat-form-field>-->
               <mat-form-field>
-                <input matInput formControlName="region2" placeholder="Région 2: " name="region2" id="region2"
-                       [(ngModel)]="candidat.region2" (change)="updateModel(candidat)">
+                <mat-label>Région 2 : </mat-label>
+                <mat-select formControlName="region2" [(ngModel)]="candidat.region2"
+                            (selectionChange)="updateModel(candidat)">
+                  <mat-option *ngFor="let v of listeRegions" [value]="v">{{v}}</mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
           </mat-card-content>

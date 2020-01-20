@@ -29,7 +29,7 @@
   <div fxFlex fxLayout fxLayoutAlign="flex-end center" fxFlexFill fxHide.lt-md>
     <ul fxLayout fxLayoutGap="15px" fxLayoutGap.lt-xl="5px" fxLayoutGap.lt-lg="1em" class="navigation-items" [ngStyle.lt-xl]="{'font-size.em': 0.6}" [ngStyle.lt-lg]="{'font-size.em': 0.4}">
       <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Rejoindre</a></li>
-      <li><a mat-button routerLink="/login" *ngIf="!token">Connexion</a></li>
+      <li><a mat-button routerLink="/login" *ngIf="!token">S'identifier</a></li>
       <li><a mat-button routerLink="/news" *ngIf="token">Actualités</a></li>
       <li><a mat-button routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profil</a></li>
       <li>
@@ -39,26 +39,26 @@
           <mat-menu #menu2="matMenu" xPosition="after" backdropClass="toolbar-menu">
             <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de présence</a>
             <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token">Mes fiches de présence</a>
-            <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role =='ADMIN'"><span matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
+            <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')"><span matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
           </mat-menu>
           <button mat-menu-item [matMenuTriggerFor]="menu3" *ngIf="token">Congés<mat-icon style="color: white">chevron_right</mat-icon></button>
           <mat-menu #menu3="matMenu" xPosition="after" backdropClass="toolbar-menu">
             <a mat-menu-item routerLink="/conges" *ngIf="token">Demande de congés</a>
             <a mat-menu-item routerLink="/users/{{ currentUser.id}}/conges" *ngIf="token">Mes congés</a>
-            <button mat-menu-item [matMenuTriggerFor]="menu4" *ngIf="token">Valider les congés<mat-icon style="color: white">chevron_right</mat-icon></button>
+            <button mat-menu-item [matMenuTriggerFor]="menu4" *ngIf="token && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Valider les congés<mat-icon style="color: white">chevron_right</mat-icon></button>
             <mat-menu #menu4="matMenu" xPosition="after" backdropClass="toolbar-menu">
-              <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role =='ADMIN'"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Congés en attente</span></a>
-              <a mat-menu-item routerLink="/conges/valides" *ngIf="token && currentUser.role =='ADMIN'">Congés validés</a>
+              <a mat-menu-item routerLink="/conges/validation" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')"><span matBadge="{{allRHUnvalidConges?.length}}" matBadgeOverlap="true">Congés en attente</span></a>
+              <a mat-menu-item routerLink="/conges/valides" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Congés validés</a>
             </mat-menu>
-            <a mat-menu-item routerLink="/conges/planning" *ngIf="token && currentUser.role =='ADMIN'"><span>Planning</span></a>
+            <a mat-menu-item routerLink="/conges/planning" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')"><span>Planning</span></a>
           </mat-menu>
         </mat-menu>
       </li>
       <li><a mat-button disabled *ngIf="token" style="color: dimgray" matTooltip="Ce lien n'est pas encore accessible">Missions</a></li>
       <li><a mat-button routerLink="/documents" *ngIf="token">Espace Téléchargement</a></li>
       <li><a mat-button routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
-      <li><a mat-button routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'">Candidatures spontanées</a></li>
-      <li><a mat-button routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'">Candidathèque</a></li>
+      <li><a mat-button routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN' && (currentUser.fonction=='COMMERCIAL' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Candidatures spontanées</a></li>
+      <li><a mat-button routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN' && (currentUser.fonction=='COMMERCIAL' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Candidathèque</a></li>
       <li><a mat-button routerLink="/faq" *ngIf="token">FAQ</a></li>
       <li><a mat-button (click)="onLogout()" *ngIf="token" style="color: white">Déconnexion</a></li>
     </ul>

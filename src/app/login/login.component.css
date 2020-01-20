@@ -23,3 +23,27 @@ mat-form-field {
   margin: auto;
   justify-content: center;
 }
+
+mat-card {
+  box-shadow: none!important;
+  background-color: transparent;
+}
+
+@media only screen and (min-width: 768px) {
+  mat-card-title {
+    position: relative;
+    top: -466px;
+    background-color: white;
+    font-size: 3em;
+    width: 20%;
+    margin: auto;
+  }
+
+  mat-card-content {
+    width: 50vw;
+    position: relative;
+    top: -436px;
+    margin: auto;
+  }
+}
+

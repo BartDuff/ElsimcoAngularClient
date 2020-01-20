@@ -34,9 +34,9 @@
   <div mat-card-image>
     <img class="login-image" [src]=img alt="user bg">
   </div>
-<mat-card-title>Connexion</mat-card-title>
+<mat-card-title>Bienvenue</mat-card-title>
 <form [formGroup]="loginForm" (ngSubmit)="login()">
-  <mat-card-content>
+  <mat-card-content s>
     <div fxLayout="column" fxLayoutAlign="space-around center">
       <mat-error *ngIf="message">
         {{message}}

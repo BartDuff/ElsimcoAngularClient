@@ -52,7 +52,11 @@ export class NewsItemComponent implements OnInit {
         height: '50vh',
         thumbnailsColumns: 4,
         imageSize: NgxGalleryImageSize.Contain,
-        imageAnimation: NgxGalleryAnimation.Slide
+        imageAnimation: NgxGalleryAnimation.Slide,
+        imagePercent: 100,
+        thumbnailsPercent: 10,
+        thumbnailsMargin: 10,
+        thumbnailMargin: 10,
       },
       // max-width 800
       {
@@ -62,9 +66,10 @@ export class NewsItemComponent implements OnInit {
         imageSize: NgxGalleryImageSize.Contain,
         imageSwipe: true,
         imagePercent: 100,
-        thumbnailsPercent: 20,
+        thumbnailsPercent: 10,
         thumbnailsMargin: 20,
-        thumbnailMargin: 20
+        thumbnailMargin: 20,
+        thumbnailsColumns: 4,
       },
       // max-width 400
       {
@@ -75,7 +80,7 @@ export class NewsItemComponent implements OnInit {
         imageSize: NgxGalleryImageSize.Contain,
         imageSwipe: true,
         imagePercent: 100,
-        thumbnailsPercent: 20,
+        thumbnailsPercent: 10,
         thumbnailsMargin: 20,
         thumbnailMargin: 20.,
         thumbnailsColumns: 4,
@@ -88,17 +93,17 @@ export class NewsItemComponent implements OnInit {
         small: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe,
         medium: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe,
         big: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe
-      },
-      {
-        small: `/../../${environment.base}/assets/images/resume.jpg`,
-        medium: `/../../${environment.base}/assets/images/resume.jpg`,
-        big: `/../../${environment.base}/assets/images/resume.jpg`
-      },
-      {
-        small: `/../../${environment.base}/assets/images/resume2.png`,
-        medium: `/../../${environment.base}/assets/images/resume2.png`,
-        big: `/../../${environment.base}/assets/images/resume2.png`
       }
+      // {
+      //   small: `/../../${environment.base}/assets/images/resume.jpg`,
+      //   medium: `/../../${environment.base}/assets/images/resume.jpg`,
+      //   big: `/../../${environment.base}/assets/images/resume.jpg`
+      // },
+      // {
+      //   small: `/../../${environment.base}/assets/images/resume2.png`,
+      //   medium: `/../../${environment.base}/assets/images/resume2.png`,
+      //   big: `/../../${environment.base}/assets/images/resume2.png`
+      // }
     ];
   }
 

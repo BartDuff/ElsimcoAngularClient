@@ -19,7 +19,7 @@
         <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" fileLimit=1 [(ngModel)]="newsitem.rawFile" (ngModelChange)="handleFile(newsitem)" [ngModelOptions]="{standalone: true}"></input-file>
         <img [src]="itemImg" alt="" style="width: 25%;height: 25%; margin-top: 2em;margin-bottom: 2em;"/>
         <mat-card-actions fxFlexAlign="center">
-          <button mat-icon-button routerLink="/news">RETOUR <mat-icon>arrow_back</mat-icon></button>
+          <button mat-icon-button routerLink="/faq">RETOUR <mat-icon>arrow_back</mat-icon></button>
           <button mat-button>Modifier</button>
         </mat-card-actions>
       </div>

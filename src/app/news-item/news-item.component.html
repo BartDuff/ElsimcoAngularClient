@@ -14,8 +14,9 @@
       <div style="font-weight: bold;vertical-align: center">{{newsitem.titre}}</div>
     </mat-card-title>
   </mat-card-header>
-<!--  <img mat-card-image [src]="sourceImg" alt="" class="newsimage">-->
-  <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery" style="margin-top: 2em;"></ngx-gallery>
+  <img mat-card-image *ngIf="galleryImages.length == 1 && !newsitem.isAvatar" [src]="sourceImg" alt="" class="newsimage">
+  <img mat-card-image *ngIf="galleryImages.length == 1 && newsitem.isAvatar" [src]="sourceImg" alt="" class="newsimage">
+  <ngx-gallery *ngIf="galleryImages.length>1" [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery" style="margin-top: 2em;"></ngx-gallery>
 <!--  <iframe width="560" height="500" src="https://www.youtube.com/embed/vFViy4-w3nY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
   <mat-card-content>
     <p [innerHTML]="newsitem.contenu">

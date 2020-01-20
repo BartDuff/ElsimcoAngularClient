@@ -7,10 +7,11 @@ export class NewsModel {
   contenu: String;
   datePublication: Date;
   auteur: UserModel;
-  likes: UserModel[];
+  likes: UserModel[] = [];
   isPublic: boolean;
   imageJointe: String;
   imageJointeType: String;
+  isAvatar;
   rawFile:any;
-  images: ImageModel[];
+  images: ImageModel[] = [];
 }

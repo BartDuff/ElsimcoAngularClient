@@ -64,6 +64,9 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'creePar':'Créé par',
     'dateCreation':'Date de création',
     'dateMAJ':'Date de mise à jour',
+    'dateCandidature': 'Date de candidature',
+    'fileName':'Nom du fichier',
+    'fileType':'Type de fichier',
     'majPar':'Mis à jour par',
     'alerteMAJ':'Alerte des mises à jour',
     'commentairesCV':'Commentaires du CV',
@@ -123,18 +126,6 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'id',
     'nom',
     'prenom',
-    'anglais',
-    'italien',
-    'allemand',
-    'espagnol',
-    'autreLangue',
-    'niveauAutrelangue',
-    'regionsFrance',
-    'statut',
-    'sourceCv',
-    'commentairesCV',
-    'experience',
-    'tags',
     'domaine1',
     'domaine2',
     'domaine3',
@@ -144,19 +135,32 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'outils1',
     'outils2',
     'outils3',
-    'region1',
-    'region2',
+    'experience',
+    'enPoste',
+    'etatRecherches',
+    'contrat',
+    'mobiliteGeographique',
     'mobiliteParis',
     'mobiliteFrance',
     'mobiliteEurope',
     'mobiliteIntl',
-    'enPoste',
-    'delai',
+    'regionsFrance',
+    'region1',
+    'region2',
     'fourchetteSalariale',
-    'fonctionEmployeurActuel',
-    'nombreAnneesExperiences',
-    'etatRecherches',
-    'mobiliteGeographique'];
+    'anglais',
+    'italien',
+    'allemand',
+    'espagnol',
+    'autreLangue',
+    'niveauAutrelangue',
+    'tags',
+    // 'delai',
+    // 'fonctionEmployeurActuel',
+    // 'nombreAnneesExperiences',
+    // 'sourceCv',
+    // 'commentairesCV'
+  ];
 
 
   constructor(private candidatService: CandidatService,
@@ -247,13 +251,13 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     return ok;
   }
 
-  objectKeysFiltered(o){
-    let ok = [];
-    for (let k of Object.keys(o))
-      if (this.columnsToFilter.indexOf(k) !=-1)
-        ok.push(k);
-    return ok;
-  }
+  // objectKeysFiltered(o){
+  //   let ok = new Map();
+  //   for (let k of Object.keys(o))
+  //     if (this.columnsToFilter.indexOf(k) !=-1)
+  //       ok.set(this.columnsToFilter[k], o[k]);
+  //   return Array.from(ok.keys());
+  // }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();

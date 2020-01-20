@@ -51,24 +51,24 @@ export class DocumentListComponent implements OnInit {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
-      (data)=>{
-        if(data) {
+      (data) => {
+        if (data) {
           this.documentService.deleteDocument(documentToDelete).subscribe(
-            ()=> {
+            () => {
               this.documents.splice(this.documents.indexOf(documentToDelete), 1);
             }
           );
         }
       }
-    )
+    );
   }
 
   selectDocument(documentSelected: DocumentModel) {
     this.selectedDocument = documentSelected;
   }
 
-  public base64ToBlob(b64Data, contentType='', sliceSize=512) {
-    b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
+  public base64ToBlob(b64Data, contentType= '', sliceSize= 512) {
+    b64Data = b64Data.replace(/\s/g, ''); // IE compatibility...
     let byteCharacters = atob(b64Data);
     let byteArrays = [];
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
@@ -138,7 +138,6 @@ export class DocumentListComponent implements OnInit {
   }
 
   handleFile(){
-    console.log("handleFile");
     for(let i=0; i < this.inputFileComponent.files.length;i++) {
       var file = this.inputFileComponent.files[i];
       console.log (file.file.name,i);

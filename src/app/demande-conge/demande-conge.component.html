@@ -84,14 +84,15 @@
                   Sélectionnez les dates de congés/absences à poser sur le calendrier joint. Pour changer de mois, sélectionnez le mois correspondant avec les flèches.
                 </div>
                 <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" style="margin: 3em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;" class="boxes">
-                  <div *ngIf="isArray(dayOff)">
+                  <div *ngIf="isArray(dayOff)" style="box-shadow: none!important;">
                     <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0" class="champs">
                       <mat-form-field>
                         <span class="prefix" matPrefix>Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
                         <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="Type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
                           <mat-option *ngFor="let absence of absTypes" [value]="absence">
-                            <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>
-                            <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> {{absence == 'RTT'?absence + ' (h)': absence}}
+<!--                            <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
+<!--                            <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> -->
+                            {{absence == 'RTT'?absence + ' (h)': absence}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
@@ -121,8 +122,9 @@
                       <span class="prefix" matPrefix>{{dayOff.date}}</span>
                       <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="autoFillType(dayOff)">
                         <mat-option *ngFor="let absence of absTypes" [value]="absence">
-                          <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>
-                          <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> {{absence == 'RTT'?absence + ' (h)': absence}}
+<!--                          <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
+<!--                          <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> -->
+                          {{absence == 'RTT'?absence + ' (h)': absence}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>

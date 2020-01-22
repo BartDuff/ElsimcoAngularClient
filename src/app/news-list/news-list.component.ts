@@ -29,10 +29,7 @@ export class NewsListComponent implements OnInit {
   getNews() {
     this.newsService.getNews().subscribe(
       (data) => {
-        for(let d of data){
-          d.isAvatar = true;
-        }
-        this.news = data.filter((a)=>!a.isPublic);
+        this.news = data.filter((a)=>!a.public);
         this.loading=false;
       }
     );

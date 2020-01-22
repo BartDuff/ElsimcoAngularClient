@@ -42,7 +42,7 @@ export class NewsItemComponent implements OnInit {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
       }
     );
-    this.sourceImg = this.newsitem.imageJointe == '' || this.newsitem.imageJointe == null?'': this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64, '+ this.newsitem.imageJointe);
+    // this.sourceImg = this.newsitem.imageJointe == '' || this.newsitem.imageJointe == null?'': this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64, '+ this.newsitem.imageJointe);
     this.authService.emitCurrentUserSubject();
     this.newsService.emitNewsSubject();
     this.getLikes();
@@ -88,23 +88,15 @@ export class NewsItemComponent implements OnInit {
       }
     ];
 
-    this.galleryImages = [
-      {
-        small: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe,
-        medium: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe,
-        big: 'data:image/' + this.newsitem.imageJointeType.toLowerCase() + ';base64,'+ this.newsitem.imageJointe
-      }
-      // {
-      //   small: `/../../${environment.base}/assets/images/resume.jpg`,
-      //   medium: `/../../${environment.base}/assets/images/resume.jpg`,
-      //   big: `/../../${environment.base}/assets/images/resume.jpg`
-      // },
-      // {
-      //   small: `/../../${environment.base}/assets/images/resume2.png`,
-      //   medium: `/../../${environment.base}/assets/images/resume2.png`,
-      //   big: `/../../${environment.base}/assets/images/resume2.png`
-      // }
-    ];
+    this.galleryImages = [];
+    for(let img of this.newsitem.images){
+      let item =       {
+        small: 'data:image/' + img.imageJointeType.toLowerCase() + ';base64,'+ img.imageJointe,
+        medium: 'data:image/' + img.imageJointeType.toLowerCase() + ';base64,'+ img.imageJointe,
+        big: 'data:image/' + img.imageJointeType.toLowerCase() + ';base64,'+ img.imageJointe
+      };
+      this.galleryImages.push(item);
+    }
   }
 
   getLikes() {

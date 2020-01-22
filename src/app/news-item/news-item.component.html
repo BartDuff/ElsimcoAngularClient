@@ -11,15 +11,15 @@
 <mat-card style="border-radius: 15px;">
   <mat-card-header>
     <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
-      <div style="font-weight: bold;vertical-align: center">{{newsitem.titre}}</div>
+      <div style="font-weight: bold;vertical-align: center">{{newsitem?.titre}}</div>
     </mat-card-title>
   </mat-card-header>
-  <img mat-card-image *ngIf="galleryImages.length == 1 && !newsitem.isAvatar" [src]="sourceImg" alt="" class="newsimage">
-  <img mat-card-image *ngIf="galleryImages.length == 1 && newsitem.isAvatar" [src]="sourceImg" alt="" class="newsimage">
+  <img mat-card-image *ngIf="galleryImages.length == 1 && !newsitem.avatar" [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem?.images[0].imageJointeType.toLowerCase() + ';base64, '+ newsitem?.images[0].imageJointe)" alt="" class="newsimage">
+  <img mat-card-image *ngIf="galleryImages.length == 1 && newsitem.avatar" [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem?.images[0].imageJointeType.toLowerCase() + ';base64, '+ newsitem?.images[0].imageJointe)" alt="" class="newsavatar">
   <ngx-gallery *ngIf="galleryImages.length>1" [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery" style="margin-top: 2em;"></ngx-gallery>
 <!--  <iframe width="560" height="500" src="https://www.youtube.com/embed/vFViy4-w3nY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
   <mat-card-content>
-    <p [innerHTML]="newsitem.contenu">
+    <p [innerHTML]="newsitem?.contenu">
     </p>
   </mat-card-content>
   <mat-card-actions style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
@@ -29,5 +29,5 @@
   </button>
   <span *ngIf="likes?.length >0"> {{likes?.length}} {{ likes?.length <=1?'personne a aimé':'personnes ont aimé'}}</span>
 </mat-card-actions>
-  <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publié le {{newsitem.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>par {{ newsitem.auteur.prenom }} {{ newsitem.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button></mat-card-subtitle>
+  <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publié le {{newsitem?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>par {{ newsitem?.auteur.prenom }} {{ newsitem?.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button></mat-card-subtitle>
 </mat-card>

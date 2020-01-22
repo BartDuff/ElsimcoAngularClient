@@ -32,8 +32,19 @@ mat-form-field{
 md-input-container{
   margin-bottom: -1em!important;
 }
+
 ::ng-deep  .mat-list .mat-list-item{
   height:initial!important;
+}
+
+::ng-deep .input-file-container .file-container{
+  display: block;
+  justify-content: flex-end!important;
+}
+
+.input-file-container .image-preview {
+  position: relative!important;
+  height: 80%!important;
 }
 
 /* for sidenav to take a whole page */

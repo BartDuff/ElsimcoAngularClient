@@ -8,10 +8,10 @@ export class NewsModel {
   datePublication: Date;
   auteur: UserModel;
   likes: UserModel[] = [];
-  isPublic: boolean;
-  imageJointe: String;
-  imageJointeType: String;
-  isAvatar;
+  public: boolean;
+  // imageJointe: String;
+  // imageJointeType: String;
+  avatar;
   rawFile:any;
   images: ImageModel[] = [];
 }

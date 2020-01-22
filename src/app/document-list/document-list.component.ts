@@ -152,7 +152,7 @@ export class DocumentListComponent implements OnInit {
           reader.onload = this._handleReaderLoaded.bind(this);
           reader.readAsBinaryString(file.file);
         }
-        this.selectedFiles.splice(i,1)
+        this.selectedFiles.splice(i,1);
         i--
       }
     }
@@ -169,8 +169,6 @@ export class DocumentListComponent implements OnInit {
     this.documentService.uploadDocument(btoa(binary), this.filename);
   }
   _handleReaderLoaded(readerEvt) {
-console.log(readerEvt)
-    console.log("_handleReaderLoaded");
     console.log(this.s(this.selectedFiles));
     this.documentService.uploadDocument(btoa(readerEvt.target.result), this.filename).subscribe(
       ()=>{this.getDocuments();

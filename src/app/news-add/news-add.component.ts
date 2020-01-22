@@ -28,6 +28,7 @@ export class NewsAddComponent implements OnInit {
   fileEncoded;
   selectedFiles;
   fileValid = true;
+  loading = false;
   filename;
   itemImg;
 
@@ -42,12 +43,14 @@ export class NewsAddComponent implements OnInit {
       id: [],
       titre: ['', Validators.required],
       contenu: ['', Validators.required],
-      isPublic: ['', Validators.required]
+      isPublic: ['', Validators.required],
+      isAvatar:['']
     });
 
   }
 
   onSubmit() {
+    this.loading = true;
     let newsitem:NewsModel = this.f;
     newsitem.images = [];
     newsitem.auteur = this.currentUser;
@@ -55,15 +58,15 @@ export class NewsAddComponent implements OnInit {
     // newsitem.imageJointeType = this.newsitem.imageJointeType;
     for(let file of this.selectedFiles){
       let image = new ImageModel();
-        image.imageJointe = file.preview;
         image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+        image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64, ").length);
         image.originalFilename = file.file.name;
-        image.newsAssoc = newsitem;
+        // image.newsAssoc = newsitem;
         newsitem.images.push(image);
     }
-    console.log(newsitem);
     this.newsService.addNews(newsitem)
-      .subscribe( () => {
+      .subscribe( (data) => {
+        this.loading = false;
         this.router.navigate(['news']);
       },
         (error)=>console.log(error));

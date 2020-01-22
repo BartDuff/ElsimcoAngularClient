@@ -5,6 +5,6 @@ export class ImageModel {
   imageJointe: String;
   imageJointeType: String;
   originalFilename: String;
-  newsAssoc: NewsModel;
+  // newsAssoc: NewsModel;
   rawFile:any;
 }

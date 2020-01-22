@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="!loading">
   <mat-card-title>Publier une actualité</mat-card-title>
     <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
       <mat-card-content>
@@ -16,10 +16,9 @@
         <textarea matInput formControlName="contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..."
                   name="contenu" id="contenu"></textarea>
         </mat-form-field>
-        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(newsitem)" (deletedFile)="deleteFile($event)" [ngModelOptions]="{standalone: true}" fileLimit="99"></input-file>
-        <img [src]="itemImg" alt="" style="width: 25%;height: 25%; margin-top: 2em;margin-bottom: 2em;"/>
-        <mat-checkbox formControlName="isPublic" name="isAvatar" id="isAvatar">Cette image est un avatar</mat-checkbox>
-        <mat-checkbox formControlName="isPublic" name="isPublic" id="isPublic">Rendre cette publication publique?</mat-checkbox>
+        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(newsitem)" [ngModelOptions]="{standalone: true}" fileLimit="99"></input-file>
+        <mat-checkbox formControlName="isAvatar" name="isAvatar" id="isAvatar" [checked]="newsitem.avatar" (change)="newsitem.avatar = $event.checked.valueOf()">Cette image est un avatar</mat-checkbox>
+        <mat-checkbox formControlName="isPublic" name="isPublic" id="isPublic" [checked]="newsitem.public" (change)="newsitem.public = $event.checked.valueOf()">Rendre cette publication publique?</mat-checkbox>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/news">RETOUR <mat-icon>arrow_back</mat-icon></button>
           <button mat-button>Publier</button>
@@ -28,3 +27,10 @@
       </mat-card-content>
     </form>
 </mat-card>
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="loading"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>

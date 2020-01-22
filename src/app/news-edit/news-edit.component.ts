@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MissionService} from '../services/mission.service';
@@ -7,6 +7,8 @@ import {NewsService} from '../services/news.service';
 import {UserModel} from '../models/user.model';
 import {NewsModel} from '../models/news.model';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ImageModel} from '../models/image.model';
+import {InputFileComponent} from 'ngx-input-file';
 
 @Component({
   selector: 'app-news-edit',
@@ -21,12 +23,16 @@ export class NewsEditComponent implements OnInit {
               private newsService: NewsService,
               private sanitizer: DomSanitizer) { }
 
+  @ViewChild(InputFileComponent)
+  private inputFileComponent: InputFileComponent;
   editForm: FormGroup;
   currentUser: UserModel;
   newsitem: NewsModel;
+  selectedFiles;
   fileEncoded;
   fileValid = true;
   filename;
+  loading = false;
   itemImg;
 
   ngOnInit() {
@@ -35,60 +41,86 @@ export class NewsEditComponent implements OnInit {
       id: [],
       titre: ['', Validators.required],
       contenu: ['', Validators.required],
+      isPublic: ['', Validators.required],
+      isAvatar:['']
     });
     this.route.params.subscribe(
       params => this.newsService.getSingleNews(params['id']).subscribe(
         data => {
           this.newsitem = data;
-          this.newsitem.rawFile = [];
-          if(data.imageJointe != null){
-            this.newsitem.rawFile.push({'file' : new File([this.base64ToBlob(data.imageJointe)],'exemple.'+data.imageJointeType, { type: 'image/'+data.imageJointeType })});
+          this.selectedFiles = [];
+          if(data.images.length>0){
+            for(let img of data.images){
+              this.selectedFiles.push({'file' : new File([this.base64ToBlob(img.imageJointe)],""+img.originalFilename, { type: 'image/'+img.imageJointeType })});
+            }
           }
           this.editForm.controls.id.setValue(data.id);
           this.editForm.controls.contenu.setValue(data.contenu);
           this.editForm.controls.titre.setValue(data.titre);
+          this.editForm.controls.isPublic.setValue(data.public);
+          this.editForm.controls.isAvatar.setValue(data.avatar);
         }
       )
     );
   }
 
   onSubmit() {
+    this.loading = true;
     this.newsitem.auteur = this.currentUser;
+    this.newsitem.images = [];
+    for(let file of this.selectedFiles){
+      let image = new ImageModel();
+      image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+      image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64,").length);
+      image.originalFilename = file.file.name;
+      this.newsitem.images.push(image);
+    }
     this.newsService.editNews(this.newsitem)
       .subscribe( data => {
+        this.loading = false;
         this.router.navigate(['news']);
       });
   }
 
   handleFile(newsitem:NewsModel) {
-    let file = this.newsitem.rawFile[0];
-    if (file) {
-      this.fileValid = false;
-      let reader = new FileReader();
-      if (reader.readAsBinaryString === undefined) {
-        reader.onload = this._handleReaderLoadedIE.bind(this);
-        reader.readAsArrayBuffer(file.file);
-        reader.onloadend = () => {
-          newsitem.imageJointe = this.fileEncoded;
-          this.fileEncoded = null;
-          newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-          this.fileValid = true;
-          this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
-        };
-      } else {
-        reader.onload = this._handleReaderLoaded.bind(this);
-        reader.readAsBinaryString(file.file);
-        reader.onloadend = () => {
-          newsitem.imageJointe = this.fileEncoded;
-          this.fileEncoded = null;
-          newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-          this.fileValid = true;
-          this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
-        };
+    let image = null;
+    for (let i = 0; i < this.inputFileComponent.files.length; i++) {
+      image = new ImageModel();
+      let file = this.inputFileComponent.files[i];
+      this.filename = file.file.name;
+      if (file) {
+        let reader = new FileReader();
+        //   if (reader.readAsBinaryString === undefined) {
+        //     reader.onload = this._handleReaderLoadedIE.bind(this);
+        //     reader.readAsArrayBuffer(file.file);
+        //   } else {
+        //     reader.onload = this._handleReaderLoaded.bind(this);
+        //     reader.readAsBinaryString(file.file);
+        //   }
+        // }
+        if (reader.readAsBinaryString === undefined) {
+          reader.onload = this._handleReaderLoadedIE.bind(this);
+          reader.readAsArrayBuffer(file.file);
+          // reader.onloadend = () => {
+          //   image.imageJointe = this.fileEncoded;
+          //   this.fileEncoded = null;
+          //   image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          //   image.originalFilename = this.filename;
+          //   this.fileValid = true;
+          // };
+        } else {
+          reader.onload = this._handleReaderLoaded.bind(this);
+          reader.readAsBinaryString(file.file);
+          // reader.onloadend = () => {
+          //   image.imageJointe = this.fileEncoded;
+          //   this.fileEncoded = null;
+          //   image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          //   image.originalFilename = this.filename;
+          //   this.fileValid = true;
+          // };
+        }
       }
-
-      // this.selectedFiles.splice(i,1);
-      // i--
+      // newsitem.images.push(image);
     }
   }
 

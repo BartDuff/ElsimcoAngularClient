@@ -134,6 +134,7 @@ export class NewsAddComponent implements OnInit {
         } else {
           reader.onload = this._handleReaderLoaded.bind(this);
           reader.readAsBinaryString(file.file);
+
           // reader.onloadend = () => {
           //   image.imageJointe = this.fileEncoded;
           //   this.fileEncoded = null;

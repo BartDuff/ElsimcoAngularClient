@@ -16,7 +16,7 @@
         <textarea matInput formControlName="contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..."
                   name="contenu" id="contenu"></textarea>
         </mat-form-field>
-        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(newsitem)" [ngModelOptions]="{standalone: true}" fileLimit="99"></input-file>
+        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(newsitem)" [ngModelOptions]="{standalone: true}" fileLimit="99" sizeLimit="5"></input-file>
         <mat-checkbox formControlName="isAvatar" name="isAvatar" id="isAvatar" [checked]="newsitem.avatar" (change)="newsitem.avatar = $event.checked.valueOf()">Cette image est un avatar</mat-checkbox>
         <mat-checkbox formControlName="isPublic" name="isPublic" id="isPublic" [checked]="newsitem.public" (change)="newsitem.public = $event.checked.valueOf()">Rendre cette publication publique?</mat-checkbox>
         <mat-card-actions fxFlexAlign="center">

@@ -29,6 +29,7 @@ export class NewsItemComponent implements OnInit {
   @Input() newsitem: NewsModel;
   @Output() newsSelected = new EventEmitter<NewsModel>();
   @Output() newsToDeleteInList = new EventEmitter<NewsModel>();
+  @Output() newsToDelete = new EventEmitter<NewsModel>();
 
   constructor(private newsService: NewsService,
               private userService: UserService,
@@ -54,7 +55,7 @@ export class NewsItemComponent implements OnInit {
         imageSize: NgxGalleryImageSize.Contain,
         imageAnimation: NgxGalleryAnimation.Slide,
         imagePercent: 100,
-        thumbnailsPercent: 10,
+        thumbnailsPercent: 20,
         thumbnailsMargin: 10,
         thumbnailMargin: 10,
       },
@@ -66,7 +67,7 @@ export class NewsItemComponent implements OnInit {
         imageSize: NgxGalleryImageSize.Contain,
         imageSwipe: true,
         imagePercent: 100,
-        thumbnailsPercent: 10,
+        thumbnailsPercent: 20,
         thumbnailsMargin: 20,
         thumbnailMargin: 20,
         thumbnailsColumns: 4,
@@ -80,7 +81,7 @@ export class NewsItemComponent implements OnInit {
         imageSize: NgxGalleryImageSize.Contain,
         imageSwipe: true,
         imagePercent: 100,
-        thumbnailsPercent: 10,
+        thumbnailsPercent: 20,
         thumbnailsMargin: 20,
         thumbnailMargin: 20.,
         thumbnailsColumns: 4,
@@ -116,6 +117,10 @@ export class NewsItemComponent implements OnInit {
   deleteNewsFromList() {
     this.newsToDeleteInList.emit(this.newsitem);
     this.getLikes();
+  }
+
+  deleteNews(){
+      this.newsToDelete.emit(this.newsitem);
   }
 
   getPrenoms(list: UserModel[]): String{

@@ -6,6 +6,7 @@
                  [newsitem]="newsitem"
                  (newsSelected)="addNewsToList($event)"
                  (newsToDeleteInList)="deleteNewsFromList($event)"
+                 (newsToDelete)="deleteNews($event)"
                  class="news-card"></app-news-item>
 </div>
 <div style="display: flex; justify-content: center; align-items: center">

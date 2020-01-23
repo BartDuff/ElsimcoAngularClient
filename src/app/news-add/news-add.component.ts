@@ -8,6 +8,7 @@ import {environment} from '../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {InputFileComponent} from 'ngx-input-file';
 import {ImageModel} from '../models/image.model';
+import * as EXIF from 'exif-js';
 
 @Component({
   selector: 'app-news-add',
@@ -31,6 +32,10 @@ export class NewsAddComponent implements OnInit {
   loading = false;
   filename;
   itemImg;
+  typeMatch ={
+    'jpeg':'jpg',
+    'png':'png'
+  };
 
   get f() {
     return this.addForm.value;
@@ -51,59 +56,61 @@ export class NewsAddComponent implements OnInit {
 
   onSubmit() {
     this.loading = true;
-    let newsitem:NewsModel = this.f;
+    let newsitem: NewsModel = this.f;
     newsitem.images = [];
     newsitem.auteur = this.currentUser;
     // newsitem.imageJointe = this.newsitem.imageJointe;
     // newsitem.imageJointeType = this.newsitem.imageJointeType;
-    for(let file of this.selectedFiles){
+    for (let file of this.selectedFiles) {
       let image = new ImageModel();
-        image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-        image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64, ").length);
-        image.originalFilename = file.file.name;
-        // image.newsAssoc = newsitem;
-        newsitem.images.push(image);
+      image.imageJointeType = this.typeMatch[file.file.name.split('.')[file.file.name.split('.').length - 1]];
+      image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64,").length);
+      image.originalFilename = file.file.name;
+      // image.newsAssoc = newsitem;
+      newsitem.images.push(image);
     }
-    this.newsService.addNews(newsitem)
-      .subscribe( (data) => {
-        this.loading = false;
-        this.router.navigate(['news']);
-      },
-        (error)=>console.log(error));
+    newsitem.avatar = this.newsitem.avatar;
+    newsitem.public = this.newsitem.public;
+      this.newsService.addNews(newsitem)
+        .subscribe( (data) => {
+          this.loading = false;
+          this.router.navigate(['news']);
+        },
+          (error)=>console.log(error))
+    //
+    // handleFile(newsitem:NewsModel) {
+    //   let file = this.newsitem.rawFile[0];
+    //   // this.resizeFiles(file.file);
+    //   if (file) {
+    //     this.fileValid = false;
+    //     let reader = new FileReader();
+    //     if (reader.readAsBinaryString === undefined) {
+    //       reader.onload = this._handleReaderLoadedIE.bind(this);
+    //       reader.readAsArrayBuffer(file.file);
+    //       reader.onloadend = () => {
+    //         newsitem.imageJointe = this.fileEncoded;
+    //         this.fileEncoded = null;
+    //         newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+    //         this.fileValid = true;
+    //         this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
+    //       };
+    //     } else {
+    //       reader.onload = this._handleReaderLoaded.bind(this);
+    //       reader.readAsBinaryString(file.file);
+    //       reader.onloadend = () => {
+    //         newsitem.imageJointe = this.fileEncoded;
+    //         this.fileEncoded = null;
+    //         newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+    //         this.fileValid = true;
+    //         this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
+    //       };
+    //     }
+    //
+    //     // this.selectedFiles.splice(i,1);
+    //     // i--
+    //   }
+    // }
   }
-  //
-  // handleFile(newsitem:NewsModel) {
-  //   let file = this.newsitem.rawFile[0];
-  //   // this.resizeFiles(file.file);
-  //   if (file) {
-  //     this.fileValid = false;
-  //     let reader = new FileReader();
-  //     if (reader.readAsBinaryString === undefined) {
-  //       reader.onload = this._handleReaderLoadedIE.bind(this);
-  //       reader.readAsArrayBuffer(file.file);
-  //       reader.onloadend = () => {
-  //         newsitem.imageJointe = this.fileEncoded;
-  //         this.fileEncoded = null;
-  //         newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-  //         this.fileValid = true;
-  //         this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
-  //       };
-  //     } else {
-  //       reader.onload = this._handleReaderLoaded.bind(this);
-  //       reader.readAsBinaryString(file.file);
-  //       reader.onloadend = () => {
-  //         newsitem.imageJointe = this.fileEncoded;
-  //         this.fileEncoded = null;
-  //         newsitem.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-  //         this.fileValid = true;
-  //         this.itemImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem.imageJointeType.toLowerCase() + ';base64, '+ newsitem.imageJointe);
-  //       };
-  //     }
-  //
-  //     // this.selectedFiles.splice(i,1);
-  //     // i--
-  //   }
-  // }
 
   handleFile(newsitem) {
     let image = null;
@@ -124,6 +131,9 @@ export class NewsAddComponent implements OnInit {
         if (reader.readAsBinaryString === undefined) {
           reader.onload = this._handleReaderLoadedIE.bind(this);
           reader.readAsArrayBuffer(file.file);
+          reader.onloadend = () => {
+            this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
+          };
           // reader.onloadend = () => {
           //   image.imageJointe = this.fileEncoded;
           //   this.fileEncoded = null;
@@ -134,82 +144,15 @@ export class NewsAddComponent implements OnInit {
         } else {
           reader.onload = this._handleReaderLoaded.bind(this);
           reader.readAsBinaryString(file.file);
-
-          // reader.onloadend = () => {
-          //   image.imageJointe = this.fileEncoded;
-          //   this.fileEncoded = null;
-          //   image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-          //   image.originalFilename = this.filename;
-          //   this.fileValid = true;
-          // };
+          reader.onloadend = () => {
+            this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
+          };
         }
       }
       // newsitem.images.push(image);
     }
   }
 
-
-  // resizeFiles(file: File) {
-  //   let dataurl = null;
-  //   // Create an image
-  //   let img = document.createElement("img");
-  //   // Create a file reader
-  //   let reader = new FileReader();
-  //   // Set the image once loaded into file reader
-  //   reader.onload = function (e) {
-  //     img.src = e.target.result;
-  //
-  //     img.onload = function () {
-  //       let canvas = document.createElement("canvas");
-  //       let ctx = canvas.getContext("2d");
-  //       ctx.drawImage(img, 0, 0);
-  //
-  //       var MAX_WIDTH = 800;
-  //       var MAX_HEIGHT = 600;
-  //       var width = img.width;
-  //       var height = img.height;
-  //
-  //       if (width > height) {
-  //         if (width > MAX_WIDTH) {
-  //           height *= MAX_WIDTH / width;
-  //           width = MAX_WIDTH;
-  //         }
-  //       } else {
-  //         if (height > MAX_HEIGHT) {
-  //           width *= MAX_HEIGHT / height;
-  //           height = MAX_HEIGHT;
-  //         }
-  //       }
-  //       canvas.width = width;
-  //       canvas.height = height;
-  //       let context = canvas.getContext("2d");
-  //       context.drawImage(img, 0, 0, width, height);
-  //
-  //       dataurl = canvas.toDataURL("image/"+file.type);
-  //
-  //       //   // Post the data
-  //       //   let fd = new FormData();
-  //       //   fd.append("name", "some_filename.jpg");
-  //       //   fd.append("image", dataurl);
-  //       //   fd.append("info", "lah_de_dah");
-  //       //   $.ajax({
-  //       //     url: '/ajax_photo',
-  //       //     data: fd,
-  //       //     cache: false,
-  //       //     contentType: false,
-  //       //     processData: false,
-  //       //     type: 'POST',
-  //       //     success: function(data){
-  //       //       $('#form_photo')[0].reset();
-  //       //       location.reload();
-  //       //     }
-  //       //   });
-  //       // } // img.onload
-  //     };
-  //     // Load files into file reader
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
 
   _handleReaderLoadedIE(readerEvt) {
     var bytes = new Uint8Array(readerEvt.target.result);
@@ -228,4 +171,63 @@ export class NewsAddComponent implements OnInit {
   s(s){
     JSON.stringify(s)
   }
+
+  setImgOrientation(file, inputBase64String) {
+    return new Promise((resolve, reject) => {
+      const that = this;
+      EXIF.getData(file, function () {
+        if (this && this.exifdata && this.exifdata.Orientation) {
+          that.resetOrientation(inputBase64String, this.exifdata.Orientation,
+          (resetBase64Image) => {
+            inputBase64String = resetBase64Image;
+            resolve(inputBase64String);
+          });
+        } else {
+          resolve("data:image/jpg;base64,"+inputBase64String);
+        }
+      });
+    });
+  }
+
+  resetOrientation(srcBase64, srcOrientation, callback) {
+    const img = new Image();
+
+    img.onload = function () {
+      const width = img.width,
+        height = img.height,
+        canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d');
+
+      // set proper canvas dimensions before transform & export
+      if (4 < srcOrientation && srcOrientation < 9) {
+        canvas.width = height;
+        canvas.height = width;
+      } else {
+        canvas.width = width;
+        canvas.height = height;
+      }
+
+      // transform context before drawing image
+      switch (srcOrientation) {
+        case 2: ctx.transform(-1, 0, 0, 1, width, 0); break;
+        case 3: ctx.transform(-1, 0, 0, -1, width, height); break;
+        case 4: ctx.transform(1, 0, 0, -1, 0, height); break;
+        case 5: ctx.transform(0, 1, 1, 0, 0, 0); break;
+        case 6: ctx.transform(0, 1, -1, 0, height, 0); break;
+        case 7: ctx.transform(0, -1, -1, 0, height, width); break;
+        case 8: ctx.transform(0, -1, 1, 0, 0, width); break;
+        default: break;
+      }
+
+      // draw image
+      ctx.drawImage(img, 0, 0);
+
+      // export base64
+      callback(canvas.toDataURL().replace("image/png", "image/jpg"));
+    };
+
+    img.src = "data:image/jpg;base64, " + srcBase64;
+  }
+
+
 }

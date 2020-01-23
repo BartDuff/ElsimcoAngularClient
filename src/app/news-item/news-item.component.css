@@ -38,13 +38,22 @@ mat-card-content {
 }
 
 .newsavatar{
-  width: 50%;
-  padding: 0;
-  border-radius: 100%;
-  /*border: solid grey 1px;*/
-  margin-top: 0.5em;
+  /*width: 50%;*/
+  /*padding: 0;*/
+  /*!*border: solid grey 1px;*!*/
+  /*margin-top: 0.5em;*/
+  display: inline-flex;
+  top: 24px;
 }
+
+/*img.rounded {*/
+/*  object-fit: cover;*/
+/*  border-radius: 50%;*/
+/*  height: 100px;*/
+/*  width: 100px;*/
+/*}*/
 
 ngx-gallery /deep/ .ngx-gallery-icon {
   color: black;
+  margin-top: 2em;
 }

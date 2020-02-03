@@ -10,6 +10,7 @@ import {MatDialog} from '@angular/material';
 import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 import {MatDialogConfig} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
+import {HttpHeaderResponse} from '@angular/common/http';
 
 const API_URL = environment.apiUrl;
 @Component({
@@ -166,14 +167,16 @@ export class DocumentListComponent implements OnInit {
     var length = bytes.byteLength;
     for (var i = 0; i < length; i++)
       binary += String.fromCharCode(bytes[i]);
-    this.documentService.uploadDocument(btoa(binary), this.filename);
+    this.documentService.uploadDocument(btoa(binary), this.filename).subscribe(
+      ()=>{
+        this.getDocuments();
+      }
+    );
   }
   _handleReaderLoaded(readerEvt) {
     console.log(this.s(this.selectedFiles));
     this.documentService.uploadDocument(btoa(readerEvt.target.result), this.filename).subscribe(
-      ()=>{this.getDocuments();
-                this.getDocuments()
-                }
+      ()=>{this.getDocuments();}
       )
   }
 

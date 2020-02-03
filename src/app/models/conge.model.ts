@@ -8,6 +8,7 @@ export class CongeModel {
   typeDemiJournee: String;
   typeConge: String;
   typeCe: String;
+  fileId: number;
   documentJointUri: String;
   documentJointType: String;
   valideRH: boolean;

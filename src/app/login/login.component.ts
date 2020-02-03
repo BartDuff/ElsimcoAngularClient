@@ -5,13 +5,15 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {environment} from '../../environments/environment';
 import { filter } from 'rxjs/operators';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent implements OnInit {
-  img = `/../../${environment.base}/assets/images/home.svg`;
+  img = `/../../${environment.base}/assets/images/businessmen.png`;
   credentials: any = {email: '', password: ''};
   loginForm: FormGroup;
   message: string;

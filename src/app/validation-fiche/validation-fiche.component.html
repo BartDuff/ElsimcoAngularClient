@@ -3,11 +3,11 @@
   <mat-tab label="Validation des fiches">
     <div style="margin-top: 2em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
-      <p *ngIf="allFiches.length==0">Pas de fiches pour ce mois-ci</p>
-      <table *ngIf="currentUser.fonction ==='RH' && allFiches.length!=0" class="bordered mat-elevation-z8" style="margin: auto; ">
+      <p *ngIf="allFiches.length==0 && !loading">Pas de fiches pour ce mois-ci</p>
+      <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8" style="margin: auto; ">
         <thead>
         <tr>
           <th>Nom</th>
@@ -47,7 +47,7 @@
         </tr>
         </tbody>
       </table>
-      <mat-card *ngIf="!allFiches"
+      <mat-card *ngIf="!allFiches || loading"
                 style="display: flex; justify-content: center; align-items: center">
         <mat-progress-spinner
           color="accent"
@@ -59,11 +59,11 @@
   <mat-tab label="Résumé">
     <div style="overflow-x: auto;margin-top: 2em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
-      <p *ngIf="allFiches.length==0">Pas de fiches pour ce mois-ci</p>
-    <table *ngIf="currentUser.fonction ==='RH' && allFiches.length!=0" class="bordered mat-elevation-z8 resume" style="margin: auto;">
+      <p *ngIf="allFiches.length==0 && !loading">Pas de fiches pour ce mois-ci</p>
+    <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8 resume" style="margin: auto;">
       <thead>
       <tr style="padding: 2em;">
         <th>Nom</th>
@@ -96,35 +96,35 @@
             <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
           </ul>
         </td>
-        <td>Total: {{fiche.rtts + fiche.rtte }} <br>
+        <td>Total : {{fiche.rtts + fiche.rtte }} <br>
           <ul *ngFor="let cp of getRTT(fiche.commentaires)">
             <li *ngIf="!isArray(cp)">{{cp}}</li>
             <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
           </ul>
         </td>
-        <td>Total: {{fiche.maladie}} <br>
+        <td>Total : {{fiche.maladie}} <br>
           <ul *ngFor="let cp of getMaladie(fiche.commentaires)">
             <li *ngIf="!isArray(cp)">{{cp}}</li>
             <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
           </ul>
         </td>
-        <td>Total: {{fiche.absences}} <br>
+        <td>Total : {{fiche.absences}} <br>
           <ul *ngFor="let cp of getAbsences(fiche.commentaires)">
             <li *ngIf="!isArray(cp)">{{cp}}</li>
             <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
           </ul>
         </td>
-        <td>Total: {{fiche.congesSansSolde}}  <br>
+        <td>Total : {{fiche.congesSansSolde}}  <br>
           <ul *ngFor="let cp of getCSS(fiche.commentaires)">
             <li *ngIf="!isArray(cp)">{{cp}}</li>
             <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
           </ul></td>
-        <td>Total: {{fiche.formation}}  <br>
+        <td>Total : {{fiche.formation}}  <br>
           <ul *ngFor="let cp of getFormation(fiche.commentaires)">
             <li *ngIf="!isArray(cp)">{{cp}}</li>
             <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
           </ul></td>
-        <td>Total: {{fiche.intercontrat}}  <br>
+        <td>Total : {{fiche.intercontrat}}  <br>
           <ul *ngFor="let cp of getIntercontrat(fiche.commentaires)">
             <li *ngIf="!isArray(cp)">{{cp}}</li>
             <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
@@ -137,6 +137,13 @@
       </tr>
       </tbody>
     </table>
+      <mat-card *ngIf="!allFiches || loading"
+                style="display: flex; justify-content: center; align-items: center">
+        <mat-progress-spinner
+          color="accent"
+          mode="indeterminate">
+        </mat-progress-spinner>
+      </mat-card>
     </div>
   </mat-tab>
 </mat-tab-group>

@@ -5,6 +5,7 @@ import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
 import {withIdentifier} from 'codelyzer/util/astQuery';
 import {from} from 'rxjs';
+import {ImageService} from '../services/image.service';
 
 @Component({
   selector: 'app-user-add',
@@ -15,7 +16,8 @@ export class UserAddComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
-              private userService: UserService) { }
+              private userService: UserService,
+              private imageService: ImageService) { }
 
   addForm: FormGroup;
   user: UserModel;
@@ -75,6 +77,7 @@ export class UserAddComponent implements OnInit {
 
   handleFile(user) {
     let file = user.rawFile[0];
+    this.filename=file.file.name;
     if (file) {
       this.fileValid = false;
       let reader = new FileReader();
@@ -82,18 +85,18 @@ export class UserAddComponent implements OnInit {
         reader.onload = this._handleReaderLoadedIE.bind(this);
         reader.readAsArrayBuffer(file.file);
         reader.onloadend = () => {
-          user.avatar = this.fileEncoded;
-          this.fileEncoded = null;
-          user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          // user.avatar = this.fileEncoded;
+          // this.fileEncoded = null;
+          // user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       } else {
         reader.onload = this._handleReaderLoaded.bind(this);
         reader.readAsBinaryString(file.file);
         reader.onloadend = () => {
-          user.avatar = this.fileEncoded;
-          this.fileEncoded = null;
-          user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          // user.avatar = this.fileEncoded;
+          // this.fileEncoded = null;
+          // user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       }
@@ -111,12 +114,24 @@ export class UserAddComponent implements OnInit {
     for (var i = 0; i < length; i++) {
       binary += String.fromCharCode(bytes[i]);
     }
+
     this.fileEncoded = btoa(binary);
+    this.postImage();
   }
 
   _handleReaderLoaded(readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileEncoded = btoa(readerEvt.target.result);
+    this.postImage();
+  }
+
+  postImage(){
+    this.imageService.uploadImage({imageJointe: this.fileEncoded, imageJointeType: this.filename.split('.')[this.filename.split('.').length - 1].toLowerCase(), id: null, originalFilename: this.filename }).subscribe(
+      (data)=>{
+        this.fileValid = false;
+        this.user.imageId = data.id;
+      }
+    )
   }
 
   public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {

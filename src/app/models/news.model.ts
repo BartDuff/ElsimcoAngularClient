@@ -14,4 +14,5 @@ export class NewsModel {
   avatar;
   rawFile:any;
   images: ImageModel[] = [];
+  imageIds: String = "";
 }

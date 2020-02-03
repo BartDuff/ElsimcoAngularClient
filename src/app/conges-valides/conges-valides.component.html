@@ -9,10 +9,10 @@
   <div style="margin-top: 2em;">
     <h3>Congés validés</h3>
     <div style="display: flex;justify-content: center;">
-      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h3>
-      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><h3 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h3>
+      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
     </div>
-    <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; ">
+    <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; " *ngIf="!loading">
       <thead>
       <tr>
         <th>Nom</th>
@@ -52,23 +52,21 @@
       </tr>
       </tbody>
     </table>
-    <div *ngIf="!congesValides"
-         style="display: flex; justify-content: center; align-items: center">
-      <mat-progress-spinner
-        color="accent"
-        mode="indeterminate">
-      </mat-progress-spinner>
-    </div>
+    <mat-progress-spinner
+      *ngIf="loading"
+      color="accent"
+      mode="indeterminate" style="margin: auto">
+    </mat-progress-spinner>
   </div>
   </mat-tab>
   <mat-tab label="Justificatifs d'absences">
     <div style="margin-top: 2em;">
       <h3>Justificatifs reçus</h3>
       <div style="display: flex;justify-content: center;">
-        <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()-1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">arrow_left</mat-icon></button><h3 style="text-align: center">{{dateNowFile.getFullYear()}}</h3>
-        <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()+1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+        <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()-1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><h3 style="text-align: center;font-weight: bold">{{dateNowFile.getFullYear()}}</h3>
+        <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()+1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
-      <table class="bordered mat-elevation-z8" style="margin: auto; ">
+      <table class="bordered mat-elevation-z8" style="margin: auto;" *ngIf="!loading">
         <thead>
         <tr>
           <th>Nom</th>
@@ -104,12 +102,11 @@
         </tr>
         </tbody>
       </table>
-      <mat-card *ngIf="!congesValides"
-                style="display: flex; justify-content: center; align-items: center">
-        <mat-progress-spinner
-          color="accent"
-          mode="indeterminate">
-        </mat-progress-spinner>
-      </mat-card>
+      <mat-progress-spinner
+        *ngIf="loading"
+        color="accent"
+        mode="indeterminate" style="margin: auto">
+      </mat-progress-spinner>
     </div>
   </mat-tab>
+</mat-tab-group>

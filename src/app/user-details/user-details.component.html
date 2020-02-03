@@ -46,37 +46,37 @@
 <!--      </mat-card-subtitle>-->
     </mat-card-header>
     <mat-card-content fxLayout="column" fxLayoutAlign="space-between start">
-      <p>Date d'inscription:&ensp;  {{ user?.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
-      <p>Date d'entrée dans l'entreprise:  &ensp;{{ user?.dateArrivee | date: 'dd/MM/yyyy' }}</p>
+      <p>Date d'inscription :&ensp;  {{ user?.dateInscription | date: 'dd/MM/yyyy, HH:mm' }}</p>
+      <p>Date d'entrée dans l'entreprise :  &ensp;{{ user?.dateArrivee | date: 'dd/MM/yyyy' }}</p>
       <p class="identity">
-        <mat-icon class="labels">business_center</mat-icon><b class="labels">Métier:</b>
+        <mat-icon class="labels">business_center</mat-icon><b class="labels">Métier :</b>
           {{ user?.metier }}</p>
       <p class="identity">
-        <mat-icon class="labels">contact_phone</mat-icon><b class="labels">Téléphone Pro:&ensp;  </b>
+        <mat-icon class="labels">contact_phone</mat-icon><b class="labels">Téléphone Pro :&ensp;  </b>
           {{ formatTel(user?.telPro) }}</p>
       <p class="identity">
-        <mat-icon class="labels">email</mat-icon><b class="labels">Email Pro:&ensp;  </b>
+        <mat-icon class="labels">email</mat-icon><b class="labels">Email Pro :&ensp;  </b>
           {{ user?.email }}</p>
       <p class="identity">
-        <mat-icon class="labels">home</mat-icon><b class="labels">Adresse Postale:&ensp;  </b>
+        <mat-icon class="labels">home</mat-icon><b class="labels">Adresse Postale :&ensp;  </b>
           {{ user?.adressePostale }}</p>
       <p class="identity">
-        <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso:&ensp;  </b>
+        <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso :   </b>
           {{ formatTel(user?.telephone) }}</p>
       <p class="identity">
-      <mat-icon class="labels">mail_outline</mat-icon><b class="labels">Email perso:&ensp;  </b>
+      <mat-icon class="labels">mail_outline</mat-icon><b class="labels">Email perso :&ensp;  </b>
           {{ user?.emailPerso }}</p>
       <p>
-        <span class="labels">Congés N-1:&ensp; </span>
+        <span class="labels">Congés N-1 :&ensp; </span>
           {{ user?.cpNMoins1 }}</p>
       <p>
-        <span class="labels">Congés N:&ensp; </span>
+        <span class="labels">Congés N :&ensp; </span>
           {{ user?.cpN }}</p>
       <p class="labels">
-        <span class="labels">RTT (h):&ensp; </span>
+        <span class="labels">RTT (h) :&ensp; </span>
           {{ user?.rttn }}</p>
       <p>
-        <span class="labels">Congés Ancienneté:&ensp; </span>
+        <span class="labels">Congés Ancienneté :&ensp; </span>
           {{ user?.congeAnciennete }}</p>
 
 <!--      <p>Cet utilisateur s'intéresse aux missions suivantes:</p>-->

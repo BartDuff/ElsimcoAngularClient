@@ -19,6 +19,8 @@ import {forEach} from '@angular/router/src/utils/collection';
 import {EmailService} from '../services/email.service';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {groupBy} from 'rxjs/operators';
+import {error} from 'util';
+import {ImageService} from '../services/image.service';
 
 const config: InputFileConfig = {
   fileAccept: '*',
@@ -41,7 +43,11 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   counter;
   mouseDown: boolean = false;
   rttValid = true;
+  previousAnciennete;
+  previousCpnMoins1;
+  previousCpn;
   fileValid = true;
+  loading = false;
   joursDeLaSemaine = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
   //daysOff = [];
   daysOffSelectedObjArr = [];
@@ -49,9 +55,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   dayoffPlage = [];
   zeroIndicator;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-  absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
-  absShortTypes = ['RTT', 'CP', 'A.E.', 'C.S.S.'];
-  fixedDateNow:Date;
+  absTypes = ['Congés Payés', 'RTT', 'Absence Exceptionnelle', 'Congés Sans Solde'];
+  absShortTypes = ['CP', 'RTT', 'A.E.', 'C.S.S.'];
+  fixedDateNow: Date;
   dateNow: Date;
   FicheEnvoyee: boolean = false;
   currentUser: UserModel;
@@ -124,7 +130,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return params.charAt(0).toUpperCase() + params.slice(1);
   }
 
-  constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService, private emailService: EmailService, private dialog: MatDialog) {
+  constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService, private emailService: EmailService, private dialog: MatDialog, private imageService: ImageService) {
   }
 
   getDayColor(day, iteration) {
@@ -166,8 +172,8 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return this.splitArrayInRanges(holidayMonthArr);
   }
 
-  addCells(number,iteration) {
-    let d = this.getWeekday(new Date(this.dateNow.getFullYear()+iteration, number, 1));
+  addCells(number, iteration) {
+    let d = this.getWeekday(new Date(this.dateNow.getFullYear() + iteration, number, 1));
     return d;
   }
 
@@ -182,7 +188,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     //this.selectedDate = moment(new Date());
-    this.counter = this.currentUser.cpNMoins1 > 0? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete: this.currentUser.cpN;
+    this.counter = this.currentUser.cpNMoins1 > 0 ? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete : this.currentUser.cpN;
     this.zeroIndicator = this.countConges();
     this.dateNow = new Date();
     this.fixedDateNow = new Date();
@@ -285,24 +291,23 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     // }
     // for (; ifrom < this.daysOffSelectedObjArr.length; ifrom++) {
     let half = absence.demiJournee ? 0.5 : 1;
-    if (absence.typeConge == 'Congés payés' && this.zeroIndicator < 0 && !this.allowAnticipation) {
+    if (absence.typeConge == 'Congés Payés' && this.zeroIndicator < 0 && !this.allowAnticipation) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
       const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
       dialogRef.afterClosed().subscribe(
         (data) => {
-          if(data){
+          if (data) {
             this.allowAnticipation = data;
           } else {
-        this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence),1);
-        this.zeroIndicator+=half;
-      }
+            this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence), 1);
+            this.zeroIndicator += half;
+          }
         });
       // break;
     }
     this.zeroIndicator -= half;
-    console.log(this.zeroIndicator);
     // this.daysOffSelectedObjArr[ifrom].typeConge = absence.typeConge;
     // // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
     // if(this.daysOffSelectedObjArr[ifrom+1].typeConge == absence.typeConge){
@@ -314,9 +319,49 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     // }
   }
 
+  // autoFillType(absence) {
+  //   let half = absence.demiJournee ? 0.5 : 1;
+  //   if (absence.typeConge == 'Congés Payés') {
+  //     if (this.currentUser.cpNMoins1 - half >= 0) {
+  //       this.currentUser.cpNMoins1 -= half;
+  //     }
+  //     if (this.currentUser.cpNMoins1 - half < 0) {
+  //       if (half == 1 && this.currentUser.cpNMoins1 != 0) {
+  //         this.currentUser.cpNMoins1 = 0;
+  //         this.currentUser.cpN -= 0.5;
+  //       } else {
+  //         this.currentUser.cpN -= half;
+  //       }
+  //     }
+  //   }
+  //   if (absence.typeConge == 'RTT') {
+  //     if (this.currentUser.rttn - half >= 0) {
+  //       this.currentUser.rttn -= half;
+  //       this.rttValid = true;
+  //     }
+  //     if (this.currentUser.rttn - half < 0) {
+  //       this.toastr.error("Solde épuisé","Votre solde de RTT est insuffisant");
+  //       this.rttValid = false;
+  //     }
+  //   }
+
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+    // dialogConfig.autoFocus = true;
+    // const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
+    // dialogRef.afterClosed().subscribe(
+    //   (data) => {
+    //     if (data) {
+    //       this.allowAnticipation = data;
+    //     } else {
+    //       this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence), 1);
+    //       this.zeroIndicator += half;
+    //     }
+    //   });
+  // }
+
   autoFillTypeInPlage(absence, plageArr) {
     let ifrom = 0;
-    let countConges = this.countConges();
     for (let i = 0; i < plageArr.length; i++) {
       if (plageArr[i].date == absence.date) {
         //console.log("found "+date+ " at position "+ i)
@@ -326,23 +371,18 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     }
     for (; ifrom < plageArr.length; ifrom++) {
       let half = absence.demiJournee ? 0.5 : 1;
-      console.log(this.zeroIndicator);
-      console.log(absence.typeConge == 'Congés payés' && this.zeroIndicator < 0 && !this.allowAnticipation);
-      console.log(absence.typeConge == 'Congés payés', "cp");
-      console.log(+this.zeroIndicator < 0, "zero");
-      console.log(!this.allowAnticipation, "antici");
-      if (absence.typeConge == 'Congés payés' && this.zeroIndicator < 0  && !this.allowAnticipation) {
+      if (absence.typeConge == 'Congés Payés' && this.zeroIndicator < 0 && !this.allowAnticipation) {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(
           (data) => {
-            if(data){
+            if (data) {
               this.allowAnticipation = data;
             } else {
-             this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(plageArr),1);
-              this.zeroIndicator+=plageArr.length;
+              this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(plageArr), 1);
+              this.zeroIndicator += plageArr.length;
               return;
             }
           });
@@ -377,7 +417,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   checkWeekends(day: Date, iteration) {
     let d = day.toLocaleString('fr-FR', {weekday: 'short'});
-    return d === 'dim.' || d === 'sam.' || DemandeCongeComponent.joursFeries(this.dateNow.getFullYear()+iteration).includes(moment(day).format('DD/MM/YYYY').toString());
+    return d === 'dim.' || d === 'sam.' || DemandeCongeComponent.joursFeries(this.dateNow.getFullYear() + iteration).includes(moment(day).format('DD/MM/YYYY').toString());
   }
 
   checkWeekendsWithYear(day: Date, year) {
@@ -386,6 +426,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   }
 
   getHolidays() {
+    this.loading = true;
     this.userService.getCongeForUser(this.currentUser).subscribe(
       (data) => {
         for (let d of data) {
@@ -399,6 +440,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             documentJointUri: d.documentJointUri
           }));
         }
+        this.loading = false;
       }
     );
   }
@@ -432,7 +474,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if(arr.length>1){
+        if (arr.length > 1) {
           if (this.isFollowingDay(arr[i].date, arr[i + 1].date) && arr[i].typeConge == arr[i + 1].typeConge) {
             plage.push(arr[i]);
           } else {
@@ -446,14 +488,14 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return newArr;
   }
 
-  isFollowingDay(date1:Date,date2:Date){
+  isFollowingDay(date1: Date, date2: Date) {
     let d1 = this.toDate(date1);
     let d2 = this.toDate(date2);
     let d3 = new Date(d2);
     d3.setDate(d2.getDate() - 1);
     let year = d3.getFullYear();
     let i = 1;
-    while(this.checkWeekendsWithYear(d3,year)){
+    while (this.checkWeekendsWithYear(d3, year)) {
       d3.setDate(d3.getDate() - 1);
       year = d3.getFullYear();
       i++;
@@ -483,8 +525,8 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return Array.isArray(a);
   }
 
-  addRemoveDay(event,x) {
-    if (this.checkAskedHolidays(event) || this.checkWeekends(event,x)) {
+  addRemoveDay(event, x) {
+    if (this.checkAskedHolidays(event) || this.checkWeekends(event, x)) {
       return;
     }
     let day = moment(event).format('DD/MM/YYYY');
@@ -493,7 +535,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       let f = moment(this.firstDay);
       while (f.toDate() < stopDate.toDate()) {
         f.add(1, 'd');
-        if (this.checkAskedHolidays(f.toDate()) || this.checkWeekends(f.toDate(),x)) {
+        if (this.checkAskedHolidays(f.toDate()) || this.checkWeekends(f.toDate(), x)) {
           continue;
         } else {
           this.dayoffPlage.push({
@@ -525,7 +567,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       if (this.includesArray(this.daysOffSelectedObjArr, this.dayoffPlage)) {
         this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(this.dayoffPlage), 1);
         this.zeroIndicator += this.dayoffPlage.length;
-        if(this.countCongesAnticipes() == this.currentUser.cpN){
+        if (this.countCongesAnticipes() == this.currentUser.cpN) {
           this.allowAnticipation = false;
         }
         this.firstDay = null;
@@ -581,7 +623,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             }
             while (lastday.toDate() < stopDate.toDate()) {
               lastday.add(1, 'd');
-              if (this.checkAskedHolidays(lastday.toDate()) || this.checkWeekends(lastday.toDate(),x)) {
+              if (this.checkAskedHolidays(lastday.toDate()) || this.checkWeekends(lastday.toDate(), x)) {
                 continue;
               } else {
                 dayArr.push({
@@ -597,7 +639,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                   rawFile: null,
                   plage: true
                 });
-                this.autoFillTypeInPlage(dayArr[0],dayArr);
+                this.autoFillTypeInPlage(dayArr[0], dayArr);
                 dayArr.sort((a, b) => a.date.localeCompare(b.date));
               }
             }
@@ -611,7 +653,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             let firstArrDay = moment(this.toDate(dayArr[0].date));
             while (firstArrDay.toDate() > this.firstDay.toDate()) {
               firstArrDay.subtract(1, 'd');
-              if (this.checkAskedHolidays(firstArrDay.toDate()) || this.checkWeekends(firstArrDay.toDate(),x)) {
+              if (this.checkAskedHolidays(firstArrDay.toDate()) || this.checkWeekends(firstArrDay.toDate(), x)) {
                 continue;
               } else {
                 dayArr.push({
@@ -627,7 +669,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                   rawFile: null,
                   plage: true
                 });
-                this.autoFillTypeInPlage(dayArr[0],dayArr);
+                this.autoFillTypeInPlage(dayArr[0], dayArr);
                 dayArr.sort((a, b) => a.date.localeCompare(b.date));
               }
             }
@@ -718,9 +760,10 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   includesArray(arr, arr2) {
     for (let x of arr) {
-      if(this.isArray(x))
-        if (x[0].date == arr2[0].date && x[x.length-1].date == arr2[arr2.length-1].date) {
-        return true;
+      if (this.isArray(x)) {
+        if (x[0].date == arr2[0].date && x[x.length - 1].date == arr2[arr2.length - 1].date) {
+          return true;
+        }
       }
     }
     return false;
@@ -784,8 +827,8 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   }
 
   disableTabs(number, year) {
-    if(year === this.dateNow.getFullYear()){
-      return this.dateNow.getMonth() > number
+    if (year === this.dateNow.getFullYear()) {
+      return this.dateNow.getMonth() > number;
     }
     return false;
 
@@ -809,7 +852,11 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                 c.documentJointType = subConge.documentJointType;
                 c.user = this.currentUser;
                 c.documentJointUri = subConge.documentJointUri;
-                c.justificatifRecu = conge[0].documentJointUri != '';
+                // c.justificatifRecu = conge[0].documentJointUri != '';
+                c.fileId = subConge.fileId;
+                if(conge[0].fileId){
+                  c.justificatifRecu = true;
+                }
                 c.demiJournee = subConge.demiJournee;
                 c.typeDemiJournee = subConge.typeDemiJournee;
                 c.date = this.toDate(subConge.date);
@@ -828,7 +875,11 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
               co.documentJointType = conge.documentJointType;
               co.user = this.currentUser;
               co.documentJointUri = conge.documentJointUri;
-              co.justificatifRecu = conge.documentJointUri != '';
+              // co.justificatifRecu = conge.documentJointUri != '';
+              co.fileId = conge.fileId;
+              if(conge.fileId){
+                co.justificatifRecu = true;
+              }
               co.demiJournee = conge.demiJournee;
               co.typeDemiJournee = conge.typeDemiJournee;
               co.date = this.toDate(conge.date);
@@ -869,11 +920,11 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                     let identicalCe = [];
                     let sCongeSansJustif = '';
                     for (let ob of congeSansJustif) {
-                      if(ob == congeSansJustif[congeSansJustif.length-1] && (new Date(ob.date).getDate() === new Date(congeSansJustif[i-1].date).getDate()+1)){
+                      if (ob == congeSansJustif[congeSansJustif.length - 1] && (new Date(ob.date).getDate() === new Date(congeSansJustif[i - 1].date).getDate() + 1)) {
                         identicalCe.push(ob);
                         break;
                       }
-                      if((new Date(ob.date).getDate() === new Date(congeSansJustif[i+1].date).getDate()-1) && identicalCe.indexOf(ob)==-1){
+                      if ((new Date(ob.date).getDate() === new Date(congeSansJustif[i + 1].date).getDate() - 1) && identicalCe.indexOf(ob) == -1) {
                         identicalCe.push(ob);
                       } else {
                         let sLine = new Date(ob.date).toLocaleDateString() + ' : ' + ob.typeCe + '\n';
@@ -881,8 +932,8 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                       }
                       i++;
                     }
-                    sCongeSansJustif += 'Du ' + new Date(identicalCe[0].date).toLocaleDateString() +' au '+new Date(identicalCe[identicalCe.length-1].date).toLocaleDateString() +' : ' + identicalCe[0].typeCe + '\n';
-                    this.emailService.sendMailWithRangeForFile('Bonjour,\nVous avez envoyé une demande d\'absence exceptionnelle sans justificatif pour les jours suivants :\n', 'Notification de pièce justificative manquante', this.currentUser.email,congeSansJustif).subscribe(
+                    sCongeSansJustif += 'Du ' + new Date(identicalCe[0].date).toLocaleDateString() + ' au ' + new Date(identicalCe[identicalCe.length - 1].date).toLocaleDateString() + ' : ' + identicalCe[0].typeCe + '\n';
+                    this.emailService.sendMailWithRangeForFile('Bonjour,\nVous avez envoyé une demande d\'absence exceptionnelle sans justificatif pour les jours suivants :\n', 'Notification de pièce justificative manquante', this.currentUser.email, congeSansJustif).subscribe(
                       () => {
                         this.FicheEnvoyee = false;
                         this.ngOnInit();
@@ -950,13 +1001,23 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         for (let det of d) {
           let half = det.demiJournee ? 3.5 : 7;
           if (det.typeConge == 'RTT') {
-            count -= half;
+            if(count - half <0) {
+              this.toastr.error("Cette demande est supérieure à votre solde de RTT", "Solde insuffisant");
+              this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d), 1);
+            } else {
+              count -= half;
+            }
           }
         }
       } else {
         let half = d.demiJournee ? 3.5 : 7;
         if (d.typeConge == 'RTT') {
-          count -= half;
+          if(count - half <0){
+            this.toastr.error("Cette demande est supérieure à votre solde de RTT","Solde insuffisant");
+            this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
+          } else {
+            count -= half;
+          }
         }
       }
     }
@@ -966,32 +1027,52 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   countConges() {
     let count = this.currentUser.cpNMoins1;
-    let countAnciente = this.currentUser.congeAnciennete;
+    let countAnciennete = this.currentUser.congeAnciennete;
     for (let d of this.daysOffSelectedObjArr) {
       if (this.isArray(d)) {
         for (let det of d) {
           let half = det.demiJournee ? 0.5 : 1;
-          if (det.typeConge == 'Congés payés') {
-            if (countAnciente - half < 0) {
-              if (count - half < 0) {
-                break;
+          if (det.typeConge == 'Congés Payés') {
+            if (countAnciennete - half < 0) {
+              if(countAnciennete-(half/2) == 0){
+                countAnciennete -= (half/2);
+                count -= (half/2);
+              } else {
+                if (count - half < 0) {
+                  if(count-(half/2) == 0){
+                    count -= (half/2);
+                    break;
+                  } else {
+                    break;
+                  }
+                }
+                count -= half;
               }
-              count -= half;
             } else {
-              countAnciente -= half;
+              countAnciennete -= half;
             }
           }
         }
       } else {
         let half = d.demiJournee ? 0.5 : 1;
-        if (d.typeConge == 'Congés payés') {
-          if (countAnciente - half < 0) {
-            if (count - half < 0) {
-              break;
+        if (d.typeConge == 'Congés Payés') {
+          if (countAnciennete - half < 0) {
+            if(countAnciennete-(half/2) == 0){
+              countAnciennete -= (half/2);
+              count -= (half/2);
+            } else {
+              if (count - half < 0) {
+                if(count-(half/2) == 0){
+                  count -= (half/2);
+                  break;
+                } else {
+                  break;
+                }
+              }
+              count -= half;
             }
-            count -= half;
           } else {
-            countAnciente -= half;
+            countAnciennete -= half;
           }
         }
       }
@@ -1001,6 +1082,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     }
     return count;
   }
+
 
   // countConges() {
   //   this.counter = this.currentUser.cpNMoins1 > 0? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete: this.currentUser.cpN;
@@ -1029,18 +1111,28 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       if (this.isArray(d)) {
         for (let det of d) {
           let half = det.demiJournee ? 0.5 : 1;
-          if (det.typeConge == 'Congés payés') {
+          if (det.typeConge == 'Congés Payés') {
             if (count - half < 0) {
-              break;
+              if(count-(half/2) == 0){
+                count -= (half/2);
+                break;
+              } else {
+                break;
+              }
             }
             count -= half;
           }
         }
       } else {
         let half = d.demiJournee ? 0.5 : 1;
-        if (d.typeConge == 'Congés payés') {
+        if (d.typeConge == 'Congés Payés') {
           if (count - half < 0) {
-            break;
+            if(count-(half/2) == 0){
+              count -= (half/2);
+              break;
+            } else {
+              break;
+            }
           }
           count -= half;
         }
@@ -1052,48 +1144,80 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   countCongesAnticipes() {
     let count = this.currentUser.cpN;
     let countCPNmoins1 = this.currentUser.cpNMoins1;
-    let countAnciente = this.currentUser.congeAnciennete;
+    let countAnciennete = this.currentUser.congeAnciennete;
     for (let d of this.daysOffSelectedObjArr) {
       if (this.isArray(d)) {
         for (let det of d) {
           let half = det.demiJournee ? 0.5 : 1;
-          if (det.typeConge == 'Congés payés') {
-            if (countAnciente - half < 0) {
-              if (countCPNmoins1 - half < 0) {
-                if (this.allowAnticipation) {
-                  if (count - half < 0) {
-                    break;
-                  }
-                  count -= half;
-                } else {
-                  break;
-                }
+          if (det.typeConge == 'Congés Payés') {
+            if (countAnciennete - half < 0) {
+              if(countAnciennete-(half/2) == 0){
+                countAnciennete -= (half/2);
+                countCPNmoins1 -= (half/2);
               } else {
-                countCPNmoins1 -= half;
+                if (countCPNmoins1 - half < 0) {
+                  if(countCPNmoins1-(half/2) == 0) {
+                    if(this.allowAnticipation){
+                      countCPNmoins1 -= (half / 2);
+                      count -= (half / 2);
+                    } else {
+                      break;
+                    }
+                  } else {
+                    if (this.allowAnticipation) {
+                      if(count - half <0){
+                        this.toastr.error("Cette demande est supérieure à votre solde de congés","Solde insuffisant");
+                        this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
+                      } else {
+                        count -= half;
+                      }
+                    } else {
+                      break;
+                    }
+                  }
+                } else {
+                  countCPNmoins1 -= half;
+                }
               }
             } else {
-              countAnciente -= half;
+              countAnciennete -= half;
             }
           }
         }
       } else {
         let half = d.demiJournee ? 0.5 : 1;
-        if (d.typeConge == 'Congés payés') {
-          if (countAnciente - half < 0) {
-            if (countCPNmoins1 - half < 0) {
-              if (this.allowAnticipation) {
-                if (count - half < 0) {
-                  break;
-                }
-                count -= half;
-              } else {
-                break;
-              }
+        if (d.typeConge == 'Congés Payés') {
+          if (countAnciennete - half < 0) {
+            if(countAnciennete-(half/2) == 0){
+              countAnciennete -= (half/2);
+              countCPNmoins1 -= (half/2);
             } else {
-              countCPNmoins1 -= half;
+              if (countCPNmoins1 - half < 0) {
+                if(countCPNmoins1-(half/2) == 0) {
+                  if(this.allowAnticipation){
+                    countCPNmoins1 -= (half / 2);
+                    count -= (half / 2);
+                  } else {
+                    break;
+                  }
+                } else {
+                  if (this.allowAnticipation) {
+                    if(count - half <0){
+                      this.toastr.error("Cette demande est supérieure à votre solde de congés","Solde insuffisant");
+                      this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
+                    } else {
+                      count -= half;
+                    }
+                  } else {
+                    break;
+                  }
+                }
+              } else {
+                countCPNmoins1 -= half;
+              }
             }
           } else {
-            countAnciente -= half;
+            countAnciennete -= half;
           }
         }
       }
@@ -1107,7 +1231,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       if (form.value.hasOwnProperty(key)) {
         let value = form.value[key];
         let nextValue = form.value[key + ' boolean'];
-        if (value === 'Absences exceptionnelle') {
+        if (value === 'Absences Exceptionnelle') {
           if (nextValue) {
             count = count + 0.5;
           } else {
@@ -1125,7 +1249,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       if (form.value.hasOwnProperty(key)) {
         let value = form.value[key];
         let nextValue = form.value[key + ' boolean'];
-        if (value === 'Congé sans solde') {
+        if (value === 'Congés Sans Solde') {
           if (nextValue) {
             count = count + 0.5;
           } else {
@@ -1144,7 +1268,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       if (form.value.hasOwnProperty(key)) {
         let value = form.value[key];
         let nextValue = form.value[key + ' boolean'];
-        if (value === 'Arrêt maladie') {
+        if (value === 'Arrêt Maladie') {
           if (nextValue) {
             count = count + 0.5;
           } else {
@@ -1158,6 +1282,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   handleFile(dayoff) {
     let file = dayoff.rawFile[0];
+    this.filename = file.file.name;
     if (file) {
       this.fileValid = false;
       let reader = new FileReader();
@@ -1165,18 +1290,20 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         reader.onload = this._handleReaderLoadedIE.bind(this);
         reader.readAsArrayBuffer(file.file);
         reader.onloadend = () => {
-          dayoff.documentJointUri = this.fileEncoded;
+          // dayoff.documentJointUri = this.fileEncoded;
+          this.postImage(dayoff);
           this.fileEncoded = null;
-          dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          // dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       } else {
         reader.onload = this._handleReaderLoaded.bind(this);
         reader.readAsBinaryString(file.file);
         reader.onloadend = () => {
-          dayoff.documentJointUri = this.fileEncoded;
+          // dayoff.documentJointUri = this.fileEncoded;
+          this.postImage(dayoff);
           this.fileEncoded = null;
-          dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          // dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       }
@@ -1200,6 +1327,14 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   _handleReaderLoaded(readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileEncoded = btoa(readerEvt.target.result);
+  }
+
+  postImage(dayoff){
+    this.imageService.uploadJustif({imageJointe: this.fileEncoded, imageJointeType: this.filename.split('.')[this.filename.split('.').length - 1].toLowerCase(), id: null, originalFilename: this.filename }).subscribe(
+      (data)=>{
+        dayoff.fileId = data.id;
+      }
+    )
   }
 
   public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {

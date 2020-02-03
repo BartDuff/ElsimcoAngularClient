@@ -4,6 +4,7 @@ import {UserModel} from '../models/user.model';
 import {UserService} from '../services/user.service';
 import {environment} from '../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ImageService} from '../services/image.service';
 
 @Component({
   selector: 'app-user-details',
@@ -19,7 +20,8 @@ export class UserDetailsComponent implements OnInit {
 
   constructor(private userService: UserService,
               private route: ActivatedRoute,
-              private sanitizer: DomSanitizer) { }
+              private sanitizer: DomSanitizer,
+              private imageService: ImageService) { }
 
   ngOnInit() {
     this.spinner = true;
@@ -27,8 +29,13 @@ export class UserDetailsComponent implements OnInit {
       params => this.userService.getUser(params['id']).subscribe(
         data => {
           this.user = data;
-          this.img = this.user.avatar == '' || this.user.avatar == null? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + this.user.avatarType.toLowerCase() + ';base64, '+ this.user.avatar);
-        this.spinner = false;}
+          this.imageService.getImage(this.user.imageId).subscribe(
+            (image) => {
+              this.img = image == null? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, '+ image.imageJointe);
+              this.spinner = false;
+            }
+          );
+        }
       )
     );
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));

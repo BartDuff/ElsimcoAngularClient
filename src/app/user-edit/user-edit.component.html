@@ -104,14 +104,14 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <mat-label>Role:</mat-label>
+          <mat-label>Role :</mat-label>
           <mat-select formControlName="role" [(ngModel)]="user.role">
             <mat-option value="ADMIN">ADMIN</mat-option>
             <mat-option value="USER">UTILISATEUR</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
-          <mat-label>Fonction:</mat-label>
+          <mat-label>Fonction :</mat-label>
           <mat-select formControlName="fonction" [(ngModel)]="user.fonction">
             <mat-option value="RH">RH</mat-option>
             <mat-option value="COMMERCIAL">COMMERCIAL</mat-option>

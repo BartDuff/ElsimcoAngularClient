@@ -9,17 +9,20 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {InputFileComponent} from 'ngx-input-file';
 import {ImageModel} from '../models/image.model';
 import * as EXIF from 'exif-js';
+import {ImageService} from '../services/image.service';
 
 @Component({
   selector: 'app-news-add',
   templateUrl: './news-add.component.html',
   styleUrls: ['./news-add.component.css']
 })
+
 export class NewsAddComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private newsService: NewsService,
-              private sanitizer: DomSanitizer) { }
+              private sanitizer: DomSanitizer,
+              private imageService: ImageService) { }
 
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
@@ -31,10 +34,15 @@ export class NewsAddComponent implements OnInit {
   fileValid = true;
   loading = false;
   filename;
+  alreadyUploaded = [];
   itemImg;
   typeMatch ={
     'jpeg':'jpg',
-    'png':'png'
+    'JPG':'jpg',
+    'JPEG':'jpg',
+    'jpg':'jpg',
+    'png':'png',
+    'PNG':'png'
   };
 
   get f() {
@@ -61,14 +69,18 @@ export class NewsAddComponent implements OnInit {
     newsitem.auteur = this.currentUser;
     // newsitem.imageJointe = this.newsitem.imageJointe;
     // newsitem.imageJointeType = this.newsitem.imageJointeType;
-    for (let file of this.selectedFiles) {
-      let image = new ImageModel();
-      image.imageJointeType = this.typeMatch[file.file.name.split('.')[file.file.name.split('.').length - 1]];
-      image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64,").length);
-      image.originalFilename = file.file.name;
-      // image.newsAssoc = newsitem;
-      newsitem.images.push(image);
-    }
+    // for (let file of this.selectedFiles) {
+    //   let image = new ImageModel();
+    //   image.originalFilename = file.file.name;
+    //   image.imageJointeType = this.typeMatch[image.originalFilename.split('.')[image.originalFilename.split('.').length - 1]];
+    //   image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64,").length);
+    //   // image.newsAssoc = newsitem;
+    //   newsitem.images.push(image);
+    // }
+    // for (let file of this.selectedFiles) {
+    //   this.postImage(file.preview);
+    // }
+    newsitem.imageIds = this.newsitem.imageIds;
     newsitem.avatar = this.newsitem.avatar;
     newsitem.public = this.newsitem.public;
       this.newsService.addNews(newsitem)
@@ -77,7 +89,7 @@ export class NewsAddComponent implements OnInit {
           this.router.navigate(['news']);
         },
           (error)=>console.log(error))
-    //
+
     // handleFile(newsitem:NewsModel) {
     //   let file = this.newsitem.rawFile[0];
     //   // this.resizeFiles(file.file);
@@ -112,9 +124,23 @@ export class NewsAddComponent implements OnInit {
     // }
   }
 
+  removeImage(newsitem){
+    let base64ToDelete = "";
+    if(newsitem.preview.changingThisBreaksApplicationSecurity){
+      base64ToDelete = newsitem.preview.changingThisBreaksApplicationSecurity.substr(("data:"+newsitem.file.type+";base64,").length-1);
+    } else {
+      base64ToDelete = newsitem.preview.substr(("data:"+newsitem.file.type+";base64,").length);
+    }
+    let idArray = this.newsitem.imageIds.split(",");
+    idArray.splice(idArray.indexOf(newsitem.id.toString()),1);
+    this.newsitem.imageIds = idArray.join(",");
+    this.alreadyUploaded.splice(this.alreadyUploaded.indexOf(base64ToDelete),1);
+  }
+
   handleFile(newsitem) {
     let image = null;
     for (let i = 0; i < this.inputFileComponent.files.length; i++) {
+      this.fileValid = false;
       image = new ImageModel();
       let file = this.inputFileComponent.files[i];
       this.filename = file.file.name;
@@ -129,10 +155,14 @@ export class NewsAddComponent implements OnInit {
         //   }
         // }
         if (reader.readAsBinaryString === undefined) {
-          reader.onload = this._handleReaderLoadedIE.bind(this);
+          reader.onload = this._handleReaderLoadedIE.bind(this, this.inputFileComponent.files[i]);
           reader.readAsArrayBuffer(file.file);
           reader.onloadend = () => {
-            this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
+            // this.postImage(file);
+            // this.setImgOrientation(file.file, this.fileEncoded).then(r=> {
+            //   this.inputFileComponent.files[i].preview = r.toString();
+            // });
+            // this.postImage();
           };
           // reader.onloadend = () => {
           //   image.imageJointe = this.fileEncoded;
@@ -142,10 +172,14 @@ export class NewsAddComponent implements OnInit {
           //   this.fileValid = true;
           // };
         } else {
-          reader.onload = this._handleReaderLoaded.bind(this);
+          reader.onload = this._handleReaderLoaded.bind(this, this.inputFileComponent.files[i]);
           reader.readAsBinaryString(file.file);
           reader.onloadend = () => {
-            this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
+            // this.postImage(file);
+            // this.setImgOrientation(file.file, this.fileEncoded).then(r=> {
+            //   this.inputFileComponent.files[i].preview = r.toString();
+            // });
+            // this.postImage();
           };
         }
       }
@@ -154,7 +188,7 @@ export class NewsAddComponent implements OnInit {
   }
 
 
-  _handleReaderLoadedIE(readerEvt) {
+  _handleReaderLoadedIE(file, readerEvt) {
     var bytes = new Uint8Array(readerEvt.target.result);
     var binary = '';
     var length = bytes.byteLength;
@@ -162,11 +196,40 @@ export class NewsAddComponent implements OnInit {
       binary += String.fromCharCode(bytes[i]);
     }
     this.fileEncoded = btoa(binary);
+    this.setImgOrientation(file.file, this.fileEncoded).then(r=> {
+      this.fileValid = false;
+      file.preview = r.toString();
+      this.postImage(file);
+    });
   }
 
-  _handleReaderLoaded(readerEvt) {
+  _handleReaderLoaded(file, readerEvt) {
     this.fileEncoded = btoa(readerEvt.target.result);
+    this.setImgOrientation(file.file, this.fileEncoded).then(r=> {
+      file.preview = r.toString();
+      this.postImage(file);
+    });
   }
+
+  postImage(newimg){
+    let encodedImg = newimg.preview.substr(("data:"+newimg.file.type+";base64,").length);
+    if(this.alreadyUploaded.indexOf(encodedImg) !=-1){
+      this.fileValid = true;
+      return;
+    }
+    this.alreadyUploaded.push(encodedImg);
+    this.imageService.uploadImage({imageJointe: encodedImg, imageJointeType: newimg.file.name.split('.')[newimg.file.name.split('.').length - 1].toLowerCase(), id: null, originalFilename: newimg.file.name }).subscribe(
+      (data)=>{
+        this.fileValid = true;
+        if(this.newsitem.imageIds.length>0){
+          this.newsitem.imageIds += ",";
+        }
+        this.newsitem.imageIds += data.id;
+        newimg.id = data.id;
+      }
+    )
+  }
+
 
   s(s){
     JSON.stringify(s)
@@ -177,19 +240,19 @@ export class NewsAddComponent implements OnInit {
       const that = this;
       EXIF.getData(file, function () {
         if (this && this.exifdata && this.exifdata.Orientation) {
-          that.resetOrientation(inputBase64String, this.exifdata.Orientation,
+          that.resetOrientation(file, inputBase64String, this.exifdata.Orientation,
           (resetBase64Image) => {
             inputBase64String = resetBase64Image;
             resolve(inputBase64String);
           });
         } else {
-          resolve("data:image/jpg;base64,"+inputBase64String);
+          resolve("data:"+file.type.toLowerCase()+";base64,"+inputBase64String);
         }
       });
     });
   }
 
-  resetOrientation(srcBase64, srcOrientation, callback) {
+  resetOrientation(file, srcBase64, srcOrientation, callback) {
     const img = new Image();
 
     img.onload = function () {
@@ -223,11 +286,10 @@ export class NewsAddComponent implements OnInit {
       ctx.drawImage(img, 0, 0);
 
       // export base64
-      callback(canvas.toDataURL().replace("image/png", "image/jpg"));
+      callback(canvas.toDataURL().replace('image/png',file.type.toLowerCase()));
     };
 
-    img.src = "data:image/jpg;base64, " + srcBase64;
+    img.src = "data:"+ file.type.toLowerCase() +  ";base64, " + srcBase64;
   }
-
 
 }

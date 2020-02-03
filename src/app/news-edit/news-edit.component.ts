@@ -10,19 +10,22 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {ImageModel} from '../models/image.model';
 import {InputFileComponent} from 'ngx-input-file';
 import * as EXIF from 'exif-js';
+import {ImageService} from '../services/image.service';
 
 @Component({
   selector: 'app-news-edit',
   templateUrl: './news-edit.component.html',
   styleUrls: ['./news-edit.component.css']
 })
+
 export class NewsEditComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
               private newsService: NewsService,
-              private sanitizer: DomSanitizer) { }
+              private sanitizer: DomSanitizer,
+              private imageService: ImageService) { }
 
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
@@ -30,11 +33,20 @@ export class NewsEditComponent implements OnInit {
   currentUser: UserModel;
   newsitem: NewsModel;
   selectedFiles;
+  alreadyUploaded =[];
   fileEncoded;
   fileValid = true;
   filename;
   loading = false;
   itemImg;
+  typeMatch ={
+    'jpeg':'jpg',
+    'JPG':'jpg',
+    'JPEG':'jpg',
+    'jpg':'jpg',
+    'png':'png',
+    'PNG':'png'
+  };
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -50,9 +62,20 @@ export class NewsEditComponent implements OnInit {
         data => {
           this.newsitem = data;
           this.selectedFiles = [];
-          if(data.images.length>0){
-            for(let img of data.images){
-              this.selectedFiles.push({'file' : new File([this.base64ToBlob(img.imageJointe)],""+img.originalFilename, { type: 'image/'+img.imageJointeType })});
+          // if(data.images.length>0){
+          //   for(let img of data.images){
+          //     this.selectedFiles.push({'file' : new File([this.base64ToBlob(img.imageJointe)],""+img.originalFilename, { type: 'image/'+img.imageJointeType })});
+          //   }
+          // }
+          if(data.imageIds) {
+            for (let ids of data.imageIds.split(",")) {
+              console.log(ids);
+              this.imageService.getImage(+ids).subscribe(
+                (image) => {
+                  this.selectedFiles.push({'file': new File([this.base64ToBlob(image.imageJointe)], image.originalFilename.toString(), {type: 'image/' + image.imageJointeType}),'preview':this.sanitizer.bypassSecurityTrustResourceUrl('data:image'+image.imageJointeType+";base64,"+image.imageJointe), 'id':image.id})
+                  this.alreadyUploaded.push(image.imageJointe);
+                }
+              );
             }
           }
           this.editForm.controls.id.setValue(data.id);
@@ -60,6 +83,7 @@ export class NewsEditComponent implements OnInit {
           this.editForm.controls.titre.setValue(data.titre);
           this.editForm.controls.isPublic.setValue(data.public);
           this.editForm.controls.isAvatar.setValue(data.avatar);
+          console.log(this.selectedFiles);
         }
       )
     );
@@ -68,20 +92,32 @@ export class NewsEditComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     this.newsitem.auteur = this.currentUser;
-    this.newsitem.images = [];
-    for(let file of this.selectedFiles){
-      let image = new ImageModel();
-      image.imageJointeType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-      image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64,").length);
-      image.originalFilename = file.file.name;
-      this.newsitem.images.push(image);
+    // this.newsitem.images = [];
+    // for(let file of this.selectedFiles){
+    //   let image = new ImageModel();
+    //   image.imageJointeType = this.typeMatch[file.file.name.split('.')[file.file.name.split('.').length - 1]];
+    //   image.imageJointe = file.preview.substr(("data:image/" + image.imageJointeType.toLowerCase() + ";base64,").length);
+    //   image.originalFilename = file.file.name;
+    //   this.newsitem.images.push(image);
+    // }
+    this.newsService.editNews(this.newsitem)
+      .subscribe( data => {
+        this.loading = false;
+        this.router.navigate(['news']);
+      });
+  }
+
+  removeImage(newsitem){
+    let base64ToDelete = "";
+    if(newsitem.preview.changingThisBreaksApplicationSecurity){
+      base64ToDelete = newsitem.preview.changingThisBreaksApplicationSecurity.substr(("data:"+newsitem.file.type+";base64,").length-1);
+    } else {
+      base64ToDelete = newsitem.preview.substr(("data:"+newsitem.file.type+";base64,").length);
     }
-    console.log(this.newsitem);
-    // this.newsService.editNews(this.newsitem)
-    //   .subscribe( data => {
-    //     this.loading = false;
-    //     this.router.navigate(['news']);
-    //   });
+    let idArray = this.newsitem.imageIds.split(",");
+    idArray.splice(idArray.indexOf(newsitem.id.toString()),1);
+    this.newsitem.imageIds = idArray.join(",");
+    this.alreadyUploaded.splice(this.alreadyUploaded.indexOf(base64ToDelete),1);
   }
 
   handleFile(newsitem:NewsModel) {
@@ -101,10 +137,10 @@ export class NewsEditComponent implements OnInit {
         //   }
         // }
         if (reader.readAsBinaryString === undefined) {
-          reader.onload = this._handleReaderLoadedIE.bind(this);
+          reader.onload = this._handleReaderLoadedIE.bind(this, this.inputFileComponent.files[i]);
           reader.readAsArrayBuffer(file.file);
           reader.onloadend = () => {
-            this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
+            // this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
           };
           // reader.onloadend = () => {
           //   image.imageJointe = this.fileEncoded;
@@ -114,10 +150,10 @@ export class NewsEditComponent implements OnInit {
           //   this.fileValid = true;
           // };
         } else {
-          reader.onload = this._handleReaderLoaded.bind(this);
+          reader.onload = this._handleReaderLoaded.bind(this, this.inputFileComponent.files[i]);
           reader.readAsBinaryString(file.file);
           reader.onloadend = () => {
-            this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
+            // this.setImgOrientation(file.file, this.fileEncoded).then(r=> this.inputFileComponent.files[i].preview = r.toString());
           };
           // reader.onloadend = () => {
           //   image.imageJointe = this.fileEncoded;
@@ -132,7 +168,7 @@ export class NewsEditComponent implements OnInit {
     }
   }
 
-  _handleReaderLoadedIE(readerEvt) {
+  _handleReaderLoadedIE(file, readerEvt) {
     console.log('_handleReaderLoadedIE');
     var bytes = new Uint8Array(readerEvt.target.result);
     var binary = '';
@@ -141,11 +177,36 @@ export class NewsEditComponent implements OnInit {
       binary += String.fromCharCode(bytes[i]);
     }
     this.fileEncoded = btoa(binary);
+    this.setImgOrientation(file.file, this.fileEncoded).then(r=> {
+      file.preview = r.toString();
+      this.postImage(file);
+    });
   }
 
-  _handleReaderLoaded(readerEvt) {
+  _handleReaderLoaded(file, readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileEncoded = btoa(readerEvt.target.result);
+    this.setImgOrientation(file.file, this.fileEncoded).then(r=> {
+      file.preview = r.toString();
+      this.postImage(file);
+    });
+  }
+
+  postImage(newimg){
+    let encodedImg = newimg.preview.substr(("data:"+newimg.file.type+";base64,").length);
+    if(this.alreadyUploaded.indexOf(encodedImg) !=-1){
+      return;
+    }
+    this.alreadyUploaded.push(encodedImg);
+    this.imageService.uploadImage({imageJointe: encodedImg, imageJointeType: newimg.file.name.split('.')[newimg.file.name.split('.').length - 1].toLowerCase(), id: null, originalFilename: newimg.file.name }).subscribe(
+      (data)=>{
+        this.fileValid = false;
+        if(this.newsitem.imageIds.length>0){
+          this.newsitem.imageIds += ",";
+        }
+        this.newsitem.imageIds += data.id;
+      }
+    )
   }
 
   public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {
@@ -165,25 +226,23 @@ export class NewsEditComponent implements OnInit {
   }
 
   setImgOrientation(file, inputBase64String) {
-    console.log(file);
-    console.log(inputBase64String);
     return new Promise((resolve, reject) => {
       const that = this;
       EXIF.getData(file, function () {
         if (this && this.exifdata && this.exifdata.Orientation) {
-          that.resetOrientation(inputBase64String, this.exifdata.Orientation,
+          that.resetOrientation(file, inputBase64String, this.exifdata.Orientation,
             (resetBase64Image) => {
               inputBase64String = resetBase64Image;
               resolve(inputBase64String);
             });
         } else {
-          resolve(inputBase64String);
+          resolve("data:"+file.type.toLowerCase()+";base64,"+inputBase64String);
         }
       });
     });
   }
 
-  resetOrientation(srcBase64, srcOrientation, callback) {
+  resetOrientation(file, srcBase64, srcOrientation, callback) {
     const img = new Image();
 
     img.onload = function () {
@@ -217,10 +276,10 @@ export class NewsEditComponent implements OnInit {
       ctx.drawImage(img, 0, 0);
 
       // export base64
-      callback(canvas.toDataURL());
+      callback(canvas.toDataURL().replace('image/png',file.type.toLowerCase()));
     };
 
-    img.src = "data:image/jpg;base64, " + srcBase64;
+    img.src = "data:"+ file.type.toLowerCase() +  ";base64, " + srcBase64;
   }
 
 }

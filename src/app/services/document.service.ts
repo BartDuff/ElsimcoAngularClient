@@ -53,6 +53,6 @@ export class DocumentService {
   }
 
   openDocument(idRecherche: string): Observable<DocumentModel> {
-    return this.http.get<DocumentModel>(`${API_URL}/documents/${idRecherche}`);
+    return this.http.get<DocumentModel>(`${API_URL}/documents/${idRecherche}/open`);
   }
 }

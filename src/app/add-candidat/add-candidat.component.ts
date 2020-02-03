@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ContactService} from '../services/contact.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -10,6 +10,8 @@ import {Diplome} from '../models/diplome.model';
 import {Reference} from '../models/reference.model';
 import {CandidatModel} from '../models/candidat.model';
 import {CandidatService} from '../services/candidat.service';
+
+
 
 @Component({
   selector: 'app-add-candidat',

@@ -14,6 +14,7 @@ import {ToastrService} from 'ngx-toastr';
   templateUrl: './candidat-details.component.html',
   styleUrls: ['./candidat-details.component.css']
 })
+
 export class CandidatDetailsComponent implements OnInit {
   clickedColumn = null;
   envBase = environment.base;

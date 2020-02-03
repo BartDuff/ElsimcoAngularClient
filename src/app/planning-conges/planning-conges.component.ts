@@ -86,6 +86,7 @@ export class PlanningCongesComponent implements OnInit {
             }
           }
           this.congesValides = this.congesValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+          this.loading = false;
         }
       );
     } else {

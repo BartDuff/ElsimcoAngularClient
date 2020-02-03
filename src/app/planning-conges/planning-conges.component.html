@@ -1,11 +1,11 @@
 <h1>Planning des Congés</h1>
-<table class="bordered mat-elevation-z8" style="margin: auto;margin-top: 2em;" id="planning">
+<table class="bordered mat-elevation-z8" style="margin: auto;margin-top: 2em;" id="planning" *ngIf="!loading">
   <thead>
   <tr>
     <th
       [colSpan]="getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear()).length+2">
-      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);getValidatedConges();" style="border: none;"><mat-icon>arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
-      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);getValidatedConges();" style="border: none;"><mat-icon>arrow_right</mat-icon></button></th>
+      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);loading = true;getValidatedConges();" style="border: none;"><mat-icon>chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);loading = true;getValidatedConges();" style="border: none;"><mat-icon>chevron_right</mat-icon></button></th>
 
   </tr>
   <tr>
@@ -30,3 +30,8 @@
   </tr>
   </tbody>
 </table>
+<mat-progress-spinner
+  *ngIf="loading"
+  color="accent"
+  mode="indeterminate" style="margin: auto;">
+</mat-progress-spinner>

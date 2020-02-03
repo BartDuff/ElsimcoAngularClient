@@ -96,6 +96,7 @@ import {FaqService} from './services/faq.service';
 import {NgxGalleryModule} from 'ngx-gallery';
 import { CongesValidesComponent } from './conges-valides/conges-valides.component';
 import { PlanningCongesComponent } from './planning-conges/planning-conges.component';
+import { HomeComponent } from './home/home.component';
 const config: InputFileConfig = {};
 
 
@@ -149,6 +150,7 @@ const config: InputFileConfig = {};
     FaqEditComponent,
     CongesValidesComponent,
     PlanningCongesComponent,
+    HomeComponent,
   ],
   imports: [
     AppRoutingModule,

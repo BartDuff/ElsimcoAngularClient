@@ -29,9 +29,11 @@
     <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells())" class="caldivs"></div>
     <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())"
          style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day)}" class="caldivs">
-      <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
+      <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))" class="insidegrid">
         <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" class="dayc">{{day | date:'d'}}</span>
         <span style="position: absolute;top:1vh;right: 2vw;font-size: 1.2em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+<!--        <span class="dayc">{{day | date:'d'}}</span>-->
+<!--        <span class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} &lt;!&ndash;{{toMomentFormat(day)}}&ndash;&gt;</span>-->
       </div>
 <!--      <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" >{{day | date:'d'}}</span>-->
 <!--      <span style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{f.value[toMomentFormat(day)+' boolean']?'1/2':''}} {{absShort[absences.indexOf(f.value[toMomentFormat(day)])]}}</span>-->
@@ -39,17 +41,17 @@
   </div>
   <br>
   <div *ngIf="!FicheEnvoyee" style="margin-top: 5em;" id="resum">
-    <p><span matPrefix>Jours ouvrés: </span><span>{{joursOuvres().length}}</span></p>
-    <p><span matPrefix>Jours travaillés: </span><span>{{joursOuvres().length - countJoursNonTravailles(f)}}</span></p>
+    <p><span matPrefix>Jours ouvrés : </span><span>{{joursOuvres().length}}</span></p>
+    <p><span matPrefix>Jours travaillés : </span><span>{{joursOuvres().length - countJoursNonTravailles(f)}}</span></p>
 <!--    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>-->
 <!--    <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTTS(f) }}</span></p>-->
-    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTT() }}</span></p>
-    <p><span matPrefix>Congés payés: </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>
-    <p><span matPrefix>Absences exceptionnelles: </span><span *ngIf="f.value">{{ countAbsences(f) }}</span></p>
-    <p><span matPrefix>Formation: </span><span *ngIf="f.value">{{ countFormation(f) }}</span></p>
-    <p><span matPrefix>Intercontrat: </span><span *ngIf="f.value">{{ countInterContrat(f) }}</span></p>
-    <p><span matPrefix>Congés sans solde: </span><span *ngIf="f.value">{{ countSansSolde(f) }}</span></p>
-    <p><span matPrefix>Arrêt maladie: </span><span *ngIf="f.value">{{ countMaladie(f) }}</span></p>
+    <p><span matPrefix>RTT Employeur : </span><span *ngIf="f.value">{{ countRTT() }}</span></p>
+    <p><span matPrefix>Congés payés : </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>
+    <p><span matPrefix>Absences exceptionnelles : </span><span *ngIf="f.value">{{ countAbsences(f) }}</span></p>
+    <p><span matPrefix>Formation : </span><span *ngIf="f.value">{{ countFormation(f) }}</span></p>
+    <p><span matPrefix>Intercontrat : </span><span *ngIf="f.value">{{ countInterContrat(f) }}</span></p>
+    <p><span matPrefix>Congés sans solde : </span><span *ngIf="f.value">{{ countSansSolde(f) }}</span></p>
+    <p><span matPrefix>Arrêt maladie : </span><span *ngIf="f.value">{{ countMaladie(f) }}</span></p>
   </div>
 </div>
 
@@ -61,7 +63,7 @@
 &lt;!&ndash;  </mat-month-view>&ndash;&gt;
 </mat-card>-->
 
-<div style="width: 40vw" id="choice">
+<div style="width: 60vw" id="choice">
   <h4>
       Jours non travaillés
   </h4>
@@ -70,12 +72,13 @@
       <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés à déclarer ce mois-ci</div>
       <div *ngIf="justifManquant" style="color: red;font-weight: bold;margin-bottom: 2em;">Vous avez déclaré une absence exceptionnelle sans fournir de justificatif.<br>
         Merci de nous fournir un justificatif dans les meilleurs délais.</div>
-      <div *ngFor="let dayOff of daysOff; index as i" style="margin: 1em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;">
+      <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
+      <div *ngFor="let dayOff of daysOff; index as i" class="formcontainer">
         <div *ngIf="isArray(dayOff)">
           <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0" class="champs">
+            <span style="padding-top: 1em">Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
             <mat-form-field>
-              <span class="prefix" matPrefix>Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
-              <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="Type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
+              <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="raison d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
                 <mat-option *ngFor="let absence of absTypes | slice: 4" [value]="absence">
                   {{absence}}
                 </mat-option>
@@ -101,6 +104,7 @@
           <input matInput placeholder="Commentaires {{(raison.value&&raison.value !== 'Absence exceptionnelle'?'facultatif':'')}}" [ngModel] [name]="dayOff + ' comm'" [required]="raison.value === 'Absence exceptionnelle'">
         </mat-form-field>
         </div>
+      </div>
       </div>
       <button mat-raised-button type="submit" [disabled]="f.invalid || sending" id="envoyerbut">Envoyer</button>
     </form>

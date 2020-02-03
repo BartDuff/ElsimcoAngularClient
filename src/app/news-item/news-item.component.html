@@ -14,8 +14,8 @@
       <div style="font-weight: bold;vertical-align: center">{{newsitem?.titre}}</div>
     </mat-card-title>
   </mat-card-header>
-  <img mat-card-image *ngIf="galleryImages.length == 1 && !newsitem.avatar" [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem?.images[0].imageJointeType.toLowerCase() + ';base64, '+ newsitem?.images[0].imageJointe)" alt="" class="newsimage">
-  <div style="width: 250px;height: 250px;position: relative;overflow: hidden;border-radius: 50%;margin: auto;margin-top: 2em;" *ngIf="galleryImages.length == 1 && newsitem.avatar"><img mat-card-image [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' + newsitem?.images[0].imageJointeType.toLowerCase() + ';base64, '+ newsitem?.images[0].imageJointe)" alt="" class="newsavatar"></div>
+  <img mat-card-image *ngIf="galleryImages.length == 1 && !newsitem.avatar" [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' + singleImg.imageJointeType + ';base64, '+ singleImg.imageJointe)" alt="" class="newsimage">
+  <div style="width: 12em;height: 12em;position: relative;overflow: hidden;border-radius: 50%;margin: auto;margin-top: 2em;" *ngIf="galleryImages.length == 1 && newsitem.avatar"><img mat-card-image [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' +singleImg.imageJointeType + ';base64, '+ singleImg.imageJointe)" alt="" class="newsavatar"></div>
   <ngx-gallery *ngIf="galleryImages.length>1" [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery" style="margin-top: 2em;"></ngx-gallery>
 <!--  <iframe width="560" height="500" src="https://www.youtube.com/embed/vFViy4-w3nY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
   <mat-card-content>
@@ -29,4 +29,5 @@
   </button>
   <span *ngIf="likes?.length >0"> {{likes?.length}} {{ likes?.length <=1?'personne a aimé':'personnes ont aimé'}}</span>
 </mat-card-actions>
-  <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publié le {{newsitem?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>par {{ newsitem?.auteur.prenom }} {{ newsitem?.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteNews()" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button>
+  <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publié le {{newsitem?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>par {{ newsitem?.auteur.prenom }} {{ newsitem?.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteNews()" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button></mat-card-subtitle>
+</mat-card>

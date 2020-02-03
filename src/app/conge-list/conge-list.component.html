@@ -20,11 +20,11 @@
       <div id="cont" style="display: flex;flex-direction: column;">
         <div style="display: flex;justify-content: center;">
           <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;">
-            <mat-icon style="color: black">arrow_left</mat-icon>
+            <mat-icon style="color: black!important;">chevron_left</mat-icon>
           </button>
-          <h3 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h3>
+          <h3 style="text-align: center;font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h3>
           <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;">
-            <mat-icon style="color: black">arrow_right</mat-icon>
+            <mat-icon style="color: black!important;">chevron_right</mat-icon>
           </button>
         </div>
         <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">

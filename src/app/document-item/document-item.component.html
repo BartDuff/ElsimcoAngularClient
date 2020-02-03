@@ -5,8 +5,8 @@
           (click)="downloadDocument()"><i class="material-icons">file_download</i></button>
 </td>
 <td>
-  <button type="button"
-          (click)="openDocument()"><mat-icon>remove_red_eyes</mat-icon></button>
+  <a type="button"
+          (click)="openDocument()" download="$event"><mat-icon>remove_red_eyes</mat-icon></a>
 </td>
 <td>
   <button type="button"

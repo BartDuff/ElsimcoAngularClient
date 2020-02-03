@@ -11,6 +11,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {EmailService} from '../services/email.service';
 import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
+import {ImageService} from '../services/image.service';
 
 @Component({
   selector: 'app-conge-list',
@@ -29,7 +30,7 @@ export class CongeListComponent implements OnInit {
   filename;
   fileValid = false;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-  absTypes = ['RTT', 'Congés payés', 'Absence Exceptionnelle', 'Congé sans solde'];
+  absTypes = ['RTT', 'Congés Payés', 'Absence Exceptionnelle', 'Congés Sans Solde'];
   absShortTypes = ['RTT', 'CP', 'A.E.', 'C.S.S.'];
   dateNow: Date;
 
@@ -37,7 +38,8 @@ export class CongeListComponent implements OnInit {
               private congeService: CongeService,
               private toastr:ToastrService,
               private dialog: MatDialog,
-              private emailService: EmailService) { }
+              private emailService: EmailService,
+              private imageService: ImageService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -72,7 +74,7 @@ export class CongeListComponent implements OnInit {
             }
           }
           for (let c of this.congeSansJustif) {
-            c.justificatifRecu = c.documentJointUri != '';
+            c.justificatifRecu = !!c.fileId;
           }
           for(let d of dates){
             if(this.congeSansJustif.find((x => new Date(x.date).toLocaleDateString() === new Date(d).toLocaleDateString()))){
@@ -117,7 +119,7 @@ export class CongeListComponent implements OnInit {
   }
 
   objectKeys(o){
-    return Object.keys(o);
+    return o? Object.keys(o):'';
   }
 
   s(o){
@@ -418,25 +420,23 @@ export class CongeListComponent implements OnInit {
   handleFile(dayoff) {
     let file = dayoff.rawFile[0];
     if (file) {
-      this.fileValid = false;
+      this.filename = file.file.name;
       let reader = new FileReader();
       if (reader.readAsBinaryString === undefined) {
         reader.onload = this._handleReaderLoadedIE.bind(this);
         reader.readAsArrayBuffer(file.file);
         reader.onloadend = () => {
-          dayoff.documentJointUri = this.fileEncoded;
+          this.postImage(dayoff);
           this.fileEncoded = null;
-          dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-          this.fileValid = true;
+          // dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
         };
       } else {
         reader.onload = this._handleReaderLoaded.bind(this);
         reader.readAsBinaryString(file.file);
         reader.onloadend = () => {
-          dayoff.documentJointUri = this.fileEncoded;
+          this.postImage(dayoff);
           this.fileEncoded = null;
-          dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
-          this.fileValid = true;
+          // dayoff.documentJointType = file.file.name.split('.')[file.file.name.split('.').length - 1];
         };
       }
 
@@ -459,6 +459,16 @@ export class CongeListComponent implements OnInit {
   _handleReaderLoaded(readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileEncoded = btoa(readerEvt.target.result);
+  }
+
+  postImage(dayoff){
+    this.fileValid = false;
+    this.imageService.uploadJustif({imageJointe: this.fileEncoded, imageJointeType: this.filename.split('.')[this.filename.split('.').length - 1].toLowerCase(), id: null, originalFilename: this.filename }).subscribe(
+      (data)=>{
+        dayoff.fileId = data.id;
+        this.fileValid = true;
+      }
+    )
   }
 
 }

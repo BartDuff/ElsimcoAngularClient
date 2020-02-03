@@ -7,6 +7,11 @@
 td {
   padding: 15em!important;
 }
+
+th {
+  padding: 1em!important;
+}
+
 tr {
   border: solid 0.2em;
 }

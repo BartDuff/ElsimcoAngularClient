@@ -15,6 +15,7 @@ import {CongeService} from '../services/conge.service';
   styleUrls: ['./header.component.css'],
   encapsulation: ViewEncapsulation.None
 })
+
 export class HeaderComponent implements OnInit, AfterViewChecked {
   img = `../../${environment.base}/assets/images/elsimco-black.PNG`;
   allRHUnvalidFiches: FicheModel[];

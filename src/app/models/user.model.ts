@@ -20,6 +20,7 @@ export class UserModel {
   dateArrivee: Date;
   dateDepart: Date;
   metier: String;
+  imageId: number;
   avatar: String;
   avatarType: String;
   rawFile: any;

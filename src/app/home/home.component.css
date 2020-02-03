@@ -5,7 +5,7 @@
 }
 
 mat-form-field {
-  width: 90%;
+  width: 50%;
 }
 
 .mat-icon-button {
@@ -30,28 +30,20 @@ mat-card {
 }
 
 @media only screen and (min-width: 768px) {
-  .logincontainer{
-    position: fixed;
-    top: 40vh;
-    left: 35%;
+  mat-card-title {
+    position: relative;
+    top: -466px;
     background-color: white;
-    margin: auto;
+    font-size: 3em;
     width: 20%;
-  }
-  .logintitle {
-    font-size: calc(1vh + 1vw);
-    /*width: 20%;*/
+    margin: auto;
   }
 
-  .connect {
-    border: black solid 1px;
-    /*width: 20%;*/
-    /*position: fixed;*/
-    padding-top: 2em;
-    /*top: 50vh;*/
-    /*left: 35%;*/
+  mat-card-content {
+    width: 50vw;
+    position: relative;
+    top: -436px;
     margin: auto;
-    /*background-color: white;*/
   }
 }
 

@@ -1,4 +1,5 @@
 <mat-nav-list>
+  <a mat-list-item routerLink="/home" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Accueil</a>
   <a mat-list-item routerLink="/contact_form" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Nous
     Rejoindre</a>
   <a mat-list-item routerLink="/login" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Connexion</a>

@@ -16,12 +16,13 @@
           <textarea matInput formControlName="contenu" [(ngModel)]="newsitem.contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..."
                     name="contenu" id="contenu"></textarea>
         </mat-form-field>
-        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" fileLimit=99 [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(newsitem)" [ngModelOptions]="{standalone: true}"></input-file>
+        <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" fileLimit=99 [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(newsitem)" [ngModelOptions]="{standalone: true}" sizeLimit="40" (deletedFile)="removeImage($event)"></input-file>
+        <div>(Maximum 40Mo)</div>
         <mat-checkbox formControlName="isAvatar" name="isAvatar" id="isAvatar" [checked]="newsitem.avatar" (change)="newsitem.avatar = $event.checked.valueOf()">Cette image est un avatar</mat-checkbox>
-        <mat-checkbox formControlName="isPublic" name="isPublic" id="isPublic" [checked]="newsitem.public" (change)="newsitem.public = $event.checked.valueOf()">Rendre cette publication publique?</mat-checkbox>
+        <mat-checkbox formControlName="isPublic" name="isPublic" id="isPublic" [checked]="newsitem.public" (change)="newsitem.public = $event.checked.valueOf()">Rendre cette publication publique ?</mat-checkbox>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/news">RETOUR <mat-icon>arrow_back</mat-icon></button>
-          <button mat-button>Modifier</button>
+          <button mat-button [disabled]="!fileValid">Modifier</button>
         </mat-card-actions>
       </div>
     </mat-card-content>

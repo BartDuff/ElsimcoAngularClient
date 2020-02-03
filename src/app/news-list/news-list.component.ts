@@ -9,11 +9,13 @@ import {NewsService} from '../services/news.service';
 import {MissionModel} from '../models/mission.model';
 import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 
+
 @Component({
   selector: 'app-news-list',
   templateUrl: './news-list.component.html',
   styleUrls: ['./news-list.component.css']
 })
+
 export class NewsListComponent implements OnInit {
   news: NewsModel[];
   currentUser: UserModel;

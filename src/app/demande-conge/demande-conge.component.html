@@ -8,24 +8,28 @@
 <!--  </div>-->
 <!--</div>-->
 <div>
-  <div><strong>Solde CP année N-1: </strong>{{countConges()}}</div>
-  <div><strong>Solde CP année N: </strong>{{countCongesAnticipes()}}</div>
-  <div><strong>Solde RTT (h): </strong>{{countRTT()}}</div>
-  <div><strong>Solde Ancienneté: </strong>{{countAnciennete()}}</div>
+  <div><strong>Solde CP année N-1 : </strong>{{countConges()}}</div>
+  <div><strong>Solde CP année N : </strong>{{countCongesAnticipes()}}</div>
+  <div><strong>Solde RTT (h) : </strong>{{countRTT()}}</div>
+  <div><strong>Solde Ancienneté : </strong>{{countAnciennete()}}</div>
+<!--  <div><strong>Solde CP année N-1 : </strong>{{currentUser.cpNMoins1}}</div>-->
+<!--  <div><strong>Solde CP année N : </strong>{{currentUser.cpN}}</div>-->
+<!--  <div><strong>Solde RTT (h) : </strong>{{currentUser.rttn}}</div>-->
+<!--  <div><strong>Solde Ancienneté : </strong>{{currentUser.congeAnciennete}}</div>-->
 </div>
 <br>
 <div style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner
-    *ngIf="daysOffSavedObjArr.length == 0"
+    *ngIf="loading"
     color="accent"
     mode="indeterminate">
   </mat-progress-spinner>
 </div>
-<div>
-  <button mat-button [disabled]="dateNow.getMonth()-1 < fixedDateNow.getMonth()" (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon [ngStyle]="{color: dateNow.getMonth()-1 < fixedDateNow.getMonth()? 'grey':'black'}" [matTooltip]="dateNow.getMonth()-1 < fixedDateNow.getMonth()?'Ce mois est déjà passé':''">arrow_left</mat-icon></button>{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}
-  <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;"><mat-icon style="color: black">arrow_right</mat-icon></button>
+<div *ngIf="!loading">
+  <button mat-button [disabled]="dateNow.getMonth()-1 < fixedDateNow.getMonth()" (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon [ngStyle]="{color: dateNow.getMonth()-1 < fixedDateNow.getMonth()? 'grey':'black'}" [matTooltip]="dateNow.getMonth()-1 < fixedDateNow.getMonth()?'Ce mois est déjà passé':''">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+  <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
 </div>
-        <div style="justify-content: space-evenly;display: flex" id="maincont">
+        <div style="justify-content: space-evenly;display: flex" id="maincont" *ngIf="!loading">
           <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
               <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
               <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
@@ -74,7 +78,7 @@
           &lt;!&ndash;  </mat-month-view>&ndash;&gt;
           </mat-card>-->
 
-          <div style="width: 40vw">
+          <div style="width: 60vw">
             <div id="formulaire">
               <form (ngSubmit)="sendRequest(f, daysOffSelectedObjArr)" #f="ngForm" novalidate id="detailform">
                 <h4>
@@ -83,11 +87,12 @@
                 <div>
                   Sélectionnez les dates de congés/absences à poser sur le calendrier joint. Pour changer de mois, sélectionnez le mois correspondant avec les flèches.
                 </div>
-                <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" style="margin: 3em;box-shadow:  0 0 20px #D3D3D3;padding: 2em;" class="boxes">
+                <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
+                <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" class="boxes formcontainer">
                   <div *ngIf="isArray(dayOff)" style="box-shadow: none!important;">
                     <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0" class="champs">
+                      <span class="prefix" matPrefix style="padding-top: 1em">Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
                       <mat-form-field>
-                        <span class="prefix" matPrefix>Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
                         <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="Type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
                           <mat-option *ngFor="let absence of absTypes" [value]="absence">
 <!--                            <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
@@ -113,7 +118,7 @@
                           </mat-select>
                         </mat-form-field>
                         <label>Document justificatif</label>
-                        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="d.rawFile" [name]="d.date + 'fichier'" (ngModelChange)="handleFile(d)" [ngModelOptions]="{standalone: true}" style="align-self: center;"></input-file>
+                        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="d.rawFile" [name]="d.date + 'fichier'" (ngModelChange)="handleFile(d)" [ngModelOptions]="{standalone: true}" style="align-self: center;padding-bottom: 1em;"></input-file>
                       </div>
                     </div>
                   </div>
@@ -128,10 +133,10 @@
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
-                    <mat-checkbox [checked]="dayOff.demiJournee" (change)="dayOff.demiJournee = $event.checked.valueOf()">Demi-journée?</mat-checkbox>
+                    <mat-checkbox [checked]="dayOff.demiJournee" (change)="dayOff.demiJournee = $event.checked.valueOf()">Demi-journée ?</mat-checkbox>
                     <br>
                     <mat-form-field *ngIf="dayOff.demiJournee">
-                      <span class="prefix" matPrefix>Type de demi-journée: </span>
+                      <span class="prefix" matPrefix>Type de demi-journée : </span>
                       <mat-select [(ngModel)]="dayOff.typeDemiJournee" [ngModelOptions]="{standalone: true}" placeholder="Type de demi-journée">
                         <mat-option value="Matin">Matin</mat-option>
                         <mat-option value="Après-midi">Après-midi</mat-option>
@@ -142,7 +147,7 @@
                     </mat-form-field>
                     <div *ngIf="dayOff.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
                       <mat-form-field>
-                        <span class="prefix" matPrefix *ngIf="dayOff.typeCe == null">Raison de l'absence exceptionnelle: </span>
+                        <span class="prefix" matPrefix *ngIf="dayOff.typeCe == null">Raison de l'absence exceptionnelle : </span>
                         <mat-select [(ngModel)]="dayOff.typeCe" [name]="dayOff.date + ' typeCe'" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value == 'Absence Exceptionnelle'">
                           <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage/pacse : 4j</mat-option>
                           <mat-option value="obsèques conjoint-enfants" matTooltip="2 jours ouvrés">obsèques conjoint/enfants : 2j</mat-option>
@@ -154,9 +159,10 @@
                         </mat-select>
                       </mat-form-field>
                       <label>Document justificatif</label>
-                      <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="dayOff.rawFile" [name]="dayOff.date + 'fichier'" (ngModelChange)="handleFile(dayOff)" [ngModelOptions]="{standalone: true}" style="align-self: center;"></input-file>
+                      <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="dayOff.rawFile" [name]="dayOff.date + 'fichier'" (ngModelChange)="handleFile(dayOff)" [ngModelOptions]="{standalone: true}" style="align-self: center;padding-bottom: 1em;"></input-file>
                     </div>
                   </div>
+                </div>
                 </div>
                 <mat-progress-spinner
                   *ngIf="FicheEnvoyee"

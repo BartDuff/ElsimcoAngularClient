@@ -17,9 +17,9 @@
         <p>Date de publication : {{ mission.datePublication | date: 'dd/MM/yyyy, HH:mm' }}</p>
         <p>Durée : {{ mission.duree }} mois</p>
         <p>Description : {{ mission.jobDesc }}</p>
-        <p>Résumé: : {{ mission.resume }}</p>
+        <p>Résumé : {{ mission.resume }}</p>
       </div>
-        <div class="card-content">Utilisateurs intéressés par cette mission:
+        <div class="card-content">Utilisateurs intéressés par cette mission :
         <ul class="collection" *ngFor="let user of users">
           <li class="collection-item">{{ user.nom }} {{ user.prenom }}<br/>{{ user.email }}</li>
         </ul>

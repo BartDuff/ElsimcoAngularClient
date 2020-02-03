@@ -19,10 +19,11 @@ import {ValidationCongesComponent} from '../validation-conges/validation-conges.
 })
 export class ValidationFicheComponent implements OnInit {
   currentUser:UserModel;
-  allFiches: FicheModel[];
+  allFiches: FicheModel[]=[];
   allRHValidFiches: FicheModel[];
   dateNow : Date;
   dataSource: any;
+  loading = false;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
   constructor(private userService: UserService,
               private ficheService: FicheService,
@@ -60,15 +61,17 @@ export class ValidationFicheComponent implements OnInit {
   }
 
   getAllFiches() {
-    this.allFiches = [];
+    // this.allFiches = [];
+    this.loading = true;
     this.ficheService.getFiches().subscribe(
       (data) => {
         for(let f of data){
-          if(f.mois == this.nomsDesMois[this.dateNow.getMonth()] && f.annee === this.dateNow.getFullYear() && this.allFiches.indexOf(f)==-1)
+          if(f.mois == this.nomsDesMois[this.dateNow.getMonth()] && f.annee === this.dateNow.getFullYear())
             this.allFiches.push(f);
           // else
           //   this.allFiches.splice(this.allFiches.indexOf(f),1);
         }
+        this.loading = false;
       }
     );
   }

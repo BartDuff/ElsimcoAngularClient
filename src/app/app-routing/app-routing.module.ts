@@ -32,9 +32,11 @@ import {FaqAddComponent} from '../faq-add/faq-add.component';
 import {FaqEditComponent} from '../faq-edit/faq-edit.component';
 import {CongesValidesComponent} from '../conges-valides/conges-valides.component';
 import {PlanningCongesComponent} from '../planning-conges/planning-conges.component';
+import {HomeComponent} from '../home/home.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
+  { path: 'home', component: HomeComponent},
   { path: 'contact_form', component: AddContactComponent},
   { path: 'candidat_form/:secretid', component: AddCandidatComponent},
   { path: 'candidat_form', canActivate: [AuthGuardService], component: AddCandidatComponent},
@@ -66,7 +68,7 @@ const routes: Routes = [
   { path: 'add_faq', canActivate: [AuthGuardService], component: FaqAddComponent },
   { path: 'edit_faq/:id', canActivate: [AuthGuardService], component: FaqEditComponent },
   { path: '', redirectTo: 'news', pathMatch: 'full'},
-  { path: 'error', redirectTo: 'login', pathMatch: 'full'},
+  { path: 'error', redirectTo: 'home', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }
 ];
 

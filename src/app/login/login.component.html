@@ -30,13 +30,14 @@
 <!--    </form>-->
 <!--  </div>-->
 <!--</div>-->
-<mat-card class="login-card">
+<!--<mat-card class="login-card">-->
   <div mat-card-image>
     <img class="login-image" [src]=img alt="user bg">
   </div>
-<mat-card-title>Bienvenue</mat-card-title>
-<form [formGroup]="loginForm" (ngSubmit)="login()">
-  <mat-card-content s>
+<div class="logincontainer">
+<div class="logintitle">Bienvenue dans la communauté Elsimco</div>
+  <div class="connect">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
     <div fxLayout="column" fxLayoutAlign="space-around center">
       <mat-error *ngIf="message">
         {{message}}
@@ -53,9 +54,10 @@
         <button mat-button>Se Connecter</button>
       </mat-card-actions>
     </div>
-  </mat-card-content>
-</form>
-</mat-card>
+  </form>
+  </div>
+</div>
+<!--</mat-card>-->
 <mat-card *ngIf="showSpinner()"
           style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner

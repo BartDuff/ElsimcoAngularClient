@@ -9,6 +9,8 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import * as moment from 'moment';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import { saveAs } from 'file-saver';
+import {ImageService} from '../services/image.service';
+import {image} from 'html2canvas/dist/types/css/types/image';
 
 
 @Component({
@@ -43,7 +45,8 @@ export class CongesValidesComponent implements OnInit {
               private toastrService: ToastrService,
               private emailService: EmailService,
               private dialog: MatDialog,
-              private changeDetectorRefs: ChangeDetectorRef) {
+              private changeDetectorRefs: ChangeDetectorRef,
+              private imageService: ImageService) {
   }
 
   ngOnInit() {
@@ -177,20 +180,39 @@ export class CongesValidesComponent implements OnInit {
       navigator.userAgent &&
       navigator.userAgent.indexOf('CriOS') == -1 &&
       navigator.userAgent.indexOf('FxiOS') == -1;
-    if (conge.documentJointUri) {
+    // if (conge.documentJointUri) {
+    //   // let blob = this.base64ToBlob(conge.documentJointUri, 'text/plain');
+    //   // saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
+    //   let blob = this.base64ToBlob(conge.documentJointUri, 'application/'+ conge.documentJointType);
+    //   if(!navigator.userAgent.match('CriOS') || !isSafari) {
+    //     saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
+    //   } else {
+    //     // let reader = new FileReader();
+    //     // reader.onload = function(e){
+    //     //   window.location.href = reader.result
+    //     // };
+    //     // reader.readAsDataURL(blob);
+    //     window.open(URL.createObjectURL(blob));
+    //   }
+    // }
+    if (conge.fileId) {
       // let blob = this.base64ToBlob(conge.documentJointUri, 'text/plain');
       // saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
-      let blob = this.base64ToBlob(conge.documentJointUri, 'application/'+ conge.documentJointType);
-      if(!navigator.userAgent.match('CriOS') || !isSafari) {
-        saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
-      } else {
-        // let reader = new FileReader();
-        // reader.onload = function(e){
-        //   window.location.href = reader.result
-        // };
-        // reader.readAsDataURL(blob);
-        window.open(URL.createObjectURL(blob));
-      }
+      this.imageService.getImage(conge.fileId).subscribe(
+        (file)=>{
+          let blob = this.base64ToBlob(file.imageJointe, 'application/'+ file.imageJointeType);
+          if(!navigator.userAgent.match('CriOS') || !isSafari) {
+            saveAs(blob, file.originalFilename);
+          } else {
+            // let reader = new FileReader();
+            // reader.onload = function(e){
+            //   window.location.href = reader.result
+            // };
+            // reader.readAsDataURL(blob);
+            window.open(URL.createObjectURL(blob));
+          }
+        }
+      );
     }
   }
 
@@ -210,12 +232,26 @@ export class CongesValidesComponent implements OnInit {
     return new Blob(byteArrays, {type: contentType});
   }
 
+  // getCongesWithFile() {
+  //   this.congesWithFile = [];
+  //   this.congeService.getConges().subscribe(
+  //     (data) => {
+  //       for (let c of data) {
+  //         if (c.documentJointUri != null && c.documentJointUri !='' && new Date(c.date).getFullYear() == this.dateNowFile.getFullYear()) {
+  //           this.congesWithFile.push(c);
+  //         }
+  //       }
+  //       this.congesWithFile = this.congesWithFile.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+  //     }
+  //   );
+  // }
+
   getCongesWithFile() {
     this.congesWithFile = [];
     this.congeService.getConges().subscribe(
       (data) => {
         for (let c of data) {
-          if (c.documentJointUri != null && c.documentJointUri !='' && new Date(c.date).getFullYear() == this.dateNowFile.getFullYear()) {
+          if (c.fileId && new Date(c.date).getFullYear() == this.dateNowFile.getFullYear()) {
             this.congesWithFile.push(c);
           }
         }
@@ -270,6 +306,7 @@ export class CongesValidesComponent implements OnInit {
 
   getValidatedConges() {
     this.congesValides = [];
+    this.loading = true;
     if (this.selectedUser == null) {
       this.congeService.getConges().subscribe(
         (data) => {
@@ -279,6 +316,7 @@ export class CongesValidesComponent implements OnInit {
             }
           }
           this.congesValides = this.congesValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+          this.loading = false;
         }
       );
     } else {
@@ -290,6 +328,7 @@ export class CongesValidesComponent implements OnInit {
             }
           }
           this.congesValides = this.congesValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+          this.loading = false;
         });
     }
   }
@@ -476,6 +515,7 @@ export class CongesValidesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       (d) => {
         if (d) {
+          this.loading = true;
           conge.valideRH = false;
           this.congeService.deleteConge(conge).subscribe(
             (data) => {

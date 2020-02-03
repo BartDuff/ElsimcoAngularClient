@@ -32,8 +32,8 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   daysOff = [];
   justifManquant = false;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
-  absTypes= ["RTT", "Congés payés", "Absence Exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
-  absences= ["RTT", "Congés payés", "Absence Exceptionnelle", "Congé sans solde", "Arrêt maladie", "Formation", "Intercontrat"];
+  absTypes= ["RTT", "Congés Payés", "Absence Exceptionnelle", "Congés Sans Solde", "Arrêt Maladie", "Formation", "Intercontrat"];
+  absences= ["RTT", "Congés Payés", "Absence Exceptionnelle", "Congés Sans Solde", "Arrêt Maladie", "Formation", "Intercontrat"];
   absShortTypes= ["RTT", "CP", "A.E.", "C.S.S.", "A.M.", "F", "I"];
   dateNow : Date;
   FicheEnvoyee:boolean;

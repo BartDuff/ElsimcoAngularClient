@@ -24,6 +24,7 @@ mat-card-subtitle {
 
 mat-card-content {
   margin: 1em;
+  margin-top: 2em;
   text-wrap: normal;
   text-align: left;
   white-space: pre-wrap;
@@ -43,7 +44,8 @@ mat-card-content {
   /*!*border: solid grey 1px;*!*/
   /*margin-top: 0.5em;*/
   display: inline-flex;
-  top: 24px;
+  margin-top: 0!important;
+  /*top: 24px;*/
 }
 
 /*img.rounded {*/
@@ -56,4 +58,8 @@ mat-card-content {
 ngx-gallery /deep/ .ngx-gallery-icon {
   color: black;
   margin-top: 2em;
+}
+
+ngx-gallery /deep/ .ngx-gallery-arrow-wrapper{
+  height:70%!important;
 }

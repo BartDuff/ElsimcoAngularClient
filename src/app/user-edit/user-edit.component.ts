@@ -7,6 +7,14 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {EmailService} from '../services/email.service';
 import {ToastrService} from 'ngx-toastr';
+import {ImageService} from '../services/image.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {DocumentModel} from '../models/document.model';
+import {ImageModel} from '../models/image.model';
+import { saveAs } from 'file-saver';
+import {MissionModel} from '../models/mission.model';
+import {NewsModel} from '../models/news.model';
+
 
 @Component({
   selector: 'app-user-edit',
@@ -20,12 +28,16 @@ export class UserEditComponent implements OnInit {
               private route: ActivatedRoute,
               private userService: UserService,
               private emailService: EmailService,
+              private imageService: ImageService,
               private toastr: ToastrService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private sanitizer: DomSanitizer) {
   }
   editForm: FormGroup;
   currentUser: UserModel;
   user: UserModel;
+  testimg;
+  base64downoad;
   formerUser: UserModel;
   fileEncoded;
   filename;
@@ -36,6 +48,7 @@ export class UserEditComponent implements OnInit {
     prenom: 'Prénom',
     nom: 'Nom',
     role: 'Rôle',
+    imageId: 'Image Id',
     fonction: 'Fonction',
     trigramme: 'Trigramme',
     cpNMoins1: 'Compteur CP N-1',
@@ -43,12 +56,21 @@ export class UserEditComponent implements OnInit {
     rttn: 'Conpteur RTT',
     congeAnciennete: 'Congés Ancienneté',
     adressePostale:'Adresse postale',
+    anticipation: 'Anticipation',
     telephone:'Téléphone',
     telPro: 'Téléphone Pro',
     emailPerso:'Email perso',
     dateArrivee:'Date d\'arrivée',
+    dateDepart:'Date de départ',
     metier:'Métier',
-    avatar: 'Avatar'};
+    dateInscription:'Date d\'inscription',
+    avatar: 'Avatar',
+    missions: 'Missions',
+    avatarType:'Type avatar',
+    rawFile:'Fichier brut',
+    derniereConnexion:'Dernière connexion',
+    likes: 'Likes'
+  };
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -78,8 +100,17 @@ export class UserEditComponent implements OnInit {
           this.user.dateArrivee = new Date(data.dateArrivee);
           this.user.derniereConnexion = new Date(data.derniereConnexion);
           this.user.rawFile = [];
-          if(data.avatar != null ) {
-            this.user.rawFile.push({'file': new File([this.base64ToBlob(data.avatar)], 'exemple.' + data.avatarType, {type: 'image/' + data.avatarType})});
+          // if(data.avatar != null ) {
+          //   this.user.rawFile.push({'file': new File([this.base64ToBlob(data.avatar)], 'exemple.' + data.avatarType, {type: 'image/' + data.avatarType})});
+          // }
+          if(data.imageId){
+            this.imageService.getImage(data.imageId).subscribe(
+              (image)=>{
+                this.base64downoad = image;
+                this.user.rawFile.push({'file': new File([this.base64ToBlob(image.imageJointe)], image.originalFilename.toString(), {type: 'image/' + image.imageJointeType})});
+              }
+            );
+
           }
           this.formerUser = {...this.user};
           this.editForm.controls.id.setValue(data.id);
@@ -121,7 +152,7 @@ export class UserEditComponent implements OnInit {
           }
           let details = [];
           for(let k of Object.keys(this.user)){
-            if(this.formerUser[k] != this.editForm.value[k] && k !='missions' && k != 'dateArrivee' && k !='rawFile' && k !='avatar' && k !='avatarType' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='congeAnciennete'){
+            if(this.formerUser[k] != this.editForm.value[k] && k !='imageId' && k !='anticipation' && k !='missions' && k != 'dateArrivee' && k !='rawFile' && k !='avatar' && k !='avatarType' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='congeAnciennete'){
               let key = k.toString();
               let val = this.editForm.value[k];
               details.push({[this.keysDict[key]]:val});
@@ -135,8 +166,6 @@ export class UserEditComponent implements OnInit {
             let sLine = Object.keys(ob)[0] + " : "+ob[Object.keys(ob)[0]]+"\n";
             sDetails += sLine;
           }
-          console.log(this.user);
-          console.log(this.formerUser);
           this.userService.editUser(this.user)
             .subscribe(data => {
               if(sDetails == ""){
@@ -157,6 +186,7 @@ export class UserEditComponent implements OnInit {
 
   handleFile(user) {
     let file = user.rawFile[0];
+    this.filename=file.file.name;
     if (file) {
       this.fileValid = false;
       let reader = new FileReader();
@@ -164,18 +194,18 @@ export class UserEditComponent implements OnInit {
         reader.onload = this._handleReaderLoadedIE.bind(this);
         reader.readAsArrayBuffer(file.file);
         reader.onloadend = () => {
-          user.avatar = this.fileEncoded;
-          this.fileEncoded = null;
-          user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          // user.avatar = this.fileEncoded;
+          // this.fileEncoded = null;
+          // user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       } else {
         reader.onload = this._handleReaderLoaded.bind(this);
         reader.readAsBinaryString(file.file);
         reader.onloadend = () => {
-          user.avatar = this.fileEncoded;
-          this.fileEncoded = null;
-          user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
+          // user.avatar = this.fileEncoded;
+          // this.fileEncoded = null;
+          // user.avatarType = file.file.name.split('.')[file.file.name.split('.').length - 1];
           this.fileValid = true;
         };
       }
@@ -194,11 +224,22 @@ export class UserEditComponent implements OnInit {
       binary += String.fromCharCode(bytes[i]);
     }
     this.fileEncoded = btoa(binary);
+    this.postImage();
   }
 
   _handleReaderLoaded(readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileEncoded = btoa(readerEvt.target.result);
+    this.postImage();
+  }
+
+  postImage(){
+    this.imageService.uploadImage({imageJointe: this.fileEncoded, imageJointeType: this.filename.split('.')[this.filename.split('.').length - 1].toLowerCase(), id: null, originalFilename: this.filename }).subscribe(
+      (data)=>{
+        this.fileValid = false;
+        this.user.imageId = data.id;
+      }
+    )
   }
 
   public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {
@@ -232,4 +273,27 @@ export class UserEditComponent implements OnInit {
   //   }
   //   return byteArrays;
   // }
+
+  getDocument(image: ImageModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
+    this.imageService.getImage(image.id).subscribe(
+      (res) => {
+        if (res.imageJointe) {
+          let blob = this.base64ToBlob(image.imageJointe, 'application/'+ image.imageJointeType);
+          if(!navigator.userAgent.match('CriOS') || !isSafari) {
+            saveAs(blob, image.originalFilename);
+          } else {
+            // let reader = new FileReader();
+            // reader.onload = function(e){
+            //   window.location.href = reader.result
+            // };
+            // reader.readAsDataURL(blob);
+            window.open(URL.createObjectURL(blob));
+          }
+        }
+      });
+  }
 }

@@ -7,6 +7,10 @@ td {
   height: 1.5em;
 }
 
+th {
+  padding: 1em;
+}
+
 .mat-button {
   color: black;
   font-size: 2em;

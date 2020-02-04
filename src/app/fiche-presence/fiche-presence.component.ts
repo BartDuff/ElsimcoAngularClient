@@ -28,6 +28,8 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   mouseDown:boolean = false;
   loading = true;
   sending = false;
+  firstDateToastr;
+  secondDateToastr;
   joursDeLaSemaine = ['L','M','M','J','V','S','D'];
   daysOff = [];
   justifManquant = false;
@@ -81,6 +83,29 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       }
     }
     return '';
+  }
+
+  compare(a,b){
+    if(this.isArray(a) && this.isArray(b)){
+        let dateA = a[0].date;
+        let dateB = b[0].date;
+        return dateA.localeCompare(dateB);
+    }
+    if(this.isArray(a)&& !this.isArray(b)){
+      let dateA = a[0].date;
+      let dateB = b.date;
+      return dateA.localeCompare(dateB);
+    }
+    if(!this.isArray(a)&& this.isArray(b)){
+      let dateA = a.date;
+      let dateB = b[0].date;
+      return dateA.localeCompare(dateB);
+    }
+    if(!this.isArray(a)&& !this.isArray(b)){
+      let dateA = a.date;
+      let dateB = b.date;
+      return dateA.localeCompare(dateB);
+    }
   }
 
   getAbsTypeLong(date) {
@@ -165,6 +190,9 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       }
       return 'yellow';
     }
+    if(this.plage && this.firstClick && moment(day).format('DD/MM/YYYY') == this.dayoffPlage[0].date){
+      return 'orange';
+    }
     return 'white';
   }
 
@@ -238,6 +266,16 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     // this.dateFilter(this.dateNow);
   }
 
+  showToastr(){
+    if(!this.plage){
+      return;
+    }
+    this.toastr.toastrConfig.closeButton= true;
+    this.toastr.toastrConfig.disableTimeOut = true;
+    let firstToastr = this.toastr.info("Sélectionner la première date de la plage","Sélection de plage de date");
+    this.firstDateToastr = firstToastr.toastRef.componentInstance;
+  }
+
   getFichesForUser(){
     this.userService.getFicheForUser(this.currentUser).subscribe(
       (data) => {
@@ -270,7 +308,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
     }
     if (plageArr.length > 1) {
-      this.toastr.warning('Le motif d\'absence "' + absence.typeConge + '" a été appliqué à toutes les dates sélectionnées à partir du ' + absence.date + '. Veuillez le préciser si nécessaire.', 'Attention');
+      this.toastr.warning('Le type d\'absence a été appliqué à toutes les dates de la plage sélectionnée du ' + plageArr[0].date + ' au '+plageArr[plageArr.length-1].date, 'Attention');
     }
   }
 
@@ -345,6 +383,9 @@ checkWeekends(day:Date){
     }
     let day = moment(event).format('DD/MM/YYYY');
     if (this.plage && this.firstClick) {
+      this.secondDateToastr.remove();
+      this.toastr.toastrConfig.closeButton= false;
+      this.toastr.toastrConfig.disableTimeOut = false;
       let stopDate = moment(event);
       let f = moment(this.firstDay);
       while (f.toDate() < stopDate.toDate()) {
@@ -365,7 +406,7 @@ checkWeekends(day:Date){
             rawFile: null,
             plage: true
           });
-          this.dayoffPlage.sort((a, b) => a.date.localeCompare(b.date));
+          this.dayoffPlage.sort((a, b) => this.compare(a,b));
         }
       }
       for (let dp of this.dayoffPlage) {
@@ -412,7 +453,7 @@ checkWeekends(day:Date){
           rawFile: null,
           plage: false
         });
-        this.daysOff.sort((a, b) => a.date.localeCompare(b.date));
+        this.daysOff.sort((a, b) => this.compare(a,b));
         this.firstDay = null;
         this.firstClick = false;
         this.plage = false;
@@ -450,7 +491,7 @@ checkWeekends(day:Date){
                   plage: true
                 });
                 this.autoFillTypeInPlage(dayArr[0],dayArr);
-                dayArr.sort((a, b) => a.date.localeCompare(b.date));
+                dayArr.sort((a, b) => this.compare(a,b));
               }
             }
             this.firstDay = null;
@@ -480,7 +521,7 @@ checkWeekends(day:Date){
                   plage: true
                 });
                 this.autoFillTypeInPlage(dayArr[0],dayArr);
-                dayArr.sort((a, b) => a.date.localeCompare(b.date));
+                dayArr.sort((a, b) => this.compare(a,b));
               }
             }
             this.firstDay = null;
@@ -492,6 +533,7 @@ checkWeekends(day:Date){
         }
       }
       this.daysOff.push(this.dayoffPlage);
+      this.daysOff.sort((a, b) => this.compare(a,b));
       this.firstDay = null;
       this.firstClick = false;
       this.plage = false;
@@ -499,6 +541,9 @@ checkWeekends(day:Date){
       return;
     }
     if (this.plage && !this.firstClick) {
+      this.firstDateToastr.remove();
+      let secondToastr = this.toastr.info("Sélectionner la dernière date de la plage","Sélection de plage de date");
+      this.secondDateToastr = secondToastr.toastRef.componentInstance;
       this.firstClick = true;
       this.firstDay = moment(event);
       this.dayoffPlage.push({
@@ -514,7 +559,7 @@ checkWeekends(day:Date){
         rawFile: null,
         plage: true
       });
-      this.dayoffPlage.sort((a, b) => a.date.localeCompare(b.date));
+      this.dayoffPlage.sort((a, b) => this.compare(a,b));
       return;
     }
     for (let plageArr of this.daysOff) {
@@ -544,8 +589,7 @@ checkWeekends(day:Date){
         rawFile: null,
         plage: false
       });
-      this.daysOff.sort((a, b) => a.date.localeCompare(b.date));
-      //this.daysOff.sort();
+      this.daysOff.sort((a, b) => this.compare(a,b));
     }
   }
 
@@ -625,10 +669,23 @@ checkWeekends(day:Date){
       fiche.user = JSON.parse(localStorage.getItem('currentUser'));
       fiche.joursOuvres = this.joursOuvres().length;
       fiche.joursTravailles = this.joursOuvres().length - this.countJoursNonTravailles(form);
-      for (let key in form.value) {
-        if (form.value.hasOwnProperty(key)) {
-          if (key.endsWith(" comm")) {
-            fiche.commentaires[form.value[key.substr(0, 10)] + " " + key.substr(0, 10)] = form.value[key];
+      // for (let key in form.value) {
+      //   if (form.value.hasOwnProperty(key)) {
+      //     if (key.endsWith(" comm")) {
+      //       fiche.commentaires[form.value[key.substr(0, 10)] + " " + key.substr(0, 10)] = form.value[key];
+      //     }
+      //   }
+      // }
+      for(let c of this.daysOff){
+        if(this.isArray(c)){
+          if (c[0].commentaires != undefined) {
+            for(let cong of c){
+              fiche.commentaires[cong.typeConge + " " + cong.date] = c[0].commentaires;
+            }
+          }
+        } else {
+          if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()) {
+            fiche.commentaires[c.typeConge + " " + c.date] = c.commentaires;
           }
         }
       }
@@ -647,6 +704,7 @@ checkWeekends(day:Date){
         (data) => {
           this.sending = true;
           fiche.commentaireSup = data.commentaire;
+          console.log(fiche);
           this.pdfService.sendFiche(fiche).subscribe(
             (data) => {
               this.toastr.success("Fiche de présence bien envoyée", 'Envoyé');
@@ -737,7 +795,7 @@ checkWeekends(day:Date){
   countConges(form: NgForm) {
     let count = 0;
     for(let c of this.daysOffSavedObjArr){
-      if(c.typeConge == 'Congés payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+      if(c.typeConge == 'Congés Payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
         if(c.demiJournee)
           count = count + 0.5;
         else
@@ -747,7 +805,7 @@ checkWeekends(day:Date){
     for(let c of this.daysOff){
       if(this.isArray(c)){
         for(let co of c){
-          if(co.typeConge == 'Congés payés' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(co.typeConge == 'Congés Payés' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
             if(co.demiJournee)
               count = count + 0.5;
             else
@@ -755,7 +813,7 @@ checkWeekends(day:Date){
           }
         }
       } else {
-        if(c.typeConge == 'Congés payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+        if(c.typeConge == 'Congés Payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
           if(c.demiJournee)
             count = count + 0.5;
           else
@@ -827,7 +885,7 @@ checkWeekends(day:Date){
   countSansSolde(form: NgForm) {
     let count = 0;
     for(let c of this.daysOffSavedObjArr){
-      if(c.typeConge == 'Congé sans solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+      if(c.typeConge == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
         if(c.demiJournee)
           count = count + 0.5;
         else
@@ -850,7 +908,7 @@ checkWeekends(day:Date){
     for(let c of this.daysOff){
       if(this.isArray(c)){
         for(let co of c){
-          if(co.typeConge == 'Congé sans solde' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(co.typeConge == 'Congés Sans Solde' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
             if(co.demiJournee)
               count = count + 0.5;
             else
@@ -858,7 +916,7 @@ checkWeekends(day:Date){
           }
         }
       } else {
-        if(c.typeConge == 'Congé sans solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+        if(c.typeConge == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
           if(c.demiJournee)
             count = count + 0.5;
           else
@@ -888,7 +946,7 @@ checkWeekends(day:Date){
     for(let c of this.daysOff){
       if(this.isArray(c)){
         for(let co of c){
-          if(co.typeConge == 'Arrêt maladie' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+          if(co.typeConge == 'Arrêt Maladie' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
             if(co.demiJournee)
               count = count + 0.5;
             else
@@ -896,7 +954,7 @@ checkWeekends(day:Date){
           }
         }
       } else {
-        if(c.typeConge == 'Arrêt maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
+        if(c.typeConge == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth()==this.dateNow.getMonth()){
           if(c.demiJournee)
             count = count + 0.5;
           else

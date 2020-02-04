@@ -120,7 +120,7 @@ export class ValidationFicheComponent implements OnInit {
           (d)=>{
             this.ficheService.deleteFiche(fiche).subscribe(
               (d)=> {
-                this.getAllFiches();
+                this.allFiches.splice(this.allFiches.indexOf(fiche),1);
                 this.toastrService.error('Fiche de présence refusée', 'Fiche refusée');
               }
             )}

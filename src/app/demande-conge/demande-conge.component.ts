@@ -40,6 +40,8 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   private inputFileComponent: InputFileComponent;
   //selectedDate: Moment;
   allowAnticipation = false;
+  firstDateToastr;
+  secondDateToastr;
   counter;
   mouseDown: boolean = false;
   rttValid = true;
@@ -133,6 +135,13 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService, private emailService: EmailService, private dialog: MatDialog, private imageService: ImageService) {
   }
 
+  showToastr(){
+    this.toastr.toastrConfig.closeButton= true;
+    this.toastr.toastrConfig.disableTimeOut = true;
+    let firstToastr = this.toastr.info("Sélectionner la première date de la plage","Sélection de plage de date");
+    this.firstDateToastr = firstToastr.toastRef.componentInstance;
+  }
+
   getDayColor(day, iteration) {
     if (this.checkWeekends(day, iteration)) {
       return 'grey';
@@ -149,6 +158,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         }
       }
       return 'yellow';
+    }
+    if(this.plage && this.firstClick && moment(day).format('DD/MM/YYYY') == this.dayoffPlage[0].date){
+      return 'orange';
     }
     return 'white';
   }
@@ -199,6 +211,29 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
+  }
+
+  compare(a,b){
+    if(this.isArray(a) && this.isArray(b)){
+      let dateA = a[0].date;
+      let dateB = b[0].date;
+      return dateA.localeCompare(dateB);
+    }
+    if(this.isArray(a)&& !this.isArray(b)){
+      let dateA = a[0].date;
+      let dateB = b.date;
+      return dateA.localeCompare(dateB);
+    }
+    if(!this.isArray(a)&& this.isArray(b)){
+      let dateA = a.date;
+      let dateB = b[0].date;
+      return dateA.localeCompare(dateB);
+    }
+    if(!this.isArray(a)&& !this.isArray(b)){
+      let dateA = a.date;
+      let dateB = b.date;
+      return dateA.localeCompare(dateB);
+    }
   }
 
   // decreaseCount(absence) {
@@ -392,7 +427,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
     }
     if (plageArr.length > 1) {
-      this.toastr.warning('Le motif d\'absence "' + absence.typeConge + '" a été appliqué à toutes les dates sélectionnées à partir du ' + absence.date + '. Veuillez le préciser si nécessaire.', 'Attention');
+      this.toastr.warning('Le type d\'absence a été appliqué à toutes les dates de la plage sélectionnée du ' + plageArr[0].date + ' au '+plageArr[plageArr.length-1].date , 'Attention',{extendedTimeOut: 2000});
     }
   }
 
@@ -531,6 +566,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     }
     let day = moment(event).format('DD/MM/YYYY');
     if (this.plage && this.firstClick) {
+      this.secondDateToastr.remove();
+      this.toastr.toastrConfig.closeButton= false;
+      this.toastr.toastrConfig.disableTimeOut = false;
       let stopDate = moment(event);
       let f = moment(this.firstDay);
       while (f.toDate() < stopDate.toDate()) {
@@ -551,7 +589,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             rawFile: null,
             plage: true
           });
-          this.dayoffPlage.sort((a, b) => a.date.localeCompare(b.date));
+          this.dayoffPlage.sort((a, b) => this.compare(a,b));
         }
       }
       for (let dp of this.dayoffPlage) {
@@ -602,7 +640,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
           rawFile: null,
           plage: false
         });
-        this.daysOffSelectedObjArr.sort((a, b) => a.date.localeCompare(b.date));
+        this.daysOffSelectedObjArr.sort((a, b) => this.compare(a,b));
         this.firstDay = null;
         this.firstClick = false;
         this.plage = false;
@@ -640,7 +678,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                   plage: true
                 });
                 this.autoFillTypeInPlage(dayArr[0], dayArr);
-                dayArr.sort((a, b) => a.date.localeCompare(b.date));
+                dayArr.sort((a, b) => this.compare(a,b));
               }
             }
             this.firstDay = null;
@@ -670,7 +708,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                   plage: true
                 });
                 this.autoFillTypeInPlage(dayArr[0], dayArr);
-                dayArr.sort((a, b) => a.date.localeCompare(b.date));
+                dayArr.sort((a, b) => this.compare(a,b));
               }
             }
             this.firstDay = null;
@@ -682,6 +720,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         }
       }
       this.daysOffSelectedObjArr.push(this.dayoffPlage);
+      this.daysOffSelectedObjArr.sort((a, b) => this.compare(a,b));
       this.firstDay = null;
       this.firstClick = false;
       this.plage = false;
@@ -689,6 +728,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       return;
     }
     if (this.plage && !this.firstClick) {
+      this.firstDateToastr.remove();
+      let secondToastr = this.toastr.info("Sélectionner la dernière date de la plage","Sélection de plage de date");
+      this.secondDateToastr = secondToastr.toastRef.componentInstance;
       this.firstClick = true;
       this.firstDay = moment(event);
       this.dayoffPlage.push({
@@ -704,7 +746,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         rawFile: null,
         plage: true
       });
-      this.dayoffPlage.sort((a, b) => a.date.localeCompare(b.date));
+      this.dayoffPlage.sort((a, b) => this.compare(a,b));
       return;
     }
     for (let plageArr of this.daysOffSelectedObjArr) {
@@ -734,7 +776,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         rawFile: null,
         plage: false
       });
-      this.daysOffSelectedObjArr.sort((a, b) => a.date.localeCompare(b.date));
+      this.daysOffSelectedObjArr.sort((a, b) => this.compare(a,b));
       //this.daysOff.sort();
     }
   }
@@ -835,7 +877,6 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   }
 
   sendRequest(form: NgForm, d) {
-    this.FicheEnvoyee = true;
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -843,11 +884,14 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     dialogRef.afterClosed().subscribe(
       (d) => {
         if (d) {
+          this.FicheEnvoyee = true;
           let cArray = [];
+          let periodArray =[];
           let congeSansJustif = [];
           for (let conge of this.daysOffSelectedObjArr) {
             if (this.isArray(conge)) {
               for (let subConge of conge) {
+                periodArray.push(this.changeCaseFirstLetter(this.nomsDesMois[this.toDate(subConge.date).getMonth()]) + " "+this.toDate(subConge.date).getFullYear());
                 let c = new CongeModel();
                 c.documentJointType = subConge.documentJointType;
                 c.user = this.currentUser;
@@ -871,6 +915,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
               }
               continue;
             } else {
+              periodArray.push(this.changeCaseFirstLetter(this.nomsDesMois[this.toDate(conge.date).getMonth()])+ " "+this.toDate(conge.date).getFullYear());
               let co = new CongeModel();
               co.documentJointType = conge.documentJointType;
               co.user = this.currentUser;
@@ -911,6 +956,15 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
           this.userService.editUser(this.currentUser).subscribe(
             () => {
               this.toastr.success('Demande envoyée', 'Confirmation d\'envoi');
+              const set = new Set(periodArray);
+              let uniquePeriod = Array.from(set.values());
+              let sPeriod = uniquePeriod.join(", ");
+              this.emailService.sendMail("Bonjour, \n\n"+this.currentUser.prenom + " "+this.currentUser.nom+" vient d'envoyer une nouvelle demande d'absence pour la période de : "+sPeriod+".","Nouvelle demande d'absence : "+this.currentUser.prenom + " "+this.currentUser.nom,"majoline.domingos@elsimco.com").subscribe(
+                ()=>{},
+                (error) => {
+                  this.toastr.error('Erreur d\'envoi de mail');
+                }
+              );
               this.userService.getUser(this.currentUser.id).subscribe(
                 (user) => {
                   localStorage.setItem('currentUser', JSON.stringify(user));
@@ -919,20 +973,20 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                     let i = 0;
                     let identicalCe = [];
                     let sCongeSansJustif = '';
-                    for (let ob of congeSansJustif) {
-                      if (ob == congeSansJustif[congeSansJustif.length - 1] && (new Date(ob.date).getDate() === new Date(congeSansJustif[i - 1].date).getDate() + 1)) {
-                        identicalCe.push(ob);
-                        break;
-                      }
-                      if ((new Date(ob.date).getDate() === new Date(congeSansJustif[i + 1].date).getDate() - 1) && identicalCe.indexOf(ob) == -1) {
-                        identicalCe.push(ob);
-                      } else {
-                        let sLine = new Date(ob.date).toLocaleDateString() + ' : ' + ob.typeCe + '\n';
-                        sCongeSansJustif += sLine;
-                      }
-                      i++;
-                    }
-                    sCongeSansJustif += 'Du ' + new Date(identicalCe[0].date).toLocaleDateString() + ' au ' + new Date(identicalCe[identicalCe.length - 1].date).toLocaleDateString() + ' : ' + identicalCe[0].typeCe + '\n';
+                    // for (let ob of congeSansJustif) {
+                    //   if (ob == congeSansJustif[congeSansJustif.length - 1] && (new Date(ob.date).getDate() === new Date(congeSansJustif[i - 1].date).getDate() + 1)) {
+                    //     identicalCe.push(ob);
+                    //     break;
+                    //   }
+                    //   if ((new Date(ob.date).getDate() === new Date(congeSansJustif[i + 1].date).getDate() - 1) && identicalCe.indexOf(ob) == -1) {
+                    //     identicalCe.push(ob);
+                    //   } else {
+                    //     let sLine = new Date(ob.date).toLocaleDateString() + ' : ' + ob.typeCe + '\n';
+                    //     sCongeSansJustif += sLine;
+                    //   }
+                    //   i++;
+                    // }
+                    // sCongeSansJustif += 'Du ' + new Date(identicalCe[0].date).toLocaleDateString() + ' au ' + new Date(identicalCe[identicalCe.length - 1].date).toLocaleDateString() + ' : ' + identicalCe[0].typeCe + '\n';
                     this.emailService.sendMailWithRangeForFile('Bonjour,\nVous avez envoyé une demande d\'absence exceptionnelle sans justificatif pour les jours suivants :\n', 'Notification de pièce justificative manquante', this.currentUser.email, congeSansJustif).subscribe(
                       () => {
                         this.FicheEnvoyee = false;
@@ -994,7 +1048,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     // }
   }
 
-  countRTT() {
+  countRTT():number {
     let count = this.currentUser.rttn;
     for (let d of this.daysOffSelectedObjArr) {
       if (this.isArray(d)) {
@@ -1025,7 +1079,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return count;
   }
 
-  countConges() {
+  countConges():number {
     let count = this.currentUser.cpNMoins1;
     let countAnciennete = this.currentUser.congeAnciennete;
     for (let d of this.daysOffSelectedObjArr) {
@@ -1105,7 +1159,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   //   return this.counter;
   // }
 
-  countAnciennete() {
+  countAnciennete(): number {
     let count = this.currentUser.congeAnciennete;
     for (let d of this.daysOffSelectedObjArr) {
       if (this.isArray(d)) {
@@ -1141,7 +1195,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return count;
   }
 
-  countCongesAnticipes() {
+  countCongesAnticipes(): number {
     let count = this.currentUser.cpN;
     let countCPNmoins1 = this.currentUser.cpNMoins1;
     let countAnciennete = this.currentUser.congeAnciennete;
@@ -1225,7 +1279,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return count;
   }
 
-  countAbsences(form: NgForm) {
+  countAbsences(form: NgForm):number {
     let count = 0;
     for (let key in form.value) {
       if (form.value.hasOwnProperty(key)) {
@@ -1243,7 +1297,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return count;
   }
 
-  countSansSolde(form: NgForm) {
+  countSansSolde(form: NgForm):number {
     let count = 0;
     for (let key in form.value) {
       if (form.value.hasOwnProperty(key)) {
@@ -1262,7 +1316,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   }
 
 
-  countMaladie(form: NgForm) {
+  countMaladie(form: NgForm):number {
     let count = 0;
     for (let key in form.value) {
       if (form.value.hasOwnProperty(key)) {

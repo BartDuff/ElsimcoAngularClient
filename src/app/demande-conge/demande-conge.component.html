@@ -8,10 +8,10 @@
 <!--  </div>-->
 <!--</div>-->
 <div>
-  <div><strong>Solde CP année N-1 : </strong>{{countConges()}}</div>
-  <div><strong>Solde CP année N : </strong>{{countCongesAnticipes()}}</div>
-  <div><strong>Solde RTT (h) : </strong>{{countRTT()}}</div>
-  <div><strong>Solde Ancienneté : </strong>{{countAnciennete()}}</div>
+  <div><strong>Solde CP année N-1 : </strong>{{countConges() | number: '1.2-2'}}</div>
+  <div><strong>Solde CP année N : </strong>{{countCongesAnticipes() | number: '1.2-2'}}</div>
+  <div><strong>Solde RTT (h) : </strong>{{countRTT() | number: '1.2-2'}}</div>
+  <div><strong>Solde Ancienneté : </strong>{{countAnciennete() | number: '1.2-2'}}</div>
 <!--  <div><strong>Solde CP année N-1 : </strong>{{currentUser.cpNMoins1}}</div>-->
 <!--  <div><strong>Solde CP année N : </strong>{{currentUser.cpN}}</div>-->
 <!--  <div><strong>Solde RTT (h) : </strong>{{currentUser.rttn}}</div>-->
@@ -39,10 +39,10 @@
             </div>-->
           <div id="cont">
             <div style="display: flex;justify-content: space-evenly;align-content: space-evenly;">
-              <button mat-button (click)="plage = !plage;firstDay = null;firstClick=false;" style="background-color: black;" class="selectbut"><span *ngIf="!plage">Sélection de plages de dates</span><span *ngIf="plage">Sélection de date unique</span></button>
+              <button mat-button (click)="plage = !plage;firstDay = null;firstClick=false;showToastr();" style="background-color: black;" class="selectbut"><span *ngIf="!plage">Sélection de plages de dates</span><span *ngIf="plage">Sélection de date unique</span></button>
               <button mat-button (click)="daysOffSelectedObjArr = [];plage = false;firstDay = null;firstClick=false;this.zeroIndicator = countConges();" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
             </div>
-            <div style="border: none;width: 38vw;height: 32vh; text-align: left;" id="calendrier">
+            <div style="border: none;width: 35vw;height: 32vh; text-align: left;" id="calendrier">
               <h1 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h1>
               <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine" class="daysofweek">{{d}}</div>
               <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),0))" class="caldivs"></div>

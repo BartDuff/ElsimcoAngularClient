@@ -68,16 +68,16 @@
           {{ user?.emailPerso }}</p>
       <p>
         <span class="labels">Congés N-1 :&ensp; </span>
-          {{ user?.cpNMoins1 }}</p>
+          {{ user?.cpNMoins1 | number: '1.2-2' }}</p>
       <p>
         <span class="labels">Congés N :&ensp; </span>
-          {{ user?.cpN }}</p>
+          {{ user?.cpN | number: '1.2-2' }}</p>
       <p class="labels">
         <span class="labels">RTT (h) :&ensp; </span>
-          {{ user?.rttn }}</p>
+          {{ user?.rttn | number: '1.2-2' }}</p>
       <p>
         <span class="labels">Congés Ancienneté :&ensp; </span>
-          {{ user?.congeAnciennete }}</p>
+          {{ user?.congeAnciennete | number: '1.2-2' }}</p>
 
 <!--      <p>Cet utilisateur s'intéresse aux missions suivantes:</p>-->
 <!--      <div class="mini-container" fxLayout="row wrap" fxFlexAlign="space-evenly" fxLayoutGap="5vw">-->

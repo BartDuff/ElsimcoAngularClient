@@ -3,30 +3,30 @@
   <thead>
   <tr>
     <th
-      [colSpan]="getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear()).length+2">
-      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);loading = true;getValidatedConges();" style="border: none;"><mat-icon>chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
-      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);loading = true;getValidatedConges();" style="border: none;"><mat-icon>chevron_right</mat-icon></button></th>
+      [colSpan]="daysInMonth.length+2">
+      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);loading = true;getDaysInMonth(this.dateNow.getMonth(),this.dateNow.getFullYear());getValidatedConges();" style="border: none;"><mat-icon>chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+      <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);loading = true;getDaysInMonth(this.dateNow.getMonth(),this.dateNow.getFullYear());getValidatedConges();" style="border: none;"><mat-icon>chevron_right</mat-icon></button></th>
 
   </tr>
   <tr>
     <th colspan="2">Jour</th>
     <th
-      *ngFor="let wd of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())">{{joursDeLaSemaine[wd.getDay()]}}</th>
+      *ngFor="let wd of daysInMonth">{{joursDeLaSemaine[wd.getDay()]}}</th>
   </tr>
   <tr>
     <th colspan="2">Nom Prénom</th>
-    <th *ngFor="let d of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())">{{d.getDate()}}</th>
+    <th *ngFor="let d of daysInMonth">{{d.getDate()}}</th>
   </tr>
   </thead>
   <tbody *ngFor="let u of users">
   <tr>
     <td rowSpan="2">{{u.nom}} {{u.prenom}}</td>
     <td>M</td>
-    <td *ngFor="let m of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" [ngStyle]="{backgroundColor: checkAskedMorningHolidays(m,u)?'green':checkWeekendsWithYear(m,m.getFullYear())?'grey':''}"></td>
+    <td *ngFor="let m of daysInMonth" [ngStyle]="{backgroundColor: checkAskedMorningHolidays(m,u)?'green':checkWeekendsWithYear(m,m.getFullYear())?'grey':''}"></td>
   </tr>
   <tr>
     <td>A.M</td>
-    <td *ngFor="let j of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" [ngStyle]="{backgroundColor: checkAskedAfternoonHolidays(j,u)? 'green': checkWeekendsWithYear(j,j.getFullYear())?'grey':''}"></td>
+    <td *ngFor="let j of daysInMonth" [ngStyle]="{backgroundColor: checkAskedAfternoonHolidays(j,u)? 'green': checkWeekendsWithYear(j,j.getFullYear())?'grey':''}"></td>
   </tr>
   </tbody>
 </table>

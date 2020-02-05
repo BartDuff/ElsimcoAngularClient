@@ -87,24 +87,24 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
 
   compare(a,b){
     if(this.isArray(a) && this.isArray(b)){
-        let dateA = a[0].date;
-        let dateB = b[0].date;
-        return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a[0].date);
+      let dateB = this.toDate(b[0].date);
+      return dateA.getTime() - dateB.getTime();
     }
     if(this.isArray(a)&& !this.isArray(b)){
-      let dateA = a[0].date;
-      let dateB = b.date;
-      return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a[0].date);
+      let dateB = this.toDate(b.date);
+      return dateA.getTime() - dateB.getTime();
     }
     if(!this.isArray(a)&& this.isArray(b)){
-      let dateA = a.date;
-      let dateB = b[0].date;
-      return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a.date);
+      let dateB = this.toDate(b[0].date);
+      return dateA.getTime() - dateB.getTime();
     }
     if(!this.isArray(a)&& !this.isArray(b)){
-      let dateA = a.date;
-      let dateB = b.date;
-      return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a.date);
+      let dateB = this.toDate(b.date);
+      return dateA.getTime() - dateB.getTime();
     }
   }
 
@@ -272,7 +272,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     }
     this.toastr.toastrConfig.closeButton= true;
     this.toastr.toastrConfig.disableTimeOut = true;
-    let firstToastr = this.toastr.info("Sélectionner la première date de la plage","Sélection de plage de date");
+    let firstToastr = this.toastr.info("Sélectionner la première date de la plage","Sélection de plages de dates");
     this.firstDateToastr = firstToastr.toastRef.componentInstance;
   }
 
@@ -542,7 +542,7 @@ checkWeekends(day:Date){
     }
     if (this.plage && !this.firstClick) {
       this.firstDateToastr.remove();
-      let secondToastr = this.toastr.info("Sélectionner la dernière date de la plage","Sélection de plage de date");
+      let secondToastr = this.toastr.info("Sélectionner la dernière date de la plage","Sélection de plages de dates");
       this.secondDateToastr = secondToastr.toastRef.componentInstance;
       this.firstClick = true;
       this.firstDay = moment(event);

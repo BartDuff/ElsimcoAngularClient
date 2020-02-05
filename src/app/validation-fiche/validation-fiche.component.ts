@@ -189,7 +189,7 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés payés'){
+      if(typeConge == 'Congés Payés'){
         arr.push(date);
       }
     }
@@ -220,7 +220,7 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Arrêt maladie'){
+      if(typeConge == 'Arrêt Maladie'){
         arr.push(date);
       }
     }
@@ -235,7 +235,7 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés sans solde'){
+      if(typeConge == 'Congés Sans Solde'){
         arr.push(date);
       }
     }

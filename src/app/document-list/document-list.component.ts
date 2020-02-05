@@ -11,6 +11,7 @@ import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.co
 import {MatDialogConfig} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {HttpHeaderResponse} from '@angular/common/http';
+import {createTextNode} from '@angular/core/src/render3/node_manipulation';
 
 const API_URL = environment.apiUrl;
 @Component({
@@ -93,7 +94,7 @@ export class DocumentListComponent implements OnInit {
       (res) => {
         let d : DocumentModel = res ;
         if (d.fileBase64) {
-          let blob = this.base64ToBlob(d.fileBase64, 'application/'+ d.originalFileName.split('.')[2]);
+          let blob = this.base64ToBlob(d.fileBase64, 'application/'+ d.originalFileName.split('.')[d.originalFileName.split('.').length-1]);
           if(!navigator.userAgent.match('CriOS') || !isSafari) {
             saveAs(blob, d.originalFileName);
           } else {
@@ -102,7 +103,10 @@ export class DocumentListComponent implements OnInit {
             //   window.location.href = reader.result
             // };
             // reader.readAsDataURL(blob);
-            window.open(URL.createObjectURL(blob));
+            let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.')[d.originalFileName.split('.').length-1]);
+            let fileURL = window.URL.createObjectURL(blob,);
+            let tab = window.open();
+            tab.location.href = fileURL;
           }
         }
       });
@@ -119,7 +123,18 @@ export class DocumentListComponent implements OnInit {
           //   window.location.href = reader.result
           // };
           // reader.readAsDataURL(blob);
-          window.open("data:application/" + d.originalFileName.split('.')[2]+ ";base64, "+d.fileBase64, '_blank');
+          // window.open("data:application/" + d.originalFileName.split('.')[2]+ ";base64, "+d.fileBase64, '_blank');
+          let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.')[d.originalFileName.split('.').length-1]);
+          let fileURL = window.URL.createObjectURL(blob);
+          let tab = window.open();
+          // if(d.originalFileName.split('.')[d.originalFileName.split('.').length-1] == 'pdf'){
+            tab.location.href = fileURL;
+          // } else {
+          //   // tab.onload = function(){this.document.body.innerHTML+= `<iframe src= "https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="800"> </iframe>`};
+          //   let newblob = new Blob([blob], {type:"text/plain;charset=utf-8"});
+          //   let newFileURL = URL.createObjectURL(newblob);
+          //   tab.location.href = newFileURL;
+          // }
         }
       });
       }

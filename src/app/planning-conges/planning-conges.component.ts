@@ -19,6 +19,7 @@ export class PlanningCongesComponent implements OnInit {
   lastCall1 = true;
   lastCall2 = true;
   dateNow: Date;
+  daysInMonth;
   users: UserModel[] = [];
   selectedUser;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
@@ -32,6 +33,7 @@ export class PlanningCongesComponent implements OnInit {
     this.getValidatedConges();
     this.getUsers();
     this.dateNow = new Date();
+    this.getDaysInMonth(this.dateNow.getMonth(),this.dateNow.getFullYear());
   }
 
   changeCaseFirstLetter(params) {
@@ -109,7 +111,7 @@ export class PlanningCongesComponent implements OnInit {
       days.push(new Date(date));
       date.setDate(date.getDate() + 1);
     }
-    return days;
+    this.daysInMonth = days;
   }
 
   getUsers() {

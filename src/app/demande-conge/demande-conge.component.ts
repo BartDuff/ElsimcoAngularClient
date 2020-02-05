@@ -215,24 +215,24 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   compare(a,b){
     if(this.isArray(a) && this.isArray(b)){
-      let dateA = a[0].date;
-      let dateB = b[0].date;
-      return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a[0].date);
+      let dateB = this.toDate(b[0].date);
+      return dateA.getTime() - dateB.getTime();
     }
     if(this.isArray(a)&& !this.isArray(b)){
-      let dateA = a[0].date;
-      let dateB = b.date;
-      return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a[0].date);
+      let dateB = this.toDate(b.date);
+      return dateA.getTime() - dateB.getTime();
     }
     if(!this.isArray(a)&& this.isArray(b)){
-      let dateA = a.date;
-      let dateB = b[0].date;
-      return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a.date);
+      let dateB = this.toDate(b[0].date);
+      return dateA.getTime() - dateB.getTime();
     }
     if(!this.isArray(a)&& !this.isArray(b)){
-      let dateA = a.date;
-      let dateB = b.date;
-      return dateA.localeCompare(dateB);
+      let dateA = this.toDate(a.date);
+      let dateB = this.toDate(b.date);
+      return dateA.getTime() - dateB.getTime();
     }
   }
 
@@ -326,7 +326,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     // }
     // for (; ifrom < this.daysOffSelectedObjArr.length; ifrom++) {
     let half = absence.demiJournee ? 0.5 : 1;
-    if (absence.typeConge == 'Congés Payés' && this.zeroIndicator < 0 && !this.allowAnticipation) {
+    console.log(half);
+    console.log(this.zeroIndicator);
+    if (absence.typeConge == 'Congés Payés' && this.zeroIndicator -half < 0 && !this.allowAnticipation) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.autoFocus = true;
@@ -788,6 +790,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         arr.splice(arr.indexOf(x), 1);
         this.zeroIndicator += half;
       }
+    }
+    if(this.zeroIndicator>0){
+      this.allowAnticipation = false;
     }
   }
 

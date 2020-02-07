@@ -28,14 +28,14 @@
   <mat-card *ngIf="!spinner">
     <div mat-card-image>
       <img [src]=img_bgd alt="user bg">
-      <button mat-fab [routerLink]="['/edit_user/', user?.id]">
+      <button mat-fab [routerLink]="['/edit_user/', user?.id]" matTooltip="Modifier">
         <mat-icon>edit</mat-icon>
       </button>
     </div>
     <mat-card-header>
       <img mat-card-avatar [src]=img alt="">
       <mat-card-title>
-        {{ user?.nom }} {{ user?.prenom }}
+        {{ user?.prenom }} {{ user?.nom }}
       </mat-card-title>
       <mat-card-subtitle class="identity">
         <mat-icon class="labels">perm_identity</mat-icon>
@@ -58,7 +58,7 @@
         <mat-icon class="labels">email</mat-icon><b class="labels">Email Pro :&ensp;  </b>
           {{ user?.email }}</p>
       <p class="identity">
-        <mat-icon class="labels">home</mat-icon><b class="labels">Adresse Postale :&ensp;  </b>
+        <mat-icon class="labels">home</mat-icon><b class="labels">Adresse :&ensp;  </b>
           {{ user?.adressePostale }}</p>
       <p class="identity">
         <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso :   </b>
@@ -66,6 +66,7 @@
       <p class="identity">
       <mat-icon class="labels">mail_outline</mat-icon><b class="labels">Email perso :&ensp;  </b>
           {{ user?.emailPerso }}</p>
+      <p style="text-decoration: underline;font-weight: bold;">RESUMÉ COMPTEUR CP/RTT :</p>
       <p>
         <span class="labels">Congés N-1 :&ensp; </span>
           {{ user?.cpNMoins1 | number: '1.2-2' }}</p>

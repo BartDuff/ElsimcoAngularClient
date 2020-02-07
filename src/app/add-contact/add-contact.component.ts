@@ -37,6 +37,7 @@ export class AddContactComponent implements OnInit {
     this.contactForm = this.formBuilder.group({
       nom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
       prenom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
+      civilite: ['', Validators.required],
       email: ['', [Validators.email, Validators.required]],
       mobile: ['',[Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
       posteRecherche: ['', Validators.required],
@@ -59,6 +60,7 @@ export class AddContactComponent implements OnInit {
     let c:ContactModel = new ContactModel();
     c.nom = this.contactForm.controls.nom.value;
     c.prenom = this.contactForm.controls.prenom.value;
+    c.civilite = this.contactForm.controls.civilite.value;
     c.email = this.contactForm.controls.email.value;
     c.mobile = this.contactForm.controls.mobile.value;
     c.posteRecherche = "";
@@ -71,14 +73,14 @@ export class AddContactComponent implements OnInit {
     c.fileBase64 = this.fileEncoded;
     c.fileName = this.fileName;
     c.fileType = this.fileType;
-    this.contactService.addContact(c)
-      .subscribe(data => {
-        this.router.navigate(['login']);
-        this.toastrService.success('Vos informations ont bien été envoyées!', 'Contact');},
-        error => {
-          this.toastrService.error("Erreur", "Erreur");
-          console.log(error);
-        });
+    // this.contactService.addContact(c)
+    //   .subscribe(data => {
+    //     this.router.navigate(['login']);
+    //     this.toastrService.success('Vos informations ont bien été envoyées!', 'Contact');},
+    //     error => {
+    //       this.toastrService.error("Erreur", "Erreur");
+    //       console.log(error);
+    //     });
   }
 
   onFileChange() {

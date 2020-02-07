@@ -575,12 +575,12 @@
   </mat-tab>
   <mat-tab label="2 - Dossier de Candidature">
     <div style="display: flex;flex-direction: row;align-content: center;justify-content: center;">
-      <div style="display: flex;flex-direction: column;align-items: flex-end;">
+      <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="labels">
           <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{columnsToDisplay[c]}} : </span>
         </div>
       </div>
-      <div style="display: flex;flex-direction: column;align-items: flex-end;">
+      <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="answers" style="display: flex;flex-direction: column;font-weight: bold;">
           <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}}</span>
           <span *ngIf="c =='dateNaissance'">{{candidat[c] | date: 'dd/MM/yyyy'}}</span>

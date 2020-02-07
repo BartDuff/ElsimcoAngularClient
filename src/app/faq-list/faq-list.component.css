@@ -22,3 +22,14 @@
 /*    justify-content: center;*/
 /*  }*/
 /*}*/
+
+@media only screen and (max-width: 768px) {
+  .question{
+    font-size: 1em!important;
+  }
+
+  .reponse {
+    font-size: 0.8em!important;
+  }
+
+}

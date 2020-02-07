@@ -109,7 +109,7 @@ mat-card.calendar-card {
     display: flex;
     flex-direction: column;
     place-content: center;
-    width: 60vw!important;
+    width: 70vw!important;
   }
 
   .prefix {
@@ -123,6 +123,10 @@ mat-card.calendar-card {
     display: inline-block;
     text-align: center;
     vertical-align: center;
+  }
+
+  .formcontainer {
+    width: 90%!important;
   }
 
   .caldivs {

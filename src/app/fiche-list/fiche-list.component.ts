@@ -102,4 +102,33 @@ export class FicheListComponent implements OnInit {
       }
     )
   }
+
+  openDocument(fiche: FicheModel) {
+    this.pdfService.openFiche(fiche.id).subscribe(
+      (res) => {
+        // let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.'[2]));
+        // let reader = new FileReader();
+        // reader.onload = function (e) {
+        //   window.location.href = reader.result
+        // };
+        // reader.readAsDataURL(blob);
+        // window.open("data:application/" + d.originalFileName.split('.')[2]+ ";base64, "+d.fileBase64, '_blank');
+        // let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.')[d.originalFileName.split('.').length-1]);
+        let blob = new Blob([res],{type:"application/pdf"});
+        let fileURL = window.URL.createObjectURL(blob);
+        let tab = window.open();
+        // if(d.originalFileName.split('.')[d.originalFileName.split('.').length-1] == 'pdf'){
+        tab.location.href = fileURL;
+        // } else {
+        //   // tab.onload = function(){this.document.body.innerHTML+= `<iframe src= "https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="800"> </iframe>`};
+        //   let newblob = new Blob([blob], {type:"text/plain;charset=utf-8"});
+        //   let newFileURL = URL.createObjectURL(newblob);
+        //   tab.location.href = newFileURL;
+        // }
+      });
+  }
+
+  changeCaseFirstLetter(params) {
+    return params.charAt(0).toUpperCase() + params.slice(1);
+  }
 }

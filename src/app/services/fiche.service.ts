@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CandidatModel} from '../models/candidat.model';
 import {environment} from '../../environments/environment';
 import {FicheModel} from '../models/fiche.model';
+import {DocumentModel} from '../models/document.model';
 
 const API_URL = environment.apiUrl;
 
@@ -45,7 +46,7 @@ export class FicheService {
     return this.http.delete(`${API_URL}/fiches/${idASupprimer}`);
   }
 
-  sendComment(user, comment: String): Observable<any> {
-    return this.http.post(`${API_URL}/emails/${user.id}/comment`, comment);
+  sendComment(fiche, comment: String): Observable<any> {
+    return this.http.post(`${API_URL}/emails/${fiche.id}/comment`, comment);
   }
 }

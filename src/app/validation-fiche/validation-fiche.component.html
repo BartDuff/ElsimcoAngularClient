@@ -1,7 +1,7 @@
 <h2 *ngIf="currentUser.fonction ==='RH' || currentUser.fonction ==='DIRECTION'" style="margin-top: 2em;">Fiches de présence des collaborateurs</h2>
 <mat-tab-group>
   <mat-tab label="Validation des fiches">
-    <div style="margin-top: 2em;">
+    <div style="margin-top: 2em;margin-bottom: 1em;">
       <div>
         <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
         <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
@@ -10,22 +10,23 @@
       <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8" style="margin: auto; ">
         <thead>
         <tr>
-          <th>Nom</th>
           <th>Prénom</th>
+          <th>Nom</th>
           <th>Trigramme</th>
           <th>Mois</th>
           <th>Année</th>
           <th>Validée RH</th>
           <th>Télécharger</th>
+          <th>Visualiser</th>
           <th>Supprimer une fiche</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let fiche of allFiches">
-          <td>{{fiche.user.nom}}</td>
           <td>{{fiche.user.prenom}}</td>
+          <td>{{fiche.user.nom}}</td>
           <td>{{fiche.user.trigramme}}</td>
-          <td>{{fiche.mois}}</td>
+          <td>{{changeCaseFirstLetter(fiche.mois)}}</td>
           <td>{{fiche.annee}}</td>
           <td>
             <button type="button" *ngIf="!fiche.valideRH;else valid"
@@ -39,6 +40,10 @@
           <td>
             <button type="button"
                     (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
+          </td>
+          <td>
+            <button type="button"
+                    (click)="openDocument(fiche)" matTooltip="Visualiser la fiche"><i class="material-icons">remove_red_eye</i></button>
           </td>
           <td>
             <button type="button"
@@ -66,8 +71,8 @@
     <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8 resume" style="margin: auto;">
       <thead>
       <tr style="padding: 2em;">
-        <th>Nom</th>
         <th>Prénom</th>
+        <th>Nom</th>
         <th>Trigramme</th>
         <th>Nb Jours Travaillés</th>
         <th>Congés Payés</th>
@@ -86,8 +91,8 @@
       </thead>
       <tbody>
       <tr *ngFor="let fiche of allFiches">
-        <td>{{fiche.user.nom}}</td>
         <td>{{fiche.user.prenom}}</td>
+        <td>{{fiche.user.nom}}</td>
         <td>{{fiche.user.trigramme}}</td>
         <td>{{fiche.joursTravailles}}</td>
         <td>Total: {{fiche.conges}} <br>

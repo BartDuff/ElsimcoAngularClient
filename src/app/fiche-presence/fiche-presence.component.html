@@ -23,6 +23,7 @@
   <button mat-button (click)="plage = !plage;firstDay = null;firstClick=false;showToastr();" style="background-color: black;" class="selectbut"><span *ngIf="!plage">Sélection de plages de dates</span><span *ngIf="plage">Sélection de date unique</span></button>
   <button mat-button (click)="daysOff = [];plage = false;firstDay = null;firstClick=false;" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
   </div>
+  <div id="capture">
   <div style="border: none;width: 35vw;height: 32vh; text-align: left;" id="calendrier">
     <h1 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h1>
     <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine" class="daysofweek">{{d}}</div>
@@ -39,8 +40,10 @@
 <!--      <span style="position: absolute;top:2em;right: 0.5em;font-size: 0.8em">{{f.value[toMomentFormat(day)+' boolean']?'1/2':''}} {{absShort[absences.indexOf(f.value[toMomentFormat(day)])]}}</span>-->
     </div>
   </div>
+  </div>
   <br>
   <div *ngIf="!FicheEnvoyee" style="margin-top: 5em;" id="resum">
+    <a href="#choice" style="color: black;"><mat-icon>arrow_downward</mat-icon></a>
     <p><span matPrefix>Jours ouvrés : </span><span>{{joursOuvres().length}}</span></p>
     <p><span matPrefix>Jours travaillés : </span><span>{{joursOuvres().length - countJoursNonTravailles(f)}}</span></p>
 <!--    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>-->

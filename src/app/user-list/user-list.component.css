@@ -11,5 +11,9 @@
 }
 
 td {
-  padding: 15em!important;
+  padding: 1em!important;
+}
+
+th {
+  padding: 1em!important;
 }

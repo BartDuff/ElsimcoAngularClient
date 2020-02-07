@@ -14,13 +14,13 @@
       *ngFor="let wd of daysInMonth">{{joursDeLaSemaine[wd.getDay()]}}</th>
   </tr>
   <tr>
-    <th colspan="2">Nom Prénom</th>
+    <th colspan="2">Prénom Nom</th>
     <th *ngFor="let d of daysInMonth">{{d.getDate()}}</th>
   </tr>
   </thead>
   <tbody *ngFor="let u of users">
   <tr>
-    <td rowSpan="2">{{u.nom}} {{u.prenom}}</td>
+    <td rowSpan="2">{{u.prenom}} {{u.nom}}</td>
     <td>M</td>
     <td *ngFor="let m of daysInMonth" [ngStyle]="{backgroundColor: checkAskedMorningHolidays(m,u)?'green':checkWeekendsWithYear(m,m.getFullYear())?'grey':''}"></td>
   </tr>

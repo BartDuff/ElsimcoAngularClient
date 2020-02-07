@@ -12,7 +12,7 @@
       <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><h3 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h3>
       <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);congesValides = [];getValidatedConges();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
     </div>
-    <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; " *ngIf="!loading">
+    <table class="bordered mat-elevation-z8" id="valide" style="margin: auto;margin-bottom: 1em; " *ngIf="!loading">
       <thead>
       <tr>
         <th>Nom</th>
@@ -66,7 +66,7 @@
         <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()-1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><h3 style="text-align: center;font-weight: bold">{{dateNowFile.getFullYear()}}</h3>
         <button mat-button (click)="dateNowFile.setFullYear(dateNowFile.getFullYear()+1);getCongesWithFile();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
-      <table class="bordered mat-elevation-z8" style="margin: auto;" *ngIf="!loading">
+      <table class="bordered mat-elevation-z8" style="margin: auto;margin-bottom: 1em;" *ngIf="!loading">
         <thead>
         <tr>
           <th>Nom</th>
@@ -78,6 +78,7 @@
           <th>Mois</th>
           <th>Type d'absence</th>
           <th>Télécharger</th>
+<!--          <th>Visualiser</th>-->
         </tr>
         </thead>
         <tbody>
@@ -96,6 +97,10 @@
             <button type="button"
                     (click)="downloadDocument(conge)"><i class="material-icons">file_download</i></button>
           </td>
+<!--          <td>-->
+<!--            <button type="button"-->
+<!--                    (click)="openDocument(conge)"><i class="material-icons">remove_red_eye</i></button>-->
+<!--          </td>-->
           <ng-template #unvalid>
             <mat-icon>close</mat-icon>
           </ng-template>

@@ -13,6 +13,7 @@
 <!--    <span class="drag-over-title">Déposer le fichier</span>-->
 <!--  </div>-->
 </div>
+<div style="overflow-x: auto;">
 <table class="bordered mat-elevation-z8" style="margin: auto; " *ngIf="documents">
   <thead>
   <tr>
@@ -35,6 +36,7 @@
   </tr>
   </tbody>
 </table>
+</div>
 <div *ngIf="!documents || sending"
           style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner

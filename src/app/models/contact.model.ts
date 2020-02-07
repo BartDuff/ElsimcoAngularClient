@@ -6,6 +6,7 @@ export class ContactModel {
   secretid: String;
   nom: String;
   prenom: String;
+  civilite: String;
   email: String;
   mobile: number;
   posteRecherche: String;

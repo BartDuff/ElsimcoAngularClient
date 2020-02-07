@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   message: string;
   returnUrl: string;
   submitted: boolean;
+  mdpMes = "";
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -37,6 +38,14 @@ export class LoginComponent implements OnInit {
     });
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/news';
     //this.authService.logout();
+  }
+
+  showMessage(){
+    if (this.mdpMes == ''){
+      this.mdpMes = 'Consultez la fiche de configuration de votre messagerie Elsimco';
+    } else {
+      this.mdpMes = '';
+    }
   }
 
   // convenience getter for easy access to form fields

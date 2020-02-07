@@ -133,7 +133,7 @@
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
-                    <mat-checkbox [checked]="dayOff.demiJournee" (change)="dayOff.demiJournee = $event.checked.valueOf()">Demi-journée ?</mat-checkbox>
+                    <mat-checkbox [checked]="dayOff.demiJournee" (change)="dayOff.demiJournee = $event.checked.valueOf();autoFillType(dayOff)">Demi-journée ?</mat-checkbox>
                     <br>
                     <mat-form-field *ngIf="dayOff.demiJournee">
                       <span class="prefix" matPrefix>Type de demi-journée : </span>

@@ -41,7 +41,7 @@ export class NewsListComponent implements OnInit {
   addNewsToList(addedNews: NewsModel) {
     this.newsService.addNewsInterestToUser(JSON.parse(localStorage.getItem('currentUser')), addedNews).subscribe(
       () => {
-        this.getNews();
+
       }
     );
   }
@@ -49,7 +49,6 @@ export class NewsListComponent implements OnInit {
   deleteNewsFromList(deletedNews: NewsModel) {
     this.newsService.removeNewsInterestFromUser(JSON.parse(localStorage.getItem('currentUser')), deletedNews).subscribe(
       () => {
-        this.getNews();
       }
     );
   }

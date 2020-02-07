@@ -4,6 +4,12 @@
   margin: 1em;
 }
 
+.mat-button:disabled {
+  background-color: black;
+  color: gray!important;
+  margin: 1em;
+}
+
 mat-form-field {
   width: 80%;
 }

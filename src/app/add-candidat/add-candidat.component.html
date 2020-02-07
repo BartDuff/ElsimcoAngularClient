@@ -22,6 +22,13 @@
         <form [formGroup]="contactForm1" (ngSubmit)="sendCV()">
           <ng-template matStepLabel>Renseignements personnels</ng-template>
           <mat-form-field>
+            <mat-label>Civilité :</mat-label>
+            <mat-select formControlName="civilite">
+              <mat-option value="Monsieur">Monsieur</mat-option>
+              <mat-option value="Madame">Madame</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
             <input matInput formControlName="nom" placeholder="Nom" required>
           </mat-form-field>
           <!--          <div class="form-group" [ngClass]="{ 'has-error': submitted && f.nom.errors }">-->
@@ -496,7 +503,7 @@
               </label>
             </mat-form-field>
             <div *ngIf="contactForm5.value">
-              <label>J'autorise la société Elsimco à procéder si besoin à un contrôle de référence auprès du/des responsable(s) cité(s) :</label>
+              <label style="font-weight: bold!important;">J'autorise la société Elsimco à procéder si besoin à un contrôle de référence auprès du/des responsable(s) cité(s) :</label>
               <mat-radio-group formControlName="autorisationControle" required>
                 <mat-radio-button [value]="true">Oui</mat-radio-button>
                 <mat-radio-button [value]="false">Non</mat-radio-button>
@@ -640,19 +647,19 @@
           <div>
             <h3>Dernier salaire annuel brut</h3>
             <mat-form-field>
-              <input matInput placeholder="Part fixe en Euros" formControlName="fixeDernierSalaireBrut" required>
-              <span class="matSuffix" matSuffix>€</span>
+              <input matInput placeholder="Part fixe en k€" formControlName="fixeDernierSalaireBrut" required>
+              <span class="matSuffix" matSuffix>k€</span>
             </mat-form-field>
             <mat-form-field>
-              <input matInput placeholder="Part variable en Euros" formControlName="varDernierSalaireBrut">
-              <span class="matSuffix" matSuffix>€</span>
+              <input matInput placeholder="Part variable en k€" formControlName="varDernierSalaireBrut">
+              <span class="matSuffix" matSuffix>k€</span>
             </mat-form-field>
           </div>
           <div>
             <h3>Prétentions salariales annuelles brut</h3>
             <mat-form-field>
-              <input matInput placeholder="Prétention annuelle Brut" formControlName="pretentionSalaireBrut" required>
-              <span class="matSuffix" matSuffix>€</span>
+              <input matInput placeholder="Prétention annuelle en k€" formControlName="pretentionSalaireBrut" required>
+              <span class="matSuffix" matSuffix>k€</span>
             </mat-form-field>
           </div>
           <div>
@@ -670,7 +677,7 @@
             droit d'accès et de rectification pourra s'exercer auprès du service juridique d'ELSIMCO.
             J'ai bien pris connaissance de l'information ci-dessus concernant la confidentialité de mes données
           </p>
-          <label>J'accepte les conditions : </label>
+          <label style="font-weight: bold!important;">J'accepte les conditions : </label>
           <mat-checkbox formControlName="acceptTerms" required>Oui</mat-checkbox>
           <mat-form-field>
             <input matInput placeholder="Fait à :" formControlName="faitA" required>

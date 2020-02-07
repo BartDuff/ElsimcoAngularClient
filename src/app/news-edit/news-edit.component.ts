@@ -123,6 +123,7 @@ export class NewsEditComponent implements OnInit {
   handleFile(newsitem:NewsModel) {
     let image = null;
     for (let i = 0; i < this.inputFileComponent.files.length; i++) {
+      this.fileValid = false;
       image = new ImageModel();
       let file = this.inputFileComponent.files[i];
       this.filename = file.file.name;
@@ -195,15 +196,17 @@ export class NewsEditComponent implements OnInit {
   postImage(newimg){
     let encodedImg = newimg.preview.substr(("data:"+newimg.file.type+";base64,").length);
     if(this.alreadyUploaded.indexOf(encodedImg) !=-1){
+      this.fileValid = true;
       return;
     }
     this.alreadyUploaded.push(encodedImg);
     this.imageService.uploadImage({imageJointe: encodedImg, imageJointeType: newimg.file.name.split('.')[newimg.file.name.split('.').length - 1].toLowerCase(), id: null, originalFilename: newimg.file.name }).subscribe(
       (data)=>{
-        this.fileValid = false;
+        this.fileValid = true;
         if(this.newsitem.imageIds.length>0){
           this.newsitem.imageIds += ",";
         }
+        newimg.id = data.id;
         this.newsitem.imageIds += data.id;
       }
     )

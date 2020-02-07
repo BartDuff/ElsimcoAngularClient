@@ -173,7 +173,7 @@ export class UserEditComponent implements OnInit {
               } else {
                 this.emailService.sendMail(this.user.prenom + ' ' +this.user.nom + ' a modifié ses infos personnelles sur l\'application: \n' + sDetails,'Notification de changement de situation: '+this.user.prenom + ' ' +this.user.nom, "majoline.domingos@elsimco.com").subscribe(
                   ()=> {
-                    this.toastr.success('Vos infos ont bien été modifiées. \nUn mail d\'information a été envoyé aux RH','Modification effectuée');
+                    this.toastr.success('Votre profil a bien été mis à jour. Un e-mail de confirmation a été envoyé au service des Ressources Humaines','Modification effectuée');
                     this.router.navigate(['users/',this.user.id]);
                   },
                   (err)=>console.log(err)

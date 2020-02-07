@@ -35,8 +35,8 @@
     <img class="login-image" [src]=img alt="user bg">
   </div>
 <div class="logincontainer">
-<div class="logintitle">Bienvenue dans la communauté Elsimco</div>
   <div class="connect">
+    <div class="logintitle">Bienvenue dans la communauté Elsimco</div>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
     <div fxLayout="column" fxLayoutAlign="space-around center">
       <mat-error *ngIf="message">
@@ -51,8 +51,10 @@
       </mat-form-field>
 
       <mat-card-actions fxFlexAlign="center">
-        <button mat-button>Se Connecter</button>
+        <button mat-button>S'identifier</button>
       </mat-card-actions>
+      <a style="color:black;margin-bottom: 1em;" (click)="showMessage();" id="mdpLink">Mot de passe oublié ?</a>
+      <p>{{mdpMes}}</p>
     </div>
   </form>
   </div>

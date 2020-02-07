@@ -19,6 +19,13 @@
       <p *ngIf="message" class="text-center error">{{message}}</p>
         <form [formGroup]="contactForm" (ngSubmit)="sendInfos()">
           <mat-form-field>
+            <mat-label>Civilité :</mat-label>
+            <mat-select formControlName="civilite">
+              <mat-option value="Monsieur">Monsieur</mat-option>
+              <mat-option value="Madame">Madame</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
               <input matInput formControlName="nom" placeholder="Nom" required>
           </mat-form-field>
           <mat-form-field>

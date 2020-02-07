@@ -2,6 +2,10 @@
   color: black;
 }
 
+ngx-gallery /deep/ .ngx-gallery-close {
+  color: white!important;
+}
+
 mat-card-header {
   background-color: black;
   border: 0.1em solid black;
@@ -56,7 +60,7 @@ mat-card-content {
 /*}*/
 
 ngx-gallery /deep/ .ngx-gallery-icon {
-  color: black;
+  color: orange;
   margin-top: 2em;
 }
 

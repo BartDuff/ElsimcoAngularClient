@@ -11,6 +11,7 @@ import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirm
 import { saveAs } from 'file-saver';
 import {ImageService} from '../services/image.service';
 import {image} from 'html2canvas/dist/types/css/types/image';
+import {DocumentModel} from '../models/document.model';
 
 
 @Component({
@@ -214,6 +215,16 @@ export class CongesValidesComponent implements OnInit {
         }
       );
     }
+  }
+
+  openDocument(conge) {
+    this.imageService.getImage(conge.fileId).subscribe(
+      (res) => {
+          let blob = this.base64ToBlob(res.imageJointe, 'application/'+ res.imageJointeType);
+          let fileURL = window.URL.createObjectURL(blob);
+          let tab = window.open();
+          tab.location.href = fileURL;
+        });
   }
 
   public base64ToBlob(b64Data, contentType='', sliceSize=512) {

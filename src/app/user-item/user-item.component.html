@@ -1,6 +1,6 @@
 <td>{{ user.email }}</td>
-<td>{{ user.nom }}</td>
 <td>{{ user.prenom }}</td>
+<td>{{ user.nom }}</td>
 <td [ngStyle]="{'color':user.role=='ADMIN'?'red':''}">{{ user.role == 'USER'?'UTILISATEUR':'ADMIN'}}</td>
 <td>{{ user.fonction }}</td>
 <td>{{ user.cpNMoins1 | number: '1.2-2' }}</td>

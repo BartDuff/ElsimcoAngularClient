@@ -326,8 +326,6 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     // }
     // for (; ifrom < this.daysOffSelectedObjArr.length; ifrom++) {
     let half = absence.demiJournee ? 0.5 : 1;
-    console.log(half);
-    console.log(this.zeroIndicator);
     if (absence.typeConge == 'Congés Payés' && this.zeroIndicator -half < 0 && !this.allowAnticipation) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
@@ -344,7 +342,9 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         });
       // break;
     }
-    this.zeroIndicator -= half;
+    if(absence.typeConge == 'Congés Payés') {
+      this.zeroIndicator -= half;
+    }
     // this.daysOffSelectedObjArr[ifrom].typeConge = absence.typeConge;
     // // this.decreaseCountNew(this.daysOffSelectedObjArr[ifrom]);
     // if(this.daysOffSelectedObjArr[ifrom+1].typeConge == absence.typeConge){

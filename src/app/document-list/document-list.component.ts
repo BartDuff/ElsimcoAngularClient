@@ -144,11 +144,11 @@ export class DocumentListComponent implements OnInit {
     this.documentService.sendDocumentByEmail(this.currentUser,documentToSend).subscribe(
       (res) => {
         this.sending = false;
-        this.toastrService.success(documentToSend.originalFileName + " envoyé avec succès!", "Envoyé");
+        this.toastrService.success(documentToSend.originalFileName + " envoyé avec succès !", "Envoyé");
       },
       (err)=> {
         this.sending = false;
-        this.toastrService.error(documentToSend.originalFileName + ": echec de l'envoi!", "Erreur d'envoi");
+        this.toastrService.error(documentToSend.originalFileName + ": echec de l'envoi !", "Erreur d'envoi");
       }
     );
   }

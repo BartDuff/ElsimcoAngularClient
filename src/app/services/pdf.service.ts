@@ -25,4 +25,8 @@ export class PdfService {
     return this.http.get(`${API_URL}/fiches/${id}`, { responseType: 'blob'});
   }
 
+  openFiche(idRecherche: string): Observable<any> {
+    return this.http.get(`${API_URL}/fiches/${idRecherche}/open`,{ responseType: 'blob'});
+  }
+
 }

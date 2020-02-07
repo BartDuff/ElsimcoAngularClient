@@ -2,7 +2,7 @@
   <a mat-list-item routerLink="/home" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Accueil</a>
   <a mat-list-item routerLink="/contact_form" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Nous
     Rejoindre</a>
-  <a mat-list-item routerLink="/login" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">Connexion</a>
+  <a mat-list-item routerLink="/login" *ngIf="!token" (click)="onSidenavClose()" class="nav-caption">S'identifier</a>
   <a mat-list-item routerLink="/news" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Actualités</a>
   <a mat-list-item routerLink="/users/{{ currentUser.id }}" *ngIf="token" (click)="onSidenavClose()"
      class="nav-caption">Mon Profil</a>

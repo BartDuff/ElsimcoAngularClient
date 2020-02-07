@@ -48,6 +48,7 @@ export class AddCandidatComponent implements OnInit {
   ngOnInit() {
     // localStorage.clear();
     this.contactForm1 = this.formBuilder.group({
+      civilite: ['', Validators.required],
       nom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
       prenom: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
       dateNaissance: [''],
@@ -151,6 +152,7 @@ export class AddCandidatComponent implements OnInit {
       this.loading = false;
     }, 1000);
     let c:CandidatModel = this.contactForm8.value;
+    c.civilite = this.contactForm1.controls.civilite.value;
     c.nom = this.contactForm1.controls.nom.value;
     c.prenom = this.contactForm1.controls.prenom.value;
     c.dateNaissance = this.contactForm1.controls.dateNaissance.value;

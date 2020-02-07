@@ -1,12 +1,12 @@
 <h2 style="align-self: center">Utilisateurs</h2>
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_users"><mat-icon>add</mat-icon></button>
-<div>
+<div style="overflow-x: auto">
   <table class="bordered mat-elevation-z8" style="margin: auto; ">
     <thead>
     <tr>
       <th>Email</th>
-      <th>Nom</th>
       <th>Prénom</th>
+      <th>Nom</th>
       <th>Statut</th>
       <th>Fonction</th>
       <th>Congés N-1</th>

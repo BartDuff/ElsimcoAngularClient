@@ -3,6 +3,10 @@ a {
   color: white;
 }
 
+.mat-menu-item {
+  color: white!important;
+}
+
 a:hover, a:active{
   color: lightgray;
 }

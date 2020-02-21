@@ -8,6 +8,8 @@ export class UserModel {
   email: String;
   trigramme: String;
   adressePostale: String;
+  codePostal: String;
+  ville: String;
   telephone: String;
   telPro: String;
   emailPerso: String;
@@ -21,12 +23,15 @@ export class UserModel {
   dateDepart: Date;
   metier: String;
   imageId: number;
+  competenceId: number;
   avatar: String;
   avatarType: String;
   rawFile: any;
+  competenceFile: any;
   derniereConnexion: Date;
   role: String;
   fonction:String;
+  statut:String;
   missions: MissionModel[];
   likes: NewsModel[];
 }

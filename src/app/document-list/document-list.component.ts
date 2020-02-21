@@ -103,7 +103,6 @@ export class DocumentListComponent implements OnInit {
             //   window.location.href = reader.result
             // };
             // reader.readAsDataURL(blob);
-            let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.')[d.originalFileName.split('.').length-1]);
             let fileURL = window.URL.createObjectURL(blob,);
             let tab = window.open();
             tab.location.href = fileURL;
@@ -113,6 +112,10 @@ export class DocumentListComponent implements OnInit {
   }
 
   openDocument(documentToOpen: DocumentModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
     this.documentService.openDocument(documentToOpen.id).subscribe(
       (res) => {
         let d: DocumentModel = res;
@@ -125,16 +128,20 @@ export class DocumentListComponent implements OnInit {
           // reader.readAsDataURL(blob);
           // window.open("data:application/" + d.originalFileName.split('.')[2]+ ";base64, "+d.fileBase64, '_blank');
           let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.')[d.originalFileName.split('.').length-1]);
-          let fileURL = window.URL.createObjectURL(blob);
-          let tab = window.open();
-          // if(d.originalFileName.split('.')[d.originalFileName.split('.').length-1] == 'pdf'){
+          if(navigator.userAgent.match('CriOS') || isSafari) {
+            saveAs(blob, d.originalFileName);
+          } else {
+            let fileURL = window.URL.createObjectURL(blob);
+            let tab = window.open();
+            // if(d.originalFileName.split('.')[d.originalFileName.split('.').length-1] == 'pdf'){
             tab.location.href = fileURL;
-          // } else {
-          //   // tab.onload = function(){this.document.body.innerHTML+= `<iframe src= "https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="800"> </iframe>`};
-          //   let newblob = new Blob([blob], {type:"text/plain;charset=utf-8"});
-          //   let newFileURL = URL.createObjectURL(newblob);
-          //   tab.location.href = newFileURL;
-          // }
+            // } else {
+            //   // tab.onload = function(){this.document.body.innerHTML+= `<iframe src= "https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="800"> </iframe>`};
+            //   let newblob = new Blob([blob], {type:"text/plain;charset=utf-8"});
+            //   let newFileURL = URL.createObjectURL(newblob);
+            //   tab.location.href = newFileURL;
+            // }
+          }
         }
       });
       }

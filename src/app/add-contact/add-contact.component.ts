@@ -54,9 +54,10 @@ export class AddContactComponent implements OnInit {
   }
 
   sendInfos() {
-    setTimeout(() => {
-      this.loading = false;
-    }, 1000);
+    // setTimeout(() => {
+    //   this.loading = false;
+    // }, 1000);
+    this.loading = true;
     let c:ContactModel = new ContactModel();
     c.nom = this.contactForm.controls.nom.value;
     c.prenom = this.contactForm.controls.prenom.value;
@@ -73,14 +74,15 @@ export class AddContactComponent implements OnInit {
     c.fileBase64 = this.fileEncoded;
     c.fileName = this.fileName;
     c.fileType = this.fileType;
-    // this.contactService.addContact(c)
-    //   .subscribe(data => {
-    //     this.router.navigate(['login']);
-    //     this.toastrService.success('Vos informations ont bien été envoyées!', 'Contact');},
-    //     error => {
-    //       this.toastrService.error("Erreur", "Erreur");
-    //       console.log(error);
-    //     });
+    this.contactService.addContact(c)
+      .subscribe(data => {
+        this.loading = false;
+        this.router.navigate(['login']);
+        this.toastrService.success('Vos informations ont bien été envoyées!', 'Contact');},
+        error => {
+          this.toastrService.error("Erreur", "Erreur");
+          console.log(error);
+        });
   }
 
   onFileChange() {

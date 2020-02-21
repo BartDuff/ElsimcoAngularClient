@@ -17,6 +17,8 @@ export class FaqAddComponent implements OnInit {
   currentUser: UserModel;
   faqitem: FaqModel;
   loading = false;
+  mailAdresses = ["majoline.domingos@elsimco.com","ghislain.chatras@elsimco.com","franck.simon@elsimco.com"];
+
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private faqService: FaqService,) { }
@@ -31,7 +33,8 @@ export class FaqAddComponent implements OnInit {
     this.addForm = this.formBuilder.group({
       id: [],
       question: ['', Validators.required],
-      reponse: ['', Validators.required]
+      reponse: ['', Validators.required],
+      mailContact: ['', Validators.required]
     });
 
   }

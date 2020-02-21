@@ -1,5 +1,7 @@
 <h2 style="align-self: center">FAQ</h2>
-<button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_faq"><mat-icon>add</mat-icon></button>
+<button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_faq">
+  <mat-icon>add</mat-icon>
+</button>
 <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
   <div *ngIf="faq?.length == 0">Pas encore de publication</div>
   <mat-accordion class="example-headers-align">
@@ -9,12 +11,19 @@
           {{ f.question }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <p class="reponse" style="font-size: 1.2em;text-align: justify;padding: 1em;text-wrap: normal!important;white-space: pre-wrap!important;" [innerHTML]="f.reponse"></p>
-      <div style="text-align: right"><span *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;"><a href="mailto:majoline.domingos@elsimco.com" style="color: black!important;">Contacter le service</a><button type="button"
-                                                                                   [routerLink]="['/edit_faq/', f.id]"><mat-icon>edit</mat-icon></button>
+      <p class="reponse"
+         style="font-size: 1.2em;text-align: justify;padding: 1em;text-wrap: normal!important;white-space: pre-wrap!important;"
+         [innerHTML]="f.reponse"></p>
+      <div style="text-align: right">
+        <span style="text-align: right;">
+          <a mat-button href="mailto:{{f.mailContact}}" style="color: black!important;" matTooltip="Contacter le service"><mat-icon>mail</mat-icon></a>
       </span>
-      <span *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;"><button type="button"
-                 (click)="deleteFaq(f)"><mat-icon>delete</mat-icon></button>
+        <span *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;">
+          <button mat-button [routerLink]="['/edit_faq/', f.id]" matTooltip="Modifier"><mat-icon style="color:black!important;">edit</mat-icon></button>
+      </span>
+        <span *ngIf="currentUser.role == 'ADMIN'" style="text-align: right;">
+        <button mat-button
+                (click)="deleteFaq(f)"><mat-icon style="color:black!important;" matTooltip="Supprimer">delete</mat-icon></button>
       </span></div>
     </mat-expansion-panel>
   </mat-accordion>

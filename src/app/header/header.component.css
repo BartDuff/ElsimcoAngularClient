@@ -26,6 +26,10 @@ a:hover, a:active {
   text-decoration: none;
 }
 
+.mat-badge-content{
+  background : orange!important;
+}
+
 .navigation-items{
   list-style-type: none;
   padding: 0;

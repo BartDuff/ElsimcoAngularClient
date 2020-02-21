@@ -5,7 +5,7 @@ import {saveAs} from 'file-saver';
 
 import {ToastrService} from 'ngx-toastr';
 import {CandidatModel} from '../models/candidat.model';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Diplome} from '../models/diplome.model';
@@ -45,6 +45,7 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     'departementNaissance': 'Département de Naissance',
     'skype': 'Identifiant Skype',
     'telDomicile': 'Téléphone domicile',
+    'civilite':'Civilité',
     'posteRecherche': 'Poste Recherché',
     'accepte':'Conditions Acceptées',
     'permisB':'Permis B',
@@ -314,6 +315,19 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
       byteArrays.push(byteArray);
     }
     return new Blob(byteArrays, {type: contentType});
+  }
+
+  addNewCandidate(){
+    let candidat = new CandidatModel();
+    candidat.diplome = new Diplome();
+    candidat.diplome.annee = 0;
+    candidat.dateDispo = new Date();
+    candidat.contrat= "CDD";
+    this.candidatService.addCandidat(candidat).subscribe(
+      (c)=>{
+        this.getQCandidates();
+      }
+    )
   }
 
 }

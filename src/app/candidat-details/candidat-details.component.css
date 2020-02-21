@@ -3,6 +3,10 @@ th, td {
   border-collapse: collapse;
 }
 
+button:disabled {
+  color: grey!important;
+}
+
 #ficheProcess th, #ficheRecrutement th {
   background-color: orange;
 }

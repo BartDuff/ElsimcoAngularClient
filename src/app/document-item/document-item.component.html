@@ -1,12 +1,15 @@
 <td>{{ document.originalFileName }}</td>
 <td>{{ document.annee }}</td>
-<td>
+<td class="hideOnMobile">
   <button type="button"
           (click)="downloadDocument()"><i class="material-icons">file_download</i></button>
 </td>
 <td>
   <a type="button"
-          (click)="openDocument()" download="$event"><mat-icon>remove_red_eyes</mat-icon></a>
+          (click)="openDocument()" download="$event" *ngIf="document.originalFileName.split('.')[document.originalFileName.split('.').length-1].toLowerCase() == 'pdf';else noeye" matTooltip="Visualiser le document"><mat-icon>remove_red_eyes</mat-icon></a>
+  <ng-template #noeye>
+    <span matTooltip="Visualisation impossible">-</span>
+  </ng-template>
 </td>
 <td>
   <button type="button"

@@ -21,6 +21,18 @@ mat-card .mat-card-image img {
 .mat-card-avatar {
   width: 150px;
   height: 150px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.img-avatar {
+  display: inline;
+  padding: 0;
+  margin-left: -2%;
+  margin-top: -2%;
+  height: auto;
+  width: 110%;
 }
 
 .mat-card-image {
@@ -75,4 +87,19 @@ mat-card {
 .identity {
   display: flex;
   align-items: center;
+}
+
+.showOnMobile {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+
+  .hideOnMobile {
+    display: none;
+  }
+
+  .showOnMobile {
+    display: flex;
+  }
 }

@@ -1,5 +1,5 @@
 <h1>
-  Demande de congés
+  Déclaration d'absences
 </h1>
 <!--<div style="border: 2px solid;height: 5vh;width: 5vw;display: block;position: relative;background-color: greenyellow;">-->
 <!--  <div>-->
@@ -7,15 +7,22 @@
 <!--    <div style="justify-content: center;text-align: center;position: relative;top:1.5vh;margin: auto;">1/2 C.S.S</div>-->
 <!--  </div>-->
 <!--</div>-->
-<div>
+<mat-form-field>
+  <span class="prefix" matPrefix style="padding: 2em;">Selectionnez un collaborateur </span>
+  <mat-select [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" (ngModelChange)="loading = true;plage = false;firstDay = null;firstClick=false;daysOffSelectedObjArr=[];this.congesCount= this.selectedUser.cpNMoins1;this.anticipeCount= this.selectedUser.cpN;this.ancienneteCount= this.selectedUser.congeAnciennete;this.rttCount=this.selectedUser.rttn;this.zeroIndicator = this.countConges();getHolidays()" placeholder="Liste des collaborateurs">
+    <mat-option [value]="null">Non sélectionné</mat-option>
+    <mat-option *ngFor="let u of users" [value]=u>{{u.prenom}} {{u.nom}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<div *ngIf="selectedUser.id != undefined">
   <div><strong>Solde CP année N-1 : </strong>{{countConges() | number: '1.2-2'}}</div>
   <div><strong>Solde CP année N : </strong>{{countCongesAnticipes() | number: '1.2-2'}}</div>
   <div><strong>Solde RTT (h) : </strong>{{countRTT() | number: '1.2-2'}}</div>
   <div><strong>Solde Ancienneté : </strong>{{countAnciennete() | number: '1.2-2'}}</div>
-<!--  <div><strong>Solde CP année N-1 : </strong>{{currentUser.cpNMoins1}}</div>-->
-<!--  <div><strong>Solde CP année N : </strong>{{currentUser.cpN}}</div>-->
-<!--  <div><strong>Solde RTT (h) : </strong>{{currentUser.rttn}}</div>-->
-<!--  <div><strong>Solde Ancienneté : </strong>{{currentUser.congeAnciennete}}</div>-->
+  <!--  <div><strong>Solde CP année N-1 : </strong>{{currentUser.cpNMoins1}}</div>-->
+  <!--  <div><strong>Solde CP année N : </strong>{{currentUser.cpN}}</div>-->
+  <!--  <div><strong>Solde RTT (h) : </strong>{{currentUser.rttn}}</div>-->
+  <!--  <div><strong>Solde Ancienneté : </strong>{{currentUser.congeAnciennete}}</div>-->
 </div>
 <br>
 <div style="display: flex; justify-content: center; align-items: center">
@@ -25,162 +32,162 @@
     mode="indeterminate">
   </mat-progress-spinner>
 </div>
-<div *ngIf="!loading">
+<div *ngIf="!loading && selectedUser.id != undefined">
   <button mat-button [disabled]="dateNow.getMonth()-1 < fixedDateNow.getMonth()" (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon [ngStyle]="{color: dateNow.getMonth()-1 < fixedDateNow.getMonth()? 'grey':'black'}" [matTooltip]="dateNow.getMonth()-1 < fixedDateNow.getMonth()?'Ce mois est déjà passé':''">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
   <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
 </div>
-        <div style="justify-content: space-evenly;display: flex" id="maincont" *ngIf="!loading">
-          <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
-              <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
-              <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
-              <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" style="border:2px solid;height: 10vh;width: 10vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':checkDay(day)?'orange':checkWeekends(day)?'grey':''}">
-                <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 2em" >{{day | date:'d'}}</span>
-              </div>
-            </div>-->
-          <div id="cont">
-            <div style="display: flex;justify-content: space-evenly;align-content: space-evenly;">
-              <button mat-button (click)="plage = !plage;firstDay = null;firstClick=false;showToastr();" style="background-color: black;" class="selectbut"><span *ngIf="!plage">Sélection de plages de dates</span><span *ngIf="plage">Sélection de date unique</span></button>
-              <button mat-button (click)="daysOffSelectedObjArr = [];plage = false;firstDay = null;firstClick=false;this.zeroIndicator = countConges();this.allowAnticipation = false;" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
-            </div>
-            <div style="border: none;width: 35vw;height: 32vh; text-align: left;" id="calendrier">
-              <h1 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h1>
-              <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine" class="daysofweek">{{d}}</div>
-              <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),0))" class="caldivs"></div>
-              <div  (mousedown)="addRemoveDay(day,0);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day,0):''" *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),dateNow.getFullYear())"
-                    style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day,0)}" class="caldivs">
-                <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
-                  <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" class="dayc">{{day | date:'d'}}</span>
-                  <span  style="position: absolute;top:1vh;right:2vw;font-size: 1.2em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
-                </div>
-              </div>
-            </div>
-            <br>
-            <div class="legend">
-              <div id="goDown"><span>{{countSelectedDays()}}</span><button mat-button (click)="ScrollDown()" style="background-color: black!important;color: white!important;">Types d'absence<mat-icon>arrow_downward</mat-icon></button></div>
-              <div style="background: yellow" disabled>Congés en attente de validation</div>
-              <div style="background: greenyellow" disabled>Congés validés</div>
-            </div>
-            <h4>
-              Jours de congés demandés
-            </h4>
-            <div *ngIf="daysOffSavedObjArr.length == 0; else conges" class="emptyDaysoff">Pas de jours de congés demandés ce mois-ci</div>
-            <ng-template #conges>
-              <ul style="list-style-type: none;">
-                <li *ngFor="let c of getHolidaysOfMonth(nomsDesMois[dateNow.getMonth()])"><span *ngIf="!isArray(c)">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</span><span *ngIf="isArray(c)">Du {{c[0].date}} au {{c[c.length-1].date}} - {{c[0].typeConge}}</span></li>
-              </ul>
-            </ng-template>
-          </div>
-
-          <!--  <mat-card class="calendar-card">
-            <mat-card-title>
-              {{dateNow.getFullYear()}}
-            </mat-card-title>
-          &lt;!&ndash;  <mat-month-view [dateFilter]="dateFilter" [activeDate]="dateNow" #calendar (selectedChange)="addRemoveDay($event)" (selected)="SelectCell($event)">&ndash;&gt;
-          &lt;!&ndash;  </mat-month-view>&ndash;&gt;
-          </mat-card>-->
-
-          <div style="width: 60vw">
-            <div id="formulaire">
-              <form (ngSubmit)="sendRequest(f, daysOffSelectedObjArr)" #f="ngForm" novalidate id="detailform">
-                <h4>
-                  Faire une demande
-                </h4>
-                <div>
-                  Sélectionnez les dates de congés/absences à poser sur le calendrier joint. Pour changer de mois, sélectionnez le mois correspondant avec les flèches.
-                </div>
-                <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
-                <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" class="boxes formcontainer">
-                  <div *ngIf="isArray(dayOff)" style="box-shadow: none!important;">
-                    <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0" class="champs">
-                      <span class="prefix" matPrefix style="padding-top: 1em">Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
-                      <mat-form-field>
-                        <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="Type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
-                          <mat-option *ngFor="let absence of absTypes" [value]="absence">
-<!--                            <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
-<!--                            <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> -->
-                            {{absence == 'RTT'?absence + ' (h)': absence}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      <mat-form-field class="commentaires">
-                        <input matInput placeholder="Commentaire facultatif" [(ngModel)]="d.commentaires" [name]="d.date + ' comm'">
-                      </mat-form-field>
-                      <div *ngIf="d.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
-                        <mat-form-field>
-                          <span class="prefix" matPrefix *ngIf="d.typeCe == null">Raison de l'absence exceptionnelle: </span>
-                          <mat-select [(ngModel)]="d.typeCe" [name]="d.date + ' typeCe'" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value == 'Absence Exceptionnelle'">
-                            <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage/pacse : 4j</mat-option>
-                            <mat-option value="mariage enfants" matTooltip="1 jour ouvré">mariage enfants : 1j</mat-option>
-                            <mat-option value="Naissance-adoption" matTooltip="3 jours ouvrés consécutifs ou non, inclus dans une période de quinze jours entourant la date de naissance ou suivant l'arrivée au foyer de l'enfant placé en vue de son adoption.">père : naissance/adoption : 3j</mat-option>
-                            <mat-option value="obsèques conjoint" matTooltip="3 jours ouvrés">obsèques conjoint : 3j</mat-option>
-                            <mat-option value="obsèques ascendants" matTooltip="3 jours ouvrés">obsèques ascendants parents/grands-parents/arrières grands-parents : 3j</mat-option>
-                            <mat-option value="obsèques collatéraux" matTooltip="3 jours ouvrés">obsèques frère/sœur : 3j</mat-option>
-                            <mat-option value="obsèques beau-parents" matTooltip="3 jours ouvrés">obsèques beau-père/belle-mère : 3j</mat-option>
-                            <mat-option value="obsèques enfants" matTooltip="5 jours ouvrés">obsèques enfants : 5j</mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                        <label>Document justificatif</label>
-                        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="d.rawFile" [name]="d.date + 'fichier'" (ngModelChange)="handleFile(d)" [ngModelOptions]="{standalone: true}" style="align-self: center;padding-bottom: 1em;"></input-file>
-                      </div>
-                    </div>
-                  </div>
-                  <div *ngIf="!isArray(dayOff)" class="champs">
-                    <mat-form-field>
-                      <span class="prefix" matPrefix>{{dayOff.date}}</span>
-                      <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="autoFillType(dayOff)">
-                        <mat-option *ngFor="let absence of absTypes" [value]="absence">
-<!--                          <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
-<!--                          <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> -->
-                          {{absence == 'RTT'?absence + ' (h)': absence}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                    <mat-checkbox [checked]="dayOff.demiJournee" (change)="dayOff.demiJournee = $event.checked.valueOf();autoFillType(dayOff)">Demi-journée ?</mat-checkbox>
-                    <br>
-                    <mat-form-field *ngIf="dayOff.demiJournee">
-                      <span class="prefix" matPrefix>Type de demi-journée : </span>
-                      <mat-select [(ngModel)]="dayOff.typeDemiJournee" [ngModelOptions]="{standalone: true}" placeholder="Type de demi-journée">
-                        <mat-option value="Matin">Matin</mat-option>
-                        <mat-option value="Après-midi">Après-midi</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                    <mat-form-field class="commentaires">
-                      <input matInput placeholder="Commentaire facultatif" [(ngModel)]="dayOff.commentaires" [name]="dayOff.date + ' comm'">
-                    </mat-form-field>
-                    <div *ngIf="dayOff.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
-                      <mat-form-field>
-                        <span class="prefix" matPrefix *ngIf="dayOff.typeCe == null">Raison de l'absence exceptionnelle : </span>
-                        <mat-select [(ngModel)]="dayOff.typeCe" [name]="dayOff.date + ' typeCe'" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value == 'Absence Exceptionnelle'">
-                          <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage/pacse : 4j</mat-option>
-                          <mat-option value="mariage enfants" matTooltip="1 jour ouvré">mariage enfants : 1j</mat-option>
-                          <mat-option value="Naissance-adoption" matTooltip="3 jours ouvrés consécutifs ou non, inclus dans une période de quinze jours entourant la date de naissance ou suivant l'arrivée au foyer de l'enfant placé en vue de son adoption.">père : naissance/adoption : 3j</mat-option>
-                          <mat-option value="obsèques conjoint" matTooltip="3 jours ouvrés">obsèques conjoint : 3j</mat-option>
-                          <mat-option value="obsèques ascendants" matTooltip="3 jours ouvrés">obsèques ascendants parents/grands-parents/arrières grands-parents : 3j</mat-option>
-                          <mat-option value="obsèques collatéraux" matTooltip="3 jours ouvrés">obsèques frère/sœur : 3j</mat-option>
-                          <mat-option value="obsèques beau-parents" matTooltip="3 jours ouvrés">obsèques beau-père/belle-mère : 3j</mat-option>
-                          <mat-option value="obsèques enfants" matTooltip="5 jours ouvrés">obsèques enfants : 5j</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      <label>Document justificatif</label>
-                      <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="dayOff.rawFile" [name]="dayOff.date + 'fichier'" (ngModelChange)="handleFile(dayOff)" [ngModelOptions]="{standalone: true}" style="align-self: center;padding-bottom: 1em;"></input-file>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <mat-progress-spinner
-                  *ngIf="FicheEnvoyee"
-                  color="accent"
-                  mode="indeterminate">
-                </mat-progress-spinner>
-                <button mat-raised-button type="submit" [disabled]="!f.form.valid || !rttValid || !fileValid || FicheEnvoyee || daysOffSelectedObjArr.length == 0" style="margin-top: 2em;" id="envoyerbut">Envoyer</button>
-              </form>
-              <!--  <p>{{f.value | json }}</p>-->
-            </div>
-          </div>
-
-          <!--      <pre>{{s(daysOffSelectedObjArr)}}</pre>-->
-
+<div style="justify-content: space-evenly;display: flex" id="maincont" *ngIf="!loading && selectedUser.id != undefined">
+  <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
+      <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
+      <div style="border:0px solid;height: 10vh;width: 10vw;display: inline-block;" *ngFor="let i of creatArray(addCells())"></div>
+      <div (mousedown)="addRemoveDay(day);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day):''" *ngFor="let day of getDaysInMonth(dateNow.getMonth(),dateNow.getFullYear())" style="border:2px solid;height: 10vh;width: 10vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':checkDay(day)?'orange':checkWeekends(day)?'grey':''}">
+        <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 2em" >{{day | date:'d'}}</span>
+      </div>
+    </div>-->
+  <div id="cont">
+    <div style="display: flex;justify-content: space-evenly;align-content: space-evenly;">
+      <button mat-button (click)="plage = !plage;firstDay = null;firstClick=false;showToastr();" style="background-color: black;" class="selectbut"><span *ngIf="!plage">Sélection de plages de dates</span><span *ngIf="plage">Sélection de date unique</span></button>
+      <button mat-button (click)="daysOffSelectedObjArr = [];plage = false;firstDay = null;firstClick=false;this.zeroIndicator = countConges();this.allowAnticipation = false;" style="background-color: black;" class="selectbut">Réinitialiser le calendrier</button>
+    </div>
+    <div style="border: none;width: 35vw;height: 32vh; text-align: left;" id="calendrier">
+      <h1 style="text-align: center">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</h1>
+      <div style="border: 1px solid;width: 5vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine" class="daysofweek">{{d}}</div>
+      <div style="border:0px solid;height: 5vh;width: 5vw;display: inline-block;" *ngFor="let i of creatArray(addCells(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),0))" class="caldivs"></div>
+      <div  (mousedown)="addRemoveDay(day,0);mouseDown = true" (mouseup)="mouseDown = false" (mouseleave)="mouseDown? addRemoveDay(day,0):''" *ngFor="let day of getDaysInMonth(nomsDesMois.indexOf(nomsDesMois[dateNow.getMonth()]),dateNow.getFullYear())"
+            style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day,0)}" class="caldivs">
+        <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
+          <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" class="dayc">{{day | date:'d'}}</span>
+          <span  style="position: absolute;top:1vh;right:2vw;font-size: 1.2em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
         </div>
+      </div>
+    </div>
+    <br>
+    <div class="legend">
+      <div id="goDown"><span>{{countSelectedDays()}}</span><button mat-button (click)="ScrollDown()" style="background-color: black!important;color: white!important;">Types d'absence<mat-icon>arrow_downward</mat-icon></button></div>
+      <div style="background: yellow" disabled>Congés en attente de validation</div>
+      <div style="background: greenyellow" disabled>Congés validés</div>
+    </div>
+    <h4>
+      Jours de congés/absences déclarés
+    </h4>
+    <div *ngIf="daysOffSavedObjArr.length == 0; else conges" class="emptyDaysoff">Pas de jours de congés/absences déclarés ce mois-ci</div>
+    <ng-template #conges>
+      <ul style="list-style-type: none;">
+        <li *ngFor="let c of getHolidaysOfMonth(nomsDesMois[dateNow.getMonth()])"><span *ngIf="!isArray(c)">{{c.date}} - {{c.typeConge}} {{c.demiJournee?'demi-journée':''}}</span><span *ngIf="isArray(c)">Du {{c[0].date}} au {{c[c.length-1].date}} - {{c[0].typeConge}}</span></li>
+      </ul>
+    </ng-template>
+  </div>
+
+  <!--  <mat-card class="calendar-card">
+    <mat-card-title>
+      {{dateNow.getFullYear()}}
+    </mat-card-title>
+  &lt;!&ndash;  <mat-month-view [dateFilter]="dateFilter" [activeDate]="dateNow" #calendar (selectedChange)="addRemoveDay($event)" (selected)="SelectCell($event)">&ndash;&gt;
+  &lt;!&ndash;  </mat-month-view>&ndash;&gt;
+  </mat-card>-->
+
+  <div style="width: 60vw">
+    <div id="formulaire">
+      <form (ngSubmit)="sendRequest(f, daysOffSelectedObjArr)" #f="ngForm" novalidate id="detailform">
+        <h4>
+          Faire une déclaration de congés/absences
+        </h4>
+        <div>
+          Sélectionnez les dates de congés/absences à déclarer sur le calendrier joint. Pour changer de mois, sélectionnez le mois correspondant avec les flèches.
+        </div>
+        <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
+          <div *ngFor="let dayOff of daysOffSelectedObjArr; index as i;" class="boxes formcontainer">
+            <div *ngIf="isArray(dayOff)" style="box-shadow: none!important;">
+              <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0" class="champs">
+                <span class="prefix" matPrefix style="padding-top: 1em">Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
+                <mat-form-field>
+                  <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="Type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
+                    <mat-option *ngFor="let absence of absTypes" [value]="absence">
+                      <!--                            <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
+                      <!--                            <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> -->
+                      {{absence == 'RTT'?absence + ' (h)': absence}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="commentaires">
+                  <input matInput placeholder="Commentaire facultatif" [(ngModel)]="d.commentaires" [name]="d.date + ' comm'">
+                </mat-form-field>
+                <div *ngIf="d.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
+                  <mat-form-field>
+                    <span class="prefix" matPrefix *ngIf="d.typeCe == null">Raison de l'absence exceptionnelle: </span>
+                    <mat-select [(ngModel)]="d.typeCe" [name]="d.date + ' typeCe'" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value == 'Absence Exceptionnelle'">
+                      <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage/pacse : 4j</mat-option>
+                      <mat-option value="mariage enfants" matTooltip="1 jour ouvré">mariage enfants : 1j</mat-option>
+                      <mat-option value="Naissance-adoption" matTooltip="3 jours ouvrés consécutifs ou non, inclus dans une période de quinze jours entourant la date de naissance ou suivant l'arrivée au foyer de l'enfant placé en vue de son adoption.">père : naissance/adoption : 3j</mat-option>
+                      <mat-option value="obsèques conjoint" matTooltip="3 jours ouvrés">obsèques conjoint : 3j</mat-option>
+                      <mat-option value="obsèques ascendants" matTooltip="3 jours ouvrés">obsèques ascendants parents/grands-parents/arrières grands-parents : 3j</mat-option>
+                      <mat-option value="obsèques collatéraux" matTooltip="3 jours ouvrés">obsèques frère/sœur : 3j</mat-option>
+                      <mat-option value="obsèques beau-parents" matTooltip="3 jours ouvrés">obsèques beau-père/belle-mère : 3j</mat-option>
+                      <mat-option value="obsèques enfants" matTooltip="5 jours ouvrés">obsèques enfants : 5j</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <label>Document justificatif</label>
+                  <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="d.rawFile" [name]="d.date + 'fichier'" (ngModelChange)="handleFile(d)" [ngModelOptions]="{standalone: true}" style="align-self: center;padding-bottom: 1em;"></input-file>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!isArray(dayOff)" class="champs">
+              <mat-form-field>
+                <span class="prefix" matPrefix>{{dayOff.date}}</span>
+                <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="Type d'absence" (selectionChange)="autoFillType(dayOff)">
+                  <mat-option *ngFor="let absence of absTypes" [value]="absence">
+                    <!--                          <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
+                    <!--                          <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> -->
+                    {{absence == 'RTT'?absence + ' (h)': absence}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-checkbox [checked]="dayOff.demiJournee" (change)="dayOff.demiJournee = $event.checked.valueOf();autoFillType(dayOff)">Demi-journée ?</mat-checkbox>
+              <br>
+              <mat-form-field *ngIf="dayOff.demiJournee">
+                <span class="prefix" matPrefix>Type de demi-journée : </span>
+                <mat-select [(ngModel)]="dayOff.typeDemiJournee" [ngModelOptions]="{standalone: true}" placeholder="Type de demi-journée">
+                  <mat-option value="Matin">Matin</mat-option>
+                  <mat-option value="Après-midi">Après-midi</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="commentaires">
+                <input matInput placeholder="Commentaire facultatif" [(ngModel)]="dayOff.commentaires" [name]="dayOff.date + ' comm'">
+              </mat-form-field>
+              <div *ngIf="dayOff.typeConge == 'Absence Exceptionnelle'" style="display: flex;flex-direction: column;">
+                <mat-form-field>
+                  <span class="prefix" matPrefix *ngIf="dayOff.typeCe == null">Raison de l'absence exceptionnelle : </span>
+                  <mat-select [(ngModel)]="dayOff.typeCe" [name]="dayOff.date + ' typeCe'" placeholder="Raison de l'absence exceptionnelle..." [required]="raison.value == 'Absence Exceptionnelle'">
+                    <mat-option value="mariage-pacse" matTooltip="4 jours ouvrés">mariage/pacse : 4j</mat-option>
+                    <mat-option value="mariage enfants" matTooltip="1 jour ouvré">mariage enfants : 1j</mat-option>
+                    <mat-option value="Naissance-adoption" matTooltip="3 jours ouvrés consécutifs ou non, inclus dans une période de quinze jours entourant la date de naissance ou suivant l'arrivée au foyer de l'enfant placé en vue de son adoption.">père : naissance/adoption : 3j</mat-option>
+                    <mat-option value="obsèques conjoint" matTooltip="3 jours ouvrés">obsèques conjoint : 3j</mat-option>
+                    <mat-option value="obsèques ascendants" matTooltip="3 jours ouvrés">obsèques ascendants parents/grands-parents/arrières grands-parents : 3j</mat-option>
+                    <mat-option value="obsèques collatéraux" matTooltip="3 jours ouvrés">obsèques frère/sœur : 3j</mat-option>
+                    <mat-option value="obsèques beau-parents" matTooltip="3 jours ouvrés">obsèques beau-père/belle-mère : 3j</mat-option>
+                    <mat-option value="obsèques enfants" matTooltip="5 jours ouvrés">obsèques enfants : 5j</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <label>Document justificatif</label>
+                <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="dayOff.rawFile" [name]="dayOff.date + 'fichier'" (ngModelChange)="handleFile(dayOff)" [ngModelOptions]="{standalone: true}" style="align-self: center;padding-bottom: 1em;"></input-file>
+              </div>
+            </div>
+          </div>
+        </div>
+        <mat-progress-spinner
+          *ngIf="FicheEnvoyee"
+          color="accent"
+          mode="indeterminate">
+        </mat-progress-spinner>
+        <button mat-raised-button type="submit" [disabled]="!f.form.valid || !rttValid || !fileValid || FicheEnvoyee || daysOffSelectedObjArr.length == 0" style="margin-top: 2em;" id="envoyerbut">Valider</button>
+      </form>
+      <!--  <p>{{f.value | json }}</p>-->
+    </div>
+  </div>
+
+  <!--      <pre>{{s(daysOffSelectedObjArr)}}</pre>-->
+
+</div>
 <!--<mat-tab-group [selectedIndex]="dateNow.getMonth()"  *ngIf="daysOffSavedObjArr.length != 0">-->
 <!--  <div *ngFor = "let x of [0,1]">-->
 <!--  <mat-tab *ngFor="let mois of nomsDesMois"  [disabled]="disableTabs(nomsDesMois.indexOf(mois),dateNow.getFullYear()+x)" >-->

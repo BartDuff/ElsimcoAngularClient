@@ -1,7 +1,7 @@
 <h1>
   Remplir ma fiche de présence
 </h1>
-
+<p>Déclarez sur le calendrier vos jours d'Intercontrat</p>
 <br>
 <div style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner
@@ -43,18 +43,18 @@
   </div>
   <br>
   <div *ngIf="!FicheEnvoyee" style="margin-top: 5em;" id="resum">
-    <a href="#choice" style="color: black;"><mat-icon>arrow_downward</mat-icon></a>
+    <div id="goDown"><span>{{countSelectedDays()}}</span><button mat-button (click)="ScrollDown()" style="background-color: black!important;color: white!important;">Types d'absence<mat-icon>arrow_downward</mat-icon></button></div>
     <p><span matPrefix>Jours ouvrés : </span><span>{{joursOuvres().length}}</span></p>
     <p><span matPrefix>Jours travaillés : </span><span>{{joursOuvres().length - countJoursNonTravailles(f)}}</span></p>
 <!--    <p><span matPrefix>RTT Employeur: </span><span *ngIf="f.value">{{ countRTTE(f) }}</span></p>-->
 <!--    <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTTS(f) }}</span></p>-->
-    <p><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTT() }}</span></p>
-    <p><span matPrefix>Congés Payés : </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>
-    <p><span matPrefix>Absences exceptionnelles : </span><span *ngIf="f.value">{{ countAbsences(f) }}</span></p>
-    <p><span matPrefix>Formation : </span><span *ngIf="f.value">{{ countFormation(f) }}</span></p>
-    <p><span matPrefix>Intercontrat : </span><span *ngIf="f.value">{{ countInterContrat(f) }}</span></p>
-    <p><span matPrefix>Congés Sans Solde : </span><span *ngIf="f.value">{{ countSansSolde(f) }}</span></p>
-    <p><span matPrefix>Arrêt Maladie : </span><span *ngIf="f.value">{{ countMaladie(f) }}</span></p>
+    <p *ngIf="countRTT()>0"><span matPrefix>RTT Salarié : </span><span *ngIf="f.value">{{ countRTT() }}</span></p>
+    <p *ngIf="countConges(f)>0"><span matPrefix>Congés Payés : </span><span *ngIf="f.value">{{ countConges(f) }}</span></p>
+    <p *ngIf="countAbsences(f)>0"><span matPrefix>Absences exceptionnelles : </span><span *ngIf="f.value">{{ countAbsences(f) }}</span></p>
+    <p *ngIf="countFormation(f)>0"><span matPrefix>Formation : </span><span *ngIf="f.value">{{ countFormation(f) }}</span></p>
+    <p *ngIf="countInterContrat(f)>0"><span matPrefix>Intercontrat : </span><span *ngIf="f.value">{{ countInterContrat(f) }}</span></p>
+    <p *ngIf="countSansSolde(f)>0"><span matPrefix>Congés Sans Solde : </span><span *ngIf="f.value">{{ countSansSolde(f) }}</span></p>
+    <p *ngIf="countMaladie(f)>0"><span matPrefix>Arrêt Maladie : </span><span *ngIf="f.value">{{ countMaladie(f) }}</span></p>
   </div>
 </div>
 
@@ -72,9 +72,16 @@
   </h4>
   <div id="formulaire">
     <form (ngSubmit)="sendFiche(f)" #f="ngForm" id="detailform">
-      <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés à déclarer ce mois-ci</div>
+      <div *ngIf="daysOff.length===0" class="emptyDaysoff">Pas de jours non travaillés à déclarer ce mois-ci,<br><span style="font-weight: bold;">CLIQUEZ SUR ENVOYER</span></div>
       <div *ngIf="justifManquant" style="color: red;font-weight: bold;margin-bottom: 2em;">Vous avez déclaré une absence exceptionnelle sans fournir de justificatif.<br>
         Merci de nous fournir un justificatif dans les meilleurs délais.</div>
+        <mat-form-field style="width: auto;padding-bottom: 2em;" id="mainMission">
+          <input matInput placeholder="Numéro d'Affaire" [(ngModel)]="fiche.numeroAffaire1" required [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+      <a mat-button style="color: white!important;background-color: black!important;margin-bottom: 1em;" (click)="showHiddenMission();">{{addedMission?"Retirer la 2e mission":"Ajouter une 2e mission"}}</a>
+      <mat-form-field id="hiddenMission" style="width: auto;padding-bottom: 2em;display: none;">
+        <input matInput placeholder="Numéro d'Affaire 2" [(ngModel)]="fiche.numeroAffaire2" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
       <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
       <div *ngFor="let dayOff of daysOff; index as i" class="formcontainer">
         <div *ngIf="isArray(dayOff)">
@@ -82,7 +89,7 @@
             <span style="padding-top: 1em">Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
             <mat-form-field>
               <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="type d'absence" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
-                <mat-option *ngFor="let absence of absTypes | slice: 4" [value]="absence">
+                <mat-option *ngFor="let absence of absTypes | slice: 6" [value]="absence">
                   {{absence}}
                 </mat-option>
               </mat-select>
@@ -96,7 +103,7 @@
           <mat-form-field>
             <span class="prefix" matPrefix>{{dayOff.date}}</span>
             <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="type d'absence">
-              <mat-option *ngFor="let absence of absences | slice: 4" [value]="absence">
+              <mat-option *ngFor="let absence of absences | slice: 6" [value]="absence">
                 {{absence}}
               </mat-option>
             </mat-select>
@@ -109,7 +116,7 @@
         </div>
       </div>
       </div>
-      <button mat-raised-button type="submit" [disabled]="f.invalid || sending" id="envoyerbut">Envoyer</button>
+      <button mat-raised-button type="submit" [disabled]="f.invalid || sending || fiche.numeroAffaire1 == ''" id="envoyerbut">Envoyer</button>
     </form>
     <div style="display: flex; justify-content: center; align-items: center">
       <mat-progress-spinner

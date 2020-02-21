@@ -33,7 +33,10 @@
       </button>
     </div>
     <mat-card-header>
-      <img mat-card-avatar [src]=img alt="">
+      <div mat-card-avatar>
+        <img class="img-avatar" [src]=img alt="">
+      </div>
+
       <mat-card-title>
         {{ user?.prenom }} {{ user?.nom }}
       </mat-card-title>
@@ -51,22 +54,34 @@
       <p class="identity">
         <mat-icon class="labels">business_center</mat-icon><b class="labels">Métier :</b>
           {{ user?.metier }}</p>
-      <p class="identity">
+      <p class="identity hideOnMobile">
         <mat-icon class="labels">contact_phone</mat-icon><b class="labels">Téléphone Pro :&ensp;  </b>
           {{ formatTel(user?.telPro) }}</p>
+      <p class="identity showOnMobile">
+        <mat-icon class="labels">contact_phone</mat-icon><b class="labels">Téléphone Pro :   </b>
+        <a href="tel:{{ formatTelForCall(user?.telPro)}}" style="color: black!important;text-decoration: underline;">{{ formatTel(user?.telPro) }}</a></p>
       <p class="identity">
         <mat-icon class="labels">email</mat-icon><b class="labels">Email Pro :&ensp;  </b>
           {{ user?.email }}</p>
       <p class="identity">
         <mat-icon class="labels">home</mat-icon><b class="labels">Adresse :&ensp;  </b>
-          {{ user?.adressePostale }}</p>
+        {{ user?.adressePostale }}</p>
       <p class="identity">
+        <mat-icon class="labels">home</mat-icon><b class="labels">Code Postal :&ensp;  </b>
+        {{ user?.codePostal }}</p>
+      <p class="identity">
+        <mat-icon class="labels">home</mat-icon><b class="labels">Ville :&ensp;  </b>
+        {{ user?.ville }}</p>
+      <p class="identity hideOnMobile">
         <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso :   </b>
           {{ formatTel(user?.telephone) }}</p>
+      <p class="identity showOnMobile">
+        <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso :   </b>
+        <a href="tel:{{ formatTelForCall(user?.telephone)}}" style="color: black!important;text-decoration: underline;">{{ formatTel(user?.telephone) }}</a></p>
       <p class="identity">
       <mat-icon class="labels">mail_outline</mat-icon><b class="labels">Email perso :&ensp;  </b>
           {{ user?.emailPerso }}</p>
-      <p style="text-decoration: underline;font-weight: bold;">RESUMÉ COMPTEUR CP/RTT :</p>
+      <p><span style="text-decoration: underline;font-weight: bold;">RESUMÉ COMPTEUR CP/RTT</span><span> :</span></p>
       <p>
         <span class="labels">Congés N-1 :&ensp; </span>
           {{ user?.cpNMoins1 | number: '1.2-2' }}</p>
@@ -79,7 +94,14 @@
       <p>
         <span class="labels">Congés Ancienneté :&ensp; </span>
           {{ user?.congeAnciennete | number: '1.2-2' }}</p>
-
+      <p class="hideOnMobile"><span style="text-decoration: underline;font-weight: bold;">DOSSIER DE COMPÉTENCES</span><span> : </span></p>
+      <p class="identity hideOnMobile" *ngIf="user.competenceId;else notavailable;">
+        <span class="labels">Télécharger le Dossier de Compétences : </span><button type="button" class="labels"
+                (click)="downloadDocument(user)" matTooltip="Télécharger le Dossier de Compétences"><i class="material-icons">file_download</i></button>
+      </p>
+      <ng-template #notavailable>
+        <span class="labels">Dossier non disponible</span>
+      </ng-template>
 <!--      <p>Cet utilisateur s'intéresse aux missions suivantes:</p>-->
 <!--      <div class="mini-container" fxLayout="row wrap" fxFlexAlign="space-evenly" fxLayoutGap="5vw">-->
 <!--        <div *ngFor="let mission of user?.missions" class="mat-card mat-card-mini">-->

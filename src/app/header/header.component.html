@@ -41,6 +41,8 @@
             <a mat-menu-item routerLink="/presence" *ngIf="token">Remplir ma fiche de présence</a>
             <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token">Mes fiches de présence</a>
             <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')"><span matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
+            <a mat-menu-item routerLink="/conges/admin" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')"><span>Déclaration d'absences</span></a>
+
           </mat-menu>
           <button mat-menu-item [matMenuTriggerFor]="menu3" *ngIf="token">Congés<mat-icon style="color: white">chevron_right</mat-icon></button>
           <mat-menu #menu3="matMenu" xPosition="after" backdropClass="toolbar-menu">

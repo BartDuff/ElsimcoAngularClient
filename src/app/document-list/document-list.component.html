@@ -13,13 +13,13 @@
 <!--    <span class="drag-over-title">Déposer le fichier</span>-->
 <!--  </div>-->
 </div>
-<div style="overflow-x: auto;">
-<table class="bordered mat-elevation-z8" style="margin: auto; " *ngIf="documents">
+<div class="table-container">
+<table class="bordered mat-elevation-z8 tabledoc" style="margin: auto; " *ngIf="documents">
   <thead>
   <tr>
     <th>Nom du fichier</th>
     <th>Année</th>
-    <th>Télécharger</th>
+    <th class="hideOnMobile">Télécharger</th>
     <th>Visualiser</th>
     <th>Recevoir par mail</th>
     <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>

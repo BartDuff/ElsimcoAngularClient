@@ -46,3 +46,17 @@ th {
   padding: 1em!important;
 }
 
+@media only screen and (max-width: 768px) {
+  .table-container{
+    width: 70vw!important;
+  }
+
+  .tabledoc {
+    width: 70vw!important;
+  }
+
+  .hideOnMobile {
+    display: none;
+  }
+}
+

@@ -1,38 +1,26 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatMonthView} from '@angular/material';
 import {Moment} from 'moment';
+import * as moment from 'moment';
 import {NgForm} from '@angular/forms';
+import {InputFileComponent} from 'ngx-input-file';
 import {UserModel} from '../models/user.model';
 import {ToastrService} from 'ngx-toastr';
 import {PdfService} from '../services/pdf.service';
 import {UserService} from '../services/user.service';
-import {InputFileComponent, InputFileConfig} from 'ngx-input-file';
-import {FicheModel} from '../models/fiche.model';
-import htmlToImage from 'html-to-image';
-import * as moment from 'moment';
-import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
-import {xdescribe} from '@angular/core/testing/src/testing_internal';
-import {CommentFicheDialogComponent} from '../dialog/comment-fiche-dialog/comment-fiche-dialog.component';
-import {AllowAnticipationDialogComponent} from '../dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
-import {forEach} from '@angular/router/src/utils/collection';
 import {EmailService} from '../services/email.service';
-import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
-import {groupBy} from 'rxjs/operators';
-import {error} from 'util';
 import {ImageService} from '../services/image.service';
-
-const config: InputFileConfig = {
-  fileAccept: '*',
-  fileLimit: 1
-};
+import {AllowAnticipationDialogComponent} from '../dialog/allow-anticipation-dialog/allow-anticipation-dialog.component';
+import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
+import {CongeModel} from '../models/conge.model';
 
 @Component({
-  selector: 'app-demande-conge',
-  templateUrl: './demande-conge.component.html',
-  styleUrls: ['./demande-conge.component.css']
+  selector: 'app-admin-conges',
+  templateUrl: './admin-conges.component.html',
+  styleUrls: ['./admin-conges.component.css']
 })
-export class DemandeCongeComponent implements OnInit, AfterViewChecked {
+export class AdminCongesComponent implements OnInit {
 
   @ViewChild('calendar') calendar: MatMonthView<Moment>;
   @ViewChild('f') f: NgForm;
@@ -57,22 +45,45 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   dayoffPlage = [];
   zeroIndicator;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-  absTypes = ['Congés Payés', 'RTT', 'Absence Exceptionnelle', 'Congés Sans Solde'];
-  absShortTypes = ['CP', 'RTT', 'A.E.', 'C.S.S.'];
+  absTypes = ['Congés Payés', 'RTT', 'Absence Exceptionnelle', 'Congés Sans Solde','Formation', 'Arrêt Maladie'];
+  absShortTypes = ['CP', 'RTT', 'A.E.', 'C.S.S.','F','A.M.'];
   fixedDateNow: Date;
   dateNow: Date;
   FicheEnvoyee: boolean = false;
   currentUser: UserModel;
+  selectedUser: UserModel;
   congesCount;
   anticipeCount;
   ancienneteCount;
   rttCount;
+  users: UserModel[] = [];
   selectedFiles;
   filename;
   fileEncoded;
   plage: boolean = false;
   firstClick: boolean = false;
   firstDay;
+
+  ngOnInit() {
+    // this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.selectedUser = new UserModel();
+    //this.selectedDate = moment(new Date());
+    this.counter = this.selectedUser.cpNMoins1 > 0 ? this.selectedUser.cpNMoins1 + this.selectedUser.congeAnciennete : this.selectedUser.cpN;
+    this.congesCount = this.selectedUser.cpNMoins1;
+    this.anticipeCount = this.selectedUser.cpN;
+    this.ancienneteCount = this.selectedUser.congeAnciennete;
+    this.rttCount = this.selectedUser.rttn;
+    this.zeroIndicator = this.countConges();
+    this.dateNow = new Date();
+    this.fixedDateNow = new Date();
+    this.FicheEnvoyee = null;
+    this.getUsers();
+    this.getHolidays();
+    // this.dateFilter(this.dateNow);
+  }
+
+  constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService, private emailService: EmailService, private dialog: MatDialog, private imageService: ImageService) {
+  }
 
   getHello(){
     let date = new Date();
@@ -84,6 +95,15 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  getUsers() {
+    this.loading = true;
+    this.userService.getUsers().subscribe(
+      (data) => {
+        this.users = data;
+        this.loading = false;
+      }
+    );
+  }
   getAbsTypeShort(date) {
     for (let x of this.daysOffSavedObjArr) {
       if (x.date == date) {
@@ -166,9 +186,6 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return params.charAt(0).toUpperCase() + params.slice(1);
   }
 
-  constructor(private toastr: ToastrService, private cdRef: ChangeDetectorRef, private pdfService: PdfService, private userService: UserService, private congeService: CongeService, private emailService: EmailService, private dialog: MatDialog, private imageService: ImageService) {
-  }
-
   showToastr(){
     this.toastr.toastrConfig.closeButton= true;
     this.toastr.toastrConfig.disableTimeOut = true;
@@ -208,6 +225,50 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     return new Array(number);
   }
 
+  // getNonValidatedConges() {
+  //   this.congesNonValides = [];
+  //   this.allNonValidatedConges = [];
+  //   this.monthArr = [];
+  //   this.monthLoading = true;
+  //   if (this.selectedUser == null) {
+  //     this.congeService.getConges().subscribe(
+  //       (data) => {
+  //         for (let c of data) {
+  //           if (!c.valideRH){
+  //             this.allNonValidatedConges.push(c);
+  //           }
+  //           if(!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()]+ ' '+ new Date(c.date).getFullYear()) == -1){
+  //             this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' '+ new Date(c.date).getFullYear());
+  //           }
+  //           if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && this.congesNonValides.indexOf(c) == -1) {
+  //             this.congesNonValides.push(c);
+  //           }
+  //         }
+  //         this.congesNonValides = this.congesNonValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+  //         this.monthArr = this.monthArr.sort((a, b) => {
+  //           a = a.split(" ");
+  //           b = b.split(" ");
+  //           return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+  //         });
+  //         this.loading = false;
+  //         this.monthLoading = false;
+  //       }
+  //     );
+  //   } else {
+  //     this.userService.getCongeForUser(this.selectedUser).subscribe(
+  //       (d) => {
+  //         for (let c of d) {
+  //           if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && this.congesNonValides.indexOf(c) == -1) {
+  //             this.congesNonValides.push(c);
+  //           }
+  //         }
+  //         this.congesNonValides = this.congesNonValides.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+  //         this.loading = false;
+  //         this.monthLoading = false;
+  //       });
+  //   }
+  // }
+
   getHolidaysOfMonth(mois) {
     let holidayMonthArr = [];
     for (let h of this.daysOffSavedObjArr) {
@@ -229,22 +290,6 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   c(cc) {
     console.log(cc);
-  }
-
-  ngOnInit() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    //this.selectedDate = moment(new Date());
-    this.counter = this.currentUser.cpNMoins1 > 0 ? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete : this.currentUser.cpN;
-    this.congesCount = this.currentUser.cpNMoins1;
-    this.anticipeCount = this.currentUser.cpN;
-    this.ancienneteCount = this.currentUser.congeAnciennete;
-    this.rttCount = this.currentUser.rttn;
-    this.zeroIndicator = this.countConges();
-    this.dateNow = new Date();
-    this.fixedDateNow = new Date();
-    this.FicheEnvoyee = null;
-    this.getHolidays();
-    // this.dateFilter(this.dateNow);
   }
 
   ngAfterViewChecked() {
@@ -420,19 +465,19 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   //     }
   //   }
 
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // dialogConfig.autoFocus = true;
-    // const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
-    // dialogRef.afterClosed().subscribe(
-    //   (data) => {
-    //     if (data) {
-    //       this.allowAnticipation = data;
-    //     } else {
-    //       this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence), 1);
-    //       this.zeroIndicator += half;
-    //     }
-    //   });
+  // const dialogConfig = new MatDialogConfig();
+  // dialogConfig.disableClose = true;
+  // dialogConfig.autoFocus = true;
+  // const dialogRef = this.dialog.open(AllowAnticipationDialogComponent, dialogConfig);
+  // dialogRef.afterClosed().subscribe(
+  //   (data) => {
+  //     if (data) {
+  //       this.allowAnticipation = data;
+  //     } else {
+  //       this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(absence), 1);
+  //       this.zeroIndicator += half;
+  //     }
+  //   });
   // }
 
   autoFillTypeInPlage(absence, plageArr) {
@@ -446,7 +491,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     }
     for (; ifrom < plageArr.length; ifrom++) {
       let half = absence.demiJournee ? 0.5 : 1;
-      if (absence.typeConge == 'Congés Payés' && this.zeroIndicator < 0 && !this.allowAnticipation) {
+      if (absence.typeConge == 'Congés Payés' && this.zeroIndicator == 0 && !this.allowAnticipation) {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
@@ -492,32 +537,40 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
 
   checkWeekends(day: Date, iteration) {
     let d = day.toLocaleString('fr-FR', {weekday: 'short'});
-    return d === 'dim.' || d === 'sam.' || DemandeCongeComponent.joursFeries(this.dateNow.getFullYear() + iteration).includes(moment(day).format('DD/MM/YYYY').toString());
+    return d === 'dim.' || d === 'sam.' || AdminCongesComponent.joursFeries(this.dateNow.getFullYear() + iteration).includes(moment(day).format('DD/MM/YYYY').toString());
   }
 
   checkWeekendsWithYear(day: Date, year) {
     let d = day.toLocaleString('fr-FR', {weekday: 'short'});
-    return d === 'dim.' || d === 'sam.' || DemandeCongeComponent.joursFeries(year).includes(moment(day).format('DD/MM/YYYY').toString());
+    return d === 'dim.' || d === 'sam.' || AdminCongesComponent.joursFeries(year).includes(moment(day).format('DD/MM/YYYY').toString());
   }
 
   getHolidays() {
     this.loading = true;
-    this.userService.getCongeForUser(this.currentUser).subscribe(
-      (data) => {
-        for (let d of data) {
-          //this.mesConges.push(moment(d.date).format('DD/MM/YYYY').toString());
-          this.daysOffSavedObjArr.push(({
-            date: moment(d.date).format('DD/MM/YYYY').toString(),
-            typeConge: d.typeConge,
-            demiJournee: d.demiJournee,
-            typeDemiJournee: d.typeDemiJournee,
-            valideRH: d.valideRH,
-            documentJointUri: d.documentJointUri
-          }));
+    this.daysOffSavedObjArr = [];
+    if(this.selectedUser == null){
+      this.selectedUser = new UserModel();
+    }
+    if(this.selectedUser.id != undefined){
+      this.userService.getCongeForUser(this.selectedUser).subscribe(
+        (data) => {
+          for (let d of data) {
+            //this.mesConges.push(moment(d.date).format('DD/MM/YYYY').toString());
+            this.daysOffSavedObjArr.push(({
+              date: moment(d.date).format('DD/MM/YYYY').toString(),
+              typeConge: d.typeConge,
+              demiJournee: d.demiJournee,
+              typeDemiJournee: d.typeDemiJournee,
+              valideRH: d.valideRH,
+              documentJointUri: d.documentJointUri
+            }));
+          }
+          this.loading = false;
         }
-        this.loading = false;
-      }
-    );
+      );
+    } else {
+      this.loading = false;
+    }
   }
 
   splitArrayInRanges(arr) {
@@ -622,7 +675,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             demiJournee: false,
             typeDemiJournee: '',
             commentaires: '',
-            valideRH: false,
+            valideRH: true,
             typeCe: '',
             documentJointUri: '',
             documentJointType: '',
@@ -645,7 +698,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
       if (this.includesArray(this.daysOffSelectedObjArr, this.dayoffPlage)) {
         this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(this.dayoffPlage), 1);
         this.zeroIndicator += this.dayoffPlage.length;
-        if (this.countCongesAnticipes() == this.currentUser.cpN) {
+        if (this.countCongesAnticipes() == this.selectedUser.cpN) {
           this.allowAnticipation = false;
         }
         this.firstDay = null;
@@ -673,7 +726,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
           demiJournee: false,
           typeDemiJournee: '',
           commentaires: '',
-          valideRH: false,
+          valideRH: true,
           typeCe: '',
           documentJointUri: '',
           documentJointType: '',
@@ -710,7 +763,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
-                  valideRH: false,
+                  valideRH: true,
                   typeCe: '',
                   documentJointUri: '',
                   documentJointType: '',
@@ -740,7 +793,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
-                  valideRH: false,
+                  valideRH: true,
                   typeCe: '',
                   documentJointUri: '',
                   documentJointType: '',
@@ -779,7 +832,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
-        valideRH: false,
+        valideRH: true,
         typeCe: '',
         documentJointUri: '',
         documentJointType: '',
@@ -795,13 +848,13 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
           if(day == plageArr[0].date){
             this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(plageArr),1);
             this.zeroIndicator += plageArr.length;
-            if (this.countCongesAnticipes() == this.currentUser.cpN) {
+            if (this.countCongesAnticipes() == this.selectedUser.cpN) {
               this.allowAnticipation = false;
             }
           } else {
             let numDeleted = plageArr.splice(plageArr.findIndex(item => item.date === day)+1);
             this.zeroIndicator += numDeleted.length;
-            if (this.countCongesAnticipes() == this.currentUser.cpN) {
+            if (this.countCongesAnticipes() == this.selectedUser.cpN) {
               this.allowAnticipation = false;
             }
           }
@@ -821,7 +874,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
-        valideRH: false,
+        valideRH: true,
         typeCe: '',
         documentJointUri: '',
         documentJointType: '',
@@ -949,7 +1002,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                 periodArray.push(this.changeCaseFirstLetter(this.nomsDesMois[this.toDate(subConge.date).getMonth()]) + " "+this.toDate(subConge.date).getFullYear());
                 let c = new CongeModel();
                 c.documentJointType = subConge.documentJointType;
-                c.user = this.currentUser;
+                c.user = this.selectedUser;
                 c.documentJointUri = subConge.documentJointUri;
                 // c.justificatifRecu = conge[0].documentJointUri != '';
                 c.fileId = subConge.fileId;
@@ -959,7 +1012,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                 c.demiJournee = subConge.demiJournee;
                 c.typeDemiJournee = subConge.typeDemiJournee;
                 c.date = this.toDate(subConge.date);
-                c.valideRH = false;
+                c.valideRH = true;
                 c.typeConge = subConge.typeConge;
                 c.commentaires = subConge.commentaires;
                 c.typeCe = subConge.typeCe;
@@ -973,7 +1026,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
               periodArray.push(this.changeCaseFirstLetter(this.nomsDesMois[this.toDate(conge.date).getMonth()])+ " "+this.toDate(conge.date).getFullYear());
               let co = new CongeModel();
               co.documentJointType = conge.documentJointType;
-              co.user = this.currentUser;
+              co.user = this.selectedUser;
               co.documentJointUri = conge.documentJointUri;
               // co.justificatifRecu = conge.documentJointUri != '';
               co.fileId = conge.fileId;
@@ -983,7 +1036,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
               co.demiJournee = conge.demiJournee;
               co.typeDemiJournee = conge.typeDemiJournee;
               co.date = this.toDate(conge.date);
-              co.valideRH = false;
+              co.valideRH = true;
               co.typeConge = conge.typeConge;
               co.commentaires = conge.commentaires;
               co.typeCe = conge.typeCe;
@@ -1003,31 +1056,34 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
             );
           }
           let antici = this.countCongesAnticipes();
-          this.currentUser.cpNMoins1 = this.countConges();
-          this.currentUser.anticipation = this.currentUser.cpN - antici;
-          this.currentUser.cpN = this.countCongesAnticipes();
-          this.currentUser.rttn = this.countRTT();
-          this.currentUser.congeAnciennete = this.countAnciennete();
-          this.userService.editUser(this.currentUser).subscribe(
+          this.selectedUser.cpNMoins1 = this.countConges();
+          this.selectedUser.anticipation = this.selectedUser.cpN - antici;
+          this.selectedUser.cpN = this.countCongesAnticipes();
+          this.selectedUser.rttn = this.countRTT();
+          this.selectedUser.congeAnciennete = this.countAnciennete();
+          this.userService.editUser(this.selectedUser).subscribe(
             () => {
-              this.toastr.success('Demande envoyée', 'Confirmation d\'envoi');
-              const set = new Set(periodArray);
-              let uniquePeriod = Array.from(set.values());
-              let sPeriod = uniquePeriod.join(", ");
-              this.emailService.sendMail(this.getHello()+", \n\n"+this.currentUser.prenom + " "+this.currentUser.nom+" vient d'envoyer une nouvelle demande d'absence pour la période de : "+sPeriod+".","Nouvelle demande d'absence : "+this.currentUser.prenom + " "+this.currentUser.nom,"majoline.domingos@elsimco.com").subscribe(
-                ()=>{},
-                (error) => {
-                  this.toastr.error('Erreur d\'envoi de mail');
-                }
-              );
-              this.userService.getUser(this.currentUser.id).subscribe(
+              this.toastr.success('Déclaration effectuée', 'Confirmation');
+              // const set = new Set(periodArray);
+              // let uniquePeriod = Array.from(set.values());
+              // let sPeriod = uniquePeriod.join(", ");
+              // this.emailService.sendMail("Bonjour, \n\n"+this.selectedUser.prenom + " "+this.selectedUser.nom+" vient d'envoyer une nouvelle demande d'absence pour la période de : "+sPeriod+".","Nouvelle demande d'absence : "+this.selectedUser.prenom + " "+this.selectedUser.nom,"majoline.domingos@elsimco.com").subscribe(
+              //   ()=>{},
+              //   (error) => {
+              //     this.toastr.error('Erreur d\'envoi de mail');
+              //   }
+              // );
+              this.userService.getUser(this.selectedUser.id).subscribe(
                 (user) => {
-                  localStorage.setItem('currentUser', JSON.stringify(user));
-                  this.daysOffSelectedObjArr = [];
+                  // this.selectedUser = user;
+                  // localStorage.setItem('currentUser', JSON.stringify(user));
+                  // this.daysOffSelectedObjArr = [];
                   if (congeSansJustif.length > 0) {
                     let i = 0;
                     let identicalCe = [];
                     let sCongeSansJustif = '';
+                    this.FicheEnvoyee = false;
+                    this.ngOnInit();
                     // for (let ob of congeSansJustif) {
                     //   if (ob == congeSansJustif[congeSansJustif.length - 1] && (new Date(ob.date).getDate() === new Date(congeSansJustif[i - 1].date).getDate() + 1)) {
                     //     identicalCe.push(ob);
@@ -1042,12 +1098,12 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                     //   i++;
                     // }
                     // sCongeSansJustif += 'Du ' + new Date(identicalCe[0].date).toLocaleDateString() + ' au ' + new Date(identicalCe[identicalCe.length - 1].date).toLocaleDateString() + ' : ' + identicalCe[0].typeCe + '\n';
-                    this.emailService.sendMailWithRangeForFile(this.getHello()+',\nVous avez envoyé une demande d\'absence exceptionnelle sans justificatif pour les jours suivants :\n', 'Notification de pièce justificative manquante', this.currentUser.email, congeSansJustif).subscribe(
-                      () => {
-                        this.FicheEnvoyee = false;
-                        this.ngOnInit();
-                      }
-                    );
+                    // this.emailService.sendMailWithRangeForFile(this.getHello()+',\nVous avez envoyé une demande d\'absence exceptionnelle sans justificatif pour les jours suivants :\n', 'Notification de pièce justificative manquante', this.selectedUser.email, congeSansJustif).subscribe(
+                    //   () => {
+                    //     this.FicheEnvoyee = false;
+                    //     this.ngOnInit();
+                    //   }
+                    // );
                   } else {
                     this.FicheEnvoyee = false;
                     this.ngOnInit();
@@ -1110,27 +1166,27 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         for (let det of d) {
           let half = det.demiJournee ? 3.5 : 7;
           if (det.typeConge == 'RTT') {
-            if(count - half <0) {
-              this.toastr.error("Cette demande est supérieure à votre solde de RTT", "Solde insuffisant");
-              this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d), 1);
-            } else {
+            // if(count - half <0) {
+            //   this.toastr.error("Cette demande est supérieure à votre solde de RTT", "Solde insuffisant");
+            //   this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d), 1);
+            // } else {
               count -= half;
-            }
+            // }
           }
         }
       } else {
         let half = d.demiJournee ? 3.5 : 7;
         if (d.typeConge == 'RTT') {
-          if(count - half <0){
-            this.toastr.error("Cette demande est supérieure à votre solde de RTT","Solde insuffisant");
-            this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
-          } else {
+          // if(count - half <0){
+          //   this.toastr.error("Cette demande est supérieure à votre solde de RTT","Solde insuffisant");
+          //   this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
+          // } else {
             count -= half;
-          }
+          // }
         }
       }
     }
-    this.rttValid = count >= 0;
+    this.rttValid = true;
     return count;
   }
 
@@ -1186,7 +1242,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         }
       }
     }
-    if (count == 0 && this.countCongesAnticipes() == this.currentUser.cpN) {
+    if (count == 0 && this.countCongesAnticipes() == this.selectedUser.cpN) {
       this.allowAnticipation = false;
     }
     return count;

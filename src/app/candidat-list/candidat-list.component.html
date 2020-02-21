@@ -4,7 +4,7 @@
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Rechercher">
   </mat-form-field>
   <div matTooltip="Créer un nouveau candidat">
-    <button mat-fab routerLink="/candidat_form"><mat-icon>add</mat-icon></button>
+    <button mat-fab (click)="addNewCandidate()"><mat-icon>add</mat-icon></button>
   </div>
 <!--  <div class="table-container">-->
 <!--  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 center" (clickOutside)="resetRowAndColumnsClick()">-->
@@ -324,7 +324,7 @@
               <a *ngIf="x === 'id'" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon> {{element[x]}}</a>
               <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{element[x] | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ'">
-                {{element[x]}}
+                {{element[x] == true? 'Oui': element[x] == false?'Non':element[x]}}
               </span>
             </td>
           </ng-container>

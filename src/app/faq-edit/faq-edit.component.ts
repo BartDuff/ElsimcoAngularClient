@@ -17,6 +17,8 @@ export class FaqEditComponent implements OnInit {
   currentUser: UserModel;
   faqitem: FaqModel;
   loading = false;
+  mailAdresses = ["majoline.domingos@elsimco.com","ghislain.chatras@elsimco.com","franck.simon@elsimco.com"];
+
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
@@ -29,6 +31,7 @@ export class FaqEditComponent implements OnInit {
       id: [],
       question: ['', Validators.required],
       reponse: ['', Validators.required],
+      mailContact: ['', Validators.required]
     });
     this.route.params.subscribe(
       params => this.faqService.getSingleFaq(params['id']).subscribe(
@@ -37,6 +40,7 @@ export class FaqEditComponent implements OnInit {
           this.editForm.controls.id.setValue(data.id);
           this.editForm.controls.question.setValue(data.question);
           this.editForm.controls.reponse.setValue(data.reponse);
+          this.editForm.controls.mailContact.setValue(data.mailContact);
           this.loading = false;
         }
       )

@@ -199,6 +199,16 @@
                 </mat-form-field>
 
                 <mat-form-field>
+                  <mat-select placeholder="Etat des Recherches : " [(ngModel)]="candidat.etatRecherches"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="En recherche active">En recherche active</mat-option>
+                    <mat-option value="En veille">En veille</mat-option>
+                    <mat-option value="En recherche">En recherche</mat-option>
+                    <mat-option value="Pas en recherche">Pas en recherche</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
                   <input matInput formControlName="posteSouhaite" placeholder="Postes souhaités : " name="posteSouhaite"
                          id="posteSouhaite" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)">
                 </mat-form-field>
@@ -258,28 +268,29 @@
         <form [formGroup]="formulaire7" (ngSubmit)="onSubmit()">
           <mat-card-content>
             <div fxLayout="column" fxLayoutAlign="space-around center">
-
-              <mat-form-field>
-                <mat-label>Domaine 1 :</mat-label>
-                <mat-select formControlName="domaine1" [(ngModel)]="candidat.domaine1"
-                            (selectionChange)="updateModel(candidat)">
-                  <mat-option value="Autres">Autres</mat-option>
-                  <mat-option value="Chimie">Chimie</mat-option>
-                  <mat-option value="Cosmétique / Parfum">Cosmétique / Parfum</mat-option>
-                  <mat-option value="Cuir / Maro">Cuir / Maro</mat-option>
-                  <mat-option value="Galva / TS">Galva / TS</mat-option>
-                  <mat-option value="Horlogerie">Horlogerie</mat-option>
-                  <mat-option value="Joaillerie / Bijoux">Joaillerie / Bijoux</mat-option>
-                  <mat-option value="Lunetterie">Lunetterie</mat-option>
-                  <mat-option value="Mécanique">Mécanique</mat-option>
-                  <mat-option value="Packaging">Packaging</mat-option>
-                  <mat-option value="Pièces métalliques">Pièces métalliques</mat-option>
-                  <mat-option value="Plasturgie">Plasturgie</mat-option>
-                  <mat-option value="Textile maro">Textile maro</mat-option>
-                  <mat-option value="Textile PAP">Textile PAP</mat-option>
-                </mat-select>
-              </mat-form-field>
-
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+                <mat-form-field >
+                  <mat-label>Domaine 1 :</mat-label>
+                  <mat-select formControlName="domaine1" [(ngModel)]="candidat.domaine1"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="Autres">Autres</mat-option>
+                    <mat-option value="Chimie">Chimie</mat-option>
+                    <mat-option value="Cosmétique / Parfum">Cosmétique / Parfum</mat-option>
+                    <mat-option value="Cuir / Maro">Cuir / Maro</mat-option>
+                    <mat-option value="Galva / TS">Galva / TS</mat-option>
+                    <mat-option value="Horlogerie">Horlogerie</mat-option>
+                    <mat-option value="Joaillerie / Bijoux">Joaillerie / Bijoux</mat-option>
+                    <mat-option value="Lunetterie">Lunetterie</mat-option>
+                    <mat-option value="Mécanique">Mécanique</mat-option>
+                    <mat-option value="Packaging">Packaging</mat-option>
+                    <mat-option value="Pièces métalliques">Pièces métalliques</mat-option>
+                    <mat-option value="Plasturgie">Plasturgie</mat-option>
+                    <mat-option value="Textile maro">Textile maro</mat-option>
+                    <mat-option value="Textile PAP">Textile PAP</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div style="box-sizing:content-box;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Domaine 2 :</mat-label>
                 <mat-select formControlName="domaine2" [(ngModel)]="candidat.domaine2"
@@ -300,7 +311,8 @@
                   <mat-option value="Textile PAP">Textile PAP</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Domaine 3 :</mat-label>
                 <mat-select formControlName="domaine3" [(ngModel)]="candidat.domaine3"
@@ -321,7 +333,8 @@
                   <mat-option value="Textile PAP">Textile PAP</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
+              <div style="box-sizing:content-box;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Métier 1 :</mat-label>
                 <mat-select formControlName="metier1" [(ngModel)]="candidat.metier1"
@@ -340,7 +353,8 @@
                   <mat-option value="CFAO / Programmation">CFAO / Programmation</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Métier 2 :</mat-label>
                 <mat-select formControlName="metier2" [(ngModel)]="candidat.metier2"
@@ -359,7 +373,8 @@
                   <mat-option value="CFAO / Programmation">CFAO / Programmation</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
+              <div style="box-sizing:content-box;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Métier 3 :</mat-label>
                 <mat-select formControlName="metier3" [(ngModel)]="candidat.metier3"
@@ -378,7 +393,8 @@
                   <mat-option value="CFAO / Programmation">CFAO / Programmation</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Outils 1 :</mat-label>
                 <mat-select formControlName="outils1" [(ngModel)]="candidat.outils1"
@@ -400,7 +416,8 @@
                   <mat-option value="Lean">Lean</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
+              <div style="box-sizing:content-box;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Outils 2 :</mat-label>
                 <mat-select formControlName="outils2" [(ngModel)]="candidat.outils2"
@@ -422,7 +439,8 @@
                   <mat-option value="Lean">Lean</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Outils 3 :</mat-label>
                 <mat-select formControlName="outils3" [(ngModel)]="candidat.outils3"
@@ -444,11 +462,12 @@
                   <mat-option value="Lean">Lean</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              </div>
               <mat-form-field>
                 <mat-label>Anglais :</mat-label>
                 <mat-select formControlName="anglais" [(ngModel)]="candidat.anglais"
                             (selectionChange)="updateModel(candidat)">
+                  <mat-option value="">Non concerné</mat-option>
                   <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
                   <mat-option value="Intermédiaire">Intermédiaire</mat-option>
                   <mat-option value="Courant">Courant</mat-option>
@@ -460,6 +479,7 @@
                 <mat-label>Italien :</mat-label>
                 <mat-select formControlName="italien" [(ngModel)]="candidat.italien"
                             (selectionChange)="updateModel(candidat)">
+                  <mat-option value="">Non concerné</mat-option>
                   <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
                   <mat-option value="Intermédiaire">Intermédiaire</mat-option>
                   <mat-option value="Courant">Courant</mat-option>
@@ -471,6 +491,7 @@
                 <mat-label>Allemand :</mat-label>
                 <mat-select formControlName="allemand" [(ngModel)]="candidat.allemand"
                             (selectionChange)="updateModel(candidat)">
+                  <mat-option value="">Non concerné</mat-option>
                   <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
                   <mat-option value="Intermédiaire">Intermédiaire</mat-option>
                   <mat-option value="Courant">Courant</mat-option>
@@ -482,6 +503,7 @@
                 <mat-label>Espagnol :</mat-label>
                 <mat-select formControlName="espagnol" [(ngModel)]="candidat.espagnol"
                             (selectionChange)="updateModel(candidat)">
+                  <mat-option value="">Non concerné</mat-option>
                   <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
                   <mat-option value="Intermédiaire">Intermédiaire</mat-option>
                   <mat-option value="Courant">Courant</mat-option>
@@ -498,6 +520,7 @@
                 <mat-label>Niveau {{candidat.autreLangue}} :</mat-label>
                 <mat-select formControlName="niveauAutreLangue" [(ngModel)]="candidat.niveauAutrelangue"
                             (selectionChange)="updateModel(candidat)">
+                  <mat-option value="">Non concerné</mat-option>
                   <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
                   <mat-option value="Intermédiaire">Intermédiaire</mat-option>
                   <mat-option value="Courant">Courant</mat-option>
@@ -577,7 +600,7 @@
     <div style="display: flex;flex-direction: row;align-content: center;justify-content: center;">
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="labels">
-          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{columnsToDisplay[c]}} : </span>
+          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{columnsToDisplay[c]?columnsToDisplay[c]+" : ":""}} </span>
         </div>
       </div>
       <div style="display: flex;flex-direction: column;align-items: baseline;">
@@ -609,23 +632,27 @@
           </tr>
           <tr>
             <td>Date des derniers entretiens :</td>
-            <td>{{candidat.dateDerniersEntretiens | date: 'short'}}</td>
+            <td>
+              <input matInput readonly [matDatepicker]="pickerInfo" [(ngModel)]="candidat.dateDerniersEntretiens"
+                       (clickOutside)="updateModel(candidat)" (click)="pickerInfo.open()">
+              <mat-datepicker #pickerInfo></mat-datepicker>
+            </td>
           </tr>
           <tr>
             <td>Intitulé du poste concerné :</td>
-            <td>{{candidat.intitulePosteConcerne}}</td>
+            <td><input matInput [(ngModel)]="candidat.intitulePosteConcerne" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Fonction et Employeur actuel :</td>
-            <td>{{candidat.fonctionEmployeurActuel}}</td>
+            <td><input matInput [(ngModel)]="candidat.fonctionEmployeurActuel" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Nombres d'années d'expérience :</td>
-            <td>{{candidat.nombreAnneesExperiences}}</td>
+            <td><input matInput [(ngModel)]="candidat.nombreAnneesExperiences" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Raison du départ de la société :</td>
-            <td>{{candidat.raisonDepartSociete}}</td>
+            <td><input matInput [(ngModel)]="candidat.raisonDepartSociete" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Projet professionnel :</td>
@@ -633,11 +660,19 @@
           </tr>
           <tr>
             <td>Etat des recherches :</td>
-            <td>{{candidat.etatRecherches}}</td>
+            <td>
+              <mat-select [(ngModel)]="candidat.etatRecherches"
+                          (selectionChange)="updateModel(candidat)">
+                <mat-option value="En recherche active">En recherche active</mat-option>
+                <mat-option value="En veille">En veille</mat-option>
+                <mat-option value="En recherche">En recherche</mat-option>
+                <mat-option value="Pas en recherche">Pas en recherche</mat-option>
+              </mat-select>
+            </td>
           </tr>
           <tr>
             <td>Adéquation poste/profil :</td>
-            <td>{{candidat.adequationPosteProfil}}</td>
+            <td><input matInput [(ngModel)]="candidat.adequationPosteProfil" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Lieu de résidence :</td>
@@ -645,11 +680,11 @@
           </tr>
           <tr>
             <td>Mobilité géographique :</td>
-            <td>{{candidat.mobiliteGeographique}}</td>
+            <td><input matInput [(ngModel)]="candidat.mobiliteGeographique" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Délai de disponibilité :</td>
-            <td>{{candidat.delaiDispoFiche}}</td>
+            <td><input matInput [(ngModel)]="candidat.delaiDispoFiche" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Rémunération actuelle fixe :</td>
@@ -665,11 +700,16 @@
           </tr>
           <tr>
             <td>Connaissance langues et niveaux :</td>
-            <td>{{candidat.anglais}}</td>
+            <td>{{candidat.anglais == ""?"":"Anglais : "+candidat.anglais}}<br *ngIf='candidat.anglais !=""'>
+              {{candidat.allemand == ""?"":"Allemand : "+candidat.allemand}}<br *ngIf='candidat.allemand !=""'>
+              {{candidat.italien == ""?"":"Italien : "+candidat.italien}}<br *ngIf='candidat.italien !=""'>
+              {{candidat.espagnol == ""?"":"Espagnol : "+candidat.espagnol}}<br *ngIf='candidat.espagnol !=""'>
+              {{candidat.autreLangue == ""?"":candidat.autreLangue +" : "+candidat.niveauAutrelangue}}
+            </td>
           </tr>
         </table>
       </div>
-      <button mat-button (click)="generateProcessDocument(candidat)">Générer la fiche Process</button>
+      <button mat-button (click)="generateProcessDocument(candidat)" [disabled]="loading">Générer la fiche Process</button>
 
       <h1>Fiche Recrutement</h1>
       <div id="ficheRecrutement">
@@ -684,7 +724,7 @@
           </tr>
           <tr>
             <td>Date de naissance :</td>
-            <td>{{candidat.dateNaissance | date: 'short'}}</td>
+            <td>{{candidat.dateNaissance | date: 'dd/MM/yyyy'}}</td>
           </tr>
           <tr>
             <td>Lieu de niassance :</td>
@@ -716,11 +756,22 @@
           </tr>
         </table>
       </div>
-      <button mat-button (click)="generateRecruitmentDocument(candidat)">Générer la fiche Recrutement</button>
+      <button mat-button (click)="generateRecruitmentDocument(candidat)" [disabled]="loading">Générer la fiche Recrutement</button>
     </div>
-    <button mat-button (click)="generateProcessRecruitementDocument(candidat)">Générer la fiche hybride</button>
+    <button mat-button (click)="generateProcessRecruitementDocument(candidat)" [disabled]="loading">Générer la fiche hybride</button>
+    <mat-progress-spinner
+      *ngIf="loading"
+      color="accent"
+      mode="indeterminate" style="position:absolute;top:50vh;left:50vw">
+    </mat-progress-spinner>
   </mat-tab>
   <mat-tab label="4 - Documents Joints">
-
+    <p ><span style="text-decoration: underline;font-weight: bold;">CV</span><span> : </span></p>
+    <p *ngIf="candidat.fileBase64;else notavailable;">
+      <span>Télécharger le CV : </span><button type="button" (click)="downloadDocument(candidat)" matTooltip="Télécharger le CV"><i class="material-icons">file_download</i></button>
+    </p>
+    <ng-template #notavailable>
+      <span class="labels">CV non disponible</span>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>

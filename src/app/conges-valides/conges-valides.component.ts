@@ -60,6 +60,16 @@ export class CongesValidesComponent implements OnInit {
     this.selectedUser = null;
   }
 
+  getHello(){
+    let date = new Date();
+    let hour = date.getHours();
+    if (hour >= 5 && hour <= 17) {
+      return "Bonjour";
+    } else {
+      return "Bonsoir";
+    }
+  }
+
   updateModel(conge: CongeModel) {
     this.congeService.editConge(conge).subscribe(
       (data) => {
@@ -364,7 +374,7 @@ export class CongesValidesComponent implements OnInit {
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail('Bonjour ' + user.prenom + ',\n\nVotre demande pour la date de congés suivante a été validée par les Ressources Humaines:\n' + sUserCong, 'Notification de validation de congés', user.email).subscribe(
+              this.emailService.sendMail(this.getHello()+' ' + user.prenom + ',\n\nVotre demande pour la date de congés suivante a été validée par les Ressources Humaines :\n' + sUserCong, 'Notification de validation de congés', user.email).subscribe(
                 () => {
                   this.toastrService.success('Congés validés', 'Congés validés');
                   this.getCongesWithFile();
@@ -427,7 +437,7 @@ export class CongesValidesComponent implements OnInit {
           userCong.push(c);
         }
       }
-      this.emailService.sendMailWithRange('Bonjour ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été validée par les Ressources Humaines:\n', 'Notification de validation de congés', u.email,userCong).subscribe(
+      this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été validée par les Ressources Humaines :\n', 'Notification de validation de congés', u.email,userCong).subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
@@ -461,7 +471,7 @@ export class CongesValidesComponent implements OnInit {
           userCong.push(c);
         }
       }
-      this.emailService.sendMailWithRange('Bonjour ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines:\n', 'Notification de refus de congés', u.email,userCong).subscribe(
+      this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines :\n', 'Notification de refus de congés', u.email,userCong).subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
@@ -503,7 +513,7 @@ export class CongesValidesComponent implements OnInit {
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail('Bonjour ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines:\n' + sUserCong, 'Notification de refus de congés', conge.user.email).subscribe(
+              this.emailService.sendMail(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines :\n' + sUserCong, 'Notification de refus de congés', conge.user.email).subscribe(
                 () => {
                   this.toastrService.error('Congé refusé', 'Congé refusé');
                   this.getCongesWithFile();
@@ -535,7 +545,7 @@ export class CongesValidesComponent implements OnInit {
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail('Bonjour ' + conge.user.prenom + ',\n\nVotre congé pour la date suivante a été refusé par les Ressources Humaines:\n' + sUserCong, 'Notification de suppression de congés', conge.user.email).subscribe(
+              this.emailService.sendMail(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre congé pour la date suivante a été refusé par les Ressources Humaines :\n' + sUserCong, 'Notification de suppression de congés', conge.user.email).subscribe(
                 () => {
                   this.toastrService.error('Congé supprimé', 'Congé supprimé');
                   this.getCongesWithFile();

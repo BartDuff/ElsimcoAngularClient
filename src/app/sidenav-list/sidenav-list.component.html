@@ -15,6 +15,7 @@
       <a mat-menu-item routerLink="/presence" *ngIf="token" (click)="onSidenavClose()">Remplir ma fiche de Présence</a>
       <a mat-menu-item routerLink="/users/{{ currentUser.id}}/fiches" *ngIf="token" (click)="onSidenavClose()">Mes fiches de présence</a>
       <a mat-menu-item routerLink="/presence/validation" *ngIf="token && currentUser.role=='ADMIN'" (click)="onSidenavClose()"><span *ngIf="currentUser.fonction === 'RH'" matBadge="{{allRHUnvalidFiches?.length}}" matBadgeOverlap="true">Validation des fiches de présence</span></a>
+      <a mat-menu-item routerLink="/conges/admin" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')" (click)="onSidenavClose()"><span>Déclaration d'absences</span></a>
     </mat-menu>
     <a mat-menu-item [matMenuTriggerFor]="menu3" *ngIf="token" style="color: white">Congés <mat-icon style="position: relative;left: 2em;color: white;vertical-align: center;">keyboard_arrow_right</mat-icon></a>
     <mat-menu #menu3="matMenu" xPosition="after">
@@ -29,7 +30,7 @@
      class="nav-caption">Utilisateurs</a>
   <a mat-list-item routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"
      class="nav-caption">Candidatures spontannées</a>
-  <a mat-list-item routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'" class="nav-caption">Candidathèque</a>
-  <a mat-list-item routerLink="/faq" *ngIf="token" class="nav-caption">FAQ</a>
+  <a mat-list-item routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN'" class="nav-caption" (click)="onSidenavClose()">Candidathèque</a>
+  <a mat-list-item routerLink="/faq" *ngIf="token" class="nav-caption" (click)="onSidenavClose()">FAQ</a>
   <a mat-list-item (click)="onLogout()" *ngIf="token" class="nav-caption">Déconnexion</a>
 </mat-nav-list>

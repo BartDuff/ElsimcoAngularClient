@@ -5,6 +5,10 @@ mat-card {
   overflow-y: auto;
 }
 
+#goDown {
+  display: none;
+}
+
 .insidegrid {
   display: grid;
   grid-template-rows: repeat(3,1fr);
@@ -73,6 +77,12 @@ mat-card.calendar-card {
     width: 77vw!important;
     height: 25vh!important;
     text-align: left;
+  }
+
+  #goDown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   #maincont{

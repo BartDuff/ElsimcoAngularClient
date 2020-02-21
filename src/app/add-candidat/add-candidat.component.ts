@@ -111,9 +111,9 @@ export class AddCandidatComponent implements OnInit {
       dateDispo: ['', Validators.required]
     });
     this.contactForm7 = this.formBuilder.group({
-      fixeDernierSalaireBrut: ['', [Validators.required, Validators.pattern('^[1-9]{1}[0-9]*$')]],
-      varDernierSalaireBrut: ['', Validators.pattern('^[0-9]{1}[0-9]*$')],
-      pretentionSalaireBrut: ['', Validators.pattern('^[1-9]{1}[0-9]*$')],
+      fixeDernierSalaireBrut: ['', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]],
+      varDernierSalaireBrut: ['', Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')],
+      pretentionSalaireBrut: ['', Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')],
     });
     this.contactForm8 = this.formBuilder.group({
       acceptTerms: ['', Validators.required],
@@ -127,6 +127,7 @@ export class AddCandidatComponent implements OnInit {
           this.contactService.getContact(params['secretid']).subscribe(
             data => {
               this.contact = data;
+              this.contactForm1.controls.civilite.setValue(data.civilite);
               this.contactForm1.controls.nom.setValue(data.nom);
               this.contactForm1.controls.prenom.setValue(data.prenom);
               this.contactForm1.controls.email.setValue(data.email);
@@ -143,14 +144,15 @@ export class AddCandidatComponent implements OnInit {
   }
 
   sendCV() {
-    this.loading = true;
-    console.log(this.contactForm1.controls.transport);
+    // this.loading = true;
+    // console.log(this.contactForm1.controls.transport);
   }
 
   sendInfos() {
-    setTimeout(() => {
-      this.loading = false;
-    }, 1000);
+    // setTimeout(() => {
+    //   this.loading = false;
+    // }, 1000);
+    this.loading = true;
     let c:CandidatModel = this.contactForm8.value;
     c.civilite = this.contactForm1.controls.civilite.value;
     c.nom = this.contactForm1.controls.nom.value;
@@ -213,6 +215,7 @@ export class AddCandidatComponent implements OnInit {
       .subscribe(data => {
         this.contactService.deleteContact(this.contact).subscribe(
           ()=>{
+            this.loading = false;
             this.router.navigate(['login']);
             this.toastrService.success('Vos informations ont bien été envoyées!', 'Contact');
           },
@@ -251,7 +254,7 @@ export class AddCandidatComponent implements OnInit {
   }
 
   _handleReaderLoaded(event) {
-    console.log(event.target.result);
+    // console.log(event.target.result);
     this.fileEncoded = btoa(event.target.result);
   }
 

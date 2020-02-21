@@ -84,7 +84,10 @@ export class FicheListComponent implements OnInit {
           //   window.location.href = reader.result
           // };
           // reader.readAsDataURL(blob);
-          window.open(URL.createObjectURL(res));
+          let blob = new Blob([res], {type: "application/pdf"});
+          let fileURL = window.URL.createObjectURL(blob,);
+          let tab = window.open();
+          tab.location.href = fileURL;
         }
         // if(!navigator.userAgent.match('CriOS')) {
         //   saveAs(res, ficheToDownload.uri);
@@ -104,6 +107,10 @@ export class FicheListComponent implements OnInit {
   }
 
   openDocument(fiche: FicheModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
     this.pdfService.openFiche(fiche.id).subscribe(
       (res) => {
         // let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.'[2]));
@@ -114,11 +121,15 @@ export class FicheListComponent implements OnInit {
         // reader.readAsDataURL(blob);
         // window.open("data:application/" + d.originalFileName.split('.')[2]+ ";base64, "+d.fileBase64, '_blank');
         // let blob = this.base64ToBlob(d.fileBase64, 'application/' + d.originalFileName.split('.')[d.originalFileName.split('.').length-1]);
-        let blob = new Blob([res],{type:"application/pdf"});
-        let fileURL = window.URL.createObjectURL(blob);
-        let tab = window.open();
-        // if(d.originalFileName.split('.')[d.originalFileName.split('.').length-1] == 'pdf'){
-        tab.location.href = fileURL;
+        let blob = new Blob([res], {type: "application/pdf"});
+        if(navigator.userAgent.match('CriOS') || isSafari) {
+          saveAs(blob, res.originalFileName);
+        } else {
+          let fileURL = window.URL.createObjectURL(blob);
+          let tab = window.open();
+          // if(d.originalFileName.split('.')[d.originalFileName.split('.').length-1] == 'pdf'){
+          tab.location.href = fileURL;
+        }
         // } else {
         //   // tab.onload = function(){this.document.body.innerHTML+= `<iframe src= "https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="800"> </iframe>`};
         //   let newblob = new Blob([blob], {type:"text/plain;charset=utf-8"});

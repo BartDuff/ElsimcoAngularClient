@@ -22,4 +22,6 @@ export class FicheModel {
   tableImg:any;
   valideRH: boolean;
   commentaireSup: String;
+  numeroAffaire1: String;
+  numeroAffaire2: String;
 }

@@ -58,7 +58,15 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput formControlName="adressePostale" placeholder="Adresse postale" name="adressePostale" id="adressePostale">
+          <input matInput formControlName="adressePostale" placeholder="Adresse" name="adressePostale" id="adressePostale">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="codePostal" placeholder="Code postal" name="codePostal" id="codePostal">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="ville" placeholder="Ville" name="ville" id="ville">
         </mat-form-field>
 
         <mat-form-field>
@@ -78,7 +86,7 @@
           <input matInput formControlName="metier" placeholder="Métier" name="metier" id="metier">
         </mat-form-field>
 
-        <input-file placeholder="Insérer un avatar..." fileLimit=1 [(ngModel)]="user.rawFile" (ngModelChange)="handleFile(user)" [ngModelOptions]="{standalone: true}"></input-file>
+        <input-file placeholder="Insérer un avatar..." fileLimit=1 [(ngModel)]="user.rawFile" (ngModelChange)="handleFile(user)" (deletedFile)="removeImage($event)" [ngModelOptions]="{standalone: true}"></input-file>
 
           <mat-form-field>
             <label>
@@ -106,14 +114,15 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-label>Role:</mat-label>
+          <mat-label>Role :</mat-label>
           <mat-select formControlName="role">
             <mat-option value="ADMIN">ADMIN</mat-option>
             <mat-option value="USER">UTILISATEUR</mat-option>
           </mat-select>
         </mat-form-field>
+
         <mat-form-field>
-          <mat-label>Fonction:</mat-label>
+          <mat-label>Fonction :</mat-label>
           <mat-select formControlName="fonction">
             <mat-option value="RH">RH</mat-option>
             <mat-option value="COMMERCIAL">COMMERCIAL</mat-option>
@@ -122,6 +131,18 @@
             <mat-option value="CONSULTANT">CONSULTANT</mat-option>
           </mat-select>
         </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Statut :</mat-label>
+          <mat-select formControlName="statut">
+            <mat-option value="CADRE">CADRE</mat-option>
+            <mat-option value="NON-CADRE">NON-CADRE</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <label>
+          Dossier de compétences (DCP) :
+        </label>
+        <input-file placeholder="DCP" fileLimit=1 [(ngModel)]="user.competenceFile" (ngModelChange)="handleFileCompetence(user)" [ngModelOptions]="{standalone: true}"></input-file>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/users">RETOUR
             <mat-icon>arrow_back</mat-icon>

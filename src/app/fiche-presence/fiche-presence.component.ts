@@ -45,9 +45,46 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   plage: boolean = false;
   firstClick: boolean = false;
   firstDay;
+  fiche = new FicheModel();
+  addedMission = false;
 
   getWeekday(date: Date) {
     return date.getUTCDay();
+  }
+
+  ScrollDown(){
+    let el = document.getElementById("choice");
+    el.scrollIntoView();
+  }
+
+  showHiddenMission(){
+    let el = document.getElementById("hiddenMission");
+    if(el.style.display == "none"){
+      el.style.display = "inline-block";
+      el.style.width = "20%";
+      this.addedMission = true;
+      this.toastr.info("Veuillez préciser le début de la 2e mission en 'Commentaire général' après avoir cliqué sur ENVOYER", null,{extendedTimeOut: 3000});
+    } else {
+      el.style.display = "none";
+      this.addedMission = false;
+      this.fiche.numeroAffaire2 = "";
+    }
+  }
+
+  countSelectedDays(){
+    let count = 0;
+    for(let el of this.daysOff) {
+      if(this.isArray(el)){
+        count += el.length;
+      } else {
+        count += 1;
+      }
+    }
+    if(count<=1){
+      return count + " jour sélectionné";
+    } else {
+      return count + " jours sélectionnés";
+    }
   }
 
   creatArray(number) {
@@ -265,6 +302,8 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     this.selectedDate = moment(new Date());
     this.dateNow = new Date();
     this.getHolidays();
+    this.fiche.numeroAffaire1 = "";
+    this.fiche.numeroAffaire2 = "";
     // this.dateFilter(this.dateNow);
   }
 
@@ -567,7 +606,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let plageArr of this.daysOff) {
       if (this.isArray(plageArr)) {
         if (this.includesDay(plageArr, day)) {
-          this.toastr.error('Cette date est déjà contenue dans une plage', 'Erreur de sélection');
+          if(day == plageArr[0].date){
+            this.daysOff.splice(this.daysOff.indexOf(plageArr),1);
+          } else {
+            plageArr.splice(plageArr.findIndex(item => item.date === day)+1);
+          }
           return;
         }
       }
@@ -662,6 +705,8 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
         let table = document.getElementById('capture');
         htmlToImage.toPng(table).then((image) => {
           fiche.tableImg = image;
+          fiche.numeroAffaire1 = this.fiche.numeroAffaire1;
+          fiche.numeroAffaire2 = this.fiche.numeroAffaire2;
           fiche.annee = this.dateNow.getFullYear();
           fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
           fiche.absences = this.countAbsences(form);
@@ -706,6 +751,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           fiche.valideRH = false;
           fiche.commentaireSup = data.commentaire;
           this.sending = true;
+          console.log(fiche);
           this.pdfService.sendFiche(fiche).subscribe(
             (data) => {
               this.toastr.success('Fiche de présence bien envoyée', 'Envoyé');
@@ -956,6 +1002,15 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     //     }
     //   }
     // }
+    for (let c of this.daysOffSavedObjArr) {
+      if (c.typeConge == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
+    }
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
@@ -995,6 +1050,15 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     //     }
     //   }
     // }
+    for (let c of this.daysOffSavedObjArr) {
+      if (c.typeConge == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
+    }
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {

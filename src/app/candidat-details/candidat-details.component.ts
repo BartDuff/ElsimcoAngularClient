@@ -17,6 +17,7 @@ import {ToastrService} from 'ngx-toastr';
 
 export class CandidatDetailsComponent implements OnInit {
   clickedColumn = null;
+  loading = false;
   envBase = environment.base;
   formulaire: FormGroup;
   formulaire2: FormGroup;
@@ -213,6 +214,8 @@ export class CandidatDetailsComponent implements OnInit {
       params => this.candidatService.getCandidat(params['id']).subscribe(
         data => {
           this.candidat = data;
+          this.candidat.dateDerniersEntretiens = new Date(data.dateDerniersEntretiens);
+          this.candidat.dateNaissance = new Date(data.dateNaissance);
         }
       )
     );
@@ -231,6 +234,7 @@ export class CandidatDetailsComponent implements OnInit {
   }
 
   generateProcessDocument(candidat: CandidatModel) {
+    this.loading = true;
     let table = document.getElementById('ficheProcess');
     htmlToImage.toPng(table, {}).then((image) => {
       candidat.ficheProcess = image;
@@ -238,12 +242,11 @@ export class CandidatDetailsComponent implements OnInit {
         () => {
           this.candidatService.downloadFicheProcess(candidat.id).subscribe(
             (res) => {
-              console.log(res);
               saveAs(res, 'FicheProcess_' + candidat.prenom + '_' + candidat.nom + '.pdf');
+              this.loading = false;
               this.toastrService.success('Téléchargé', 'Téléchargé');
             },
             (err) => {
-              console.log(err);
               this.toastrService.error('Erreur', 'Erreur de téléchargement');
             }
           );
@@ -252,6 +255,7 @@ export class CandidatDetailsComponent implements OnInit {
   }
 
   generateRecruitmentDocument(candidat: CandidatModel) {
+    this.loading = true;
     let table = document.getElementById('ficheRecrutement');
     htmlToImage.toPng(table, {}).then((image) => {
       candidat.ficheRecrutement = image;
@@ -259,12 +263,11 @@ export class CandidatDetailsComponent implements OnInit {
         () => {
           this.candidatService.downloadFicheRecrutement(candidat.id).subscribe(
             (res) => {
-              console.log(res);
               saveAs(res, 'FicheRecrutement_' + candidat.prenom + '_' + candidat.nom + '.pdf');
+              this.loading = false;
               this.toastrService.success('Téléchargé', 'Téléchargé');
             },
             (err) => {
-              console.log(err);
               this.toastrService.error('Erreur', 'Erreur de téléchargement');
             }
           );
@@ -273,17 +276,28 @@ export class CandidatDetailsComponent implements OnInit {
   }
 
   generateProcessRecruitementDocument(candidat: CandidatModel) {
-    this.candidatService.downloadFicheProcessRecrutement(candidat.id).subscribe(
-      (res) => {
-        console.log(res);
-        saveAs(res, 'FicheHybride' + candidat.prenom + '_' + candidat.nom + '.pdf');
-        this.toastrService.success('Téléchargé', 'Téléchargé');
-      },
-      (err) => {
-        console.log(err);
-        this.toastrService.error('Erreur', 'Erreur de téléchargement');
-      }
-    );
+    this.loading = true;
+    let table = document.getElementById('ficheProcess');
+    let table2 = document.getElementById('ficheRecrutement');
+    htmlToImage.toPng(table2, {}).then((image) => {
+      candidat.ficheRecrutement = image;
+      htmlToImage.toPng(table, {}).then((image2) => {
+        candidat.ficheProcess = image2;
+        this.candidatService.editCandidat(candidat).subscribe(
+          () => {
+            this.candidatService.downloadFicheProcessRecrutement(candidat.id).subscribe(
+              (res) => {
+                saveAs(res, 'FicheHybride' + candidat.prenom + '_' + candidat.nom + '.pdf');
+                this.loading = false;
+                this.toastrService.success('Téléchargé', 'Téléchargé');
+              },
+              (err) => {
+                this.toastrService.error('Erreur', 'Erreur de téléchargement');
+              }
+            );
+          });
+      });
+    });
   }
 
   public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {
@@ -301,5 +315,84 @@ export class CandidatDetailsComponent implements OnInit {
     }
     return new Blob(byteArrays, {type: contentType});
   }
+
+  downloadDocument(candidat){
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
+    // if (conge.documentJointUri) {
+    //   // let blob = this.base64ToBlob(conge.documentJointUri, 'text/plain');
+    //   // saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
+    //   let blob = this.base64ToBlob(conge.documentJointUri, 'application/'+ conge.documentJointType);
+    //   if(!navigator.userAgent.match('CriOS') || !isSafari) {
+    //     saveAs(blob, 'justif_'+conge.user.prenom + '_'+ conge.user.nom + "."+conge.documentJointType);
+    //   } else {
+    //     // let reader = new FileReader();
+    //     // reader.onload = function(e){
+    //     //   window.location.href = reader.result
+    //     // };
+    //     // reader.readAsDataURL(blob);
+    //     window.open(URL.createObjectURL(blob));
+    //   }
+    // }
+    if (candidat.fileBase64) {
+      let blob = this.base64ToBlob(candidat.fileBase64, 'application/pdf');
+      if(!navigator.userAgent.match('CriOS') || !isSafari) {
+        saveAs(blob, candidat.filename);
+      } else {
+        // let reader = new FileReader();
+        // reader.onload = function(e){
+        //   window.location.href = reader.result
+        // };
+        // reader.readAsDataURL(blob);
+        let fileURL = window.URL.createObjectURL(blob,);
+        let tab = window.open();
+        tab.location.href = fileURL;
+      }
+    }
+  }
+
+  // downloadDocument(candidat){
+  //   for(let i=0; i < this.inputFileComponent.files.length;i++) {
+  //     var file = this.inputFileComponent.files[i];
+  //     console.log (file.file.name,i);
+  //     this.filename=file.file.name;
+  //     if (file) {
+  //       var reader = new FileReader();
+  //
+  //       if (reader.readAsBinaryString === undefined) {
+  //         reader.onload = this._handleReaderLoadedIE.bind(this);
+  //         reader.readAsArrayBuffer(file.file);
+  //       } else {
+  //         reader.onload = this._handleReaderLoaded.bind(this);
+  //         reader.readAsBinaryString(file.file);
+  //       }
+  //       this.selectedFiles.splice(i,1);
+  //       i--
+  //     }
+  //   }
+  // }
+  //
+  // _handleReaderLoadedIE(readerEvt) {
+  //   console.log("_handleReaderLoadedIE");
+  //
+  //   var bytes = new Uint8Array(readerEvt.target.result);
+  //   var binary = "";
+  //   var length = bytes.byteLength;
+  //   for (var i = 0; i < length; i++)
+  //     binary += String.fromCharCode(bytes[i]);
+  //   this.documentService.uploadDocument(btoa(binary), this.filename).subscribe(
+  //     ()=>{
+  //       this.getDocuments();
+  //     }
+  //   );
+  // }
+  // _handleReaderLoaded(readerEvt) {
+  //   console.log(this.s(this.selectedFiles));
+  //   this.documentService.uploadDocument(btoa(readerEvt.target.result), this.filename).subscribe(
+  //     ()=>{this.getDocuments();}
+  //   )
+  // }
 
 }

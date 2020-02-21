@@ -48,6 +48,16 @@ export class CongeListComponent implements OnInit {
     this.dateNow = new Date();
   }
 
+  getHello(){
+    let date = new Date();
+    let hour = date.getHours();
+    if (hour >= 5 && hour <= 17) {
+      return "Bonjour";
+    } else {
+      return "Bonsoir";
+    }
+  }
+
   changeCaseFirstLetter(params) {
     return params.charAt(0).toUpperCase() + params.slice(1);
   }
@@ -93,7 +103,7 @@ export class CongeListComponent implements OnInit {
           }
           this.congeService.editMultipleConge(this.congeSansJustif).subscribe(
             () => {
-              this.emailService.sendMail('Une nouvelle pièce justificative a été envoyée par ' + this.currentUser.prenom + ' ' + this.currentUser.nom, 'Notification d\'envoi de pièce justificative', 'majoline.domingos@elsimco.com').subscribe(
+              this.emailService.sendMail(this.getHello()+',\nUne nouvelle pièce justificative a été envoyée par ' + this.currentUser.prenom + ' ' + this.currentUser.nom, 'Notification d\'envoi de pièce justificative', 'majoline.domingos@elsimco.com').subscribe(
                 () => {
                   for (let c of this.congeSansJustif) {
                     if (c.justificatifRecu) {

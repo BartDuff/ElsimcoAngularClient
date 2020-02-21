@@ -1,4 +1,4 @@
-<mat-card class="contact-card">
+<mat-card class="contact-card" *ngIf="!loading">
 <!--<div class="card">-->
 <!--  <div class="card-title black white-text">Candidature:</div>-->
 <!--  <div class="card-image">-->
@@ -66,3 +66,10 @@
     </form>
     </div>
 </mat-card>
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="loading"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>

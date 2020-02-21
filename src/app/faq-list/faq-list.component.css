@@ -3,6 +3,10 @@
   color: white;
 }
 
+.mat-button::ng-deep {
+  width: 1em!important;
+}
+
 .news-card {
   width: 80%;
   margin-bottom: 5%;
@@ -29,7 +33,7 @@
   }
 
   .reponse {
-    font-size: 0.8em!important;
+    font-size: 0.9em!important;
   }
 
 }

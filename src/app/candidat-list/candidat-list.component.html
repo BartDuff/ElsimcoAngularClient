@@ -324,7 +324,8 @@
               <a *ngIf="x === 'id'" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon> {{element[x]}}</a>
               <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{element[x] | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ'">
-                {{element[x] == true? 'Oui': element[x] == false?'Non':element[x]}}
+                <span *ngIf="x ==='diplome'">{{element[x].annee}} {{element[x].intitule}} {{element[x].obtenu}}</span>
+                {{element[x] == true? 'Oui': element[x] == false?'Non':x ==='diplome'?'':element[x]}}
               </span>
             </td>
           </ng-container>
@@ -362,7 +363,7 @@
                 <mat-select #selector  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [ngModelOptions]="{standalone: true}"
                         [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=1;getQCandidates()">
                   <mat-option *ngFor="let v of getUniqueValues(x)" [value]="v">
-                    <span>{{v}}</span>
+                    <span>{{v == true? 'Oui': v == false?'Non':v}}</span>
                   </mat-option>
                 </mat-select>
 
@@ -377,9 +378,10 @@
             </th>
             <td mat-cell *matCellDef="let element">
               <a *ngIf="x === 'id'" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon>{{element[x]}}</a>
-              <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{element[x] | date: 'dd/MM/yyyy'}}</span>
+              <span *ngIf="x === 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ'">{{element[x] | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ'">
-                {{element[x] == true? 'Oui': element[x] == false?'Non':element[x]}}
+                <span *ngIf="x === 'id'"></span>
+                {{element[x] === true? 'Oui': element[x] === false?'Non':element[x]}}
               </span>
             </td>
           </ng-container>

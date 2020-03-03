@@ -3,10 +3,20 @@
   <mat-tab label="Validation des fiches">
     <div style="margin-top: 2em;margin-bottom: 1em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
       <p *ngIf="allFiches.length==0 && !loading">Pas de fiches pour ce mois-ci</p>
+      <div *ngIf="allFiches.length>0 && !loading" style="display: flex;flex-direction: row;justify-content: space-evenly;margin-bottom: 1em;font-weight: bolder;font-size: 1.2em;">
+        <div><span style="text-decoration: underline">Fiches reçues</span> : {{allFiches?.length}}/{{users?.length - 3}}</div>
+        <div><span style="text-decoration: underline">Fiches validées</span> : {{validatedFichesCount}}/{{users?.length - 3}}</div>
+      </div>
+      <div style="margin-bottom: 1em;display: flex;flex-direction: column;align-items: center;" *ngIf="allFiches.length>0 && !loading && usersWithoutFiche.length !=0">
+        <h6 mat-subheader>Les utilisateurs suivants n'ont pas encore envoyé leur fiche de présence :</h6>
+        <mat-chip-list style="display: flex;flex-direction: row;">
+          <mat-chip *ngFor="let user of usersWithoutFiche" color="primary">{{user.prenom}} {{user.nom}}</mat-chip>
+        </mat-chip-list>
+      </div>
       <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8" style="margin: auto; ">
         <thead>
         <tr>
@@ -62,26 +72,27 @@
     </div>
   </mat-tab>
   <mat-tab label="Résumé">
-    <div style="overflow-x: auto;margin-top: 2em;">
+    <div style="margin-top: 2em;">
       <div>
         <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
         <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
       <p *ngIf="allFiches.length==0 && !loading">Pas de fiches pour ce mois-ci</p>
-    <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8 resume" style="margin: auto;">
+      <div style="margin: 1em;">Légende : C.P : Congés Payés | RTT: Réduction du Temps de Travail  | A.M : Arrêt Maladie | A.E : Absences Exceptionnelles | C.S.S : Congés Sans Solde | F : Formation | I : Intercontrat</div>
+    <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8 resume table-responsive">
       <thead>
-      <tr style="padding: 2em;">
+      <tr>
         <th>Prénom</th>
         <th>Nom</th>
         <th>Trigramme</th>
         <th>Nb Jours Travaillés</th>
-        <th>Congés Payés</th>
+        <th>C.P</th>
         <th>RTT</th>
-        <th>Arrêt Maladie</th>
-        <th>Absences Exceptionnelles</th>
-        <th>Congés Sans Solde</th>
-        <th>Formation</th>
-        <th>Intercontrat</th>
+        <th>A.M</th>
+        <th>A.E</th>
+        <th>C.S.S</th>
+        <th>F</th>
+        <th>I</th>
         <th>Jours Ouvrés</th>
         <th>Commentaires</th>
         <th>Validé RH</th>
@@ -95,47 +106,95 @@
         <td>{{fiche.user.nom}}</td>
         <td>{{fiche.user.trigramme}}</td>
         <td>{{fiche.joursTravailles}}</td>
-        <td>Total: {{fiche.conges}} <br>
-          <ul *ngFor="let cp of getCP(fiche.commentaires)">
-            <li *ngIf="!isArray(cp)">{{cp}}</li>
-            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
-          </ul>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.conges}}</h3>
+            <div class="dates">
+              <mat-list-item *ngFor="let cp of getCP(fiche.commentaires)">
+                <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+                <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+              </mat-list-item>
+            </div>
+          </mat-list>
         </td>
-        <td>Total : {{fiche.rtts + fiche.rtte }} <br>
-          <ul *ngFor="let cp of getRTT(fiche.commentaires)">
-            <li *ngIf="!isArray(cp)">{{cp}}</li>
-            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
-          </ul>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.rtts + fiche.rtte }}</h3>
+            <div class="dates">
+            <mat-list-item *ngFor="let cp of getRTT(fiche.commentaires)">
+              <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+              <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            </mat-list-item>
+            </div>
+          </mat-list>
         </td>
-        <td>Total : {{fiche.maladie}} <br>
-          <ul *ngFor="let cp of getMaladie(fiche.commentaires)">
-            <li *ngIf="!isArray(cp)">{{cp}}</li>
-            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
-          </ul>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.maladie}}</h3>
+            <div class="dates">
+            <mat-list-item *ngFor="let cp of getMaladie(fiche.commentaires)">
+              <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+              <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            </mat-list-item>
+            </div>
+          </mat-list>
         </td>
-        <td>Total : {{fiche.absences}} <br>
-          <ul *ngFor="let cp of getAbsences(fiche.commentaires)">
-            <li *ngIf="!isArray(cp)">{{cp}}</li>
-            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
-          </ul>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.absences}}</h3>
+            <div class="dates">
+            <mat-list-item *ngFor="let cp of getAbsences(fiche.commentaires)">
+            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            </mat-list-item>
+            </div>
+          </mat-list>
         </td>
-        <td>Total : {{fiche.congesSansSolde}}  <br>
-          <ul *ngFor="let cp of getCSS(fiche.commentaires)">
-            <li *ngIf="!isArray(cp)">{{cp}}</li>
-            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
-          </ul></td>
-        <td>Total : {{fiche.formation}}  <br>
-          <ul *ngFor="let cp of getFormation(fiche.commentaires)">
-            <li *ngIf="!isArray(cp)">{{cp}}</li>
-            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
-          </ul></td>
-        <td>Total : {{fiche.intercontrat}}  <br>
-          <ul *ngFor="let cp of getIntercontrat(fiche.commentaires)">
-            <li *ngIf="!isArray(cp)">{{cp}}</li>
-            <li *ngIf="isArray(cp)">Du {{cp[0]}} au {{cp[cp.length-1]}}</li>
-          </ul></td>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.congesSansSolde}}</h3>
+            <div class="dates">
+            <mat-list-item *ngFor="let cp of getCSS(fiche.commentaires)">
+            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            </mat-list-item>
+            </div>
+          </mat-list></td>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.formation}}</h3>
+            <div class="dates">
+            <mat-list-item *ngFor="let cp of getFormation(fiche.commentaires)">
+            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            </mat-list-item>
+            </div>
+          </mat-list>
+        </td>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.intercontrat}}</h3>
+            <div class="dates">
+            <mat-list-item *ngFor="let cp of getIntercontrat(fiche.commentaires)">
+            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            </mat-list-item>
+              </div >
+          </mat-list>
+        </td>
         <td>{{fiche.joursOuvres}}</td>
-        <td><ul *ngFor="let com of objectKeys(fiche.commentaires)"><li *ngIf="fiche.commentaires[com] != null && fiche.commentaires[com] != ''">{{com}} : {{fiche.commentaires[com]}}</li></ul></td>
+        <td>
+          <mat-list dense>
+              <ng-template ngFor let-item [ngForOf]="objectKeys(fiche.commentaires)">
+                <mat-list-item class="item" *ngIf="fiche?.commentaires[item]?.length">
+                  <p mat-line>{{item + ' : ' + fiche.commentaires[item]}}</p>
+                </mat-list-item>
+              </ng-template>
+<!--            <mat-list-item *ngFor="let com of objectKeys(fiche.commentaires)">-->
+<!--              <p *ngIf="fiche.commentaires[com] != null && fiche.commentaires[com] != ''" mat-line>{{com}} : {{fiche.commentaires[com]}}</p>-->
+<!--            </mat-list-item>-->
+          </mat-list>
+        </td>
         <td>{{fiche.valideRH? 'oui': 'non'}}</td>
         <td>{{fiche.commentaireSup}}</td>
         <td>{{fiche.datePublication | date: 'dd/MM/yyyy'}}</td>

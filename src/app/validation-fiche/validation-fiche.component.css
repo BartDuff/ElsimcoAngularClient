@@ -1,12 +1,38 @@
 .resume th, .resume td {
   border: solid black 1px;
-  padding: 2em;
+  /*padding: 1em;*/
 }
 
+
+
 th {
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 td {
-  padding: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.mat-line {
+  color: black!important;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-list {
+  display: inline;
+}
+
+.mat-subheader {
+  flex: fit-content;
+  height: 1em;
+  width: max-content;
+}
+
+.dates {
+  display: flex;
+  flex-direction: column;
+  flex: fit-content;
+  align-items: flex-start;
 }

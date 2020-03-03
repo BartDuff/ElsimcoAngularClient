@@ -50,6 +50,15 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
+          <label>
+            <input matInput readonly [matDatepicker]="picker2"
+                   formControlName="dateNaissance" placeholder="Date de naissance" name="dateNaissance" id="dateNaissance" [(ngModel)]="user.dateNaissance">
+          </label>
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <mat-label>Role :</mat-label>
           <mat-select formControlName="role" [(ngModel)]="user.role">
             <mat-option value="ADMIN">ADMIN</mat-option>
@@ -81,8 +90,17 @@
             <input matInput readonly [matDatepicker]="picker"
                    formControlName="dateArrivee" [(ngModel)]="user.dateArrivee" placeholder="Date d'entrée dans l'entreprise" name="dateArrivee" id="dateArrivee">
           </label>
-          <mat-datepicker-toggle matSuffix [for]="picker" id="cal"></mat-datepicker-toggle>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker [disabled]="false"></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="currentUser.role=='ADMIN'" (click)="picker3.open()">
+          <label>
+            <input matInput readonly [matDatepicker]="picker3"
+                   formControlName="dateDepart" [(ngModel)]="user.dateDepart" placeholder="Date de sortie de l'entreprise" name="dateDepart" id="dateDepart">
+          </label>
+          <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+          <mat-datepicker #picker3 [disabled]="false"></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
@@ -141,7 +159,7 @@
         <label>
           Dossier de compétences (DCP) :
         </label>
-        <input-file placeholder="DCP" fileLimit=1 [(ngModel)]="user.competenceFile" (ngModelChange)="handleFileCompetence(user)" [ngModelOptions]="{standalone: true}"></input-file>
+        <input-file placeholder="DCP" fileLimit=1 [(ngModel)]="user.competenceFile" (ngModelChange)="handleFileCompetence(user)" [ngModelOptions]="{standalone: true}" (deletedFile)="removeDossier($event)"></input-file>
         <mat-card-actions>
           <div class="buttoncontainer">
             <button mat-icon-button routerLink="/users/{{user.id}}">RETOUR

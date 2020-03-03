@@ -23,7 +23,7 @@
               <div>
                 <label>
                   <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance:"
-                         formControlName="dateNaissance" [value]="candidat.dateNaissance | date: 'dd/MM/yyyy'"
+                         formControlName="dateNaissance" [(ngModel)]="candidat.dateNaissance"
                          (change)="updateModel(candidat)">
                 </label>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -77,9 +77,13 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <input matInput formControlName="dateCreation" placeholder="Date de création : " name="dateCreation"
-                         id="dateCreation" [(ngModel)]="candidat.dateCreation" (change)="updateModel(candidat)"
-                         disabled>
+                  <label>
+                    <input matInput [matDatepicker]="picker3" formControlName="dateCreation" placeholder="Date de création : " name="dateCreation"
+                           id="dateCreation" [(ngModel)]="candidat.dateCreation" (change)="updateModel(candidat)"
+                           readonly>
+                  </label>
+                  <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
                 </mat-form-field>
               </div>
             </mat-card-content>
@@ -130,13 +134,17 @@
         <form [formGroup]="formulaire4" (ngSubmit)="onSubmit()">
           <mat-card-content>
             <div fxLayout="column" fxLayoutAlign="space-around center">
-              <mat-checkbox matInput formControlName="cvJoint" placeholder="CV joint: " name="cvJoint" id="cvJoint"
+              <mat-checkbox formControlName="cvJoint" name="cvJoint" id="cvJoint"
                             [ngModel]="candidat.fileBase64 != null" (ngModelChange)="$event"
-                            (change)="updateModel(candidat)">CV Joint
+                            (change)="updateModel(candidat)" disabled>CV Joint
               </mat-checkbox>
               <div>
-                <input matInput formControlName="dateMAJ" placeholder="Date de MAJ: " name="dateMAJ" id="dateMAJ"
-                       [(ngModel)]="candidat.dateMAJ" (ngModelChange)="updateModel(candidat)" disabled>
+                <label>
+                  <input matInput [matDatepicker]="picker4" formControlName="dateMAJ" placeholder="Date de MAJ: " name="dateMAJ" id="dateMAJ"
+                         [(ngModel)]="candidat.dateMAJ" (ngModelChange)="updateModel(candidat)" readonly>
+                </label>
+                <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                <mat-datepicker #picker4></mat-datepicker>
               </div>
 
               <mat-form-field>
@@ -151,8 +159,13 @@
               </mat-form-field>
 
               <mat-form-field>
-                <input matInput formControlName="alerteMAJ" placeholder="Alerte mise à jour : " name="alerteMAJ"
-                       id="alerteMAJ" [value]="candidat.alerteMAJ | date: 'dd/MM/yyyy'" (ngModelChange)="updateModel(candidat)" disabled>
+
+                <label>
+                  <input matInput [matDatepicker]="picker5" formControlName="alerteMAJ" placeholder="Alerte mise à jour : " name="alerteMAJ"
+                         id="alerteMAJ" [(ngModel)]="candidat.alerteMAJ" (ngModelChange)="updateModel(candidat)" readonly>
+                </label>
+                <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                <mat-datepicker #picker5></mat-datepicker>
               </mat-form-field>
 
               <mat-form-field>
@@ -169,7 +182,6 @@
           <form [formGroup]="formulaire5" (ngSubmit)="onSubmit()">
             <mat-card-content>
               <div fxLayout="column" fxLayoutAlign="space-around center">
-
                 <mat-form-field>
                   <mat-label>En poste ?</mat-label>
                   <mat-select formControlName="enPoste" [(ngModel)]="candidat.enPoste"
@@ -228,7 +240,7 @@
 
                 <mat-form-field>
                   <input matInput readonly [matDatepicker]="picker2" formControlName="dateDispo" placeholder="Date de disponibilité : " name="dateDispo"
-                         id="dateDispo" [value]="candidat.dateDispo | date: 'dd/MM/yyyy'"
+                         id="dateDispo" [(ngModel)]="candidat.dateDispo"
                          (ngModelChange)="updateModel(candidat)">
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
@@ -463,70 +475,77 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <mat-form-field>
-                <mat-label>Anglais :</mat-label>
-                <mat-select formControlName="anglais" [(ngModel)]="candidat.anglais"
-                            (selectionChange)="updateModel(candidat)">
-                  <mat-option value="">Non concerné</mat-option>
-                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
-                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
-                  <mat-option value="Courant">Courant</mat-option>
-                  <mat-option value="Bilingue">Bilingue</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field>
-                <mat-label>Italien :</mat-label>
-                <mat-select formControlName="italien" [(ngModel)]="candidat.italien"
-                            (selectionChange)="updateModel(candidat)">
-                  <mat-option value="">Non concerné</mat-option>
-                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
-                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
-                  <mat-option value="Courant">Courant</mat-option>
-                  <mat-option value="Bilingue">Bilingue</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field>
-                <mat-label>Allemand :</mat-label>
-                <mat-select formControlName="allemand" [(ngModel)]="candidat.allemand"
-                            (selectionChange)="updateModel(candidat)">
-                  <mat-option value="">Non concerné</mat-option>
-                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
-                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
-                  <mat-option value="Courant">Courant</mat-option>
-                  <mat-option value="Bilingue">Bilingue</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field>
-                <mat-label>Espagnol :</mat-label>
-                <mat-select formControlName="espagnol" [(ngModel)]="candidat.espagnol"
-                            (selectionChange)="updateModel(candidat)">
-                  <mat-option value="">Non concerné</mat-option>
-                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
-                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
-                  <mat-option value="Courant">Courant</mat-option>
-                  <mat-option value="Bilingue">Bilingue</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field>
-                <input matInput formControlName="autreLangue" placeholder="Autre langue : " name="autreLangue"
-                       id="autreLangue" [(ngModel)]="candidat.autreLangue" (change)="updateModel(candidat)">
-              </mat-form-field>
-
-              <mat-form-field>
-                <mat-label>Niveau {{candidat.autreLangue}} :</mat-label>
-                <mat-select formControlName="niveauAutreLangue" [(ngModel)]="candidat.niveauAutrelangue"
-                            (selectionChange)="updateModel(candidat)">
-                  <mat-option value="">Non concerné</mat-option>
-                  <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
-                  <mat-option value="Intermédiaire">Intermédiaire</mat-option>
-                  <mat-option value="Courant">Courant</mat-option>
-                  <mat-option value="Bilingue">Bilingue</mat-option>
-                </mat-select>
-              </mat-form-field>
+              <div style="box-sizing:content-box;padding:1em;width:100%;">
+                <mat-form-field>
+                  <mat-label>Anglais :</mat-label>
+                  <mat-select formControlName="anglais" [(ngModel)]="candidat.anglais"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="">Non concerné</mat-option>
+                    <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                    <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                    <mat-option value="Courant">Courant</mat-option>
+                    <mat-option value="Bilingue">Bilingue</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+                <mat-form-field>
+                  <mat-label>Italien :</mat-label>
+                  <mat-select formControlName="italien" [(ngModel)]="candidat.italien"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="">Non concerné</mat-option>
+                    <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                    <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                    <mat-option value="Courant">Courant</mat-option>
+                    <mat-option value="Bilingue">Bilingue</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div style="box-sizing:content-box;padding:1em;width:100%;">
+                <mat-form-field>
+                  <mat-label>Allemand :</mat-label>
+                  <mat-select formControlName="allemand" [(ngModel)]="candidat.allemand"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="">Non concerné</mat-option>
+                    <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                    <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                    <mat-option value="Courant">Courant</mat-option>
+                    <mat-option value="Bilingue">Bilingue</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+                <mat-form-field>
+                  <mat-label>Espagnol :</mat-label>
+                  <mat-select formControlName="espagnol" [(ngModel)]="candidat.espagnol"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="">Non concerné</mat-option>
+                    <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                    <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                    <mat-option value="Courant">Courant</mat-option>
+                    <mat-option value="Bilingue">Bilingue</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div style="box-sizing:content-box;padding:1em;width:100%;">
+                <mat-form-field>
+                  <input matInput formControlName="autreLangue" placeholder="Autre langue : " name="autreLangue"
+                         id="autreLangue" [(ngModel)]="candidat.autreLangue" (change)="updateModel(candidat)">
+                </mat-form-field>
+              </div>
+              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+                <mat-form-field>
+                  <mat-label>Niveau {{candidat.autreLangue}} :</mat-label>
+                  <mat-select formControlName="niveauAutreLangue" [(ngModel)]="candidat.niveauAutrelangue"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="">Non concerné</mat-option>
+                    <mat-option value="Débutant / Scolaire">Débutant / Scolaire</mat-option>
+                    <mat-option value="Intermédiaire">Intermédiaire</mat-option>
+                    <mat-option value="Courant">Courant</mat-option>
+                    <mat-option value="Bilingue">Bilingue</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
           </mat-card-content>
         </form>
@@ -601,13 +620,14 @@
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="labels">
           <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{columnsToDisplay[c]?columnsToDisplay[c]+" : ":""}} </span>
+<!--          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{c}} </span>-->
         </div>
       </div>
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="answers" style="display: flex;flex-direction: column;font-weight: bold;">
           <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}}</span>
           <span *ngIf="c =='dateNaissance'">{{candidat[c] | date: 'dd/MM/yyyy'}}</span>
-          <span *ngIf="c =='diplome'">{{candidat[c].annee}} {{candidat[c].intitule}} {{candidat[c].obtenu == true?"Obtenu":"Non obtenu"}}</span>
+          <span *ngIf="c =='diplome'">Année : {{candidat[c].annee}} | Intitulé : {{candidat[c].intitule}} | Obtenu : {{candidat[c].obtenu == true?"Obtenu":"Non obtenu"}}</span>
           <span *ngIf="c =='references'">{{candidat[c].annee}} {{candidat[c].intitule}} {{candidat[c].obtenu == true?"Obtenu":"Non obtenu"}}</span>
         </div>
       </div>
@@ -704,7 +724,7 @@
               {{candidat.allemand == ""?"":"Allemand : "+candidat.allemand}}<br *ngIf='candidat.allemand !=""'>
               {{candidat.italien == ""?"":"Italien : "+candidat.italien}}<br *ngIf='candidat.italien !=""'>
               {{candidat.espagnol == ""?"":"Espagnol : "+candidat.espagnol}}<br *ngIf='candidat.espagnol !=""'>
-              {{candidat.autreLangue == ""?"":candidat.autreLangue +" : "+candidat.niveauAutrelangue}}
+              {{candidat.autreLangue == "" || candidat.autreLangue == null?"":candidat.autreLangue +" : "+candidat.niveauAutrelangue}}
             </td>
           </tr>
         </table>

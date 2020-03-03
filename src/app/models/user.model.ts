@@ -21,6 +21,7 @@ export class UserModel {
   dateInscription: Date;
   dateArrivee: Date;
   dateDepart: Date;
+  dateNaissance: Date;
   metier: String;
   imageId: number;
   competenceId: number;

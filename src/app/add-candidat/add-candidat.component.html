@@ -1,4 +1,4 @@
-<mat-card class="contact-card">
+<mat-card class="contact-card" *ngIf="!loading && contact">
   <!--<div class="card">-->
   <!--  <div class="card-title black white-text">Candidature:</div>-->
   <!--  <div class="card-image">-->
@@ -19,7 +19,7 @@
       </div>
       <p *ngIf="message" class="text-center error">{{message}}</p>
       <mat-step [stepControl]="contactForm1">
-        <form [formGroup]="contactForm1" (ngSubmit)="sendCV()">
+        <form [formGroup]="contactForm1">
           <ng-template matStepLabel>Renseignements personnels</ng-template>
           <mat-form-field>
             <mat-label>Civilité :</mat-label>
@@ -60,7 +60,7 @@
           <mat-form-field>
             <label>
               <input matInput readonly [matDatepicker]="picker2" placeholder="Date de Naissance :"
-                     formControlName="dateNaissance">
+                     formControlName="dateNaissance" (click)="picker2.open()">
             </label>
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
@@ -174,8 +174,8 @@
           </mat-form-field>
           <div class="form-group" [ngClass]="{ 'has-error': submitted && f.fileBase64.errors }">
             <label class="col-md-3 col-sm-5 col-xs-12">CV :</label>
-            <div class="col-md-9 col-sm-7 col-xs-12">
-              <input-file id="fileBase64" placeholder="CV en pièce jointe" formControlName="fileBase64"
+            <div style="display: flex;justify-content: center;">
+              <input-file id="fileBase64" placeholder="CV au format PDF" formControlName="fileBase64"
                           (change)="onFileChange()"></input-file>
               <div *ngIf="submitted && f.fileBase64.errors" class="help-block">
                 <div *ngIf="f.fileBase64.errors.required">Votre CV est requis pour pouvoir vous recontacter</div>
@@ -234,8 +234,8 @@
           <mat-form-field>
             <mat-label>Anglais :</mat-label>
             <mat-select formControlName="anglais">
-              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau :</mat-option>
+              <mat-option value="">Non concerné</mat-option>
               <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
               <mat-option value="Intermédiaire">Intermédiaire</mat-option>
               <mat-option value="Courant">Courant</mat-option>
@@ -256,8 +256,8 @@
           <mat-form-field>
             <mat-label>Italien :</mat-label>
             <mat-select formControlName="italien">
-              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau :</mat-option>
+              <mat-option value="">Non concerné</mat-option>
               <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
               <mat-option value="Intermédiaire">Intermédiaire</mat-option>
               <mat-option value="Courant">Courant</mat-option>
@@ -278,8 +278,8 @@
           <mat-form-field>
             <mat-label>Allemand :</mat-label>
             <mat-select formControlName="allemand">
-              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau :</mat-option>
+              <mat-option value="">Non concerné</mat-option>
               <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
               <mat-option value="Intermédiaire">Intermédiaire</mat-option>
               <mat-option value="Courant">Courant</mat-option>
@@ -300,8 +300,8 @@
           <mat-form-field>
             <mat-label>Espagnol :</mat-label>
             <mat-select formControlName="espagnol">
-              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau :</mat-option>
+              <mat-option value="">Non concerné</mat-option>
               <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
               <mat-option value="Intermédiaire">Intermédiaire</mat-option>
               <mat-option value="Courant">Courant</mat-option>
@@ -325,10 +325,10 @@
             </label>
           </mat-form-field>
           <mat-form-field>
-            <mat-label>{{contactForm3.controls.autreLangue.value}} : </mat-label>
+            <mat-label>{{contactForm3.controls.autreLangue.value + " : "}}</mat-label>
             <mat-select formControlName="niveauAutreLangue">
-              <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option value="" disabled selected>Sélectionner votre niveau :</mat-option>
+              <mat-option value="">Non concerné</mat-option>
               <mat-option value="Débutant/Scolaire">Débutant/scolaire</mat-option>
               <mat-option value="Intermédiaire">Intermédiaire</mat-option>
               <mat-option value="Courant">Courant</mat-option>
@@ -373,7 +373,7 @@
           <!--            </label>-->
           <!--          </div>-->
           <mat-form-field>
-            <mat-label>Mobilité France :</mat-label>
+            <mat-label>Mobilité France Entière :</mat-label>
             <mat-select formControlName="mobiliteFrance">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
               <mat-option [value]="true">Oui</mat-option>
@@ -381,7 +381,7 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field *ngIf="contactForm4.controls.mobiliteFrance.value">
+          <mat-form-field>
             <mat-label>Mobilité dans les régions suivantes :</mat-label>
             <mat-select formControlName="regionsFrance" multiple>
               <mat-option value="" disabled selected>Sélectionnez une ou plusieurs option(s)</mat-option>
@@ -503,9 +503,9 @@
               </label>
             </mat-form-field>
             <div *ngIf="contactForm5.value">
-              <label style="font-weight: bold!important;">J'autorise la société Elsimco à procéder si besoin à un contrôle de référence auprès du/des responsable(s) cité(s) :</label>
-              <mat-radio-group formControlName="autorisationControle" required>
-                <mat-radio-button [value]="true">Oui</mat-radio-button>
+              <label style="font-weight: bolder!important;">J'autorise la société Elsimco à procéder si besoin à un contrôle de référence auprès du/des responsable(s) cité(s) :</label>
+              <mat-radio-group formControlName="autorisationControle" required style="margin: 1em;">
+                <mat-radio-button style="padding: 1em;" [value]="true">Oui</mat-radio-button>
                 <mat-radio-button [value]="false">Non</mat-radio-button>
               </mat-radio-group>
             </div>
@@ -692,3 +692,10 @@
     </div>
   </mat-vertical-stepper>
 </mat-card>
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="loading"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>

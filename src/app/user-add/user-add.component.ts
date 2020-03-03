@@ -26,6 +26,7 @@ export class UserAddComponent implements OnInit {
   fileEncoded;
   fileCompEncoded;
   alreadyUploaded = [];
+  alreadyUploadedCompetence = [];
   fileValid = true;
   filename;
   dossierFilename;
@@ -43,6 +44,7 @@ export class UserAddComponent implements OnInit {
       role: ['', Validators.required],
       fonction:['', Validators.required],
       statut:['', Validators.required],
+      dateNaissance:['', Validators.required],
       trigramme:[''],
       cpNMoins1:[''],
       cpN:[''],
@@ -76,6 +78,7 @@ export class UserAddComponent implements OnInit {
     this.user.telPro = this.f.telPro;
     this.user.emailPerso = this.f.emailPerso;
     this.user.dateArrivee = this.f.dateArrivee;
+    this.user.dateNaissance = this.f.dateNaissance;
     this.user.metier = this.f.metier;
     this.user.role = this.addForm.get('role').value;
     this.user.fonction = this.addForm.get('fonction').value;
@@ -124,7 +127,7 @@ export class UserAddComponent implements OnInit {
       this.fileValid = false;
       let reader = new FileReader();
       if (reader.readAsBinaryString === undefined) {
-        reader.onload = this._handleReaderLoadedCompetenceIE.bind(this);
+        reader.onload = this._handleReaderLoadedCompetenceIE.bind(this, file);
         reader.readAsArrayBuffer(file.file);
         reader.onloadend = () => {
           // user.avatar = this.fileEncoded;
@@ -133,7 +136,7 @@ export class UserAddComponent implements OnInit {
           this.fileValid = true;
         };
       } else {
-        reader.onload = this._handleReaderLoadedCompetence.bind(this);
+        reader.onload = this._handleReaderLoadedCompetence.bind(this, file);
         reader.readAsBinaryString(file.file);
         reader.onloadend = () => {
           // user.avatar = this.fileEncoded;
@@ -175,7 +178,7 @@ export class UserAddComponent implements OnInit {
     });
   }
 
-  _handleReaderLoadedCompetenceIE(readerEvt) {
+  _handleReaderLoadedCompetenceIE(file, readerEvt) {
     console.log('_handleReaderLoadedIE');
     var bytes = new Uint8Array(readerEvt.target.result);
     var binary = '';
@@ -185,13 +188,13 @@ export class UserAddComponent implements OnInit {
     }
 
     this.fileCompEncoded = btoa(binary);
-    this.postDossier();
+    this.postDossier(file);
   }
 
-  _handleReaderLoadedCompetence(readerEvt) {
+  _handleReaderLoadedCompetence(file, readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileCompEncoded = btoa(readerEvt.target.result);
-    this.postDossier();
+    this.postDossier(file);
   }
 
   removeImage(file){
@@ -203,6 +206,11 @@ export class UserAddComponent implements OnInit {
     }
     this.user.imageId = 0;
     this.alreadyUploaded.splice(this.alreadyUploaded.indexOf(base64ToDelete),1);
+  }
+
+  removeDossier(file){
+    this.user.competenceId = 0;
+    this.alreadyUploadedCompetence.splice(this.alreadyUploadedCompetence.indexOf(file.id),1);
   }
 
   postImage(newimg){
@@ -221,11 +229,17 @@ export class UserAddComponent implements OnInit {
     )
   }
 
-  postDossier(){
+  postDossier(file){
+    if(this.alreadyUploadedCompetence.indexOf(file.id) !=-1){
+      this.fileValid = true;
+      return;
+    }
+    this.alreadyUploadedCompetence.push(file.id);
     this.imageService.uploadJustif({imageJointe: this.fileCompEncoded, imageJointeType: this.dossierFilename.split('.')[this.dossierFilename.split('.').length - 1].toLowerCase(), id: null, originalFilename: this.dossierFilename }).subscribe(
       (data)=>{
         this.fileValid = false;
         this.user.competenceId = data.id;
+        file.id = data.id;
       }
     )
   }

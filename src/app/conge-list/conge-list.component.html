@@ -1,6 +1,6 @@
 <h2>Mes Congés</h2>
 <mat-tab-group>
-  <mat-tab label="Mes Congés Validés">
+  <mat-tab label="Mes Congés validés">
     <mat-card *ngIf="loading"
               style="display: flex; justify-content: center; align-items: center">
       <mat-progress-spinner
@@ -54,24 +54,12 @@
       </div>
     </div>
   </mat-tab>
-  <mat-tab label="Envoi de justificatifs">
-    <form (ngSubmit)="sendJustif()" *ngIf="congeSansJustif.length !=0">
-      <div *ngFor="let c of objectKeys(sortedCSJ)">
-<!--        <label>Document justificatif {{c.date | date: 'dd/MM/yyyy'}} {{c.typeCe}}</label>-->
-        <label>Document justificatif {{c}} {{findWithDate(c).typeCe}}</label>
-        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="findWithDate(c).rawFile"
-                    (ngModelChange)="handleFile(findWithDate(c))" [ngModelOptions]="{standalone: true}"
-                    style="align-self: center;"></input-file>
-      </div>
-      <button mat-raised-button type="submit" [disabled]="!fileValid" style="margin-top: 2em;">Envoyer</button>
-    </form>
-  </mat-tab>
-  <mat-tab label="Détails">
+  <mat-tab label="Mes Congés en attente de validation / Validés">
     <div style="display: flex;flex: available;justify-content: space-evenly;" id="listcontainer">
 
       <div style="margin-top: 2em;" >
         <h3>Congés en attente de validation</h3>
-        <table class="bordered mat-elevation-z8" id="enattente" style="margin: auto; ">
+        <table class="bordered mat-elevation-z8" id="enattente" style="margin: auto;margin-bottom: 1em;">
           <thead>
           <tr>
             <th>Date</th>
@@ -108,7 +96,7 @@
 
       <div style="margin-top: 2em;">
         <h3>Congés validés</h3>
-        <table class="bordered mat-elevation-z8" id="valide" style="margin: auto; ">
+        <table class="bordered mat-elevation-z8" id="valide" style="margin: auto;margin-bottom: 1em;">
           <thead>
           <tr>
             <th>Date</th>
@@ -142,5 +130,19 @@
         </mat-card>
       </div>
     </div>
+  </mat-tab>
+  <mat-tab label="Justificatifs Absences Exceptionnelles">
+    <div style="margin-bottom: 1em;">Cette page vous sert à envoyer vos justificatifs d'Absence Exceptionnelle manquants</div>
+    <form (ngSubmit)="sendJustif()" *ngIf="congeSansJustif.length !=0">
+      <div *ngFor="let c of objectKeys(sortedCSJ)">
+        <!--        <label>Document justificatif {{c.date | date: 'dd/MM/yyyy'}} {{c.typeCe}}</label>-->
+        <label>Document justificatif {{c}} {{findWithDate(c).typeCe}}</label>
+        <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="findWithDate(c).rawFile"
+                    (ngModelChange)="handleFile(findWithDate(c))" [ngModelOptions]="{standalone: true}"
+                    style="align-self: center;"></input-file>
+      </div>
+      <button mat-raised-button type="submit" [disabled]="!fileValid" style="margin-top: 2em;">Envoyer</button>
+    </form>
+    <div *ngIf="congeSansJustif.length == 0">Pas de justificatif à envoyer</div>
   </mat-tab>
 </mat-tab-group>

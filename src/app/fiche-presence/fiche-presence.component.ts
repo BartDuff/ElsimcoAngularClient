@@ -47,43 +47,46 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   firstDay;
   fiche = new FicheModel();
   addedMission = false;
+  enMission = false;
+  enIntercontrat = false;
+  selected = 'Intercontrat';
 
   getWeekday(date: Date) {
     return date.getUTCDay();
   }
 
-  ScrollDown(){
-    let el = document.getElementById("choice");
+  ScrollDown() {
+    let el = document.getElementById('choice');
     el.scrollIntoView();
   }
 
-  showHiddenMission(){
-    let el = document.getElementById("hiddenMission");
-    if(el.style.display == "none"){
-      el.style.display = "inline-block";
-      el.style.width = "20%";
+  showHiddenMission() {
+    let el = document.getElementById('hiddenMission');
+    if (el.style.display == 'none') {
+      el.style.display = 'inline-block';
+      el.style.width = '20%';
       this.addedMission = true;
-      this.toastr.info("Veuillez préciser le début de la 2e mission en 'Commentaire général' après avoir cliqué sur ENVOYER", null,{extendedTimeOut: 3000});
+      this.toastr.info('Veuillez préciser la date de début de la 2ème mission en \'Commentaire général\' après avoir cliqué sur ENVOYER', null, {extendedTimeOut: 8000});
     } else {
-      el.style.display = "none";
+      el.style.display = 'none';
       this.addedMission = false;
-      this.fiche.numeroAffaire2 = "";
+      this.fiche.numeroAffaire2 = '';
     }
   }
 
-  countSelectedDays(){
+  countSelectedDays() {
     let count = 0;
-    for(let el of this.daysOff) {
-      if(this.isArray(el)){
+    for (let el of this.daysOff) {
+      if (this.isArray(el)) {
         count += el.length;
       } else {
         count += 1;
       }
     }
-    if(count<=1){
-      return count + " jour sélectionné";
+    if (count <= 1) {
+      return count + ' jour sélectionné';
     } else {
-      return count + " jours sélectionnés";
+      return count + ' jours sélectionnés';
     }
   }
 
@@ -277,7 +280,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   }
 
   addCells() {
-    let d = this.getWeekday(moment().startOf('month').toDate());
+    let d = this.getWeekday(moment(this.dateNow).startOf('month').toDate());
     return d;
   }
 
@@ -301,9 +304,10 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     this.getFichesForUser();
     this.selectedDate = moment(new Date());
     this.dateNow = new Date();
+    this.dateNow.setDate(this.dateNow.getDate()-3);
     this.getHolidays();
-    this.fiche.numeroAffaire1 = "";
-    this.fiche.numeroAffaire2 = "";
+    this.fiche.numeroAffaire1 = '';
+    this.fiche.numeroAffaire2 = '';
     // this.dateFilter(this.dateNow);
   }
 
@@ -390,7 +394,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
 
   checkWeekends(day: Date) {
     let d = day.toLocaleString('fr-FR', {weekday: 'short'});
-    return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString());
+    return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString()) || moment(day).isBefore(moment(this.currentUser.dateArrivee)) || moment(day).isAfter(moment(this.currentUser.dateDepart));
   }
 
   // addRemoveDay(event) {
@@ -436,7 +440,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
         } else {
           this.dayoffPlage.push({
             date: f.format('DD/MM/YYYY'),
-            typeConge: '',
+            typeConge: 'Intercontrat',
             demiJournee: false,
             typeDemiJournee: '',
             commentaires: '',
@@ -483,7 +487,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
         }
         this.daysOff.push({
           date: day,
-          typeConge: '',
+          typeConge: 'Intercontrat',
           demiJournee: false,
           typeDemiJournee: '',
           commentaires: '',
@@ -520,7 +524,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
               } else {
                 dayArr.push({
                   date: lastday.format('DD/MM/YYYY'),
-                  typeConge: '',
+                  typeConge: 'Intercontrat',
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
@@ -550,7 +554,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
               } else {
                 dayArr.push({
                   date: firstArrDay.format('DD/MM/YYYY'),
-                  typeConge: '',
+                  typeConge: 'Intercontrat',
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
@@ -589,7 +593,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       this.firstDay = moment(event);
       this.dayoffPlage.push({
         date: day,
-        typeConge: '',
+        typeConge: 'Intercontrat',
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
@@ -606,10 +610,10 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let plageArr of this.daysOff) {
       if (this.isArray(plageArr)) {
         if (this.includesDay(plageArr, day)) {
-          if(day == plageArr[0].date){
-            this.daysOff.splice(this.daysOff.indexOf(plageArr),1);
+          if (day == plageArr[0].date) {
+            this.daysOff.splice(this.daysOff.indexOf(plageArr), 1);
           } else {
-            plageArr.splice(plageArr.findIndex(item => item.date === day)+1);
+            plageArr.splice(plageArr.findIndex(item => item.date === day) + 1);
           }
           return;
         }
@@ -623,7 +627,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       //this.daysOff.push(day);
       this.daysOff.push({
         date: day,
-        typeConge: '',
+        typeConge: 'Intercontrat',
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
@@ -677,12 +681,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     const MoisPaques = 3 + Math.floor((L + 40) / 44);
     const JourPaques = L + 28 - 31 * Math.floor(MoisPaques / 4);
     const Paques = new Date(an, MoisPaques - 1, JourPaques);
-    const VendrediSaint = new Date(an, MoisPaques - 1, JourPaques - 2);
     const LundiPaques = new Date(an, MoisPaques - 1, JourPaques + 1);
     const Ascension = new Date(an, MoisPaques - 1, JourPaques + 39);
     const Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49);
     const LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50);
-    let t = [JourAn, VendrediSaint, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let t = [JourAn, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
     let sDates = [];
     for (let i = 0; i < t.length; i++) {
       sDates.push(moment(t[i]).format('DD/MM/YYYY'));
@@ -701,65 +704,68 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     const dialogRef = this.dialog.open(CommentFicheDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
       (data) => {
-        let fiche = new FicheModel();
-        let table = document.getElementById('capture');
-        htmlToImage.toPng(table).then((image) => {
-          fiche.tableImg = image;
-          fiche.numeroAffaire1 = this.fiche.numeroAffaire1;
-          fiche.numeroAffaire2 = this.fiche.numeroAffaire2;
-          fiche.annee = this.dateNow.getFullYear();
-          fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
-          fiche.absences = this.countAbsences(form);
-          fiche.conges = this.countConges(form);
-          fiche.congesSansSolde = this.countSansSolde(form);
-          fiche.formation = this.countFormation(form);
-          fiche.intercontrat = this.countInterContrat(form);
-          fiche.maladie = this.countMaladie(form);
-          // fiche.rtte = this.countRTTE(form);
-          // fiche.rtts = this.countRTTS(form);
-          fiche.rtts = this.countRTT();
-          fiche.datePublication = new Date();
-          fiche.user = JSON.parse(localStorage.getItem('currentUser'));
-          fiche.joursOuvres = this.joursOuvres().length;
-          fiche.joursTravailles = this.joursOuvres().length - this.countJoursNonTravailles(form);
-          // for (let key in form.value) {
-          //   if (form.value.hasOwnProperty(key)) {
-          //     if (key.endsWith(" comm")) {
-          //       fiche.commentaires[form.value[key.substr(0, 10)] + " " + key.substr(0, 10)] = form.value[key];
-          //     }
-          //   }
-          // }
-          for (let c of this.daysOff) {
-            if (this.isArray(c)) {
-              if (c[0].commentaires != undefined) {
-                for (let cong of c) {
-                  fiche.commentaires[cong.typeConge + ' ' + cong.date] = c[0].commentaires;
+        if (data) {
+          this.sending = true;
+          let fiche = new FicheModel();
+          let table = document.getElementById('capture');
+          htmlToImage.toPng(table).then((image) => {
+            fiche.tableImg = image;
+            fiche.numeroAffaire1 = this.fiche.numeroAffaire1;
+            fiche.numeroAffaire2 = this.fiche.numeroAffaire2;
+            fiche.annee = this.dateNow.getFullYear();
+            fiche.mois = this.nomsDesMois[this.dateNow.getMonth()];
+            fiche.absences = this.countAbsences(form);
+            fiche.conges = this.countConges(form);
+            fiche.congesSansSolde = this.countSansSolde(form);
+            fiche.formation = this.countFormation(form);
+            fiche.intercontrat = this.countInterContrat(form);
+            fiche.maladie = this.countMaladie(form);
+            // fiche.rtte = this.countRTTE(form);
+            // fiche.rtts = this.countRTTS(form);
+            fiche.rtts = this.countRTT();
+            fiche.datePublication = new Date();
+            fiche.user = JSON.parse(localStorage.getItem('currentUser'));
+            fiche.joursOuvres = this.joursOuvres().length;
+            fiche.joursTravailles = this.joursOuvres().length - this.countJoursNonTravailles(form);
+            // for (let key in form.value) {
+            //   if (form.value.hasOwnProperty(key)) {
+            //     if (key.endsWith(" comm")) {
+            //       fiche.commentaires[form.value[key.substr(0, 10)] + " " + key.substr(0, 10)] = form.value[key];
+            //     }
+            //   }
+            // }
+            for (let c of this.daysOff) {
+              if (this.isArray(c)) {
+                if (c[0].commentaires != undefined) {
+                  for (let cong of c) {
+                    fiche.commentaires[cong.typeConge + ' ' + cong.date] = c[0].commentaires;
+                  }
+                }
+              } else {
+                if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+                  let dem = c.demiJournee ? '1/2 ' : '';
+                  fiche.commentaires[dem + c.typeConge + ' ' + c.date] = c.commentaires;
                 }
               }
-            } else {
+            }
+            for (let c of this.daysOffSavedObjArr) {
               if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
-                fiche.commentaires[c.typeConge + ' ' + c.date] = c.commentaires;
+                let dem = c.demiJournee ? '1/2 ' : '';
+                fiche.commentaires[dem + c.typeConge + ' ' + c.date] = c.commentaires;
               }
             }
-          }
-          for (let c of this.daysOffSavedObjArr) {
-            if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
-              fiche.commentaires[c.typeConge + ' ' + c.date] = c.commentaires;
-            }
-          }
-          fiche.uri = `${fiche.user.prenom}_${fiche.user.nom}_${fiche.user.trigramme}_${fiche.mois}${fiche.annee}.pdf`;
-          fiche.valideRH = false;
-          fiche.commentaireSup = data.commentaire;
-          this.sending = true;
-          console.log(fiche);
-          this.pdfService.sendFiche(fiche).subscribe(
-            (data) => {
-              this.toastr.success('Fiche de présence bien envoyée', 'Envoyé');
-              this.sending = false;
-              this.getFichesForUser();
-              this.ficheService.emitFicheSubject();
-            });
-        });
+            fiche.uri = `${fiche.user.prenom}_${fiche.user.nom}_${fiche.user.trigramme}_${fiche.mois}${fiche.annee}.pdf`;
+            fiche.valideRH = false;
+            fiche.commentaireSup = data.commentaire;
+            this.pdfService.sendFiche(fiche).subscribe(
+              (data) => {
+                this.toastr.success('Fiche de présence bien envoyée', 'Envoyé');
+                this.sending = false;
+                this.getFichesForUser();
+                this.ficheService.emitFicheSubject();
+              });
+          });
+        }
       });
   }
 
@@ -1085,6 +1091,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
 
   countInterContrat(form: NgForm) {
     let count = 0;
+    let alreadyCountedHalf = [];
     // for(let key in form.value){
     //   if(form.value.hasOwnProperty(key)) {
     //     let value = form.value[key];
@@ -1106,6 +1113,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
               count = count + 0.5;
             } else {
               count++;
+              let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => moment(this.toDate(x.date)).diff(moment(this.toDate(co.date)), 'days') == 1 && x.demiJournee)];
+              if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
+                count += 0.5;
+                alreadyCountedHalf.push(addHalf);
+              }
             }
           }
         }
@@ -1115,6 +1127,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
             count = count + 0.5;
           } else {
             count++;
+            let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => (moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == 1 || moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == -1) && x.demiJournee)];
+            if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
+              count += 0.5;
+              alreadyCountedHalf.push(addHalf);
+            }
           }
         }
       }

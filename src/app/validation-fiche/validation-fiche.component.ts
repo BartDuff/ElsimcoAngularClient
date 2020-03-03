@@ -23,6 +23,10 @@ export class ValidationFicheComponent implements OnInit {
   allFiches: FicheModel[]=[];
   allRHValidFiches: FicheModel[];
   dateNow : Date;
+  users;
+  validatedFichesCount;
+  usersWithFiche = [];
+  usersWithoutFiche = [];
   dataSource: any;
   loading = false;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
@@ -33,10 +37,11 @@ export class ValidationFicheComponent implements OnInit {
               private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.dateNow = new Date();
+    this.validatedFichesCount = 0;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getAllFiches();
     this.getAllValidRHFiches();
-    this.dateNow = new Date();
   }
 
     objectKeys(o){
@@ -61,18 +66,35 @@ export class ValidationFicheComponent implements OnInit {
     return params.charAt(0).toUpperCase() + params.slice(1);
   }
 
+  getUserWithoutFiche(){
+    for(let user of this.users){
+      if(this.usersWithFiche.indexOf(user.id) == -1 && user.fonction != "DIRECTION" && user.fonction != "DEVELOPPEUR"){
+        this.usersWithoutFiche.push(user);
+      }
+    }
+  }
+
   getAllFiches() {
     // this.allFiches = [];
     this.loading = true;
     this.ficheService.getFiches().subscribe(
       (data) => {
         for(let f of data){
-          if(f.mois == this.nomsDesMois[this.dateNow.getMonth()] && f.annee === this.dateNow.getFullYear())
+          if(f.mois == this.nomsDesMois[this.dateNow.getMonth()] && f.annee === this.dateNow.getFullYear()){
             this.allFiches.push(f);
-          // else
-          //   this.allFiches.splice(this.allFiches.indexOf(f),1);
+            this.usersWithFiche.push(f.user.id);
+            if(f.valideRH){
+              this.validatedFichesCount++;
+            }
+          }
         }
-        this.loading = false;
+        this.userService.getUsers().subscribe(
+          (data)=> {
+            this.users = data;
+            this.getUserWithoutFiche();
+            this.loading = false;
+          }
+          );
       }
     );
   }
@@ -100,6 +122,9 @@ export class ValidationFicheComponent implements OnInit {
           this.ficheService.editFiche(fiche).subscribe(
             (data)=> {
               this.allFiches = [];
+              this.validatedFichesCount = 0;
+              this.usersWithoutFiche = [];
+              this.usersWithFiche = [];
               this.getAllFiches();
               this.toastrService.success('Fiche de présence validée', 'Fiche validée');
             }
@@ -123,6 +148,8 @@ export class ValidationFicheComponent implements OnInit {
             this.ficheService.deleteFiche(fiche).subscribe(
               (d)=> {
                 this.allFiches.splice(this.allFiches.indexOf(fiche),1);
+                this.usersWithFiche.splice(this.usersWithFiche.indexOf(fiche.user.id),1);
+                this.usersWithoutFiche.push(fiche.user);
                 this.toastrService.error('Fiche de présence refusée', 'Fiche refusée');
               }
             )}
@@ -216,8 +243,12 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés Payés'){
-        arr.push(date);
+      if(typeConge == 'Congés Payés' || typeConge == '1/2 Congés Payés'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          typeAffiche += "1/2";
+        }
+        arr.push({date: date, type: typeAffiche });
       }
     }
     if(arr.length == 0){
@@ -232,8 +263,12 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'RTT'){
-        arr.push(date);
+      if(typeConge == 'RTT' || typeConge == '1/2 RTT'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          typeAffiche += "1/2";
+        }
+        arr.push({date: date, type: typeAffiche});
       }
     }
     if(arr.length == 0){
@@ -247,8 +282,12 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Arrêt Maladie'){
-        arr.push(date);
+      if(typeConge == 'Arrêt Maladie' || typeConge == '1/2 Arrêt Maladie'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          typeAffiche += "1/2";
+        }
+        arr.push({date: date, type: typeAffiche});
       }
     }
     if(arr.length == 0){
@@ -262,8 +301,12 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés Sans Solde'){
-        arr.push(date);
+      if(typeConge == 'Congés Sans Solde' || typeConge == '1/2 Congés Sans Solde'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          typeAffiche += "1/2";
+        }
+        arr.push({date: date, type: typeAffiche});
       }
     }
     if(arr.length == 0){
@@ -277,8 +320,12 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Absence Exceptionnelle'){
-        arr.push(date);
+      if(typeConge == 'Absence Exceptionnelle' || typeConge == '1/2 Abscence Exceptionnelle'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          typeAffiche += "1/2";
+        }
+        arr.push({date: date, type:typeAffiche});
       }
     }
     if(arr.length == 0){
@@ -292,8 +339,12 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Formation'){
-        arr.push(date);
+      if(typeConge == 'Formation' || typeConge == '1/2 Formation'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          typeAffiche += "1/2";
+        }
+        arr.push({date: date, type: typeAffiche});
       }
     }
     if(arr.length == 0){
@@ -308,8 +359,12 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Intercontrat'){
-        arr.push(date);
+      if(typeConge == 'Intercontrat' || typeConge == '1/2 Intercontrat'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          typeAffiche += "1/2";
+        }
+        arr.push({date: date, type: typeAffiche});
       }
     }
     if(arr.length == 0){
@@ -318,21 +373,44 @@ export class ValidationFicheComponent implements OnInit {
     return this.splitArrayInRanges(arr);
   }
 
+  compare(a, b) {
+    if (this.isArray(a) && this.isArray(b)) {
+      let dateA = this.toDate(a[0].date);
+      let dateB = this.toDate(b[0].date);
+      return dateA.getTime() - dateB.getTime();
+    }
+    if (this.isArray(a) && !this.isArray(b)) {
+      let dateA = this.toDate(a[0].date);
+      let dateB = this.toDate(b.date);
+      return dateA.getTime() - dateB.getTime();
+    }
+    if (!this.isArray(a) && this.isArray(b)) {
+      let dateA = this.toDate(a.date);
+      let dateB = this.toDate(b[0].date);
+      return dateA.getTime() - dateB.getTime();
+    }
+    if (!this.isArray(a) && !this.isArray(b)) {
+      let dateA = this.toDate(a.date);
+      let dateB = this.toDate(b.date);
+      return dateA.getTime() - dateB.getTime();
+    }
+  }
+
   splitArrayInRanges(arr) {
     let newArr = [];
     let plage = [];
-    arr.sort((a, b) => this.toDate(a).valueOf() - this.toDate(b).valueOf());
+    arr.sort((a, b) => this.compare(a,b));
     for (let i = 0; i < arr.length; i++) {
       if (i > 0) {
-        if (this.isFollowingDay(arr[i - 1], arr[i])) {
+        if (this.isFollowingDay(arr[i - 1].date, arr[i].date)) {
           plage.push(arr[i]);
-          if (i == arr.length - 1 || !(this.isFollowingDay(arr[i], arr[i + 1]))) {
+          if (i == arr.length - 1 || !(this.isFollowingDay(arr[i].date, arr[i + 1].date))) {
             newArr.push(plage);
             plage = [];
           }
         } else {
           if (i != arr.length - 1) {
-            if (this.isFollowingDay(arr[i], arr[i + 1])) {
+            if (this.isFollowingDay(arr[i].date, arr[i + 1].date)) {
               plage.push(arr[i]);
             } else {
               newArr.push(arr[i]);
@@ -343,7 +421,7 @@ export class ValidationFicheComponent implements OnInit {
         }
       } else {
         if(arr.length>1){
-          if (this.isFollowingDay(arr[i], arr[i + 1])) {
+          if (this.isFollowingDay(arr[i].date, arr[i + 1].date)) {
             plage.push(arr[i]);
           } else {
             newArr.push(arr[i]);

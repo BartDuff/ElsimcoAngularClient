@@ -81,6 +81,14 @@
           <input matInput formControlName="emailPerso" placeholder="Email perso" name="emailPerso" id="emailPerso">
         </mat-form-field>
 
+        <mat-form-field>
+          <label>
+            <input matInput readonly [matDatepicker]="picker2"
+                   formControlName="dateNaissance" placeholder="Date de naissance" name="dateNaissance" id="dateNaissance">
+          </label>
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
 
         <mat-form-field>
           <input matInput formControlName="metier" placeholder="Métier" name="metier" id="metier">
@@ -142,7 +150,7 @@
         <label>
           Dossier de compétences (DCP) :
         </label>
-        <input-file placeholder="DCP" fileLimit=1 [(ngModel)]="user.competenceFile" (ngModelChange)="handleFileCompetence(user)" [ngModelOptions]="{standalone: true}"></input-file>
+        <input-file placeholder="DCP" fileLimit=1 [(ngModel)]="user.competenceFile" (ngModelChange)="handleFileCompetence(user)" [ngModelOptions]="{standalone: true}" (deletedFile)="removeDossier($event)"></input-file>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/users">RETOUR
             <mat-icon>arrow_back</mat-icon>

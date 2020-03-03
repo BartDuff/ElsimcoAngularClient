@@ -34,6 +34,58 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   public ngUnsubscribe: Subject<void> = new Subject<void>();
   dataSource: any;
   columnsToIgnore = ['secretid', 'fileBase64', 'accepte', 'ficheProcess','ficheRecrutement','ficheProcessRecrutement'];
+  possibleValues = {
+    'domaine1': ["Autres","Chimie","Cosmétique / Parfum","Cuir / Maro","Galva / TS","Horlogerie","Joaillerie / Bijoux","Lunetterie","Mécanique","Packaging","Pièces métalliques","Plasturgie","Textile maro","Textile PAP"],
+    'domaine2': ["Autres","Chimie","Cosmétique / Parfum","Cuir / Maro","Galva / TS","Horlogerie","Joaillerie / Bijoux","Lunetterie","Mécanique","Packaging","Pièces métalliques","Plasturgie","Textile maro","Textile PAP"],
+    'domaine3': ["Autres","Chimie","Cosmétique / Parfum","Cuir / Maro","Galva / TS","Horlogerie","Joaillerie / Bijoux","Lunetterie","Mécanique","Packaging","Pièces métalliques","Plasturgie","Textile maro","Textile PAP"],
+    'metier1': ["Achat / Sourcing","Affaires règlementaires","Autres","R&D / Formulation","Conception","Design","Développement / Projet","Méthodes / Indus","Production / atelier","Qualité / Amélioration continue","Supply Chain / Logistique","CFAO / Programmation"],
+    'metier2': ["Achat / Sourcing","Affaires règlementaires","Autres","R&D / Formulation","Conception","Design","Développement / Projet","Méthodes / Indus","Production / atelier","Qualité / Amélioration continue","Supply Chain / Logistique","CFAO / Programmation"],
+    'metier3': ["Achat / Sourcing","Affaires règlementaires","Autres","R&D / Formulation","Conception","Design","Développement / Projet","Méthodes / Indus","Production / atelier","Qualité / Amélioration continue","Supply Chain / Logistique","CFAO / Programmation"],
+    'outils1': ["Autres","Autres CAO / DAO","Catia","Creo / Pro E / Wildfire","Solidworks","Inventor","Autocad","Rhinoceros / Alias","Lectra","Mastercam / Top solid","MS Project","Windchill","Gitis","Linkit","Lean"],
+    'outils2': ["Autres","Autres CAO / DAO","Catia","Creo / Pro E / Wildfire","Solidworks","Inventor","Autocad","Rhinoceros / Alias","Lectra","Mastercam / Top solid","MS Project","Windchill","Gitis","Linkit","Lean"],
+    'outils3': ["Autres","Autres CAO / DAO","Catia","Creo / Pro E / Wildfire","Solidworks","Inventor","Autocad","Rhinoceros / Alias","Lectra","Mastercam / Top solid","MS Project","Windchill","Gitis","Linkit","Lean"],
+    'experience': ["0 / 2 ans","Sup à 2 / 5 ans","Sup à 5 / 10 ans","Sup à 10 ans"],
+    'enPoste': [true, false],
+    'etatRecherches': ["En recherche active", "En veille", "En recherche", "Pas en recherche"],
+    'contrat': ["CDI (PE validée)", "CDI (en PE)", "CDD", "Interim", "Formation", "Indépendant"],
+    'mobiliteGeographique': [true, false],
+    'mobiliteParis': [true, false],
+    'mobiliteFrance': [true, false],
+    'mobiliteEurope': [true, false],
+    'mobiliteIntl': [true, false],
+    'regionsFrance': [true, false],
+    'region1': ['Auvergne-Rhône-Alpes',
+      'Bourgogne-Franche-Comté',
+      'Bretagne',
+      'Centre-Val de Loire',
+      'Corse',
+      'Grand Est',
+      'Hauts-de-France',
+      'Normandie',
+      'Nouvelle-Aquitaine',
+      'Occitanie',
+      'Pays de la Loire',
+      'Provence-Alpes-Côte d\'Azur'],
+    'region2': ['Auvergne-Rhône-Alpes',
+      'Bourgogne-Franche-Comté',
+      'Bretagne',
+      'Centre-Val de Loire',
+      'Corse',
+      'Grand Est',
+      'Hauts-de-France',
+      'Normandie',
+      'Nouvelle-Aquitaine',
+      'Occitanie',
+      'Pays de la Loire',
+      'Provence-Alpes-Côte d\'Azur'],
+    'fourchetteSalariale': ["moins de 30k","31 / 35k","36 / 40","41 / 45k","46 / 50k","Plus de 50k"],
+    'anglais': ['','Débutant / Scolaire','Intermédiaire','Courant','Bilingue'],
+    'italien': ['','Débutant / Scolaire','Intermédiaire','Courant','Bilingue'],
+    'allemand': ['','Débutant / Scolaire','Intermédiaire','Courant','Bilingue'],
+    'espagnol':['','Débutant / Scolaire','Intermédiaire','Courant','Bilingue'],
+    'niveauAutrelangue': ['','Débutant / Scolaire','Intermédiaire','Courant','Bilingue']
+  };
+
   columnsToDisplay = {
     'id':'Id',
     'secretid':'Id Secret',
@@ -212,8 +264,12 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
   getUniqueValues(key){
     let uniqueValues = [];
     for(let c of this.qCandidats){
-      if(uniqueValues.indexOf(c[key]) == -1){
-        uniqueValues.push(c[key]);
+      if(key == 'nom' || key == 'prenom' || key == 'id' || key == 'tags' || key == 'autreLangue'){
+        if(uniqueValues.indexOf(c[key]) == -1){
+          uniqueValues.push(c[key]);
+        }
+      } else {
+        uniqueValues = this.possibleValues[key];
       }
     }
     return uniqueValues;

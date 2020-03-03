@@ -47,12 +47,26 @@ th {
 }
 
 @media only screen and (max-width: 768px) {
+
+  table {
+    margin: 0;
+  }
+
+  th {
+    padding: 0.5em!important;
+  }
+
+  td {
+    padding: 0.5em!important;
+  }
+
   .table-container{
-    width: 70vw!important;
+    width: fit-content!important;
+    overflow-x: auto;
   }
 
   .tabledoc {
-    width: 70vw!important;
+    width: fit-content!important;
   }
 
   .hideOnMobile {

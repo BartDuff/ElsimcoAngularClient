@@ -37,25 +37,33 @@ import { EmailDialogComponent } from './dialog/email-dialog/email-dialog.compone
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import 'hammerjs';
 import {
-  MatButtonModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatSelectModule,
-  MatSortModule,
-  MatStepperModule,
-  MatTableModule,
-  MatNativeDateModule,
-  MatCardModule,
-  MAT_DATE_LOCALE,
-  DateAdapter,
-  MatMenuModule,
-  MatSidenavModule,
-  MatToolbarModule,
-  MatIconModule,
-  MatListModule, MatPaginatorModule, MatRadioModule, MatTabsModule, MatBadgeModule, MatTooltipModule, MatChipsModule, MatExpansionModule
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSortModule,
+    MatStepperModule,
+    MatTableModule,
+    MatNativeDateModule,
+    MatCardModule,
+    MAT_DATE_LOCALE,
+    DateAdapter,
+    MatMenuModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatListModule,
+    MatPaginatorModule,
+    MatRadioModule,
+    MatTabsModule,
+    MatBadgeModule,
+    MatTooltipModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatTreeModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import {CommonModule} from '@angular/common';
@@ -196,7 +204,8 @@ const config: InputFileConfig = {};
         MatChipsModule,
         TooltipModule,
         MatExpansionModule,
-        NgxGalleryModule
+        NgxGalleryModule,
+        MatTreeModule
     ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService, FaqService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

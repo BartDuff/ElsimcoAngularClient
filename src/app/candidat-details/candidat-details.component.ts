@@ -44,6 +44,7 @@ export class CandidatDetailsComponent implements OnInit {
   columnsToDisplay = {
     'id':'Id',
     'secretid':'Id Secret',
+    'civilite':'Civilité',
     'nom':'Nom',
     'prenom': 'Prénom',
     'dateNaissance': 'Date de Naissance',
@@ -94,6 +95,8 @@ export class CandidatDetailsComponent implements OnInit {
     'mobile': 'Téléphone Mobile',
     'dateEnvoi': 'Date d\'envoi',
     'fileBase64': 'CV',
+    'fileType':'Type de Fichier',
+    'fileName':'Nom du Fichier',
     'mobiliteParis': 'Mobilité Paris-IdF',
     'mobiliteFrance': 'Mobilité France',
     'mobiliteEurope': 'Mobilité Europe',
@@ -108,7 +111,7 @@ export class CandidatDetailsComponent implements OnInit {
     'preavisNegociable': 'Préavis négociable',
     'contrat': 'Contrat',
     'posteSouhaite': 'Poste souhaité',
-    'evolution5ans': 'ëvolution souhaitée dans les 5 ans',
+    'evolution5ans': 'Évolution souhaitée dans les 5 ans',
     'numSecu': 'Numéro INSEE',
     'fixeDernierSalaireBrut': 'Fixe du dernier salaire en brut',
     'varDernierSalaireBrut': 'Variable du dernier salaire en brut',
@@ -125,7 +128,8 @@ export class CandidatDetailsComponent implements OnInit {
     'mobiliteGeographique':'Mobilité géographique',
     'delaiDispoFiche':'Délai de disponibilité sur la Fiche',
     'faitA': 'Fait à:',
-    'echangesEffectues': 'Echanges éffectués'};
+    'echangesEffectues': 'Echanges éffectués',
+    'dateCandidature':'Date de Candidature'};
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -215,7 +219,11 @@ export class CandidatDetailsComponent implements OnInit {
         data => {
           this.candidat = data;
           this.candidat.dateDerniersEntretiens = new Date(data.dateDerniersEntretiens);
+          this.candidat.dateDispo = new Date(data.dateDispo);
+          this.candidat.dateMAJ = new Date(data.dateMAJ);
+          this.candidat.dateCreation = new Date(data.dateCreation);
           this.candidat.dateNaissance = new Date(data.dateNaissance);
+          this.candidat.alerteMAJ = new Date(data.alerteMAJ);
         }
       )
     );

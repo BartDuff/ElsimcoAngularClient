@@ -33,7 +33,7 @@
   </mat-progress-spinner>
 </div>
 <div *ngIf="!loading && selectedUser.id != undefined">
-  <button mat-button [disabled]="dateNow.getMonth()-1 < fixedDateNow.getMonth()" (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon [ngStyle]="{color: dateNow.getMonth()-1 < fixedDateNow.getMonth()? 'grey':'black'}" [matTooltip]="dateNow.getMonth()-1 < fixedDateNow.getMonth()?'Ce mois est déjà passé':''">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+  <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;"><mat-icon [ngStyle]="{color: dateNow.getMonth()-1 < fixedDateNow.getMonth()? 'black':'black'}" [matTooltip]="dateNow.getMonth()-1 < fixedDateNow.getMonth()?'Ce mois est déjà passé':''">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
   <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
 </div>
 <div style="justify-content: space-evenly;display: flex" id="maincont" *ngIf="!loading && selectedUser.id != undefined">

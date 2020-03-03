@@ -29,5 +29,11 @@
   </button>
   <span *ngIf="likes?.length >0"> {{likes?.length}} {{ likes?.length <=1?'personne a aimé':'personnes ont aimé'}}</span>
 </mat-card-actions>
+  <mat-card-actions *ngIf="currentUser.role == 'ADMIN' && likes?.length>0" style="display: flex;flex-direction: column;margin-left: 1em;">
+    <h6 mat-subheader>Les utilisateurs suivants ont aimé :</h6>
+    <mat-chip-list style="display: flex;flex-direction: row;">
+      <mat-chip *ngFor="let user of likes" color="primary">{{user.prenom}} {{user.nom}}</mat-chip>
+    </mat-chip-list>
+  </mat-card-actions>
   <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publié le {{newsitem?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>par {{ newsitem?.auteur.prenom }} {{ newsitem?.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteNews()" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button></mat-card-subtitle>
 </mat-card>

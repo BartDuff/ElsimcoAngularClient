@@ -43,6 +43,7 @@ export class UserEditComponent implements OnInit {
   fileEncoded;
   fileCompEncoded;
   alreadyUploaded = [];
+  alreadyUploadedCompetence = [];
   filename;
   dossierFilename;
   fileValid = true;
@@ -90,6 +91,7 @@ export class UserEditComponent implements OnInit {
       email: ['', Validators.required],
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
+      dateNaissance:[''],
       role: [''],
       fonction: [''],
       statut: [''],
@@ -105,6 +107,7 @@ export class UserEditComponent implements OnInit {
       telPro:['', Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')],
       emailPerso:['', Validators.email],
       dateArrivee:[''],
+      dateDepart:[''],
       metier:['']
     });
     this.route.params.subscribe(
@@ -112,6 +115,8 @@ export class UserEditComponent implements OnInit {
         data => {
           this.user = data;
           this.user.dateArrivee = new Date(data.dateArrivee);
+          this.user.dateDepart = new Date(data.dateDepart);
+          this.user.dateNaissance = new Date(data.dateNaissance);
           this.user.derniereConnexion = new Date(data.derniereConnexion);
           this.user.rawFile = [];
           this.user.competenceFile = [];
@@ -131,7 +136,8 @@ export class UserEditComponent implements OnInit {
             this.imageService.getImage(data.competenceId).subscribe(
               (image)=>{
                 this.base64downoad = image;
-                this.user.competenceFile.push({'file': new File([this.base64ToBlob(image.imageJointe)], image.originalFilename.toString(), {type: 'image/' + image.imageJointeType})});
+                this.user.competenceFile.push({'file': new File([this.base64ToBlob(image.imageJointe)], image.originalFilename.toString(), {type: 'image/' + image.imageJointeType}),'id':image.id});
+                this.alreadyUploadedCompetence.push(image.id);
               }
             );
           }
@@ -188,7 +194,7 @@ export class UserEditComponent implements OnInit {
           }
           let details = [];
           for(let k of Object.keys(this.user)){
-            if(this.formerUser[k] != this.editForm.value[k] && k !='imageId' && k !='competenceId' && k !='anticipation' && k !='missions' && k != 'dateArrivee' && k !='rawFile' && k !='competenceFile' && k !='avatar' && k !='avatarType' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='statut' && k !='congeAnciennete'){
+            if(this.formerUser[k] != this.editForm.value[k] && k !='imageId' && k !='competenceId' && k !='anticipation' && k !='missions' && k != 'dateArrivee' && k !='dateNaissance' && k != 'dateDepart' && k !='rawFile' && k !='competenceFile' && k !='avatar' && k !='avatarType' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='statut' && k !='congeAnciennete'){
               let key = k.toString();
               let val = this.editForm.value[k];
               details.push({[this.keysDict[key]]:val});
@@ -262,7 +268,7 @@ export class UserEditComponent implements OnInit {
       this.fileValid = false;
       let reader = new FileReader();
       if (reader.readAsBinaryString === undefined) {
-        reader.onload = this._handleReaderLoadedCompetenceIE.bind(this);
+        reader.onload = this._handleReaderLoadedCompetenceIE.bind(this, file);
         reader.readAsArrayBuffer(file.file);
         reader.onloadend = () => {
           // user.avatar = this.fileEncoded;
@@ -271,7 +277,7 @@ export class UserEditComponent implements OnInit {
           this.fileValid = true;
         };
       } else {
-        reader.onload = this._handleReaderLoadedCompetence.bind(this);
+        reader.onload = this._handleReaderLoadedCompetence.bind(this, file);
         reader.readAsBinaryString(file.file);
         reader.onloadend = () => {
           // user.avatar = this.fileEncoded;
@@ -310,7 +316,7 @@ export class UserEditComponent implements OnInit {
     });
   }
 
-  _handleReaderLoadedCompetenceIE(readerEvt) {
+  _handleReaderLoadedCompetenceIE(file, readerEvt) {
     console.log('_handleReaderLoadedIE');
     var bytes = new Uint8Array(readerEvt.target.result);
     var binary = '';
@@ -320,13 +326,13 @@ export class UserEditComponent implements OnInit {
     }
 
     this.fileCompEncoded = btoa(binary);
-    this.postDossier();
+    this.postDossier(file);
   }
 
-  _handleReaderLoadedCompetence(readerEvt) {
+  _handleReaderLoadedCompetence(file, readerEvt) {
     //console.log ("xx"+this.inputFileComponent.files[this.i].file.name,this.i);
     this.fileCompEncoded = btoa(readerEvt.target.result);
-    this.postDossier();
+    this.postDossier(file);
   }
 
   postImage(newimg){
@@ -345,11 +351,17 @@ export class UserEditComponent implements OnInit {
     )
   }
 
-  postDossier(){
+  postDossier(file){
+    if(this.alreadyUploadedCompetence.indexOf(file.id) !=-1){
+      this.fileValid = true;
+      return;
+    }
+    this.alreadyUploadedCompetence.push(file.id);
     this.imageService.uploadJustif({imageJointe: this.fileCompEncoded, imageJointeType: this.dossierFilename.split('.')[this.dossierFilename.split('.').length - 1].toLowerCase(), id: null, originalFilename: this.dossierFilename }).subscribe(
       (data)=>{
         this.fileValid = false;
         this.user.competenceId = data.id;
+        file.id = data.id;
       }
     )
   }
@@ -363,6 +375,11 @@ export class UserEditComponent implements OnInit {
     }
     this.user.imageId = 0;
     this.alreadyUploaded.splice(this.alreadyUploaded.indexOf(base64ToDelete),1);
+  }
+
+  removeDossier(file){
+    this.user.competenceId = 0;
+    this.alreadyUploadedCompetence.splice(this.alreadyUploadedCompetence.indexOf(file.id),1);
   }
 
   public base64ToBlob(b64Data, contentType = '', sliceSize = 512) {

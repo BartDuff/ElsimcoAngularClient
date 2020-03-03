@@ -1042,7 +1042,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
                     //   i++;
                     // }
                     // sCongeSansJustif += 'Du ' + new Date(identicalCe[0].date).toLocaleDateString() + ' au ' + new Date(identicalCe[identicalCe.length - 1].date).toLocaleDateString() + ' : ' + identicalCe[0].typeCe + '\n';
-                    this.emailService.sendMailWithRangeForFile(this.getHello()+',\nVous avez envoyé une demande d\'absence exceptionnelle sans justificatif pour les jours suivants :\n', 'Notification de pièce justificative manquante', this.currentUser.email, congeSansJustif).subscribe(
+                    this.emailService.sendMailWithRangeForFile(this.getHello()+' '+this.currentUser.prenom+',\n\nVous avez envoyé une demande d\'absence exceptionnelle sans justificatif pour les jours suivants :\n', 'Notification de pièce justificative manquante', this.currentUser.email, congeSansJustif).subscribe(
                       () => {
                         this.FicheEnvoyee = false;
                         this.ngOnInit();

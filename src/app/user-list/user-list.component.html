@@ -1,6 +1,11 @@
 <h2 style="align-self: center">Utilisateurs</h2>
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_users"><mat-icon>add</mat-icon></button>
 <div style="overflow-x: auto">
+  <mat-paginator #top style="background-color: transparent;" [length]="length"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 (page)="OnPageChange($event, bottom);">
+  </mat-paginator>
   <table class="bordered mat-elevation-z8" style="margin: auto; ">
     <thead>
     <tr>
@@ -9,6 +14,7 @@
       <th>Nom</th>
       <th>Statut</th>
       <th>Fonction</th>
+      <th>Actif</th>
       <th>Congés N-1</th>
       <th>Congés N</th>
       <th>RTT (h)</th>
@@ -20,15 +26,20 @@
     </tr>
     </thead>
     <tbody>
-    <tr app-user-item *ngFor="let user of users"
+    <tr app-user-item *ngFor="let user of pagedUsers"
         [user]="user"
         (userSelected)="selectUser($event)"
         (userDeleted)="deleteUser($event)">
     </tr>
     </tbody>
   </table>
+  <mat-paginator #bottom style="background-color: transparent" [length]="length"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 (page)="OnPageChange($event, top);">
+  </mat-paginator>
 </div>
-<mat-card *ngIf="!users"
+<mat-card *ngIf="!pagedUsers"
           style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner
     color="accent"

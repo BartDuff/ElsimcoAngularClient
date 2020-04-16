@@ -3,6 +3,7 @@
 <td>{{ user.nom }}</td>
 <td [ngStyle]="{'color':user.role=='ADMIN'?'red':''}">{{ user.role == 'USER'?'UTILISATEUR':'ADMIN'}}</td>
 <td>{{ user.fonction }}</td>
+<td>{{ user.actif?'oui':'non' }}</td>
 <td>{{ user.cpNMoins1 | number: '1.2-2' }}</td>
 <td>{{ user.cpN | number: '1.2-2' }}</td>
 <td>{{ user.rttn | number: '1.2-2' }}</td>

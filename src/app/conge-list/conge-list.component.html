@@ -8,6 +8,9 @@
         mode="indeterminate">
       </mat-progress-spinner>
     </mat-card>
+    <mat-chip-list *ngIf="monthArr.length>0" style="display: flex;flex-direction: row;justify-content: center;">
+      <mat-chip *ngFor="let i of monthArr" style="background-color: black;color: white;" (click)="dateNow.setMonth(nomsDesMois.indexOf(i.split(' ')[0]));dateNow.setFullYear(i.split(' ')[1]);conges = [];getCongesForUser();">{{i}}</mat-chip>
+    </mat-chip-list>
     <div style="justify-content: space-evenly;display: flex" *ngIf="!loading" id="maincont">
       <!--  <div style="border: 1px solid;width: 75vw;height: 60vh; text-align: left;" >
           <div style="border: 1px solid;width: 10vw;height: 2em; display: inline-block; text-align: center;vertical-align: center;" *ngFor="let d of joursDeLaSemaine">{{d}}</div>
@@ -16,7 +19,6 @@
             <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 2em" >{{day | date:'d'}}</span>
           </div>
         </div>-->
-
       <div id="cont" style="display: flex;flex-direction: column;">
         <div style="display: flex;justify-content: center;">
           <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);" style="border: none;">

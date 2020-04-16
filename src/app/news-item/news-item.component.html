@@ -19,7 +19,7 @@
   <ngx-gallery *ngIf="galleryImages.length>1" [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery" style="margin-top: 2em;"></ngx-gallery>
 <!--  <iframe width="560" height="500" src="https://www.youtube.com/embed/vFViy4-w3nY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
   <mat-card-content>
-    <p [innerHTML]="newsitem?.contenu">
+    <p [innerHTML]="createTextLinks_(newsitem?.contenu)">
     </p>
   </mat-card-content>
   <mat-card-actions style="display: flex;flex-direction: row;justify-content: center;align-items: center;">

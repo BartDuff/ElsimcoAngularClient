@@ -5,4 +5,5 @@ export class FaqModel {
   question: String;
   reponse: String;
   mailContact: String;
+  category: String;
 }

@@ -1,38 +1,64 @@
-.resume th, .resume td {
-  border: solid black 1px;
-  /*padding: 1em;*/
+.resume tbody {
+  display:block;
+  height: 1200px;
+  overflow:auto;
 }
 
+.resume tbody tr {
+  display:table;
+  width: 100%;
+  height: fit-content;
+  table-layout:fixed;
+}
 
+.resume thead {
+  display:table;
+  width: 100%;
+  table-layout:fixed;
+}
+
+.resume td, .resume th {
+  font-size: x-small;
+  border: solid black 1px;
+  padding: 0 1em !important;
+}
 
 th {
-  padding-left: 1em;
-  padding-right: 1em;
+  padding: 1em;
 }
 
 td {
-  padding-left: 1em;
-  padding-right: 1em;
+  padding: 1em;
 }
 
-.mat-line {
+.lines {
   color: black!important;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: x-small;
+  margin-left: -1em;
+  margin-right: -1em;
 }
 
 .mat-list {
-  display: inline;
+  font-size: x-small;
+  margin: -8px!important;
 }
 
+.mat-list[dense] .mat-list-item {
+  height: fit-content!important;
+}
+
+
 .mat-subheader {
-  flex: fit-content;
   height: 1em;
   width: max-content;
+  font-size: x-small;
 }
 
 .dates {
   display: flex;
   flex-direction: column;
-  flex: fit-content;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: x-small;
 }

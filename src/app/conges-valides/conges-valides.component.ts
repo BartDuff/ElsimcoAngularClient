@@ -12,6 +12,8 @@ import { saveAs } from 'file-saver';
 import {ImageService} from '../services/image.service';
 import {image} from 'html2canvas/dist/types/css/types/image';
 import {DocumentModel} from '../models/document.model';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -35,7 +37,8 @@ export class CongesValidesComponent implements OnInit {
   dateNow: Date;
   dateNowFile;
   users: UserModel[] = [];
-  selectedUser;
+  public ngUnsubscribe: Subject<void> = new Subject<void>();
+  selectedUser = null;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   joursDeLaSemaine = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
   usersId = [];
@@ -57,7 +60,6 @@ export class CongesValidesComponent implements OnInit {
     this.getUsers();
     this.dateNow = new Date();
     this.dateNowFile = new Date();
-    this.selectedUser = null;
   }
 
   getHello(){
@@ -269,7 +271,8 @@ export class CongesValidesComponent implements OnInit {
 
   getCongesWithFile() {
     this.congesWithFile = [];
-    this.congeService.getConges().subscribe(
+    this.congeService.getConges()
+      .subscribe(
       (data) => {
         for (let c of data) {
           if (c.fileId && new Date(c.date).getFullYear() == this.dateNowFile.getFullYear()) {
@@ -287,7 +290,8 @@ export class CongesValidesComponent implements OnInit {
     this.monthArr = [];
     this.monthLoading = true;
     if (this.selectedUser == null) {
-      this.congeService.getConges().subscribe(
+      this.congeService.getConges()
+        .subscribe(
         (data) => {
           for (let c of data) {
             if (!c.valideRH){
@@ -311,7 +315,8 @@ export class CongesValidesComponent implements OnInit {
         }
       );
     } else {
-      this.userService.getCongeForUser(this.selectedUser).subscribe(
+      this.userService.getCongeForUser(this.selectedUser)
+        .subscribe(
         (d) => {
           for (let c of d) {
             if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && this.congesNonValides.indexOf(c) == -1) {
@@ -328,11 +333,14 @@ export class CongesValidesComponent implements OnInit {
   getValidatedConges() {
     this.congesValides = [];
     this.loading = true;
+    this.ngUnsubscribe.next();
     if (this.selectedUser == null) {
-      this.congeService.getConges().subscribe(
+      this.congeService.getConges()
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(
         (data) => {
           for (let c of data) {
-            if (c.valideRH && new Date(c.date).getMonth() === this.dateNow.getMonth()) {
+            if (c.valideRH && new Date(c.date).getMonth() === this.dateNow.getMonth() && new Date(c.date).getFullYear() === this.dateNow.getFullYear()) {
               this.congesValides.push(c);
             }
           }
@@ -341,10 +349,12 @@ export class CongesValidesComponent implements OnInit {
         }
       );
     } else {
-      this.userService.getCongeForUser(this.selectedUser).subscribe(
+      this.userService.getCongeForUser(this.selectedUser)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(
         (d) => {
           for (let c of d) {
-            if (c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth()) {
+            if (c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth() && new Date(c.date).getFullYear() === this.dateNow.getFullYear()) {
               this.congesValides.push(c);
             }
           }
@@ -599,7 +609,8 @@ export class CongesValidesComponent implements OnInit {
   }
 
   getUsers() {
-    this.userService.getUsers().subscribe(
+    this.userService.getUsers()
+      .subscribe(
       (data) => this.users = data
     );
   }

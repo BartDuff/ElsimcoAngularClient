@@ -16,7 +16,7 @@ export class FaqService {
   }
 
   getFaq(): Observable<any> {
-    return this.http.get<ContactModel[]>(`${API_URL}/faq`,{ withCredentials : true});
+    return this.http.get<FaqModel[]>(`${API_URL}/faq`,{ withCredentials : true});
   }
 
   addFaq(newFaq: any): Observable<any> {

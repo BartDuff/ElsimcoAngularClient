@@ -14,7 +14,11 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class FaqListComponent implements OnInit {
 
-  faq: FaqModel[];
+  faqRH: FaqModel[] = [];
+  faqCommercial: FaqModel[] = [];
+  faqFinance: FaqModel[] = [];
+  faq: FaqModel[] = [];
+  categories = ["COMMERCIAL","RH","FINANCES"];
   currentUser: UserModel;
   loading = true;
   constructor(private faqService: FaqService,
@@ -29,7 +33,19 @@ export class FaqListComponent implements OnInit {
   getFaq() {
     this.faqService.getFaq().subscribe(
       (data) => {
-        this.faq = data;
+        for(let d of data){
+          if(d.category == "FINANCES"){
+            this.faqFinance.push(d);
+          }
+          if(d.category == "RH"){
+            this.faqRH.push(d);
+          }
+          if(d.category == "COMMERCIAL"){
+            this.faqCommercial.push(d);
+          } else {
+            this.faq.push(d);
+          }
+        }
         this.loading=false;
       }
     );

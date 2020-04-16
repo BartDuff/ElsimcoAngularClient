@@ -14,6 +14,7 @@ export class FicheModel {
   congesSansSolde: number;
   maladie:number;
   formation: number;
+  activitePartielle: number;
   intercontrat:number;
   user: UserModel;
   joursOuvres:number;

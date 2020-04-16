@@ -3,8 +3,8 @@
   <mat-tab label="Validation des fiches">
     <div style="margin-top: 2em;margin-bottom: 1em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;users =[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;users =[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
       <p *ngIf="allFiches.length==0 && !loading">Pas de fiches pour ce mois-ci</p>
       <div *ngIf="allFiches.length>0 && !loading" style="display: flex;flex-direction: row;justify-content: space-evenly;margin-bottom: 1em;font-weight: bolder;font-size: 1.2em;">
@@ -74,14 +74,14 @@
   <mat-tab label="Résumé">
     <div style="margin-top: 2em;">
       <div>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
-        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()-1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;users = [];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_left</mat-icon></button><span style="font-weight: bold">{{changeCaseFirstLetter(nomsDesMois[dateNow.getMonth()])}} {{dateNow.getFullYear()}}</span>
+        <button mat-button (click)="dateNow.setMonth(dateNow.getMonth()+1);allFiches=[];usersWithFiche = [];usersWithoutFiche=[];validatedFichesCount = 0;users = [];getAllFiches();" style="border: none;"><mat-icon style="color: black">chevron_right</mat-icon></button>
       </div>
       <p *ngIf="allFiches.length==0 && !loading">Pas de fiches pour ce mois-ci</p>
-      <div style="margin: 1em;">Légende : C.P : Congés Payés | RTT: Réduction du Temps de Travail  | A.M : Arrêt Maladie | A.E : Absences Exceptionnelles | C.S.S : Congés Sans Solde | F : Formation | I : Intercontrat</div>
-    <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8 resume table-responsive">
+      <div style="margin: 1em;">Légende : C.P : Congés Payés | RTT: Réduction du Temps de Travail  | A.M : Arrêt Maladie | A.E : Absences Exceptionnelles | C.S.S : Congés Sans Solde | F : Formation | I : Intercontrat | A.P : Activité Partielle</div>
+    <table *ngIf="(currentUser.fonction ==='RH' || currentUser.fonction ==='DEVELOPPEUR') && allFiches.length!=0" class="bordered mat-elevation-z8 resume">
       <thead>
-      <tr>
+      <tr style="background-color: black;color: white;font-weight: bolder;">
         <th>Prénom</th>
         <th>Nom</th>
         <th>Trigramme</th>
@@ -93,10 +93,11 @@
         <th>C.S.S</th>
         <th>F</th>
         <th>I</th>
+        <th>A.P</th>
         <th>Jours Ouvrés</th>
         <th>Commentaires</th>
         <th>Validé RH</th>
-        <th>commentaireSup</th>
+        <th>Commentaire Supplémentaire</th>
         <th>Date de Réception</th>
       </tr>
       </thead>
@@ -111,8 +112,8 @@
             <h3 mat-subheader>Total : {{fiche.conges}}</h3>
             <div class="dates">
               <mat-list-item *ngFor="let cp of getCP(fiche.commentaires)">
-                <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
-                <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+                <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+                <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
               </mat-list-item>
             </div>
           </mat-list>
@@ -122,8 +123,8 @@
             <h3 mat-subheader>Total : {{fiche.rtts + fiche.rtte }}</h3>
             <div class="dates">
             <mat-list-item *ngFor="let cp of getRTT(fiche.commentaires)">
-              <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
-              <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+              <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+              <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
             </mat-list-item>
             </div>
           </mat-list>
@@ -133,8 +134,8 @@
             <h3 mat-subheader>Total : {{fiche.maladie}}</h3>
             <div class="dates">
             <mat-list-item *ngFor="let cp of getMaladie(fiche.commentaires)">
-              <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
-              <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+              <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+              <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
             </mat-list-item>
             </div>
           </mat-list>
@@ -144,8 +145,8 @@
             <h3 mat-subheader>Total : {{fiche.absences}}</h3>
             <div class="dates">
             <mat-list-item *ngFor="let cp of getAbsences(fiche.commentaires)">
-            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
-            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
             </mat-list-item>
             </div>
           </mat-list>
@@ -155,8 +156,8 @@
             <h3 mat-subheader>Total : {{fiche.congesSansSolde}}</h3>
             <div class="dates">
             <mat-list-item *ngFor="let cp of getCSS(fiche.commentaires)">
-            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
-            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
             </mat-list-item>
             </div>
           </mat-list></td>
@@ -165,8 +166,8 @@
             <h3 mat-subheader>Total : {{fiche.formation}}</h3>
             <div class="dates">
             <mat-list-item *ngFor="let cp of getFormation(fiche.commentaires)">
-            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
-            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
             </mat-list-item>
             </div>
           </mat-list>
@@ -176,10 +177,21 @@
             <h3 mat-subheader>Total : {{fiche.intercontrat}}</h3>
             <div class="dates">
             <mat-list-item *ngFor="let cp of getIntercontrat(fiche.commentaires)">
-            <p *ngIf="!isArray(cp)" mat-line>{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
-            <p *ngIf="isArray(cp)" mat-line>Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+            <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+            <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
             </mat-list-item>
               </div >
+          </mat-list>
+        </td>
+        <td>
+          <mat-list dense>
+            <h3 mat-subheader>Total : {{fiche.activitePartielle}}</h3>
+            <div class="dates">
+              <mat-list-item *ngFor="let cp of getActivitePartielle(fiche.commentaires)">
+                <p *ngIf="!isArray(cp)" class="lines">{{cp.date}} {{cp.type != " "?" : "+cp.type:''}}</p>
+                <p *ngIf="isArray(cp)" class="lines">Du {{cp[0].date}} au {{cp[cp.length-1].date}}</p>
+              </mat-list-item>
+            </div >
           </mat-list>
         </td>
         <td>{{fiche.joursOuvres}}</td>
@@ -187,12 +199,9 @@
           <mat-list dense>
               <ng-template ngFor let-item [ngForOf]="objectKeys(fiche.commentaires)">
                 <mat-list-item class="item" *ngIf="fiche?.commentaires[item]?.length">
-                  <p mat-line>{{item + ' : ' + fiche.commentaires[item]}}</p>
+                  <p class="lines">{{item + ' : ' + fiche.commentaires[item]}}</p>
                 </mat-list-item>
               </ng-template>
-<!--            <mat-list-item *ngFor="let com of objectKeys(fiche.commentaires)">-->
-<!--              <p *ngIf="fiche.commentaires[com] != null && fiche.commentaires[com] != ''" mat-line>{{com}} : {{fiche.commentaires[com]}}</p>-->
-<!--            </mat-list-item>-->
           </mat-list>
         </td>
         <td>{{fiche.valideRH? 'oui': 'non'}}</td>
@@ -201,6 +210,38 @@
       </tr>
       </tbody>
     </table>
+
+<!--      <div class="example-container mat-elevation-z8">-->
+<!--        <table mat-table [dataSource]="dataSource">-->
+
+<!--          &lt;!&ndash; Position Column &ndash;&gt;-->
+<!--          <ng-container matColumnDef="position">-->
+<!--            <th mat-header-cell *matHeaderCellDef> No. </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.position}} </td>-->
+<!--          </ng-container>-->
+
+<!--          &lt;!&ndash; Name Column &ndash;&gt;-->
+<!--          <ng-container matColumnDef="name">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Name </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.name}} </td>-->
+<!--          </ng-container>-->
+
+<!--          &lt;!&ndash; Weight Column &ndash;&gt;-->
+<!--          <ng-container matColumnDef="weight">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Weight </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.weight}} </td>-->
+<!--          </ng-container>-->
+
+<!--          &lt;!&ndash; Symbol Column &ndash;&gt;-->
+<!--          <ng-container matColumnDef="symbol">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Symbol </th>-->
+<!--            <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>-->
+<!--          </ng-container>-->
+
+<!--          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>-->
+<!--          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+<!--        </table>-->
+<!--      </div>-->
       <mat-card *ngIf="!allFiches || loading"
                 style="display: flex; justify-content: center; align-items: center">
         <mat-progress-spinner

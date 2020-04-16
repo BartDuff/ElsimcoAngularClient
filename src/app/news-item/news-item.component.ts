@@ -2,15 +2,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NewsModel} from '../models/news.model';
 import {Subscription} from 'rxjs';
 import {UserModel} from '../models/user.model';
-import {MissionService} from '../services/mission.service';
 import {UserService} from '../services/user.service';
 import {AuthenticationService} from '../services/authentication.service';
-import {Router} from '@angular/router';
 import {NewsService} from '../services/news.service';
-import {environment} from '../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
-import {MissionModel} from '../models/mission.model';
-import {NgxGalleryAnimation, NgxGalleryArrowsComponent, NgxGalleryImage, NgxGalleryImageSize, NgxGalleryOptions} from 'ngx-gallery';
+import {NgxGalleryAnimation, NgxGalleryImageSize, NgxGalleryOptions} from 'ngx-gallery';
 import {ImageService} from '../services/image.service';
 
 
@@ -180,5 +176,28 @@ export class NewsItemComponent implements OnInit {
     }
     return pList;
   }
+
+  createTextLinks_(text) {
+    let pattern = /(\d{10})|(\+33\d{9})|(\+33\s\d{1}\s\d{2}\s\d{2}\s\d{2}\s\d{2})|(\d{2}\s\d{2}\s\d{2}\s\d{2}\s\d{2})|(0\s\d{3}\s\d{3}\s\d{3}\s)|(0\s\d{3}\s\d{2}\s\d{2}\s\d{2}\s)|(0\d{3}\s\d{3}\s\d{3}\s)|(0\d{3}\s\d{2}\s\d{2}\s\d{2}\s)/gi;
+    return (text || "")
+      .replace(
+      /([^\S]|^)(((https?\:\/\/)|(www\.))(\S+))/gi,
+      function(match, space, url){
+        let hyperlink = url;
+        if (!hyperlink.match('^https?:\/\/')) {
+          hyperlink = 'http://' + hyperlink;
+        }
+        return space + '<a class="links" href="' + hyperlink + '" target="_blank">' + url + '</a>';
+      }
+    )
+      .replace(
+      pattern,
+      function(match2){
+        return '<a class="showOnMobile links" href="tel:' + match2 + '">' + match2 + '</a>'+'<span class="hideOnMobile">'+match2+'</span>';
+      }
+    );
+  };
+
+  // regexp: /\d{10}|\+33\d{9}|\+33\s\d{1}\s\d{2}\s\d{2}\s\d{2}\s\d{2}|\d{2}\s\d{2}\s\d{2}\s\d{2}\s\d{2}|0\s\d{3}\s\d{3}\s\d{3}\s|0\s\d{3}\s\d{2}\s\d{2}\s\d{2}\s|0\d{3}\s\d{3}\s\d{3}\s|0\d{3}\s\d{2}\s\d{2}\s\d{2}\s/g
 
 }

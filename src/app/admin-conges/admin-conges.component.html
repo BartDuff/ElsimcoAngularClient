@@ -57,7 +57,8 @@
             style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day,0)}" class="caldivs">
         <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))">
           <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" class="dayc">{{day | date:'d'}}</span>
-          <span  style="position: absolute;top:1vh;right:2vw;font-size: 1.2em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+          <span  style="position: absolute;top:1vh;right:2vw;" [ngStyle]="{'font-size':getAbsHalfDay(toMomentFormat(day)) == '1/2'?'0.8em':'1.2em'}" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} {{getAbsHalfType(toMomentFormat(day))=='Matin'?'M':getAbsHalfType(toMomentFormat(day))=='Après-midi'?'A.M':''}} <br>{{getAbsOtherHalf(toMomentFormat(day))}}
+            <!--{{toMomentFormat(day)}}--></span>
         </div>
       </div>
     </div>
@@ -171,6 +172,16 @@
                 <label>Document justificatif</label>
                 <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="dayOff.rawFile" [name]="dayOff.date + 'fichier'" (ngModelChange)="handleFile(dayOff)" [ngModelOptions]="{standalone: true}" style="align-self: center;padding-bottom: 1em;"></input-file>
               </div>
+              <mat-form-field *ngIf="dayOff.demiJournee" style="padding-bottom: 1em;">
+                <span class="prefix" matPrefix>{{dayOff.date}}</span>
+                <mat-select #raison2 [(ngModel)]="dayOff.typeConge2" [name]="dayOff.typeConge2" required placeholder="Type d'absence 2" (selectionChange)="dayOff.typeConge2 = $event.value">
+                  <mat-option *ngFor="let absence of absTypes2" [value]="absence">
+                    <!--                          <span matPrefix *ngIf="absence ==='Congés payés'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countConges()>0?'darkblue':'red'}">{{!allowAnticipation?countConges():countCongesAnticipes()}}{{countAnciennete()>0?" + ("+ countAnciennete()+ ")":''}}</span>-->
+                    <!--                          <span matPrefix *ngIf="absence ==='RTT'" style="font-weight: bolder;border: solid" [ngStyle]="{'color':countRTT()>0?'darkblue':'red'}">{{countRTT()}}</span> -->
+                    {{absence == 'RTT'?absence + ' (h)': absence}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
         </div>

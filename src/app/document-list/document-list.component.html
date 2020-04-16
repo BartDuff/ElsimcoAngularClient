@@ -14,6 +14,11 @@
 <!--  </div>-->
 </div>
 <div class="table-container">
+  <mat-paginator #top style="background-color: transparent;" [length]="length"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 (page)="OnPageChange($event, bottom);">
+  </mat-paginator>
 <table class="bordered mat-elevation-z8 tabledoc" style="margin: auto;" *ngIf="documents">
   <thead>
   <tr>
@@ -26,7 +31,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr app-document-item *ngFor="let document of documents"
+  <tr app-document-item *ngFor="let document of pagedDocuments"
       [document]="document"
       (documentSelected)="selectDocument($event)"
       (documentDeleted)="deleteDocument($event)"
@@ -36,6 +41,11 @@
   </tr>
   </tbody>
 </table>
+  <mat-paginator #bottom style="background-color: transparent" [length]="length"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 (page)="OnPageChange($event, top);">
+  </mat-paginator>
 </div>
 <div *ngIf="!documents || sending"
           style="display: flex; justify-content: center; align-items: center">

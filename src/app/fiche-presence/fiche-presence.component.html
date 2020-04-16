@@ -31,7 +31,7 @@
          style="border:2px solid;height: 5vh;width: 5vw;display: inline-block;position: relative;" [ngStyle]="{'background-color':getDayColor(day)}" class="caldivs">
       <div [matTooltip]="getAbsTypeLong(toMomentFormat(day))" class="insidegrid">
         <span style="position: absolute;top:0.5em;right: 0.5em;font-size: 1em" class="dayc">{{day | date:'d'}}</span>
-        <span style="position: absolute;top:1vh;right: 2vw;font-size: 1.2em" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
+        <span style="position: absolute;top:1vh;right: 2vw;" [ngStyle]="{'font-size':getAbsHalfDay(toMomentFormat(day)) == '1/2'?'0.8em':'1.2em'}" class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} {{getAbsHalfType(toMomentFormat(day))=='Matin'?'M':getAbsHalfType(toMomentFormat(day))=='Après-midi'?'A.M':''}} <br>{{getAbsOtherHalf(toMomentFormat(day))}} <!--{{toMomentFormat(day)}}--></span>
 <!--        <span class="dayc">{{day | date:'d'}}</span>-->
 <!--        <span class="typec">{{getAbsHalfDay(toMomentFormat(day))}} {{getAbsTypeShort(toMomentFormat(day))}} &lt;!&ndash;{{toMomentFormat(day)}}&ndash;&gt;</span>-->
       </div>
@@ -52,6 +52,7 @@
     <p *ngIf="countAbsences(f)>0"><span matPrefix>Absences exceptionnelles : </span><span *ngIf="f.value">{{ countAbsences(f) }}</span></p>
     <p *ngIf="countFormation(f)>0"><span matPrefix>Formation : </span><span *ngIf="f.value">{{ countFormation(f) }}</span></p>
     <p *ngIf="countInterContrat(f)>0"><span matPrefix>Intercontrat : </span><span *ngIf="f.value">{{ countInterContrat(f) }}</span></p>
+    <p *ngIf="countActivitePartielle(f)>0"><span matPrefix>Activité Partielle : </span><span *ngIf="f.value">{{ countActivitePartielle(f) }}</span></p>
     <p *ngIf="countSansSolde(f)>0"><span matPrefix>Congés Sans Solde : </span><span *ngIf="f.value">{{ countSansSolde(f) }}</span></p>
     <p *ngIf="countMaladie(f)>0"><span matPrefix>Arrêt Maladie : </span><span *ngIf="f.value">{{ countMaladie(f) }}</span></p>
   </div>
@@ -70,17 +71,29 @@
     <form (ngSubmit)="sendFiche(f)" #f="ngForm" id="detailform">
         <div style="display: flex;flex-direction: column;align-items: baseline;width:fit-content;margin: auto;">
           <mat-checkbox [checked]="enMission" (change)="enMission = $event.checked.valueOf();fiche.numeroAffaire1 = '';fiche.numeroAffaire2 = '';addedMission = false;">En Mission</mat-checkbox>
-          <mat-checkbox [checked]="enIntercontrat" (change)="enIntercontrat = $event.checked.valueOf()">En Intercontrat</mat-checkbox>
+          <mat-checkbox [checked]="enIntercontrat" (change)="enIntercontrat = $event.checked.valueOf()">En Intercontrat et/ou Activité Partielle</mat-checkbox>
+<!--          <mat-checkbox [checked]="enActivitePartielle" (change)="enActivitePartielle = $event.checked.valueOf()">En Activité Partielle</mat-checkbox>-->
         </div>
-      <div *ngIf="enIntercontrat" style="display: flex;flex-direction: row;align-items: baseline;justify-items:center;width:fit-content;margin: auto;">Déclarez sur le calendrier vos jours d'Intercontrat</div>
+      <div *ngIf="enIntercontrat" style="display: flex;flex-direction: row;align-items: baseline;justify-items:center;width:fit-content;margin: auto;">Déclarez sur le calendrier vos jours d'Intercontrat et/ou d'Activité Partielle</div>
+<!--      <div *ngIf="enActivitePartielle" style="display: flex;flex-direction: row;align-items: baseline;justify-items:center;width:fit-content;margin: auto;">Déclarez sur le calendrier vos jours d'Activité Partielle</div>-->
       <div *ngIf="justifManquant" style="color: red;font-weight: bold;margin-bottom: 2em;">Vous avez déclaré une absence exceptionnelle sans fournir de justificatif.<br>
         Merci de nous fournir un justificatif dans les meilleurs délais.</div>
         <mat-form-field *ngIf="enMission" style="width: auto;padding-bottom: 2em;" id="mainMission">
-          <input matInput placeholder="Numéro d'Affaire" [(ngModel)]="fiche.numeroAffaire1" [required]="enMission" [ngModelOptions]="{standalone: true}">
+          <input matInput placeholder="Numéro d'Affaire" [(ngModel)]="fiche.numeroAffaire1" [required]="enMission" [ngModelOptions]="{standalone: true}" [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of options" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       <a *ngIf="enMission" mat-button style="color: white!important;background-color: black!important;margin-bottom: 1em;" (click)="showHiddenMission();">{{addedMission?"Retirer la 2ème mission":"Ajouter une 2ème mission"}}</a>
       <mat-form-field *ngIf="enMission" id="hiddenMission" style="width: auto;padding-bottom: 2em;display: none;">
-        <input matInput placeholder="Numéro d'Affaire 2" [(ngModel)]="fiche.numeroAffaire2" [ngModelOptions]="{standalone: true}">
+        <input matInput placeholder="Numéro d'Affaire 2" [(ngModel)]="fiche.numeroAffaire2" [ngModelOptions]="{standalone: true}" [matAutocomplete]="auto2">
+        <mat-autocomplete #auto2="matAutocomplete">
+          <mat-option *ngFor="let option of options" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
       <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
       <div *ngFor="let dayOff of daysOff; index as i" class="formcontainer">
@@ -88,7 +101,12 @@
           <div *ngFor="let d of dayOff;index as j" [hidden]="j!=0" class="champs">
             <span style="padding-top: 1em">Du {{dayOff[0].date}} au {{dayOff[dayOff.length-1].date}}</span>
             <mat-form-field>
-              <input matInput #raison [(ngModel)]="d.typeConge" [name]="d.date" required readonly>
+<!--              <input matInput #raison [(ngModel)]="d.typeConge" [name]="d.date" required readonly>-->
+              <mat-select #raison [(ngModel)]="d.typeConge" [name]="d.date" required placeholder="situation" (selectionChange)="autoFillTypeInPlage(d, dayOff)">
+                <mat-option *ngFor="let absence of absences | slice: 6" [value]="absence">
+                  {{absence}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
             <mat-form-field class="commentaires">
               <input matInput placeholder="Commentaire facultatif" [(ngModel)]="d.commentaires" [name]="d.date + ' comm'">
@@ -98,22 +116,29 @@
         <div *ngIf="!isArray(dayOff)" class="champs">
           <mat-form-field>
             <span class="prefix" matPrefix>{{dayOff.date}}</span>
-<!--            <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="type d'absence">-->
-<!--              <mat-option *ngFor="let absence of absences | slice: 6" [value]="absence">-->
-<!--                {{absence}}-->
-<!--              </mat-option>-->
-<!--            </mat-select>-->
-            <input matInput #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required readonly>
+            <mat-select #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required placeholder="situation">
+              <mat-option *ngFor="let absence of absences | slice: 6" [value]="absence">
+                {{absence}}
+              </mat-option>
+            </mat-select>
+<!--            <input matInput #raison [(ngModel)]="dayOff.typeConge" [name]="dayOff.date" required readonly>-->
           </mat-form-field>
           <mat-checkbox [checked]="dayOff.demiJournee" (change)="dayOff.demiJournee = $event.checked.valueOf()" [name]="dayOff + ' boolean'">Demi-journée ?</mat-checkbox>
         <br>
+          <mat-form-field *ngIf="dayOff.demiJournee">
+            <span class="prefix" matPrefix>Type de demi-journée : </span>
+            <mat-select [(ngModel)]="dayOff.typeDemiJournee" [ngModelOptions]="{standalone: true}" placeholder="Type de demi-journée" [required]="dayOff.demiJournee">
+              <mat-option value="Matin">Matin</mat-option>
+              <mat-option value="Après-midi">Après-midi</mat-option>
+            </mat-select>
+          </mat-form-field>
         <mat-form-field class="commentaires">
           <input matInput placeholder="Commentaires {{(raison.value&&raison.value !== 'Absence exceptionnelle'?'facultatif':'')}}" [(ngModel)]="dayOff.commentaires" [name]="dayOff.date + ' comm'" [required]="raison.value === 'Absence exceptionnelle'">
         </mat-form-field>
         </div>
       </div>
       </div>
-      <button mat-raised-button type="submit" [disabled]="f.invalid || sending || (fiche.numeroAffaire1 == '' && enMission) || (enMission == false && enIntercontrat == false) || (daysOff.length == 0 && enIntercontrat)" id="envoyerbut">Envoyer</button>
+      <button mat-raised-button type="submit" [disabled]="f.invalid || sending || (fiche.numeroAffaire1 == '' && enMission) || (enMission == false && enIntercontrat == false && enActivitePartielle == false)" id="envoyerbut">Envoyer</button>
     </form>
     <div style="display: flex; justify-content: center; align-items: center">
       <mat-progress-spinner

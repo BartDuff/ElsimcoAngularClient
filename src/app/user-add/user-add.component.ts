@@ -83,6 +83,7 @@ export class UserAddComponent implements OnInit {
     this.user.role = this.addForm.get('role').value;
     this.user.fonction = this.addForm.get('fonction').value;
     this.user.statut = this.addForm.get('statut').value;
+    this.user.actif = true;
     this.userService.addUser(this.user)
       .subscribe( data => {
         this.router.navigate(['users']);

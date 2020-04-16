@@ -12,6 +12,8 @@ import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirm
 import {EmailService} from '../services/email.service';
 import {CandidatModel} from '../models/candidat.model';
 import {DocumentModel} from '../models/document.model';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-validation-conges',
@@ -34,6 +36,7 @@ export class ValidationCongesComponent implements OnInit {
   dateNowFile;
   users: UserModel[] = [];
   selectedUser;
+  public ngUnsubscribe: Subject<void> = new Subject<void>();
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   joursDeLaSemaine = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
   usersId = [];
@@ -223,7 +226,8 @@ export class ValidationCongesComponent implements OnInit {
 
   getCongesWithFile() {
     this.congesWithFile = [];
-    this.congeService.getConges().subscribe(
+    this.congeService.getConges()
+      .subscribe(
         (data) => {
           for (let c of data) {
             if (c.documentJointUri != null && c.documentJointUri !='' && new Date(c.date).getFullYear() == this.dateNowFile.getFullYear()) {
@@ -240,8 +244,11 @@ export class ValidationCongesComponent implements OnInit {
     this.allNonValidatedConges = [];
     this.monthArr = [];
     this.monthLoading = true;
+    this.ngUnsubscribe.next();
     if (this.selectedUser == null) {
-      this.congeService.getConges().subscribe(
+      this.congeService.getConges()
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(
         (data) => {
           for (let c of data) {
             if (!c.valideRH){
@@ -250,7 +257,7 @@ export class ValidationCongesComponent implements OnInit {
             if(!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()]+ ' '+ new Date(c.date).getFullYear()) == -1){
               this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' '+ new Date(c.date).getFullYear());
             }
-            if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && this.congesNonValides.indexOf(c) == -1) {
+            if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && new Date(c.date).getFullYear() === this.dateNow.getFullYear() && this.congesNonValides.indexOf(c) == -1) {
               this.congesNonValides.push(c);
             }
           }
@@ -265,10 +272,12 @@ export class ValidationCongesComponent implements OnInit {
         }
       );
     } else {
-      this.userService.getCongeForUser(this.selectedUser).subscribe(
+      this.userService.getCongeForUser(this.selectedUser)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(
         (d) => {
           for (let c of d) {
-            if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && this.congesNonValides.indexOf(c) == -1) {
+            if (!c.valideRH && (new Date(c.date).getMonth() == this.dateNow.getMonth()) && new Date(c.date).getFullYear() === this.dateNow.getFullYear() && this.congesNonValides.indexOf(c) == -1) {
               this.congesNonValides.push(c);
             }
           }
@@ -282,7 +291,8 @@ export class ValidationCongesComponent implements OnInit {
   getValidatedConges() {
     this.congesValides = [];
     if (this.selectedUser == null) {
-      this.congeService.getConges().subscribe(
+      this.congeService.getConges()
+        .subscribe(
         (data) => {
           for (let c of data) {
             if (c.valideRH && new Date(c.date).getMonth() === this.dateNow.getMonth()) {
@@ -293,7 +303,8 @@ export class ValidationCongesComponent implements OnInit {
         }
       );
     } else {
-      this.userService.getCongeForUser(this.selectedUser).subscribe(
+      this.userService.getCongeForUser(this.selectedUser)
+        .subscribe(
         (d) => {
           for (let c of d) {
             if (c.valideRH && new Date(c.date).getMonth() == this.dateNow.getMonth()) {
@@ -549,7 +560,8 @@ export class ValidationCongesComponent implements OnInit {
   }
 
   getUsers() {
-    this.userService.getUsers().subscribe(
+    this.userService.getUsers()
+      .subscribe(
       (data) => this.users = data
     );
   }

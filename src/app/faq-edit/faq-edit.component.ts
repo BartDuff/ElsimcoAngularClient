@@ -6,6 +6,7 @@ import {FaqService} from '../services/faq.service';
 import {UserModel} from '../models/user.model';
 import {NewsModel} from '../models/news.model';
 import {FaqModel} from '../models/faq.model';
+import {ConfigurationService} from '../services/configuration.service';
 
 @Component({
   selector: 'app-faq-edit',
@@ -17,12 +18,16 @@ export class FaqEditComponent implements OnInit {
   currentUser: UserModel;
   faqitem: FaqModel;
   loading = false;
-  mailAdresses = ["majoline.domingos@elsimco.com","ghislain.chatras@elsimco.com","franck.simon@elsimco.com"];
+  // mailAdresses = ["majoline.domingos@elsimco.com","ghislain.chatras@elsimco.com","franck.simon@elsimco.com"];
+  mailAdresses;
+  categories = ["COMMERCIAL","RH","FINANCES"];
+
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private faqService: FaqService,) { }
+              private faqService: FaqService,
+              private configurationService: ConfigurationService) { }
 
   ngOnInit() {
     this.loading = true;
@@ -31,8 +36,14 @@ export class FaqEditComponent implements OnInit {
       id: [],
       question: ['', Validators.required],
       reponse: ['', Validators.required],
-      mailContact: ['', Validators.required]
+      mailContact: ['', Validators.required],
+      category: ['', Validators.required]
     });
+    this.configurationService.getSingleConfiguration('1').subscribe(
+      (config)=>{
+        this.mailAdresses = config.contactsFaq;
+      }
+    );
     this.route.params.subscribe(
       params => this.faqService.getSingleFaq(params['id']).subscribe(
         data => {
@@ -41,6 +52,7 @@ export class FaqEditComponent implements OnInit {
           this.editForm.controls.question.setValue(data.question);
           this.editForm.controls.reponse.setValue(data.reponse);
           this.editForm.controls.mailContact.setValue(data.mailContact);
+          this.editForm.controls.category.setValue(data.category);
           this.loading = false;
         }
       )

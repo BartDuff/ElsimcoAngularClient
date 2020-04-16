@@ -1,0 +1,42 @@
+<h2>Annuaire</h2>
+<div class="annuaire-card" *ngIf="!spinner">
+  <mat-card *ngFor="let user of users;" class="single-annuaire-card">
+    <mat-card-header>
+      <mat-card-title>
+        {{ user?.prenom }} {{ user?.nom }}
+      </mat-card-title>
+      <div mat-card-avatar>
+        <img class="img-avatar" [src]=user.img alt="">
+      </div>
+    </mat-card-header>
+    <mat-card-content fxLayout="column" fxLayoutAlign="space-between start">
+      <p class="identity">
+        <mat-icon class="labels">business_center</mat-icon><b class="labels">Métier :</b>
+        {{ user?.metier }}</p>
+      <p class="identity hideOnMobile">
+        <mat-icon class="labels">contact_phone</mat-icon><b class="labels">Téléphone Pro :&ensp;  </b>
+        {{ formatTel(user?.telPro) }}</p>
+      <p class="identity showOnMobile">
+        <mat-icon class="labels">contact_phone</mat-icon><b class="labels">Téléphone Pro :   </b>
+        <a href="tel:{{ formatTelForCall(user?.telPro)}}" style="color: black!important;text-decoration: underline;">{{ formatTel(user?.telPro) }}</a></p>
+      <p class="identity">
+        <mat-icon class="labels">email</mat-icon><b class="labels">Email Pro :&ensp;  </b>
+        <a href="mailto:{{ user?.email }}" style="color: black!important;text-decoration: underline;">{{ user?.email }}</a></p>
+      <p class="identity hideOnMobile">
+        <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso :   </b>
+        {{ formatTel(user?.telephone) }}</p>
+      <p class="identity showOnMobile">
+        <mat-icon class="labels">phone</mat-icon><b class="labels">Téléphone Perso :   </b>
+        <a href="tel:{{ formatTelForCall(user?.telephone)}}" style="color: black!important;text-decoration: underline;">{{ formatTel(user?.telephone) }}</a></p>
+    </mat-card-content>
+  </mat-card>
+</div>
+<mat-card *ngIf="spinner"
+          style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</mat-card>
+
+

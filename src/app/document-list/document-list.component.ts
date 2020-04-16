@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs';
 import {DocumentModel} from '../models/document.model';
 import {DocumentService} from '../services/document.service';
@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
 import {environment} from '../../environments/environment';
 import { InputFileComponent } from 'ngx-input-file';
 import {UserModel} from '../models/user.model';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatPaginator, PageEvent} from '@angular/material';
 import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 import {MatDialogConfig} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
@@ -20,9 +20,10 @@ const API_URL = environment.apiUrl;
   styleUrls: ['./document-list.component.css']
 })
 
-export class DocumentListComponent implements OnInit {
+export class DocumentListComponent implements OnInit, AfterViewInit {
   currentUser: UserModel;
   documents: DocumentModel[];
+  pagedDocuments: DocumentModel[];
   selectedDocument: DocumentModel;
   selectedFiles;
   filename;
@@ -30,6 +31,10 @@ export class DocumentListComponent implements OnInit {
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
 
+  length: number = 0;
+  pageSize: number = 10;
+  @ViewChild('top') paginatorTop: MatPaginator;
+  @ViewChild('bottom') paginatorBottom: MatPaginator;
 
   constructor(private documentService: DocumentService,
               private dialog: MatDialog,
@@ -43,8 +48,46 @@ export class DocumentListComponent implements OnInit {
     // this.uploader = new FileUploader({url: API_URL + '/documents/upload', autoUpload: true, headers: headers});
     // this.uploader.onCompleteAll = () => alert('File uploaded');
   }
+
+  ngAfterViewInit(){
+    this.paginatorTop._intl.itemsPerPageLabel = 'Documents par page : ';
+    this.paginatorTop._intl.nextPageLabel = 'Page suivante';
+    this.paginatorTop._intl.previousPageLabel = 'Page précédente';
+    this.paginatorTop._intl.firstPageLabel = 'Première page';
+    this.paginatorTop._intl.lastPageLabel = 'Dernière page';
+    this.paginatorTop._intl.getRangeLabel = this.getRangeLabel;
+    this.paginatorBottom = this.paginatorTop;
+  }
+
+  getRangeLabel = (page: number, pageSize: number, length: number) =>  {
+    if (length === 0 || pageSize === 0) {
+      return `0 / ${length}`;
+    }
+    length = Math.max(length, 0);
+    const startIndex = page * pageSize;
+    const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+    return `${startIndex + 1} - ${endIndex} sur ${length}`;
+  };
+
   getDocuments() {
-    this.documentService.getDocuments().subscribe(r=>this.documents=r);
+    this.documentService.getDocuments().subscribe(r=> {
+      this.documents=r;
+        this.length = this.documents.length;
+      },
+      ()=>{},
+      ()=>{
+        this.pagedDocuments = this.documents.slice(0,this.pageSize);
+      });
+  }
+
+  OnPageChange(event: PageEvent, paginator){
+    let startIndex = event.pageIndex * event.pageSize;
+    let endIndex = startIndex + event.pageSize;
+    if(endIndex > this.length){
+      endIndex = this.length;
+    }
+    this.pagedDocuments = this.documents.slice(startIndex, endIndex);
+    paginator.pageIndex = event.pageIndex;
   }
 
   deleteDocument(documentToDelete) {

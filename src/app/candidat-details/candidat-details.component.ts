@@ -181,6 +181,7 @@ export class CandidatDetailsComponent implements OnInit {
       enPoste: [''],
       contrat: [''],
       raisonDispo: [''],
+      etatRecherches:[''],
       posteSouhaite: [''],
       delai: [''],
       dateDispo: ['']
@@ -211,6 +212,7 @@ export class CandidatDetailsComponent implements OnInit {
       varDernierSalaireBrut: [''],
       fourchetteSalariale: [''],
       mobiliteGeographique: [''],
+      lieuxMobiliteGeographique:[''],
       region1: [''],
       region2: ['']
     });
@@ -224,6 +226,14 @@ export class CandidatDetailsComponent implements OnInit {
           this.candidat.dateCreation = new Date(data.dateCreation);
           this.candidat.dateNaissance = new Date(data.dateNaissance);
           this.candidat.alerteMAJ = new Date(data.alerteMAJ);
+          this.formulaire8.controls.lieuxMobiliteGeographique.setValue(
+            [
+              this.candidat.mobiliteParis? "Paris - île-de-France":"",
+          this.candidat.mobiliteFrance? "France entière":"",
+          this.candidat.mobiliteEurope? "Europe":"",
+          this.candidat.mobiliteIntl? "International":""
+            ]
+          )
         }
       )
     );
@@ -231,6 +241,18 @@ export class CandidatDetailsComponent implements OnInit {
 
   onSubmit() {
 
+  }
+
+  c(event){
+    console.log(event);
+  }
+
+  updateSelected(event){
+    this.candidat.mobiliteParis = event.value.indexOf("Paris - île-de-France") != -1;
+    this.candidat.mobiliteFrance = event.value.indexOf("France entière") != -1;
+    this.candidat.mobiliteEurope = event.value.indexOf("Europe") != -1;
+    this.candidat.mobiliteIntl = event.value.indexOf("International") != -1;
+    this.updateModel(this.candidat);
   }
 
   updateModel(candidat: CandidatModel) {

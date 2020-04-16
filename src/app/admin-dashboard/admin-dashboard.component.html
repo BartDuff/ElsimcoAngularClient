@@ -1,0 +1,99 @@
+<!--<div class="col s12 m12 l6">-->
+<!--  <div class="card-panel">-->
+<!--    <h4 class="text-center">Ajouter un utilisateur</h4>-->
+<!--    <div class="row">-->
+<!--      <form [formGroup]="addForm" (ngSubmit)="onSubmit()" class="col s12">-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="email" class="active">Email:</label>-->
+<!--            <input type="email" formControlName="email" placeholder="Email" name="email" class="validate" id="email">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="prenom" class="active">Prénom:</label>-->
+<!--            <input formControlName="prenom" placeholder="Prénom" name="prenom" class="validate" id="prenom">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="nom" class="active">Nom:</label>-->
+<!--            <input formControlName="nom" placeholder="Nom" name="lastName" class="validate" id="nom">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="input-field col s12">-->
+<!--            <label for="role" class="active">Role:</label>-->
+<!--            <select formControlName="role" name="role" class="browser-default" id="role">-->
+<!--              <option value="ADMIN">ADMIN</option>-->
+<!--              <option value="USER" selected>UTILISATEUR</option>-->
+<!--            </select>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <button class="btn btn-success">Ajouter</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<mat-card *ngIf="configuration">
+  <mat-card-title>Paramètres d'Administration</mat-card-title>
+  <form [formGroup]="configurationForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field>
+          <input matInput formControlName="incrementRTT" placeholder="Incrémentation mensuelle des RTT" name="incrementRTT" id="incrementRTT">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="incrementCP" placeholder="Incrémentation mensuelle des CP" name="incrementCP" id="incrementCP">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="mailRH" placeholder="Adresse email RH" name="mailRH" id="mailRH">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="mailCommercial" placeholder="Adresse email service commercial" name="mailCommercial" id="mailCommercial">
+        </mat-form-field>
+
+        <h6 style="margin-top: 1em;">Contacts de la FAQ</h6>
+        <mat-list style="display: inline-flex;">
+          <mat-list-item *ngFor="let contact of configuration.contactsFaq"><span style="color: black!important;">{{contact}}</span></mat-list-item>
+        </mat-list>
+        <div style="display: flex;flex-direction: row;align-items: center;justify-content: space-evenly;width: 30%">
+          <mat-form-field style="width: 30%">
+            <input matInput formControlName="contactsFaq" placeholder="Ajouter un contact à la FAQ" name="contactsFaq" id="contactsFaq" #cont>
+          </mat-form-field>
+          <button mat-button style="background-color: black;color: white;margin-top: 1em;" (click)="addContactToList(cont.value)" matTooltip="Ajouter">+</button>
+        </div>
+
+<!--        <h6 style="margin-top: 1em;">Catégories de la FAQ</h6>-->
+<!--        <mat-list style="display: inline-flex;">-->
+<!--          <mat-list-item *ngFor="let category of configuration.categoriesFaq"><span style="color: black!important;">{{category}}</span></mat-list-item>-->
+<!--        </mat-list>-->
+<!--        <div style="display: flex;flex-direction: row;align-items: center;justify-content: space-evenly;width: 30%">-->
+<!--          <mat-form-field style="width: 30%">-->
+<!--            <input matInput formControlName="categoriesFaq" placeholder="Ajouter une catégorie à la FAQ" name="categoriesFaq" id="categoriesFaq" #cat>-->
+<!--          </mat-form-field>-->
+<!--          <button mat-button style="background-color: black;color: white;margin-top: 1em;" (click)="addCategoryToList(cat.value)">+</button>-->
+<!--        </div>-->
+
+        <mat-card-actions fxFlexAlign="center">
+          <button mat-icon-button routerLink="/users">RETOUR
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button mat-button style="background-color: black;color: white">Mettre à jour</button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="!configuration"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
+

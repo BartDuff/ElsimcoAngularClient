@@ -22,7 +22,7 @@
 
               <div>
                 <label>
-                  <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance:"
+                  <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance :"
                          formControlName="dateNaissance" [(ngModel)]="candidat.dateNaissance"
                          (change)="updateModel(candidat)">
                 </label>
@@ -211,7 +211,7 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <mat-select placeholder="Etat des Recherches : " [(ngModel)]="candidat.etatRecherches"
+                  <mat-select formControlName="etatRecherches" placeholder="Etat des Recherches : " [(ngModel)]="candidat.etatRecherches"
                               (selectionChange)="updateModel(candidat)">
                     <mat-option value="En recherche active">En recherche active</mat-option>
                     <mat-option value="En veille">En veille</mat-option>
@@ -591,6 +591,18 @@
               </mat-form-field>
 
               <mat-form-field>
+                <mat-label>Lieux de Mobilité géographique:</mat-label>
+                <mat-select formControlName="lieuxMobiliteGeographique" id="lieuxMobiliteGeographique"
+                            (selectionChange)="updateSelected($event)" multiple>
+                  <mat-option value="Paris - île-de-France">Paris - île-de-France</mat-option>
+                  <mat-option value="France entière">France entière</mat-option>
+                  <mat-option value="France - Autres régions">France - Autres régions</mat-option>
+                  <mat-option value="Europe">Europe</mat-option>
+                  <mat-option value="International">International</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
                 <mat-label>Région 1 : </mat-label>
                 <mat-select formControlName="region1" [(ngModel)]="candidat.region1"
                             (selectionChange)="updateModel(candidat)">
@@ -620,15 +632,19 @@
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="labels">
           <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{columnsToDisplay[c]?columnsToDisplay[c]+" : ":""}} </span>
-<!--          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{c}} </span>-->
+          <span *ngIf="c =='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'"></span>
         </div>
       </div>
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="answers" style="display: flex;flex-direction: column;font-weight: bold;">
-          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}}</span>
-          <span *ngIf="c =='dateNaissance'">{{candidat[c] | date: 'dd/MM/yyyy'}}</span>
-          <span *ngIf="c =='diplome'">Année : {{candidat[c].annee}} | Intitulé : {{candidat[c].intitule}} | Obtenu : {{candidat[c].obtenu == true?"Obtenu":"Non obtenu"}}</span>
-          <span *ngIf="c =='references'">{{candidat[c].annee}} {{candidat[c].intitule}} {{candidat[c].obtenu == true?"Obtenu":"Non obtenu"}}</span>
+          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance' && c !=='dateCreation' && c !=='dateDispo' && c !=='dateMAJ' && c !=='alerteMAJ' && c !=='dateCandidature' && c !=='dateEnvoi' && c !=='dateDerniersEntretiens' && c !=='references'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}} {{c}}</span>
+          <span *ngIf="c =='dateNaissance' || c =='dateCreation' || c =='dateMAJ' || c =='alerteMAJ' || c =='dateCandidature' || c == 'dateDerniersEntretiens' || c == 'dateDispo' || c =='dateEnvoi'">{{!candidat[c]?'-':candidat[c] | date: 'dd/MM/yyyy'}}</span>
+          <span *ngIf="c =='diplome'">Année : {{candidat[c].annee}} | Intitulé : {{candidat[c].intitule}} | Obtenu : {{candidat[c].obtenu == true?"Oui":"Non"}}</span>
+            <span *ngIf="c =='references'" style="display: inline-flex">
+                {{candidat[c][0]?.nomEntreprise?candidat[c][0].nomEntreprise: '-'}} {{candidat[c][0]?.nomResponsable?candidat[c][0]?.nomResponsable: '-'}} {{candidat[c][0]?.fonction?candidat[c][0].fonction: '-'}} {{candidat[c][0]?.telephone?candidat[c][0].telephone: '-'}} {{candidat[c][0]?.adresseMail?candidat[c][0].adresseMail: '-'}}
+                {{candidat[c][1]?.nomEntreprise?candidat[c][1].nomEntreprise: '-'}} {{candidat[c][1]?.nomResponsable?candidat[c][1]?.nomResponsable: '-'}} {{candidat[c][1]?.fonction?candidat[c][1].fonction: '-'}} {{candidat[c][1]?.telephone?candidat[c][1].telephone: '-'}} {{candidat[c][1]?.adresseMail?candidat[c][1].adresseMail: '-'}}
+          </span>
+          <span *ngIf="c =='fileBase64' && c == 'ficheProcess' && c == 'ficheRecrutement'"></span>
         </div>
       </div>
     </div>

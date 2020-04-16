@@ -1,5 +1,6 @@
 import {MissionModel} from './mission.model';
 import {NewsModel} from './news.model';
+import {SafeResourceUrl} from '@angular/platform-browser';
 
 export class UserModel {
   id: any;
@@ -13,6 +14,7 @@ export class UserModel {
   telephone: String;
   telPro: String;
   emailPerso: String;
+  actif:boolean;
   cpNMoins1: number;
   cpN: number;
   rttn: number;
@@ -35,4 +37,5 @@ export class UserModel {
   statut:String;
   missions: MissionModel[];
   likes: NewsModel[];
+  img:SafeResourceUrl;
 }

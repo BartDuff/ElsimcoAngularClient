@@ -34,6 +34,8 @@ import {CongesValidesComponent} from '../conges-valides/conges-valides.component
 import {PlanningCongesComponent} from '../planning-conges/planning-conges.component';
 import {HomeComponent} from '../home/home.component';
 import {AdminCongesComponent} from '../admin-conges/admin-conges.component';
+import {AnnuaireComponent} from '../annuaire/annuaire.component';
+import {AdminDashboardComponent} from '../admin-dashboard/admin-dashboard.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -51,6 +53,7 @@ const routes: Routes = [
   { path: 'news', canActivate: [AuthGuardService], component: NewsListComponent },
   { path: 'add_news', canActivate: [AuthGuardService], component: NewsAddComponent },
   { path: 'edit_news/:id', canActivate: [AuthGuardService], component: NewsEditComponent },
+  { path: 'annuaire', canActivate: [AuthGuardService], component: AnnuaireComponent },
   { path: 'users', canActivate: [AuthGuardService], component: UserListComponent },
   { path: 'users/:id', canActivate: [AuthGuardService], component: UserDetailsComponent },
   { path: 'users/:id/fiches', canActivate: [AuthGuardService], component: FicheListComponent },
@@ -69,6 +72,7 @@ const routes: Routes = [
   { path: 'faq', canActivate: [AuthGuardService], component: FaqListComponent },
   { path: 'add_faq', canActivate: [AuthGuardService], component: FaqAddComponent },
   { path: 'edit_faq/:id', canActivate: [AuthGuardService], component: FaqEditComponent },
+  { path: 'admin-dashboard', canActivate: [AuthGuardService], component: AdminDashboardComponent },
   { path: '', redirectTo: 'news', pathMatch: 'full'},
   { path: 'error', redirectTo: 'home', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }

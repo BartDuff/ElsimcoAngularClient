@@ -34,9 +34,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   daysOff = [];
   justifManquant = false;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-  absTypes = ['RTT', 'Congés Payés', 'Absence Exceptionnelle', 'Congés Sans Solde', 'Arrêt Maladie', 'Formation', 'Intercontrat'];
-  absences = ['RTT', 'Congés Payés', 'Absence Exceptionnelle', 'Congés Sans Solde', 'Arrêt Maladie', 'Formation', 'Intercontrat'];
-  absShortTypes = ['RTT', 'CP', 'A.E.', 'C.S.S.', 'A.M.', 'F', 'I'];
+  absTypes = ['RTT', 'Congés Payés', 'Absence Exceptionnelle', 'Congés Sans Solde', 'Arrêt Maladie', 'Formation', 'Intercontrat','Activité Partielle'];
+  absences = ['RTT', 'Congés Payés', 'Absence Exceptionnelle', 'Congés Sans Solde', 'Arrêt Maladie', 'Formation', 'Intercontrat','Activité Partielle'];
+  absShortTypes = ['RTT', 'CP', 'A.E.', 'C.S.S.', 'A.M.', 'F', 'I','A.P'];
+  absTypes2 = ['En mission','Congés Sans Solde','Formation', 'Arrêt Maladie','Intercontrat','Activité Partielle'];
+  absShortTypes2 = ['E.M','C.S.S.','F','A.M.','I','A.P'];
   dateNow: Date;
   FicheEnvoyee: boolean;
   daysOffSavedObjArr = [];
@@ -49,6 +51,8 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   addedMission = false;
   enMission = false;
   enIntercontrat = false;
+  enActivitePartielle = false;
+  options = [];
   selected = 'Intercontrat';
 
   getWeekday(date: Date) {
@@ -121,6 +125,78 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       }
       if (x.date == date) {
         return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
+      }
+    }
+    return '';
+  }
+
+  getAbsHalfType(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return x.typeDemiJournee;
+        }
+      }
+    }
+    for (let x of this.daysOff) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == date) {
+            if (x.demiJournee) {
+              return x.typeDemiJournee;
+            }
+          }
+        }
+      }
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return x.typeDemiJournee;
+        }
+      }
+    }
+    return '';
+  }
+
+  getAbsOtherHalf(date){
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee && x.typeConge2 && x.typeConge2 !='En mission') {
+          let typeDem = '';
+          if(x.typeDemiJournee == 'Matin'){
+            typeDem = 'A.M';
+          } else {
+            typeDem = 'M'
+          }
+          return '1/2 ' + this.absShortTypes2[this.absTypes2.indexOf(x.typeConge2)] + ' ' + typeDem;
+        }
+      }
+    }
+    for (let x of this.daysOff) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == date) {
+            if (x.demiJournee && x.typeConge2 && x.typeConge2 !='En mission') {
+              let typeDem = '';
+              if(x.typeDemiJournee == 'Matin'){
+                typeDem = 'A.M';
+              } else {
+                typeDem = 'M'
+              }
+              return '1/2 ' + this.absShortTypes2[this.absTypes2.indexOf(x.typeConge2)] + ' ' + typeDem;
+            }
+          }
+        }
+      }
+      if (x.date == date) {
+        if (x.demiJournee && x.typeConge2 && x.typeConge2 !='En mission') {
+          let typeDem = '';
+          if(x.typeDemiJournee == 'Matin'){
+            typeDem = 'A.M';
+          } else {
+            typeDem = 'M'
+          }
+          return '1/2 ' + this.absShortTypes2[this.absTypes2.indexOf(x.typeConge2)] + ' ' + typeDem;
+        }
       }
     }
     return '';
@@ -247,6 +323,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
             this.daysOffSavedObjArr.push(({
               date: moment(d.date).format('DD/MM/YYYY').toString(),
               typeConge: d.typeConge,
+              typeConge2: d.typeConge2,
               demiJournee: d.demiJournee,
               typeDemiJournee: d.typeDemiJournee,
               valideRH: d.valideRH,
@@ -304,7 +381,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     this.getFichesForUser();
     this.selectedDate = moment(new Date());
     this.dateNow = new Date();
-    this.dateNow.setDate(this.dateNow.getDate()-3);
+    this.dateNow.setDate(this.dateNow.getDate()-14);
     this.getHolidays();
     this.fiche.numeroAffaire1 = '';
     this.fiche.numeroAffaire2 = '';
@@ -325,6 +402,14 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     this.userService.getFicheForUser(this.currentUser).subscribe(
       (data) => {
         let fichesUser: FicheModel[] = data;
+        for(let f of data){
+          if(this.options.indexOf(f.numeroAffaire1)==-1){
+            this.options.push(f.numeroAffaire1)
+          }
+          if(this.options.indexOf(f.numeroAffaire2)==-1){
+            this.options.push(f.numeroAffaire2)
+          }
+        }
         if (fichesUser.find((x) => x.annee === this.dateNow.getFullYear() && x.mois === this.nomsDesMois[this.dateNow.getMonth()])) {
           this.FicheEnvoyee = true;
         } else {
@@ -394,7 +479,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
 
   checkWeekends(day: Date) {
     let d = day.toLocaleString('fr-FR', {weekday: 'short'});
-    return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString()) || moment(day).isBefore(moment(this.currentUser.dateArrivee)) || moment(day).isAfter(moment(this.currentUser.dateDepart));
+    let dateDepart = new Date(this.currentUser.dateDepart);
+    if(dateDepart.getFullYear() > 1970){
+    return moment(day).isAfter(moment(this.currentUser.dateDepart));
+    }
+    return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString()) || moment(day).isBefore(moment(this.currentUser.dateArrivee));
   }
 
   // addRemoveDay(event) {
@@ -441,6 +530,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           this.dayoffPlage.push({
             date: f.format('DD/MM/YYYY'),
             typeConge: 'Intercontrat',
+            typeConge2: '',
             demiJournee: false,
             typeDemiJournee: '',
             commentaires: '',
@@ -488,6 +578,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
         this.daysOff.push({
           date: day,
           typeConge: 'Intercontrat',
+          typeConge2: '',
           demiJournee: false,
           typeDemiJournee: '',
           commentaires: '',
@@ -525,6 +616,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
                 dayArr.push({
                   date: lastday.format('DD/MM/YYYY'),
                   typeConge: 'Intercontrat',
+                  typeConge2: '',
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
@@ -555,6 +647,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
                 dayArr.push({
                   date: firstArrDay.format('DD/MM/YYYY'),
                   typeConge: 'Intercontrat',
+                  typeConge2: '',
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
@@ -594,6 +687,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       this.dayoffPlage.push({
         date: day,
         typeConge: 'Intercontrat',
+        typeConge2: '',
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
@@ -628,6 +722,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
       this.daysOff.push({
         date: day,
         typeConge: 'Intercontrat',
+        typeConge2: '',
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
@@ -720,6 +815,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
             fiche.formation = this.countFormation(form);
             fiche.intercontrat = this.countInterContrat(form);
             fiche.maladie = this.countMaladie(form);
+            fiche.activitePartielle = this.countActivitePartielle(form);
             // fiche.rtte = this.countRTTE(form);
             // fiche.rtts = this.countRTTS(form);
             fiche.rtts = this.countRTT();
@@ -744,19 +840,27 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
               } else {
                 if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
                   let dem = c.demiJournee ? '1/2 ' : '';
-                  fiche.commentaires[dem + c.typeConge + ' ' + c.date] = c.commentaires;
+                  let typeDem = c.typeDemiJournee? ' ' + c.typeDemiJournee: '';
+                  fiche.commentaires[dem + c.typeConge + typeDem + ' ' + c.date] = c.commentaires;
                 }
               }
             }
             for (let c of this.daysOffSavedObjArr) {
               if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
                 let dem = c.demiJournee ? '1/2 ' : '';
-                fiche.commentaires[dem + c.typeConge + ' ' + c.date] = c.commentaires;
+                let typeDem = c.typeDemiJournee? ' ' + c.typeDemiJournee : '';
+                let typeDemiJournee2 = !c.typeDemiJournee?'':c.typeDemiJournee == 'Matin'?' Après-midi':' Matin';
+                let typeDem2 = typeDemiJournee2? ' ' + typeDemiJournee2 : '';
+                fiche.commentaires[dem + c.typeConge + typeDem +' '+ c.date] = c.commentaires;
+                if(c.typeConge2){
+                  fiche.commentaires[dem + c.typeConge2+ typeDemiJournee2 +' '+ c.date] = c.commentaires;
+                }
               }
             }
             fiche.uri = `${fiche.user.prenom}_${fiche.user.nom}_${fiche.user.trigramme}_${fiche.mois}${fiche.annee}.pdf`;
             fiche.valideRH = false;
             fiche.commentaireSup = data.commentaire;
+            console.log(fiche);
             this.pdfService.sendFiche(fiche).subscribe(
               (data) => {
                 this.toastr.success('Fiche de présence bien envoyée', 'Envoyé');
@@ -954,6 +1058,13 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           count++;
         }
       }
+      if (c.typeConge2 == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
     }
     // for(let key in form.value){
     //   if(form.value.hasOwnProperty(key)) {
@@ -1016,6 +1127,13 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           count++;
         }
       }
+      if (c.typeConge2 == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
     }
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
@@ -1064,6 +1182,13 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           count++;
         }
       }
+      if (c.typeConge2 == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
     }
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
@@ -1105,6 +1230,22 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     //     }
     //   }
     // }
+    for (let c of this.daysOffSavedObjArr) {
+      if (c.typeConge == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
+      if (c.typeConge2 == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
+    }
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
@@ -1113,11 +1254,11 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
               count = count + 0.5;
             } else {
               count++;
-              let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => moment(this.toDate(x.date)).diff(moment(this.toDate(co.date)), 'days') == 1 && x.demiJournee)];
-              if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
-                count += 0.5;
-                alreadyCountedHalf.push(addHalf);
-              }
+              // let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => moment(this.toDate(x.date)).diff(moment(this.toDate(co.date)), 'days') == 1 && x.demiJournee)];
+              // if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
+              //   count += 0.5;
+              //   alreadyCountedHalf.push(addHalf);
+              // }
             }
           }
         }
@@ -1127,11 +1268,77 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
             count = count + 0.5;
           } else {
             count++;
-            let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => (moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == 1 || moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == -1) && x.demiJournee)];
-            if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
-              count += 0.5;
-              alreadyCountedHalf.push(addHalf);
+            // let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => (moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == 1 || moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == -1) && x.demiJournee)];
+            // if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
+            //   count += 0.5;
+            //   alreadyCountedHalf.push(addHalf);
+            // }
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  countActivitePartielle(form: NgForm){
+    let count = 0;
+    let alreadyCountedHalf = [];
+    // for(let key in form.value){
+    //   if(form.value.hasOwnProperty(key)) {
+    //     let value = form.value[key];
+    //     let nextValue = form.value[key + " boolean"];
+    //     if (value === "Intercontrat") {
+    //       if (nextValue){
+    //         count = count + 0.5;
+    //       } else {
+    //         count++;
+    //       }
+    //     }
+    //   }
+    // }
+    for (let c of this.daysOffSavedObjArr) {
+      if (c.typeConge == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
+      if (c.typeConge2 == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.demiJournee) {
+          count = count + 0.5;
+        } else {
+          count++;
+        }
+      }
+    }
+    for (let c of this.daysOff) {
+      if (this.isArray(c)) {
+        for (let co of c) {
+          if (co.typeConge == 'Activité Partielle' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+            if (co.demiJournee) {
+              count = count + 0.5;
+            } else {
+              count++;
+              // let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => moment(this.toDate(x.date)).diff(moment(this.toDate(co.date)), 'days') == 1 && x.demiJournee)];
+              // if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
+              //   count += 0.5;
+              //   alreadyCountedHalf.push(addHalf);
+              // }
             }
+          }
+        }
+      } else {
+        if (c.typeConge == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (c.demiJournee) {
+            count = count + 0.5;
+          } else {
+            count++;
+            // let addHalf = this.daysOffSavedObjArr[this.daysOffSavedObjArr.findIndex(x => (moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == 1 || moment(this.toDate(x.date)).diff(moment(this.toDate(c.date)), 'days') == -1) && x.demiJournee)];
+            // if (addHalf != undefined && alreadyCountedHalf.indexOf(addHalf) == -1) {
+            //   count += 0.5;
+            //   alreadyCountedHalf.push(addHalf);
+            // }
           }
         }
       }
@@ -1140,9 +1347,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   }
 
   countJoursNonTravailles(form: NgForm) {
-    return this.countAbsences(form) + this.countConges(form) + this.countFormation(form) + this.countInterContrat(form)
-      // +this.countMaladie(form) + this.countRTTE(form)+this.countRTTS(form)+this.countSansSolde(form);
+    return this.countAbsences(form) + this.countConges(form) + this.countFormation(form) + this.countInterContrat(form) + + this.countActivitePartielle(form)
       + this.countMaladie(form) + this.countRTT() + this.countSansSolde(form);
-
   }
 }

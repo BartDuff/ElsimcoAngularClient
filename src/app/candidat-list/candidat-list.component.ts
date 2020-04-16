@@ -1,13 +1,13 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ContactModel} from '../models/contact.model';
 import {CandidatService} from '../services/candidat.service';
 import {saveAs} from 'file-saver';
 
 import {ToastrService} from 'ngx-toastr';
 import {CandidatModel} from '../models/candidat.model';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource, PageEvent} from '@angular/material';
 import {Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil, tap} from 'rxjs/operators';
 import {Diplome} from '../models/diplome.model';
 import {hasProperties} from 'codelyzer/util/astQuery';
 import {HttpHeaders} from '@angular/common/http';
@@ -19,20 +19,21 @@ import {Router} from '@angular/router';
   templateUrl: './candidat-list.component.html',
   styleUrls: ['./candidat-list.component.css']
 })
-export class CandidatListComponent implements OnInit, AfterViewChecked {
+export class CandidatListComponent implements OnInit, AfterViewInit {
   clickedRow = null;
   clickedColumn = null;
   qCandidats;
   spinner = false;
-  pageable = {size:3,number:1};
+  pageable = {size:3,number:0};
   totalPages = 1;
   size=10;
+  paginator;
   qCandidatExemple = {};
   candidatFiltre = new CandidatModel();
   //editField: String;
   candidats: CandidatModel[];
   public ngUnsubscribe: Subject<void> = new Subject<void>();
-  dataSource: any;
+  dataSource = new MatTableDataSource();
   columnsToIgnore = ['secretid', 'fileBase64', 'accepte', 'ficheProcess','ficheRecrutement','ficheProcessRecrutement'];
   possibleValues = {
     'domaine1': ["Autres","Chimie","Cosmétique / Parfum","Cuir / Maro","Galva / TS","Horlogerie","Joaillerie / Bijoux","Lunetterie","Mécanique","Packaging","Pièces métalliques","Plasturgie","Textile maro","Textile PAP"],
@@ -214,7 +215,7 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
     // 'sourceCv',
     // 'commentairesCV'
   ];
-
+  pageEvent: PageEvent;
 
   constructor(private candidatService: CandidatService,
               private contactService: ContactService,
@@ -223,33 +224,39 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
               private cdRef:ChangeDetectorRef,) {
   }
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginator1') paginator1: MatPaginator;
+  @ViewChild('paginator2') paginator2: MatPaginator;
+
 
   ngOnInit() {
+    this.paginator = this.paginator1;
     this.getQCandidates();
+    // this.dataSource.paginator = this.paginator;
     //this.getCandidates();
   }
 
   getQCandidates(){
     this.spinner=true;
     this.ngUnsubscribe.next();
-
     this.candidatService.getQCandidats(this.candidatFiltre, this.pageable,this.size)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
       (data)=> {
         this.qCandidats = data.content;
-        //this.pageable=data.pageable;
+        // this.pageable=data.pageable;
         this.totalPages = data.totalElements;
-        this.qCandidatExemple = this.qCandidats[0];
+        if(this.qCandidats.length > 0){
+          this.qCandidatExemple = this.qCandidats[0];
+        } else {
+          this.qCandidatExemple = new CandidatModel();
+        }
         this.spinner = false;
-        this.dataSource = new MatTableDataSource(this.qCandidats);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.data = this.qCandidats;
       }
     );
   }
 
-  ngAfterViewChecked()
+  ngAfterViewInit()
   {
     this.cdRef.detectChanges();
     this.paginator.page.subscribe(
@@ -260,6 +267,22 @@ export class CandidatListComponent implements OnInit, AfterViewChecked {
       }
     )
   }
+
+  changePaginator(event){
+    switch (event.index) {
+      case 0:
+        !this.dataSource.paginator ? this.dataSource.paginator = this.paginator : null;
+        break;
+      case 1:
+        !this.dataSource.paginator ? this.dataSource.paginator = this.paginator2 : null;
+        break;
+    }
+  }
+
+  c(x){
+    console.log(x);
+  }
+
 
   getUniqueValues(key){
     let uniqueValues = [];

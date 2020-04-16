@@ -19,7 +19,6 @@ import {forEach} from '@angular/router/src/utils/collection';
 import {EmailService} from '../services/email.service';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {groupBy} from 'rxjs/operators';
-import {error} from 'util';
 import {ImageService} from '../services/image.service';
 
 const config: InputFileConfig = {
@@ -43,6 +42,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   firstDateToastr;
   secondDateToastr;
   counter;
+  cachedUser;
   mouseDown: boolean = false;
   rttValid = true;
   previousAnciennete;
@@ -232,23 +232,34 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    // this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.cachedUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.getUser(this.cachedUser.id);
     //this.selectedDate = moment(new Date());
-    this.counter = this.currentUser.cpNMoins1 > 0 ? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete : this.currentUser.cpN;
-    this.congesCount = this.currentUser.cpNMoins1;
-    this.anticipeCount = this.currentUser.cpN;
-    this.ancienneteCount = this.currentUser.congeAnciennete;
-    this.rttCount = this.currentUser.rttn;
+
     this.zeroIndicator = this.countConges();
     this.dateNow = new Date();
     this.fixedDateNow = new Date();
     this.FicheEnvoyee = null;
-    this.getHolidays();
     // this.dateFilter(this.dateNow);
   }
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
+  }
+
+  getUser(id){
+    this.userService.getUser(id).subscribe(
+      (data) => {
+        this.currentUser = data;
+        this.counter = this.currentUser.cpNMoins1 > 0 ? this.currentUser.cpNMoins1 + this.currentUser.congeAnciennete : this.currentUser.cpN;
+        this.congesCount = this.currentUser.cpNMoins1;
+        this.anticipeCount = this.currentUser.cpN;
+        this.ancienneteCount = this.currentUser.congeAnciennete;
+        this.rttCount = this.currentUser.rttn;
+        this.getHolidays();
+      }
+    )
   }
 
   compare(a,b){

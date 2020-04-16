@@ -1,0 +1,101 @@
+mat-card .mat-card-image img {
+  display: block;
+  border-radius: 2px 2px 0 0;
+  position: relative;
+  left: 0;
+  right: 0;
+  top: -10vw;
+  bottom: 0;
+  width: 100%;
+}
+
+.mat-card-avatar {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.img-avatar {
+  display: inline;
+  padding: 0;
+  margin-left: -2%;
+  margin-top: -2%;
+  height: auto;
+  width: 110%;
+}
+
+.annuaire-card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: space-evenly;
+}
+
+mat-card-header {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mat-fab {
+  position: absolute;
+  top:0;
+  right: 0;
+  margin: 1em;
+  color: white;
+  background-color: black;
+}
+
+.labels {
+  margin-right: 0.5em;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.showOnMobile {
+  display: none;
+}
+
+.single-annuaire-card {
+  margin-top: 1em;
+  width: 15vw;
+}
+
+@media only screen and (max-width: 1300px) {
+  a {
+    font-size: x-small!important;
+  }
+}
+@media only screen and (max-width: 768px) {
+
+  a {
+    font-size: x-small!important;
+  }
+  .hideOnMobile {
+    display: none;
+  }
+
+  .showOnMobile {
+    display: flex;
+  }
+
+  .annuaire-card {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+  }
+
+  .single-annuaire-card {
+    margin-top: 1em;
+    width: 90vw;
+  }
+}

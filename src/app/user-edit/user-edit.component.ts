@@ -95,6 +95,7 @@ export class UserEditComponent implements OnInit {
       role: [''],
       fonction: [''],
       statut: [''],
+      actif:[''],
       trigramme:[''],
       cpNMoins1:[''],
       cpN:[''],
@@ -115,7 +116,9 @@ export class UserEditComponent implements OnInit {
         data => {
           this.user = data;
           this.user.dateArrivee = new Date(data.dateArrivee);
-          this.user.dateDepart = new Date(data.dateDepart);
+          if(this.user.dateDepart){
+            this.user.dateDepart = new Date(data.dateDepart);
+          }
           this.user.dateNaissance = new Date(data.dateNaissance);
           this.user.derniereConnexion = new Date(data.derniereConnexion);
           this.user.rawFile = [];
@@ -157,6 +160,7 @@ export class UserEditComponent implements OnInit {
           this.editForm.controls.metier.setValue(data.metier);
           this.editForm.controls.role.setValue(data.role);
           this.editForm.controls.fonction.setValue(data.fonction);
+          this.editForm.controls.actif.setValue(data.actif);
           this.editForm.controls.statut.setValue(data.statut);
           this.editForm.controls.cpNMoins1.setValue(data.cpNMoins1);
           this.editForm.controls.cpN.setValue(data.cpN);
@@ -194,14 +198,14 @@ export class UserEditComponent implements OnInit {
           }
           let details = [];
           for(let k of Object.keys(this.user)){
-            if(this.formerUser[k] != this.editForm.value[k] && k !='imageId' && k !='competenceId' && k !='anticipation' && k !='missions' && k != 'dateArrivee' && k !='dateNaissance' && k != 'dateDepart' && k !='rawFile' && k !='competenceFile' && k !='avatar' && k !='avatarType' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='statut' && k !='congeAnciennete'){
+            if(this.formerUser[k] != this.editForm.value[k] && k !='imageId' && k !='competenceId' && k !='anticipation' && k !='missions' && k != 'dateArrivee' && k !='dateNaissance' && k !='dateArrivee' && k !='actif' && k != 'dateDepart' && k !='rawFile' && k !='competenceFile' && k !='avatar' && k !='avatarType' && k != 'dateInscription' && k != 'trigramme' && k !='id' && k !='cpNMoins1'&& k !='rttn' && k !='cpN' && k !='dateDepart' && k !='derniereConnexion' && k !='role' && k !='fonction' && k !='statut' && k !='congeAnciennete'){
               let key = k.toString();
               let val = this.editForm.value[k];
               details.push({[this.keysDict[key]]:val});
             }
-            if(k.toString() == 'dateArrivee' && new Date(this.formerUser[k]).toString() != this.editForm.value[k].toString()){
-              details.push({[this.keysDict[k.toString()]]:this.editForm.value[k]});
-            }
+            // if(k.toString() == 'dateArrivee' && new Date(this.formerUser[k]).toString() != this.editForm.value[k].toString()){
+            //   details.push({[this.keysDict[k.toString()]]:this.editForm.value[k]});
+            // }
           }
           let sDetails = "";
           for(let ob of details){

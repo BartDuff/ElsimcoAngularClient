@@ -3,6 +3,7 @@
   <mat-form-field>
     <span class="prefix" matPrefix style="padding: 2em;">Selectionnez un collaborateur </span>
     <mat-select [(ngModel)]="selectedUser" [ngModelOptions]="{standalone: true}" (ngModelChange)="getValidatedConges()" placeholder="Liste des collaborateurs">
+      <mat-option [value]="null">Tous les utilisateurs</mat-option>
       <mat-option *ngFor="let u of users" [value]=u>{{u.prenom}} {{u.nom}}</mat-option>
     </mat-select>
   </mat-form-field>

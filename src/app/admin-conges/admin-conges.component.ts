@@ -45,8 +45,10 @@ export class AdminCongesComponent implements OnInit {
   dayoffPlage = [];
   zeroIndicator;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-  absTypes = ['Congés Payés', 'RTT', 'Absence Exceptionnelle', 'Congés Sans Solde','Formation', 'Arrêt Maladie'];
-  absShortTypes = ['CP', 'RTT', 'A.E.', 'C.S.S.','F','A.M.'];
+  absTypes = ['Congés Payés', 'RTT', 'Absence Exceptionnelle', 'Congés Sans Solde','Formation', 'Arrêt Maladie','Intercontrat','Activité Partielle'];
+  absTypes2 = ['En mission','Congés Sans Solde','Formation', 'Arrêt Maladie','Intercontrat','Activité Partielle'];
+  absShortTypes = ['CP', 'RTT', 'A.E.', 'C.S.S.','F','A.M.','I','A.P'];
+  absShortTypes2 = ['E.M','C.S.S.','F','A.M.','I','A.P'];
   fixedDateNow: Date;
   dateNow: Date;
   FicheEnvoyee: boolean = false;
@@ -120,6 +122,78 @@ export class AdminCongesComponent implements OnInit {
       }
       if (x.date == date) {
         return this.absShortTypes[this.absTypes.indexOf(x.typeConge)];
+      }
+    }
+    return '';
+  }
+
+  getAbsHalfType(date) {
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return x.typeDemiJournee;
+        }
+      }
+    }
+    for (let x of this.daysOffSelectedObjArr) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == date) {
+            if (x.demiJournee) {
+              return x.typeDemiJournee;
+            }
+          }
+        }
+      }
+      if (x.date == date) {
+        if (x.demiJournee) {
+          return x.typeDemiJournee;
+        }
+      }
+    }
+    return '';
+  }
+
+  getAbsOtherHalf(date){
+    for (let x of this.daysOffSavedObjArr) {
+      if (x.date == date) {
+        if (x.demiJournee && x.typeConge2 && x.typeConge2 !='En mission') {
+          let typeDem = '';
+          if(x.typeDemiJournee == 'Matin'){
+            typeDem = 'A.M';
+          } else {
+            typeDem = 'M'
+          }
+          return '1/2 ' + this.absShortTypes2[this.absTypes2.indexOf(x.typeConge2)] + ' ' + typeDem;
+        }
+      }
+    }
+    for (let x of this.daysOffSelectedObjArr) {
+      if (this.isArray(x)) {
+        for (let y of x) {
+          if (y.date == date) {
+            if (x.demiJournee && x.typeConge2 && x.typeConge2 !='En mission') {
+              let typeDem = '';
+              if(x.typeDemiJournee == 'Matin'){
+                typeDem = 'A.M';
+              } else {
+                typeDem = 'M'
+              }
+              return '1/2 ' + this.absShortTypes2[this.absTypes2.indexOf(x.typeConge2)] + ' ' + typeDem;
+            }
+          }
+        }
+      }
+      if (x.date == date) {
+        if (x.demiJournee && x.typeConge2 && x.typeConge2 !='En mission') {
+          let typeDem = '';
+          if(x.typeDemiJournee == 'Matin'){
+            typeDem = 'A.M';
+          } else {
+            typeDem = 'M'
+          }
+          return '1/2 ' + this.absShortTypes2[this.absTypes2.indexOf(x.typeConge2)] + ' ' + typeDem;
+        }
       }
     }
     return '';
@@ -559,6 +633,7 @@ export class AdminCongesComponent implements OnInit {
             this.daysOffSavedObjArr.push(({
               date: moment(d.date).format('DD/MM/YYYY').toString(),
               typeConge: d.typeConge,
+              typeConge2: d.typeConge2,
               demiJournee: d.demiJournee,
               typeDemiJournee: d.typeDemiJournee,
               valideRH: d.valideRH,
@@ -672,6 +747,7 @@ export class AdminCongesComponent implements OnInit {
           this.dayoffPlage.push({
             date: f.format('DD/MM/YYYY'),
             typeConge: '',
+            typeConge2: '',
             demiJournee: false,
             typeDemiJournee: '',
             commentaires: '',
@@ -723,6 +799,7 @@ export class AdminCongesComponent implements OnInit {
         this.daysOffSelectedObjArr.push({
           date: day,
           typeConge: '',
+          typeConge2: '',
           demiJournee: false,
           typeDemiJournee: '',
           commentaires: '',
@@ -760,6 +837,7 @@ export class AdminCongesComponent implements OnInit {
                 dayArr.push({
                   date: lastday.format('DD/MM/YYYY'),
                   typeConge: '',
+                  typeConge2: '',
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
@@ -790,6 +868,7 @@ export class AdminCongesComponent implements OnInit {
                 dayArr.push({
                   date: firstArrDay.format('DD/MM/YYYY'),
                   typeConge: '',
+                  typeConge2: '',
                   demiJournee: false,
                   typeDemiJournee: '',
                   commentaires: '',
@@ -829,6 +908,7 @@ export class AdminCongesComponent implements OnInit {
       this.dayoffPlage.push({
         date: day,
         typeConge: '',
+        typeConge2: '',
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
@@ -871,6 +951,7 @@ export class AdminCongesComponent implements OnInit {
       this.daysOffSelectedObjArr.push({
         date: day,
         typeConge: '',
+        typeConge2: '',
         demiJournee: false,
         typeDemiJournee: '',
         commentaires: '',
@@ -1014,6 +1095,7 @@ export class AdminCongesComponent implements OnInit {
                 c.date = this.toDate(subConge.date);
                 c.valideRH = true;
                 c.typeConge = subConge.typeConge;
+                c.typeConge2 = subConge.typeConge2;
                 c.commentaires = subConge.commentaires;
                 c.typeCe = subConge.typeCe;
                 cArray.push(c);
@@ -1038,6 +1120,7 @@ export class AdminCongesComponent implements OnInit {
               co.date = this.toDate(conge.date);
               co.valideRH = true;
               co.typeConge = conge.typeConge;
+              co.typeConge2 = conge.typeConge2;
               co.commentaires = conge.commentaires;
               co.typeCe = conge.typeCe;
               cArray.push(co);
@@ -1330,12 +1413,12 @@ export class AdminCongesComponent implements OnInit {
                     }
                   } else {
                     if (this.allowAnticipation) {
-                      if(count - half <0){
-                        this.toastr.error("Cette demande est supérieure à votre solde de congés","Solde insuffisant");
-                        this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
-                      } else {
+                      // if(count - half <0){
+                      //   this.toastr.error("Cette demande est supérieure à votre solde de congés","Solde insuffisant");
+                      //   this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
+                      // } else {
                         count -= half;
-                      }
+                      // }
                     } else {
                       break;
                     }
@@ -1367,12 +1450,12 @@ export class AdminCongesComponent implements OnInit {
                   }
                 } else {
                   if (this.allowAnticipation) {
-                    if(count - half <0){
-                      this.toastr.error("Cette demande est supérieure à votre solde de congés","Solde insuffisant");
-                      this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
-                    } else {
+                    // if(count - half <0){
+                    //   this.toastr.error("Cette demande est supérieure à votre solde de congés","Solde insuffisant");
+                    //   this.daysOffSelectedObjArr.splice(this.daysOffSelectedObjArr.indexOf(d),1);
+                    // } else {
                       count -= half;
-                    }
+                    // }
                   } else {
                     break;
                   }

@@ -117,7 +117,6 @@ export class AddContactComponent implements OnInit {
   }
 
   _handleReaderLoaded(event) {
-    console.log(event.target.result);
     this.fileEncoded = btoa(event.target.result);
   }
 

@@ -12,6 +12,7 @@ import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirm
 import {EmailService} from '../services/email.service';
 import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
 import {ImageService} from '../services/image.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-conge-list',
@@ -21,6 +22,7 @@ import {ImageService} from '../services/image.service';
 export class CongeListComponent implements OnInit {
   currentUser:UserModel;
   conges : CongeModel[] = [];
+  monthArr = [];
   loading = true;
   joursDeLaSemaine = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
   daysOffSavedObjArr = [];
@@ -145,6 +147,7 @@ export class CongeListComponent implements OnInit {
   }
 
   getHolidays() {
+    this.monthArr = [];
     this.userService.getCongeForUser(this.currentUser).subscribe(
       (data) => {
         for (let d of data) {
@@ -159,12 +162,21 @@ export class CongeListComponent implements OnInit {
           if (d.typeConge == 'Absence Exceptionnelle' && !d.justificatifRecu) {
             this.congeSansJustif.push(d);
           }
+
+          if(d.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(d.date).getMonth()]+ ' '+ new Date(d.date).getFullYear()) == -1 && new Date(d.date).getMonth() >= new Date().getMonth() && new Date(d.date).getFullYear() >= new Date().getFullYear()){
+            this.monthArr.push(this.nomsDesMois[new Date(d.date).getMonth()] + ' '+ new Date(d.date).getFullYear());
+          }
         }
         this.congeService.sortConges(this.congeSansJustif).subscribe(
           (data)=>{
             this.sortedCSJ = data;
           }
         );
+        this.monthArr = this.monthArr.sort((a, b) => {
+          a = a.split(" ");
+          b = b.split(" ");
+          return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+        });
         this.loading = false;
       }
     );
@@ -227,7 +239,7 @@ export class CongeListComponent implements OnInit {
     const Ascension = new Date(an, MoisPaques - 1, JourPaques + 39);
     const Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49);
     const LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50);
-    let t = [JourAn, VendrediSaint, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let t = [JourAn, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
     let sDates = [];
     for (let i = 0; i < t.length; i++) {
       sDates.push(moment(t[i]).format('DD/MM/YYYY'));

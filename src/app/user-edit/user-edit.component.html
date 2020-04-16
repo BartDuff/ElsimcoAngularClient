@@ -102,6 +102,7 @@
           <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
           <mat-datepicker #picker3 [disabled]="false"></mat-datepicker>
         </mat-form-field>
+        <a *ngIf="currentUser.role=='ADMIN'" mat-button (click)="user.dateDepart = null">Supprimer la date de sortie</a>
 
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <input matInput formControlName="trigramme" [(ngModel)]="user.trigramme" placeholder="Trigramme" name="trigramme" id="trigramme">
@@ -156,6 +157,8 @@
         <mat-form-field *ngIf="currentUser.role=='ADMIN'">
           <input matInput formControlName="congeAnciennete" [(ngModel)]="user.congeAnciennete" placeholder="Congé Ancienneté" name="congeAnciennete" id="congeAnciennete">
         </mat-form-field>
+
+        <mat-checkbox  *ngIf="currentUser.role=='ADMIN'" formControlName="actif" name="actif" id="actif" [checked]="user.actif" (change)="user.actif = $event.checked.valueOf()">Utilisateur actif ?</mat-checkbox>
         <label>
           Dossier de compétences (DCP) :
         </label>

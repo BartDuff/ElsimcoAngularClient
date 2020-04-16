@@ -32,7 +32,7 @@ export class CandidatService {
       if(q[k])
         s+=(s.length > 0?'&':'')+k+"="+q[k];
 
-    s+=(s.length > 0?'&':'')+"page="+(pageable.number-1);
+    s+=(s.length > 0?'&':'')+"page="+(pageable.number);
     s+=(s.length > 0?'&':'')+"size="+size;
 
     return this.http.get<CandidatModel[]>(`${API_URL}/candidats?${s}`);

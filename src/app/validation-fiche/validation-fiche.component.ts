@@ -6,12 +6,14 @@ import {UserService} from '../services/user.service';
 import {FicheService} from '../services/fiche.service';
 import {PdfService} from '../services/pdf.service';
 import {ToastrService} from 'ngx-toastr';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatTableDataSource} from '@angular/material';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
 import {CommentDialogComponent} from '../dialog/comment-dialog/comment-dialog.component';
 import * as moment from 'moment';
 import {ValidationCongesComponent} from '../validation-conges/validation-conges.component';
 import {DocumentModel} from '../models/document.model';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-validation-fiche',
@@ -23,13 +25,31 @@ export class ValidationFicheComponent implements OnInit {
   allFiches: FicheModel[]=[];
   allRHValidFiches: FicheModel[];
   dateNow : Date;
-  users;
+  users = [];
   validatedFichesCount;
   usersWithFiche = [];
   usersWithoutFiche = [];
+  public ngUnsubscribe: Subject<void> = new Subject<void>();
   dataSource: any;
   loading = false;
   nomsDesMois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"] ;
+  displayedColumns = [
+    "joursTravailles",
+    "conges",
+    "rtts",
+    "maladie",
+    "absences",
+    "congesSansSolde",
+    "formation",
+    "intercontrat",
+    "joursOuvres",
+    "commentaires",
+    "valideRH",
+    "commentaireSup",
+    "datePublication"
+  ];
+
+
   constructor(private userService: UserService,
               private ficheService: FicheService,
               private pdfService:PdfService,
@@ -76,8 +96,15 @@ export class ValidationFicheComponent implements OnInit {
 
   getAllFiches() {
     // this.allFiches = [];
+    this.allFiches = [];
+    this.validatedFichesCount = 0;
+    this.usersWithoutFiche = [];
+    this.usersWithFiche = [];
     this.loading = true;
-    this.ficheService.getFiches().subscribe(
+    this.ngUnsubscribe.next();
+    this.ficheService.getFiches()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
       (data) => {
         for(let f of data){
           if(f.mois == this.nomsDesMois[this.dateNow.getMonth()] && f.annee === this.dateNow.getFullYear()){
@@ -90,7 +117,17 @@ export class ValidationFicheComponent implements OnInit {
         }
         this.userService.getUsers().subscribe(
           (data)=> {
-            this.users = data;
+            for(let user of data){
+              if(user.dateDepart !=null){
+                if (!user.actif && (this.nomsDesMois[new Date(user.dateDepart).getMonth()] == this.nomsDesMois[this.dateNow.getMonth()] && new Date(user.dateDepart).getFullYear() === this.dateNow.getFullYear())){
+                  this.users.push(user);
+                }
+              } else {
+                if(user.actif){
+                  this.users.push(user);
+                }
+              }
+            }
             this.getUserWithoutFiche();
             this.loading = false;
           }
@@ -243,10 +280,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés Payés' || typeConge == '1/2 Congés Payés'){
+      if(typeConge == 'Congés Payés' || typeConge == '1/2 Congés Payés Matin' || typeConge == '1/2 Congés Payés Après-midi' || typeConge == '1/2 Congés Payés'){
         let typeAffiche = ' ';
         if(typeConge.substr(0,3) == "1/2"){
-          typeAffiche += "1/2";
+          if(typeConge == '1/2 Congés Payés'){
+            typeAffiche += "1/2";
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(17,typeConge.length-17));
+          }
         }
         arr.push({date: date, type: typeAffiche });
       }
@@ -263,10 +304,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'RTT' || typeConge == '1/2 RTT'){
+      if(typeConge == 'RTT' || typeConge == '1/2 RTT Matin' || typeConge == '1/2 RTT Après-midi' || typeConge == '1/2 RTT'){
         let typeAffiche = ' ';
         if(typeConge.substr(0,3) == "1/2"){
-          typeAffiche += "1/2";
+          if(typeConge == '1/2 RTT'){
+            typeAffiche += "1/2";
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(8,typeConge.length-8));
+          }
         }
         arr.push({date: date, type: typeAffiche});
       }
@@ -282,10 +327,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Arrêt Maladie' || typeConge == '1/2 Arrêt Maladie'){
+      if(typeConge == 'Arrêt Maladie' || typeConge == '1/2 Arrêt Maladie Matin' || typeConge == '1/2 Arrêt Maladie Après-midi' || typeConge == '1/2 Arrêt Maladie'){
         let typeAffiche = ' ';
         if(typeConge.substr(0,3) == "1/2"){
-          typeAffiche += "1/2";
+          if(typeConge == '1/2 Arrêt Maladie'){
+            typeAffiche += "1/2";
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(18,typeConge.length-18));
+          }
         }
         arr.push({date: date, type: typeAffiche});
       }
@@ -301,10 +350,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Congés Sans Solde' || typeConge == '1/2 Congés Sans Solde'){
+      if(typeConge == 'Congés Sans Solde' || typeConge == '1/2 Congés Sans Solde Matin' || typeConge == '1/2 Congés Sans Solde Après-midi' || typeConge == '1/2 Congés Sans Solde' ){
         let typeAffiche = ' ';
         if(typeConge.substr(0,3) == "1/2"){
-          typeAffiche += "1/2";
+          if(typeConge == '1/2 Congés Sans Solde'){
+            typeAffiche += "1/2";
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(22,typeConge.length-22));
+          }
         }
         arr.push({date: date, type: typeAffiche});
       }
@@ -320,10 +373,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Absence Exceptionnelle' || typeConge == '1/2 Abscence Exceptionnelle'){
+      if(typeConge == 'Absence Exceptionnelle' || typeConge == '1/2 Abscence Exceptionnelle Matin' || typeConge == '1/2 Abscence Exceptionnelle Après-midi' || typeConge == '1/2 Abscence Exceptionnelle'){
         let typeAffiche = ' ';
         if(typeConge.substr(0,3) == "1/2"){
-          typeAffiche += "1/2";
+          if(typeConge == '1/2 Abscence Exceptionnelle'){
+            typeAffiche += "1/2"
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(28,typeConge.length-22));
+          }
         }
         arr.push({date: date, type:typeAffiche});
       }
@@ -339,10 +396,14 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Formation' || typeConge == '1/2 Formation'){
+      if(typeConge == 'Formation' || typeConge == '1/2 Formation Matin' || typeConge == '1/2 Formation Après-midi' || typeConge == '1/2 Formation' ){
         let typeAffiche = ' ';
         if(typeConge.substr(0,3) == "1/2"){
-          typeAffiche += "1/2";
+          if(typeConge == '1/2 Formation'){
+            typeAffiche += "1/2";
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(14,typeConge.length-14));
+          }
         }
         arr.push({date: date, type: typeAffiche});
       }
@@ -359,10 +420,37 @@ export class ValidationFicheComponent implements OnInit {
     for(let k of Object.keys(ob)){
       let date = k.substr(k.length-10,10);
       let typeConge = k.substr(0,k.length-11);
-      if(typeConge == 'Intercontrat' || typeConge == '1/2 Intercontrat'){
+      if(typeConge == 'Intercontrat' || typeConge == '1/2 Intercontrat Matin' || typeConge == '1/2 Intercontrat Après-midi' || typeConge == '1/2 Intercontrat'){
         let typeAffiche = ' ';
         if(typeConge.substr(0,3) == "1/2"){
-          typeAffiche += "1/2";
+          if(typeConge == '1/2 Intercontrat'){
+            typeAffiche += "1/2"
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(17,typeConge.length-17));
+          }
+        }
+        arr.push({date: date, type: typeAffiche});
+      }
+    }
+    if(arr.length == 0){
+      return arr;
+    }
+    return this.splitArrayInRanges(arr);
+  }
+
+  getActivitePartielle(ob){
+    let arr = [];
+    for(let k of Object.keys(ob)){
+      let date = k.substr(k.length-10,10);
+      let typeConge = k.substr(0,k.length-11);
+      if(typeConge == 'Activité Partielle' || typeConge == '1/2 Activité Partielle Matin' || typeConge == '1/2 Activité Partielle Après-midi' || typeConge == '1/2 Activité Partielle'){
+        let typeAffiche = ' ';
+        if(typeConge.substr(0,3) == "1/2"){
+          if(typeConge == '1/2 Activité Partielle'){
+            typeAffiche += "1/2"
+          } else {
+            typeAffiche += ("1/2 - " + typeConge.substr(23,typeConge.length-23));
+          }
         }
         arr.push({date: date, type: typeAffiche});
       }
@@ -478,7 +566,7 @@ export class ValidationFicheComponent implements OnInit {
     const Ascension = new Date(an, MoisPaques - 1, JourPaques + 39);
     const Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49);
     const LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50);
-    let t = [JourAn, VendrediSaint, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
+    let t = [JourAn, Paques, LundiPaques, FeteTravail, Victoire1945, Ascension, Pentecote, LundiPentecote, FeteNationale, Assomption, Toussaint, Armistice, Noel];
     let sDates = [];
     for(let i=0;i<t.length;i++){
       sDates.push(moment(t[i]).format('DD/MM/YYYY'));

@@ -23,6 +23,13 @@
             <mat-option *ngFor="let adress of mailAdresses" [value]="adress">{{adress}}</mat-option>
           </mat-select>
         </mat-form-field>
+
+        <mat-form-field  style="margin-top: 1em!important;">
+          <mat-label>Catégorie :</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/faq">RETOUR <mat-icon>arrow_back</mat-icon></button>
           <button mat-button>Publier</button>

@@ -58,7 +58,7 @@
         </mat-menu>
       </li>
       <li><a mat-button disabled *ngIf="token" style="color: dimgray" matTooltip="Ce lien n'est pas encore accessible">Missions</a></li>
-      <li><a mat-button routerLink="/annuaire" *ngIf="token && currentUser.role == 'ADMIN'">Annuaire</a></li>
+      <li><a mat-button routerLink="/annuaire" *ngIf="token">Annuaire</a></li>
       <li><a mat-button routerLink="/admin-dashboard" *ngIf="token && currentUser.role == 'ADMIN'">Paramètres d'Administration</a></li>
       <li><a mat-button routerLink="/documents" *ngIf="token">Espace Téléchargement</a></li>
       <li><a mat-button routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>

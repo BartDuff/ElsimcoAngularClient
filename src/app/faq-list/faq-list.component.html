@@ -11,8 +11,8 @@
           {{ c }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <div *ngIf='c =="COMMERCIAL"'>
-        <mat-expansion-panel *ngFor="let f of faqCommercial" style="margin-bottom: 5px;">
+      <div *ngIf='c =="COMMERCIAL"' [dragula]="currentUser.role=='ADMIN'?'COMMERCIAL':null" [dragulaModel]="faqCommercial" (dragulaModelChange)="changeOrder($event)">
+        <mat-expansion-panel *ngFor="let f of faqCommercial;let i = index;" style="margin-bottom: 5px;" >
           <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'" style="padding: 3em;">
             <mat-panel-title style="font-weight: bold;font-size: 1.5em;text-align: justify;" class="question">
               {{ f.question }}
@@ -34,7 +34,7 @@
       </span></div>
         </mat-expansion-panel>
       </div>
-      <div *ngIf='c =="RH"'>
+      <div *ngIf='c =="RH"' [dragula]="currentUser.role=='ADMIN'?'RH':null" [dragulaModel]="faqRH" (dragulaModelChange)="changeOrder($event)">
         <mat-expansion-panel *ngFor="let f of faqRH" style="margin-bottom: 5px;">
           <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'" style="padding: 3em;">
             <mat-panel-title style="font-weight: bold;font-size: 1.5em;text-align: justify;" class="question">
@@ -57,7 +57,7 @@
       </span></div>
         </mat-expansion-panel>
       </div>
-      <div *ngIf='c =="FINANCES"'>
+      <div *ngIf='c =="FINANCES"' [dragula]="currentUser.role=='ADMIN'?'FINANCES':null" [dragulaModel]="faqFinance" (dragulaModelChange)="changeOrder($event)">
         <mat-expansion-panel *ngFor="let f of faqFinance" style="margin-bottom: 5px;">
           <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'" style="padding: 3em;">
             <mat-panel-title style="font-weight: bold;font-size: 1.5em;text-align: justify;" class="question">

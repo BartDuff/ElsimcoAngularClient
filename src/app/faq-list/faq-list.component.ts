@@ -6,6 +6,7 @@ import {FaqModel} from '../models/faq.model';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 import {ToastrService} from 'ngx-toastr';
+import {DragulaService} from 'ng2-dragula';
 
 @Component({
   selector: 'app-faq-list',
@@ -13,7 +14,7 @@ import {ToastrService} from 'ngx-toastr';
   styleUrls: ['./faq-list.component.css']
 })
 export class FaqListComponent implements OnInit {
-
+  test;
   faqRH: FaqModel[] = [];
   faqCommercial: FaqModel[] = [];
   faqFinance: FaqModel[] = [];
@@ -23,7 +24,8 @@ export class FaqListComponent implements OnInit {
   loading = true;
   constructor(private faqService: FaqService,
               private dialog: MatDialog,
-              private toastrService: ToastrService) { }
+              private toastrService: ToastrService,
+              private dragula: DragulaService) { }
 
   ngOnInit() {
     this.getFaq();
@@ -46,6 +48,9 @@ export class FaqListComponent implements OnInit {
             this.faq.push(d);
           }
         }
+        this.faqCommercial.sort((a,b)=>a.chosenOrder-b.chosenOrder);
+        this.faqRH.sort((a,b)=>a.chosenOrder-b.chosenOrder);
+        this.faqFinance.sort((a,b)=>a.chosenOrder-b.chosenOrder);
         this.loading=false;
       }
     );
@@ -67,6 +72,15 @@ export class FaqListComponent implements OnInit {
         }
       }
     )
+  }
+
+  changeOrder(array){
+    for(let el of array){
+      el.chosenOrder = array.indexOf(el)+1
+      this.faqService.editFaq(el).subscribe(
+        ()=>{}
+      );
+    }
   }
 
 }

@@ -68,7 +68,7 @@ mat-card-header {
   width: 15vw;
 }
 
-@media only screen and (max-width: 1300px) {
+@media only screen and (max-width: 1600px) {
   a {
     font-size: x-small!important;
   }

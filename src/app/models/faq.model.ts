@@ -6,4 +6,5 @@ export class FaqModel {
   reponse: String;
   mailContact: String;
   category: String;
+  chosenOrder:number;
 }

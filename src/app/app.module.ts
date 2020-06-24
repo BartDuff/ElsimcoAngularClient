@@ -109,6 +109,8 @@ import { AdminCongesComponent } from './admin-conges/admin-conges.component';
 import { AnnuaireComponent } from './annuaire/annuaire.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import {ConfigurationService} from './services/configuration.service';
+import {DragAndDropModule} from 'angular-draggable-droppable';
+import {DragulaModule} from 'ng2-dragula';
 const config: InputFileConfig = {};
 
 
@@ -211,7 +213,9 @@ const config: InputFileConfig = {};
     MatExpansionModule,
     NgxGalleryModule,
     MatTreeModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    DragAndDropModule,
+    DragulaModule.forRoot()
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService, FaqService, ConfigurationService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

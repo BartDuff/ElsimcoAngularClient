@@ -54,6 +54,7 @@ export class NewsEditComponent implements OnInit {
       id: [],
       titre: ['', Validators.required],
       contenu: ['', Validators.required],
+      video:[''],
       isPublic: ['', Validators.required],
       isAvatar:['']
     });
@@ -80,6 +81,7 @@ export class NewsEditComponent implements OnInit {
           }
           this.editForm.controls.id.setValue(data.id);
           this.editForm.controls.contenu.setValue(data.contenu);
+          this.editForm.controls.video.setValue(data.videoLink);
           this.editForm.controls.titre.setValue(data.titre);
           this.editForm.controls.isPublic.setValue(data.public);
           this.editForm.controls.isAvatar.setValue(data.avatar);

@@ -55,7 +55,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
   daysOffSelectedObjArr = [];
   daysOffSavedObjArr = [];
   dayoffPlage = [];
-  zeroIndicator;
+  zeroIndicator:number;
   nomsDesMois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   absTypes = ['Congés Payés', 'RTT', 'Absence Exceptionnelle', 'Congés Sans Solde'];
   absShortTypes = ['CP', 'RTT', 'A.E.', 'C.S.S.'];
@@ -235,9 +235,10 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     // this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.cachedUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getUser(this.cachedUser.id);
+    // this.getUser(8942);
     //this.selectedDate = moment(new Date());
 
-    this.zeroIndicator = this.countConges();
+    // this.zeroIndicator = this.countConges();
     this.dateNow = new Date();
     this.fixedDateNow = new Date();
     this.FicheEnvoyee = null;
@@ -257,6 +258,7 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
         this.anticipeCount = this.currentUser.cpN;
         this.ancienneteCount = this.currentUser.congeAnciennete;
         this.rttCount = this.currentUser.rttn;
+        this.zeroIndicator = this.currentUser.cpNMoins1;
         this.getHolidays();
       }
     )
@@ -1112,6 +1114,17 @@ export class DemandeCongeComponent implements OnInit, AfterViewChecked {
     //   }
     //   i++;
     // }
+  }
+
+  containsRTT(){
+    for(let c of this.daysOffSelectedObjArr){
+      if(c.typeConge == "RTT"){
+        return true;
+        break;
+      } else {
+        return false;
+      }
+    }
   }
 
   countRTT():number {

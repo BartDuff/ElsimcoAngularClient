@@ -172,7 +172,7 @@
                   color="accent"
                   mode="indeterminate">
                 </mat-progress-spinner>
-                <button mat-raised-button type="submit" [disabled]="!f.form.valid || !rttValid || !fileValid || FicheEnvoyee || daysOffSelectedObjArr.length == 0" style="margin-top: 2em;" id="envoyerbut">Envoyer</button>
+                <button mat-raised-button type="submit" [disabled]="!f.form.valid || (!rttValid && containsRTT())  || !fileValid || FicheEnvoyee || daysOffSelectedObjArr.length == 0" style="margin-top: 2em;" id="envoyerbut">Envoyer</button>
               </form>
               <!--  <p>{{f.value | json }}</p>-->
             </div>

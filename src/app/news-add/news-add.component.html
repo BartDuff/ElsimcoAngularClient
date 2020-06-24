@@ -16,6 +16,9 @@
         <textarea matInput formControlName="contenu" placeholder="Veuillez écrire votre actualité dans ce cadre..."
                   name="contenu" id="contenu"></textarea>
         </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="videoLink" placeholder="Vidéo Youtube" name="videoLink"  id="videoLink">
+        </mat-form-field>
         <input-file *ngIf="currentUser.role=='ADMIN'" placeholder="Insérer une image..." fileAccept="image/*" [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(newsitem)" (deletedFile)="removeImage($event)" [ngModelOptions]="{standalone: true}" fileLimit="99" sizeLimit="40"></input-file>
         <div>(Maximum 40Mo)</div>
         <mat-checkbox formControlName="isAvatar" name="isAvatar" id="isAvatar" [checked]="newsitem.avatar" (change)="newsitem.avatar = $event.checked.valueOf()">Cette image est un avatar</mat-checkbox>

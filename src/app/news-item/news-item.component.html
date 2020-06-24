@@ -17,7 +17,7 @@
   <img mat-card-image *ngIf="galleryImages.length == 1 && !newsitem.avatar" [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' + singleImg.imageJointeType + ';base64, '+ singleImg.imageJointe)" alt="" class="newsimage">
   <div style="width: 12em;height: 12em;position: relative;overflow: hidden;border-radius: 50%;margin: auto;margin-top: 2em;" *ngIf="galleryImages.length == 1 && newsitem.avatar"><img mat-card-image [src]="sanitizer.bypassSecurityTrustResourceUrl('data:image/' +singleImg.imageJointeType + ';base64, '+ singleImg.imageJointe)" alt="" class="newsavatar"></div>
   <ngx-gallery *ngIf="galleryImages.length>1" [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery" style="margin-top: 2em;"></ngx-gallery>
-<!--  <iframe width="560" height="500" src="https://www.youtube.com/embed/vFViy4-w3nY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
+  <iframe *ngIf="videoCode" style="margin-top: 1em;" width="560" height="500" [src]="videoCode" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   <mat-card-content>
     <p [innerHTML]="createTextLinks_(newsitem?.contenu)">
     </p>

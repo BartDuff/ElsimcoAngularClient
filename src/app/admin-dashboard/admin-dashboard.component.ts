@@ -38,7 +38,6 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   addContactToList(cont){
-    console.log(cont);
     this.configuration.contactsFaq.push(cont);
   }
 
@@ -48,6 +47,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   onSubmit(){
+    this.configuration = this.configurationForm.value;
     this.configurationService.editConfiguration(this.configuration).subscribe(
       ()=>{
         this.ngOnInit();

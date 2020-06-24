@@ -21,7 +21,9 @@ export class FaqAddComponent implements OnInit {
   // mailAdresses = ["majoline.domingos@elsimco.com","ghislain.chatras@elsimco.com","franck.simon@elsimco.com"];
   mailAdresses;
   categories = ["COMMERCIAL","RH","FINANCES"];
-
+  countCom=0;
+  countRH=0;
+  countFin=0;
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -40,6 +42,19 @@ export class FaqAddComponent implements OnInit {
         this.mailAdresses = config.contactsFaq;
       }
     );
+    this.faqService.getFaq().subscribe(
+      (data) => {
+        for(let d of data){
+          if(d.category == "FINANCES"){
+            this.countFin+=1;
+          }
+          if(d.category == "RH"){
+            this.countRH+=1;
+          }
+          if(d.category == "COMMERCIAL"){
+            this.countCom+=1;
+          }
+        }});
     this.addForm = this.formBuilder.group({
       id: [],
       question: ['', Validators.required],
@@ -53,6 +68,15 @@ export class FaqAddComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     let faqitem:FaqModel = this.f;
+    if(faqitem.category == "FINANCES"){
+      faqitem.chosenOrder = this.countFin+1;
+    }
+    if(faqitem.category == "RH"){
+      faqitem.chosenOrder = this.countRH+1;
+    }
+    if(faqitem.category == "COMMERCIAL"){
+      faqitem.chosenOrder = this.countCom+1;
+    }
     this.faqService.addFaq(faqitem)
       .subscribe( () => {
         this.loading = false;

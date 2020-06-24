@@ -5,7 +5,7 @@ import {UserModel} from '../models/user.model';
 import {UserService} from '../services/user.service';
 import {AuthenticationService} from '../services/authentication.service';
 import {NewsService} from '../services/news.service';
-import {DomSanitizer} from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {NgxGalleryAnimation, NgxGalleryImageSize, NgxGalleryOptions} from 'ngx-gallery';
 import {ImageService} from '../services/image.service';
 
@@ -25,6 +25,7 @@ export class NewsItemComponent implements OnInit {
   galleryImages: any[]=[];
   galleryImagesTmp;
   sourceImg;
+  videoCode:SafeUrl;
   isLiked: boolean;
   likes : UserModel[];
   likesForNews:UserModel[];
@@ -136,6 +137,9 @@ export class NewsItemComponent implements OnInit {
            }
          );
        }
+     }
+     if(this.newsitem.videoLink){
+       this.videoCode = this.sanitizer.bypassSecurityTrustResourceUrl( "https://www.youtube.com/embed/"+ this.newsitem.videoLink.substr(this.newsitem.videoLink.indexOf('=')+1,this.newsitem.videoLink.length-this.newsitem.videoLink.indexOf('=')));
      }
   }
 

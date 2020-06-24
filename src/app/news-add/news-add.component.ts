@@ -56,6 +56,7 @@ export class NewsAddComponent implements OnInit {
       id: [],
       titre: ['', Validators.required],
       contenu: ['', Validators.required],
+      videoLink:[''],
       isPublic: ['', Validators.required],
       isAvatar:['']
     });

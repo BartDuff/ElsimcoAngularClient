@@ -158,11 +158,11 @@ export class ValidationFicheComponent implements OnInit {
         if(data){
           this.ficheService.editFiche(fiche).subscribe(
             (data)=> {
-              this.allFiches = [];
-              this.validatedFichesCount = 0;
-              this.usersWithoutFiche = [];
-              this.usersWithFiche = [];
-              this.getAllFiches();
+              // this.allFiches = [];
+              this.validatedFichesCount++;
+              // this.usersWithoutFiche = [];
+              // this.usersWithFiche = [];
+              // this.getAllFiches();
               this.toastrService.success('Fiche de présence validée', 'Fiche validée');
             }
           )

@@ -16,8 +16,8 @@
     <table class="bordered mat-elevation-z8" id="valide" style="margin: auto;margin-bottom: 1em; " *ngIf="!loading">
       <thead>
       <tr>
-        <th>Nom</th>
         <th>Prénom</th>
+        <th>Nom</th>
         <th>Trigramme</th>
         <th>Date</th>
         <th>Demi-journée</th>
@@ -30,8 +30,8 @@
       </thead>
       <tbody>
       <tr *ngFor="let conge of congesValides">
-        <td>{{conge.user.nom}}</td>
         <td>{{conge.user.prenom}}</td>
+        <td>{{conge.user.nom}}</td>
         <td>{{conge.user.trigramme}}</td>
         <td>{{conge.date | date: 'dd/MM/yyyy'}}</td>
         <td>{{conge.demiJournee ? 'oui' : 'non'}}</td>

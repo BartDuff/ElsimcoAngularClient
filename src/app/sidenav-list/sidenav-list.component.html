@@ -25,7 +25,7 @@
     </mat-menu>
   </mat-menu>
   <a mat-list-item disabled *ngIf="token" (click)="onSidenavClose()" class="nav-caption" matTooltip="Ce lien n'est pas encore accessible"><span class="priority">Missions</span></a>
-  <a mat-list-item routerLink="/annuaire" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()" class="nav-caption">Annuaire</a>
+  <a mat-list-item routerLink="/annuaire" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Annuaire</a>
   <a mat-list-item routerLink="/documents" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Espace Téléchargement</a>
   <a mat-list-item routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"
      class="nav-caption">Utilisateurs</a>

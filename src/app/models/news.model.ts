@@ -15,4 +15,5 @@ export class NewsModel {
   rawFile:any;
   images: ImageModel[] = [];
   imageIds: String = "";
+  videoLink: String;
 }

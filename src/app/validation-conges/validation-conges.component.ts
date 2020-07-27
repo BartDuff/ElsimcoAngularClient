@@ -14,6 +14,7 @@ import {CandidatModel} from '../models/candidat.model';
 import {DocumentModel} from '../models/document.model';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {RefuseWithCommentComponent} from '../dialog/refuse-with-comment/refuse-with-comment.component';
 
 @Component({
   selector: 'app-validation-conges',
@@ -425,7 +426,7 @@ export class ValidationCongesComponent implements OnInit {
     this.usersId = [];
   }
 
-  sendRejectionEmail(arr) {
+  sendRejectionEmail(arr, comment) {
     for (let u of this.usersToSend) {
       let userCong = [];
       for (let c of arr) {
@@ -433,7 +434,7 @@ export class ValidationCongesComponent implements OnInit {
           userCong.push(c);
         }
       }
-      this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée par les Ressources Humaines :\n', 'Notification de refus de congés', u.email,userCong).subscribe(
+      this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée, pour la raison suivante : ' + comment.commentaire +', par les Ressources Humaines :\n', 'Notification de refus de congés', u.email,userCong).subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
@@ -463,7 +464,7 @@ export class ValidationCongesComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(RefuseWithCommentComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
       (d) => {
         if (d) {
@@ -475,7 +476,7 @@ export class ValidationCongesComponent implements OnInit {
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines :\n' + sUserCong, 'Notification de refus de congés', conge.user.email).subscribe(
+              this.emailService.sendMail(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines :\n' + sUserCong + '\npour la raison suivante : '+d.commentaire, 'Notification de refus de congés', conge.user.email).subscribe(
                 () => {
                   this.toastrService.error('Congé refusé', 'Congé refusé');
                   this.getCongesWithFile();
@@ -525,7 +526,7 @@ export class ValidationCongesComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(RefuseWithCommentComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
       (d) => {
         if (d) {
@@ -539,7 +540,7 @@ export class ValidationCongesComponent implements OnInit {
           }
           this.congeService.deleteMultipleConge(this.congesNonValides).subscribe(
             () => {
-              this.sendRejectionEmail(arr);
+              this.sendRejectionEmail(arr,d);
               this.toastrService.error('Congés refusés', 'Congés refusés');
             },
             (err) => console.log(err)

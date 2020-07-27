@@ -44,8 +44,8 @@ export class DocumentService {
     return this.http.get(`${API_URL}/documents/download?=${document.originalFileName}`, {responseType: 'arraybuffer'});
   }
 
-  uploadDocument(file: any, filename: String) {
-    return this.http.post(`${API_URL}/documents`, {"fileBase64": file, "originalFileName": filename});
+  uploadDocument(file: any, filename: String, chosenOrder: number) {
+    return this.http.post(`${API_URL}/documents`, {"fileBase64": file, "originalFileName": filename, "chosenOrder": chosenOrder});
   }
 
   sendDocumentByEmail(user:UserModel, document:DocumentModel) {

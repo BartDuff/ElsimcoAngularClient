@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Refuser ?</h2>
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field>
+    <input matInput
+           placeholder="Commentaire"
+           formControlName="commentaire">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="mat-raised-button" (click)="envoyer()">Envoyer</button>
+  <button class="mat-raised-button mat-accent" (click)="fermer()">Annuler</button>
+</mat-dialog-actions>

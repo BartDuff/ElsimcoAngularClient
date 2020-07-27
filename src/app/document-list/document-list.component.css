@@ -61,7 +61,7 @@ th {
   }
 
   .table-container{
-    width: fit-content!important;
+    /*width: fit-content!important;*/
     overflow-x: auto;
   }
 

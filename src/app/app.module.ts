@@ -111,6 +111,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import {ConfigurationService} from './services/configuration.service';
 import {DragAndDropModule} from 'angular-draggable-droppable';
 import {DragulaModule} from 'ng2-dragula';
+import { RefuseWithCommentComponent } from './dialog/refuse-with-comment/refuse-with-comment.component';
 const config: InputFileConfig = {};
 
 
@@ -168,6 +169,7 @@ const config: InputFileConfig = {};
     AdminCongesComponent,
     AnnuaireComponent,
     AdminDashboardComponent,
+    RefuseWithCommentComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -224,6 +226,6 @@ const config: InputFileConfig = {};
     {provide: DateAdapter, useClass: CustomDateAdapter }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmDialogComponent, EmailDialogComponent, CommentDialogComponent, ConfirmationDialogComponent, CommentFicheDialogComponent, AllowAnticipationDialogComponent]
+  entryComponents: [ConfirmDialogComponent, EmailDialogComponent, CommentDialogComponent, ConfirmationDialogComponent, CommentFicheDialogComponent, AllowAnticipationDialogComponent, RefuseWithCommentComponent]
 })
 export class AppModule { }

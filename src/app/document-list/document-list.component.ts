@@ -12,6 +12,10 @@ import {MatDialogConfig} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {HttpHeaderResponse} from '@angular/common/http';
 import {createTextNode} from '@angular/core/src/render3/node_manipulation';
+import {DragulaService} from 'ng2-dragula';
+import 'rxjs/add/operator/mapTo';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/startWith';
 
 const API_URL = environment.apiUrl;
 @Component({
@@ -38,12 +42,25 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
 
   constructor(private documentService: DocumentService,
               private dialog: MatDialog,
-              private toastrService: ToastrService) {
+              private toastrService: ToastrService,
+              private dragula: DragulaService) {
   }
 
   ngOnInit() {
     this.getDocuments();
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.dragula.drag("DOCUMENTS").subscribe(
+      ()=>{
+        this.pageSize = this.documents.length;
+        this.pagedDocuments = this.documents;
+      }
+    );
+    this.dragula.drop("DOCUMENTS").subscribe(
+      ()=>{
+        this.pageSize = 10;
+        this.getDocuments();
+      }
+    )
     // const headers = [{name: 'Accept', value: 'application/json'}];
     // this.uploader = new FileUploader({url: API_URL + '/documents/upload', autoUpload: true, headers: headers});
     // this.uploader.onCompleteAll = () => alert('File uploaded');
@@ -72,6 +89,7 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
   getDocuments() {
     this.documentService.getDocuments().subscribe(r=> {
       this.documents=r;
+        this.documents.sort((a,b)=>a.chosenOrder-b.chosenOrder);
         this.length = this.documents.length;
       },
       ()=>{},
@@ -100,7 +118,7 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
         if (data) {
           this.documentService.deleteDocument(documentToDelete).subscribe(
             () => {
-              this.documents.splice(this.documents.indexOf(documentToDelete), 1);
+              this.pagedDocuments.splice(this.pagedDocuments.indexOf(documentToDelete), 1);
             }
           );
         }
@@ -206,7 +224,7 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
   handleFile(){
     for(let i=0; i < this.inputFileComponent.files.length;i++) {
       var file = this.inputFileComponent.files[i];
-      console.log (file.file.name,i);
+      // console.log (file.file.name,i);
       this.filename=file.file.name;
       if (file) {
         var reader = new FileReader();
@@ -232,7 +250,7 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
     var length = bytes.byteLength;
     for (var i = 0; i < length; i++)
       binary += String.fromCharCode(bytes[i]);
-    this.documentService.uploadDocument(btoa(binary), this.filename).subscribe(
+    this.documentService.uploadDocument(btoa(binary), this.filename, 1).subscribe(
       ()=>{
         this.getDocuments();
       }
@@ -240,13 +258,27 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
   }
   _handleReaderLoaded(readerEvt) {
     console.log(this.s(this.selectedFiles));
-    this.documentService.uploadDocument(btoa(readerEvt.target.result), this.filename).subscribe(
+    this.documentService.uploadDocument(btoa(readerEvt.target.result), this.filename,1).subscribe(
       ()=>{this.getDocuments();}
       )
   }
 
   s(s){
     JSON.stringify(s)
+  }
+
+  changeOrder(array){
+    for(let el of array){
+      el.chosenOrder = array.indexOf(el)+1;
+      this.documentService.getDocument(el.id).subscribe(
+        (doc)=>{
+          el.fileBase64 = doc.fileBase64;
+          this.documentService.editDocument(el).subscribe(
+            ()=>{}
+          );
+        }
+      )
+    }
   }
 
 }

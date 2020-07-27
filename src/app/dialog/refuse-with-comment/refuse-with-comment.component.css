@@ -1,0 +1,11 @@
+#yes{
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
+
+#no{
+  background-color: orange;
+  color: white;
+  margin: 1em;
+}

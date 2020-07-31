@@ -20,7 +20,7 @@
                        [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)">
               </mat-form-field>
 
-              <div>
+              <mat-form-field>
                 <label>
                   <input matInput readonly [matDatepicker]="picker" placeholder="Date de Naissance :"
                          formControlName="dateNaissance" [(ngModel)]="candidat.dateNaissance"
@@ -28,7 +28,7 @@
                 </label>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
-              </div>
+              </mat-form-field>
 
               <mat-form-field>
                 <input matInput formControlName="codePostal" placeholder="Code Postal" name="codePostal" id="codePostal"
@@ -138,14 +138,14 @@
                             [ngModel]="candidat.fileBase64 != null" (ngModelChange)="$event"
                             (change)="updateModel(candidat)" disabled>CV Joint
               </mat-checkbox>
-              <div>
+              <mat-form-field>
                 <label>
-                  <input matInput [matDatepicker]="picker4" formControlName="dateMAJ" placeholder="Date de MAJ: " name="dateMAJ" id="dateMAJ"
+                  <input matInput [matDatepicker]="picker4" formControlName="dateMAJ" placeholder="Mis à jour le : " name="dateMAJ" id="dateMAJ"
                          [(ngModel)]="candidat.dateMAJ" (ngModelChange)="updateModel(candidat)" readonly>
                 </label>
                 <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                 <mat-datepicker #picker4></mat-datepicker>
-              </div>
+              </mat-form-field>
 
               <mat-form-field>
                 <mat-label>Par :</mat-label>
@@ -157,9 +157,8 @@
                   <mat-option value="Franck">Franck</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              <br><br>
               <mat-form-field>
-
                 <label>
                   <input matInput [matDatepicker]="picker5" formControlName="alerteMAJ" placeholder="Alerte mise à jour : " name="alerteMAJ"
                          id="alerteMAJ" [(ngModel)]="candidat.alerteMAJ" (ngModelChange)="updateModel(candidat)" readonly>
@@ -192,25 +191,6 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <mat-label>Contrat :</mat-label>
-                  <mat-select formControlName="contrat" [(ngModel)]="candidat.contrat"
-                              (selectionChange)="updateModel(candidat)">
-                    <mat-option value="CDI (PE validée)">CDI (PE validée)</mat-option>
-                    <mat-option value="CDI (en PE)">CDI (en PE)</mat-option>
-                    <mat-option value="CDD">CDD</mat-option>
-                    <mat-option value="Interim">Interim</mat-option>
-                    <mat-option value="Formation">Formation</mat-option>
-                    <mat-option value="Indépendant">Indépendant</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                  <input matInput formControlName="raisonDispo" placeholder="Raison de la Recherche : "
-                         name="raisonDispo" id="raisonDispo" [(ngModel)]="candidat.raisonDispo"
-                         (change)="updateModel(candidat)">
-                </mat-form-field>
-
-                <mat-form-field>
                   <mat-select formControlName="etatRecherches" placeholder="Etat des Recherches : " [(ngModel)]="candidat.etatRecherches"
                               (selectionChange)="updateModel(candidat)">
                     <mat-option value="En recherche active">En recherche active</mat-option>
@@ -221,14 +201,24 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <input matInput formControlName="posteSouhaite" placeholder="Postes souhaités : " name="posteSouhaite"
-                         id="posteSouhaite" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)">
+                  <mat-label>Contrat :</mat-label>
+                  <mat-select formControlName="contrat" [(ngModel)]="candidat.contrat"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="">Non concerné</mat-option>
+                    <mat-option value="CDI (PE validée)">CDI (PE validée)</mat-option>
+                    <mat-option value="CDI (en PE)">CDI (en PE)</mat-option>
+                    <mat-option value="CDD">CDD</mat-option>
+                    <mat-option value="Interim">Interim</mat-option>
+                    <mat-option value="Formation">Formation</mat-option>
+                    <mat-option value="Indépendant">Indépendant</mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
                   <mat-label>Délai de préavis :</mat-label>
                   <mat-select formControlName="delai" [(ngModel)]="candidat.delai"
                               (selectionChange)="updateModel(candidat)">
+                    <mat-option value="">Non concerné</mat-option>
                     <mat-option value="1 semaine">1 semaine</mat-option>
                     <mat-option value="2 semaines">2 semaines</mat-option>
                     <mat-option value="3 semaines">3 semaines</mat-option>
@@ -236,6 +226,17 @@
                     <mat-option value="Sous 2 mois">Sous 2 mois</mat-option>
                     <mat-option value="Sous 3 mois">Sous 3 mois</mat-option>
                   </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <input matInput formControlName="raisonDispo" placeholder="Raison de la Recherche : "
+                         name="raisonDispo" id="raisonDispo" [(ngModel)]="candidat.raisonDispo"
+                         (change)="updateModel(candidat)">
+                </mat-form-field>
+
+                <mat-form-field>
+                  <input matInput formControlName="posteSouhaite" placeholder="Postes souhaités : " name="posteSouhaite"
+                         id="posteSouhaite" [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)">
                 </mat-form-field>
 
                 <mat-form-field>
@@ -280,7 +281,7 @@
         <form [formGroup]="formulaire7" (ngSubmit)="onSubmit()">
           <mat-card-content>
             <div fxLayout="column" fxLayoutAlign="space-around center">
-              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:dimgray;padding:1em;width:100%;">
                 <mat-form-field >
                   <mat-label>Domaine 1 :</mat-label>
                   <mat-select formControlName="domaine1" [(ngModel)]="candidat.domaine1"
@@ -302,7 +303,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:dimgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Domaine 2 :</mat-label>
                 <mat-select formControlName="domaine2" [(ngModel)]="candidat.domaine2"
@@ -324,7 +325,7 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:dimgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Domaine 3 :</mat-label>
                 <mat-select formControlName="domaine3" [(ngModel)]="candidat.domaine3"
@@ -346,7 +347,7 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:gray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Métier 1 :</mat-label>
                 <mat-select formControlName="metier1" [(ngModel)]="candidat.metier1"
@@ -366,7 +367,7 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:gray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Métier 2 :</mat-label>
                 <mat-select formControlName="metier2" [(ngModel)]="candidat.metier2"
@@ -386,7 +387,7 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:gray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Métier 3 :</mat-label>
                 <mat-select formControlName="metier3" [(ngModel)]="candidat.metier3"
@@ -406,7 +407,7 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:darkgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Outils 1 :</mat-label>
                 <mat-select formControlName="outils1" [(ngModel)]="candidat.outils1"
@@ -429,7 +430,7 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:darkgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Outils 2 :</mat-label>
                 <mat-select formControlName="outils2" [(ngModel)]="candidat.outils2"
@@ -452,7 +453,7 @@
                 </mat-select>
               </mat-form-field>
               </div>
-              <div style="box-sizing:content-box;background-color:lightgray;padding:1em;width:100%;">
+              <div style="box-sizing:content-box;background-color:darkgray;padding:1em;width:100%;">
               <mat-form-field>
                 <mat-label>Outils 3 :</mat-label>
                 <mat-select formControlName="outils3" [(ngModel)]="candidat.outils3"
@@ -561,13 +562,13 @@
                        name="fixeDernierSalaireBrut" id="fixeDernierSalaireBrut"
                        [(ngModel)]="candidat.fixeDernierSalaireBrut" (change)="updateModel(candidat)">
               </mat-form-field>
-
+              <br>
               <mat-form-field>
                 <input matInput formControlName="varDernierSalaireBrut" placeholder="Part variable : "
                        name="varDernierSalaireBrut" id="varDernierSalaireBrut"
                        [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)">
               </mat-form-field>
-
+              <br>
               <mat-form-field>
                 <mat-label>Prétentions brut salariales en k€ :</mat-label>
                 <mat-select formControlName="fourchetteSalariale" [(ngModel)]="candidat.fourchetteSalariale"
@@ -581,15 +582,15 @@
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field>
-                <mat-label>Mobilité géographique:</mat-label>
-                <mat-select formControlName="mobiliteGeographique" id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteFrance"
-                       (selectionChange)="updateModel(candidat)">
-                <mat-option [value]=true>oui</mat-option>
-                <mat-option [value]=false>non</mat-option>
-                </mat-select>
-              </mat-form-field>
-
+<!--              <mat-form-field>-->
+<!--                <mat-label>Mobilité géographique:</mat-label>-->
+<!--                <mat-select formControlName="mobiliteGeographique" id="mobiliteGeographique" [(ngModel)]="candidat.mobiliteFrance"-->
+<!--                       (selectionChange)="updateModel(candidat)">-->
+<!--                <mat-option [value]=true>oui</mat-option>-->
+<!--                <mat-option [value]=false>non</mat-option>-->
+<!--                </mat-select>-->
+<!--              </mat-form-field>-->
+              <br>
               <mat-form-field>
                 <mat-label>Lieux de Mobilité géographique:</mat-label>
                 <mat-select formControlName="lieuxMobiliteGeographique" id="lieuxMobiliteGeographique"
@@ -601,7 +602,7 @@
                   <mat-option value="International">International</mat-option>
                 </mat-select>
               </mat-form-field>
-
+              <br>
               <mat-form-field>
                 <mat-label>Région 1 : </mat-label>
                 <mat-select formControlName="region1" [(ngModel)]="candidat.region1"
@@ -614,6 +615,7 @@
 <!--                <input matInput formControlName="region2" placeholder="Région 2: " name="region2" id="region2"-->
 <!--                       [(ngModel)]="candidat.region2" (change)="updateModel(candidat)">-->
 <!--              </mat-form-field>-->
+              <br>
               <mat-form-field>
                 <mat-label>Région 2 : </mat-label>
                 <mat-select formControlName="region2" [(ngModel)]="candidat.region2"
@@ -637,7 +639,7 @@
       </div>
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="answers" style="display: flex;flex-direction: column;font-weight: bold;">
-          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance' && c !=='dateCreation' && c !=='dateDispo' && c !=='dateMAJ' && c !=='alerteMAJ' && c !=='dateCandidature' && c !=='dateEnvoi' && c !=='dateDerniersEntretiens' && c !=='references'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}} {{c}}</span>
+          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance' && c !=='dateCreation' && c !=='dateDispo' && c !=='dateMAJ' && c !=='alerteMAJ' && c !=='dateCandidature' && c !=='dateEnvoi' && c !=='dateDerniersEntretiens' && c !=='references'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}}</span>
           <span *ngIf="c =='dateNaissance' || c =='dateCreation' || c =='dateMAJ' || c =='alerteMAJ' || c =='dateCandidature' || c == 'dateDerniersEntretiens' || c == 'dateDispo' || c =='dateEnvoi'">{{!candidat[c]?'-':candidat[c] | date: 'dd/MM/yyyy'}}</span>
           <span *ngIf="c =='diplome'">Année : {{candidat[c].annee}} | Intitulé : {{candidat[c].intitule}} | Obtenu : {{candidat[c].obtenu == true?"Oui":"Non"}}</span>
             <span *ngIf="c =='references'" style="display: inline-flex">
@@ -664,7 +666,7 @@
 <!--              [hidden]="cellClicked(candidat, 'prenom')">{{candidat.prenom}}</span>-->
 <!--              <input matInput [hidden]="!cellClicked(candidat, 'prenom')" [(ngModel)]="candidat.prenom"-->
 <!--                     (change)="updateModel(candidat)">-->
-              <td>{{candidat.prenom}}</td>
+              <td><input matInput [(ngModel)]="candidat.prenom" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Date des derniers entretiens :</td>
@@ -692,7 +694,7 @@
           </tr>
           <tr>
             <td>Projet professionnel :</td>
-            <td>{{candidat.posteSouhaite}}</td>
+            <td><input matInput [(ngModel)]="candidat.posteSouhaite" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Etat des recherches :</td>
@@ -708,11 +710,11 @@
           </tr>
           <tr>
             <td>Adéquation poste/profil :</td>
-            <td><input matInput [(ngModel)]="candidat.adequationPosteProfil" (change)="updateModel(candidat)"></td>
+            <td><textarea matInput cdkTextareaAutosize [(ngModel)]="candidat.adequationPosteProfil" (change)="updateModel(candidat)"></textarea></td>
           </tr>
           <tr>
             <td>Lieu de résidence :</td>
-            <td>{{candidat.ville}}</td>
+            <td><input matInput [(ngModel)]="candidat.ville" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Mobilité géographique :</td>
@@ -724,15 +726,15 @@
           </tr>
           <tr>
             <td>Rémunération actuelle fixe :</td>
-            <td>{{candidat.fixeDernierSalaireBrut}}</td>
+            <td><input matInput [(ngModel)]="candidat.fixeDernierSalaireBrut" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Rémunération actuelle part variable :</td>
-            <td>{{candidat.varDernierSalaireBrut}}</td>
+            <td><input matInput [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Rémunération souhaitée :</td>
-            <td>{{candidat.pretentionSalaireBrut}}</td>
+            <td><input matInput [(ngModel)]="candidat.pretentionSalaireBrut" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Connaissance langues et niveaux :</td>
@@ -760,35 +762,39 @@
           </tr>
           <tr>
             <td>Date de naissance :</td>
-            <td>{{candidat.dateNaissance | date: 'dd/MM/yyyy'}}</td>
+            <td>
+              <input matInput readonly [matDatepicker]="pickerNaissance" [(ngModel)]="candidat.dateNaissance"
+                     (clickOutside)="updateModel(candidat)" (click)="pickerNaissance.open()">
+              <mat-datepicker #pickerNaissance></mat-datepicker>
+            </td>
           </tr>
           <tr>
             <td>Lieu de niassance :</td>
-            <td>{{candidat.villeNaissance}}</td>
+            <td><input matInput [(ngModel)]="candidat.villeNaissance" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Département de naissance :</td>
-            <td>{{candidat.departementNaissance}}</td>
+            <td><input matInput [(ngModel)]="candidat.departementNaissance" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Nationalité :</td>
-            <td>{{candidat.nationalite}}</td>
+            <td><input matInput [(ngModel)]="candidat.nationalite" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Adresse :</td>
-            <td>{{candidat.adresse}}</td>
+            <td><input matInput [(ngModel)]="candidat.adresse" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Téléphone :</td>
-            <td>{{candidat.mobile}}</td>
+            <td><input matInput [(ngModel)]="candidat.mobile" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Adresse e-mail :</td>
-            <td>{{candidat.email}}</td>
+            <td><input matInput [(ngModel)]="candidat.email" (change)="updateModel(candidat)"></td>
           </tr>
           <tr>
             <td>Numéro Sécurité Sociale :</td>
-            <td>{{candidat.numSecu}}</td>
+            <td><input matInput [(ngModel)]="candidat.numSecu" (change)="updateModel(candidat)"></td>
           </tr>
         </table>
       </div>

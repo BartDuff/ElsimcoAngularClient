@@ -33,7 +33,7 @@ export class CandidatModel extends ContactModel {
   references: Reference[];
   enPoste: boolean;
   contrat: String;
-  preavisNegociable: boolean;
+  preavisNegociable: String;
   delai: String;
   raisonDispo: String;
   posteSouhaite: String;

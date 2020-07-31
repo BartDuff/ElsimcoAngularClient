@@ -63,7 +63,7 @@ export class AddCandidatComponent implements OnInit {
       ville: ['', [Validators.required, Validators.pattern('^[a-zA-ZÀ-ú\\-\\s]*')]],
       mobile: ['',[Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
       transport: [''],
-      fileBase64: ['']
+      fileBase64: ['',[Validators.required]]
     });
     this.contactForm2 = this.formBuilder.group({
       Id:[''],
@@ -166,7 +166,7 @@ export class AddCandidatComponent implements OnInit {
     c.email = this.contactForm1.controls.email.value;
     c.adresse = this.contactForm1.controls.adresse.value;
     c.codePostal = this.contactForm1.controls.codePostal.value;
-    c.ville = this.contactForm1.controls.codePostal.value;
+    c.ville = this.contactForm1.controls.ville.value;
     c.mobile = this.contactForm1.controls.mobile.value;
     c.permisB = this.contactForm1.controls.transport.value.includes("permisB");
     c.voiture = this.contactForm1.controls.transport.value.includes("voiture");

@@ -176,7 +176,7 @@
             <label class="col-md-3 col-sm-5 col-xs-12">CV :</label>
             <div style="display: flex;justify-content: center;">
               <input-file id="fileBase64" placeholder="CV au format PDF" formControlName="fileBase64"
-                          (change)="onFileChange()"></input-file>
+                          (change)="onFileChange()" required></input-file>
               <div *ngIf="submitted && f.fileBase64.errors" class="help-block">
                 <div *ngIf="f.fileBase64.errors.required">Votre CV est requis pour pouvoir vous recontacter</div>
               </div>
@@ -540,13 +540,13 @@
             <mat-label>Sous quel type de contrat ?</mat-label>
             <mat-select formControlName="contrat">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
-              <mat-option value="CDI">CDI</mat-option>
+              <mat-option value="">Non concerné</mat-option>
+              <mat-option value="CDI (PE validée)">CDI (PE validée)</mat-option>
+              <mat-option value="CDI (en PE)">CDI (en PE)</mat-option>
               <mat-option value="CDD">CDD</mat-option>
-              <mat-option value="Intérim">Intérim</mat-option>
-              <mat-option value="Indépendant">Indépendant</mat-option>
-              <mat-option value="Contrat de professionnalisation">Contrat de professionnalisation</mat-option>
-              <mat-option value="Alternance">Alternance</mat-option>
+              <mat-option value="Interim">Interim</mat-option>
               <mat-option value="Formation">Formation</mat-option>
+              <mat-option value="Indépendant">Indépendant</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -567,8 +567,9 @@
             <mat-label>Préavis négociable ?</mat-label>
             <mat-select formControlName="preavisNegociable">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
-              <mat-option [value]="true">Oui</mat-option>
-              <mat-option [value]="false">Non</mat-option>
+              <mat-option value="">Non concerné</mat-option>
+              <mat-option value="Oui">Oui</mat-option>
+              <mat-option value="Non">Non</mat-option>
             </mat-select>
           </mat-form-field>
           <!--          <div class="form-field">-->
@@ -584,6 +585,7 @@
             <mat-label>Sous quel délai ?</mat-label>
             <mat-select formControlName="delai">
               <mat-option value="" disabled selected>Sélectionnez une option</mat-option>
+              <mat-option value="">Non concerné</mat-option>
               <mat-option value="1 semaine">1 semaine</mat-option>
               <mat-option value="2 semaines">2 semaines</mat-option>
               <mat-option value="3 semaines">3 semaines</mat-option>

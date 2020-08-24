@@ -107,7 +107,7 @@
                   </mat-select>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field style="background-color: antiquewhite">
                   <mat-label>Source du CV :</mat-label>
                   <mat-select formControlName="sourceCV" [(ngModel)]="candidat.sourceCv"
                               (selectionChange)="updateModel(candidat)">
@@ -182,6 +182,15 @@
             <mat-card-content>
               <div fxLayout="column" fxLayoutAlign="space-around center">
                 <mat-form-field>
+                  <mat-select formControlName="etatRecherches" placeholder="Etat des Recherches : " [(ngModel)]="candidat.etatRecherches"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="En recherche active">En recherche active</mat-option>
+                    <mat-option value="En veille">En veille</mat-option>
+                    <mat-option value="Pas à l'écoute">Pas à l'écoute</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
                   <mat-label>En poste ?</mat-label>
                   <mat-select formControlName="enPoste" [(ngModel)]="candidat.enPoste"
                               (selectionChange)="updateModel(candidat)">
@@ -191,45 +200,45 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <mat-select formControlName="etatRecherches" placeholder="Etat des Recherches : " [(ngModel)]="candidat.etatRecherches"
-                              (selectionChange)="updateModel(candidat)">
-                    <mat-option value="En recherche active">En recherche active</mat-option>
-                    <mat-option value="En veille">En veille</mat-option>
-                    <mat-option value="En recherche">En recherche</mat-option>
-                    <mat-option value="Pas en recherche">Pas en recherche</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
                   <mat-label>Contrat :</mat-label>
                   <mat-select formControlName="contrat" [(ngModel)]="candidat.contrat"
                               (selectionChange)="updateModel(candidat)">
-                    <mat-option value="">Non concerné</mat-option>
-                    <mat-option value="CDI (PE validée)">CDI (PE validée)</mat-option>
-                    <mat-option value="CDI (en PE)">CDI (en PE)</mat-option>
+                    <mat-option value="CDI (période d'essai validée)">CDI (période d'essai validée)</mat-option>
+                    <mat-option value="CDI (en période d'essai)">CDI (en période d'essai)</mat-option>
                     <mat-option value="CDD">CDD</mat-option>
                     <mat-option value="Interim">Interim</mat-option>
                     <mat-option value="Formation">Formation</mat-option>
                     <mat-option value="Indépendant">Indépendant</mat-option>
+                    <mat-option value="">Non concerné</mat-option>
                   </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                  <mat-label>Délai de préavis :</mat-label>
+                  <mat-label>Préavis négociable ?</mat-label>
+                  <mat-select formControlName="preavisNegociable" [(ngModel)]="candidat.preavisNegociable"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="Oui">Oui</mat-option>
+                    <mat-option value="Non">Non</mat-option>
+                    <mat-option value="">Non concerné</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Sous quel délais :</mat-label>
                   <mat-select formControlName="delai" [(ngModel)]="candidat.delai"
                               (selectionChange)="updateModel(candidat)">
-                    <mat-option value="">Non concerné</mat-option>
                     <mat-option value="1 semaine">1 semaine</mat-option>
                     <mat-option value="2 semaines">2 semaines</mat-option>
                     <mat-option value="3 semaines">3 semaines</mat-option>
                     <mat-option value="Sous 1 mois">Sous 1 mois</mat-option>
                     <mat-option value="Sous 2 mois">Sous 2 mois</mat-option>
                     <mat-option value="Sous 3 mois">Sous 3 mois</mat-option>
+                    <mat-option value="">Non concerné</mat-option>
                   </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                  <input matInput formControlName="raisonDispo" placeholder="Raison de la Recherche : "
+                  <input matInput formControlName="raisonDispo" placeholder="Pourquoi êtes-vous à l'écoute aujourd'hui ? "
                          name="raisonDispo" id="raisonDispo" [(ngModel)]="candidat.raisonDispo"
                          (change)="updateModel(candidat)">
                 </mat-form-field>
@@ -703,8 +712,8 @@
                           (selectionChange)="updateModel(candidat)">
                 <mat-option value="En recherche active">En recherche active</mat-option>
                 <mat-option value="En veille">En veille</mat-option>
-                <mat-option value="En recherche">En recherche</mat-option>
-                <mat-option value="Pas en recherche">Pas en recherche</mat-option>
+<!--                <mat-option value="En recherche">En recherche</mat-option>-->
+                <mat-option value="Pas à l'écoute">Pas à l'écoute</mat-option>
               </mat-select>
             </td>
           </tr>

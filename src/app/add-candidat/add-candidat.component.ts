@@ -203,6 +203,7 @@ export class AddCandidatComponent implements OnInit {
     c.enPoste = this.contactForm6.controls.enPoste.value;
     c.contrat = this.contactForm6.controls.contrat.value;
     c.preavisNegociable = this.contactForm6.controls.preavisNegociable.value;
+    c.delai = this.contactForm6.controls.delai.value;
     c.raisonDispo = this.contactForm6.controls.raisonDispo.value;
     c.posteSouhaite = this.contactForm6.controls.posteSouhaite.value;
     c.evolution5ans = this.contactForm6.controls.evolution5ans.value;

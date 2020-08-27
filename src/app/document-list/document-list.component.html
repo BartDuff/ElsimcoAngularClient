@@ -19,7 +19,7 @@
                  showFirstLastButtons
                  (page)="OnPageChange($event, bottom);">
   </mat-paginator>
-<table class="bordered mat-elevation-z8 tabledoc" style="margin: auto;" *ngIf="documents">
+<table class="bordered mat-elevation-z8 tabledoc" style="margin: auto;" *ngIf="documents" #autoscroll>
   <thead>
   <tr>
     <th>Nom du fichier</th>
@@ -30,14 +30,16 @@
     <th *ngIf="currentUser.role=='ADMIN'">Supprimer</th>
   </tr>
   </thead>
-  <tbody [dragula]="currentUser.role=='ADMIN'?'DOCUMENTS':null" [dragulaModel]="pagedDocuments" (dragulaModelChange)="changeOrder($event)">
+  <tbody [dragula]="currentUser.role=='ADMIN'?'DOCUMENTS':null" [dragulaModel]="pagedDocuments" (dragulaModelChange)="changeOrder($event)" class="wrapper">
   <tr app-document-item *ngFor="let document of pagedDocuments"
       [document]="document"
       (documentSelected)="selectDocument($event)"
       (documentDeleted)="deleteDocument($event)"
       (documentDownloaded)="getDocument($event)"
       (documentOpened)="openDocument($event)"
-      (documentToSend)="sendDocumentByEmail($event)" [ngStyle]="{'cursor':currentUser.role=='ADMIN'?'grab':''}">
+      (documentToSend)="sendDocumentByEmail($event)"
+      (documentToModify)="updateTitle($event)"
+      [ngStyle]="{'cursor':currentUser.role=='ADMIN'?'grab':''}">
   </tr>
   </tbody>
 </table>
@@ -47,6 +49,27 @@
                  (page)="OnPageChange($event, top);">
   </mat-paginator>
 </div>
+<!--<div #autoscroll [dragula]="'EXEMPLE'" class="wrapper">-->
+<!--  <div>A</div>-->
+<!--  <div>B</div>-->
+<!--  <div>C</div>-->
+<!--  <div>D</div>-->
+<!--  <div>E</div>-->
+<!--  <div>F</div>-->
+<!--  <div>G</div>-->
+<!--  <div>H</div>-->
+<!--  <div>I</div>-->
+<!--  <div>J</div>-->
+<!--  <div>K</div>-->
+<!--  <div>L</div>-->
+<!--  <div>M</div>-->
+<!--  <div>N</div>-->
+<!--  <div>O</div>-->
+<!--  <div>P</div>-->
+<!--  <div>Q</div>-->
+<!--  <div>R</div>-->
+<!--  <div>S</div>-->
+<!--</div>-->
 <div *ngIf="!documents || sending"
           style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner

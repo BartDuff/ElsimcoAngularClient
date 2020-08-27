@@ -9,4 +9,5 @@ import {UserModel} from './models/user.model';
 export class AppComponent {
   title = 'ElsimcoAngularClient';
   currentUser: UserModel;
+
 }

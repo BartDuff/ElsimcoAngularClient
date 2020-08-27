@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ContactModel} from '../models/contact.model';
 import {CandidatService} from '../services/candidat.service';
 import {saveAs} from 'file-saver';
@@ -28,6 +28,7 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
   totalPages = 1;
   size=10;
   paginator;
+  topScrollbarWidth : any;
   qCandidatExemple = {};
   candidatFiltre = new CandidatModel();
   //editField: String;
@@ -227,13 +228,13 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
   @ViewChild('paginator1') paginator1: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
 
-
   ngOnInit() {
     this.paginator = this.paginator1;
     this.getQCandidates();
     // this.dataSource.paginator = this.paginator;
     //this.getCandidates();
   }
+
 
   getQCandidates(){
     this.spinner=true;

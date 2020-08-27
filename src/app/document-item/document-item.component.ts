@@ -12,13 +12,16 @@ import {UserModel} from '../models/user.model';
 export class DocumentItemComponent implements OnInit {
   currentUser: UserModel;
   documents: any[];
+  newTitle : String;
   documentSubscription: Subscription;
+  modifying: boolean = false;
   @Input() document: DocumentModel;
   @Output() documentSelected = new EventEmitter<DocumentModel>();
   @Output() documentDeleted = new EventEmitter<DocumentModel>();
   @Output() documentDownloaded = new EventEmitter<DocumentModel>();
   @Output() documentOpened = new EventEmitter<DocumentModel>();
   @Output() documentToSend = new EventEmitter<DocumentModel>();
+  @Output() documentToModify = new EventEmitter<DocumentModel>();
 
   constructor(private documentService: DocumentService) { }
 
@@ -29,6 +32,7 @@ export class DocumentItemComponent implements OnInit {
       }
     );
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.newTitle = this.document.originalFileName.split(".")[0];
     this.documentService.emitDocumentSubject();
   }
 
@@ -50,5 +54,10 @@ export class DocumentItemComponent implements OnInit {
 
   sendDocumentByEmail() {
     this.documentToSend.emit(this.document);
+  }
+
+  modifyTitle() {
+    this.document.originalFileName = this.newTitle + "." + this.document.originalFileName.split(".")[1];
+    this.documentToModify.emit(this.document);
   }
 }

@@ -1,4 +1,6 @@
-<td>{{ document.originalFileName }}</td>
+<td>
+  <span *ngIf="!modifying" (dblclick)="modifying = !modifying">{{ document.originalFileName }}</span>
+  <input *ngIf="modifying" matInput [(ngModel)]="newTitle" (clickOutside)="modifying = !modifying;modifyTitle()" style="width: 100%"></td>
 <td>{{ document.annee }}</td>
 <td class="hideOnMobile">
   <button type="button"

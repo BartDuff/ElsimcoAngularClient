@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs';
 import {DocumentModel} from '../models/document.model';
 import {DocumentService} from '../services/document.service';
@@ -12,7 +12,8 @@ import {MatDialogConfig} from '@angular/material';
 import {ToastrService} from 'ngx-toastr';
 import {HttpHeaderResponse} from '@angular/common/http';
 import {createTextNode} from '@angular/core/src/render3/node_manipulation';
-import {DragulaService} from 'ng2-dragula';
+import {dragula, DragulaService} from 'ng2-dragula';
+import * as autoScroll from 'dom-autoscroller';
 import 'rxjs/add/operator/mapTo';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/startWith';
@@ -34,25 +35,38 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
   sending = false;
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
-
   length: number = 0;
   pageSize: number = 10;
+  scroll:any;
   @ViewChild('top') paginatorTop: MatPaginator;
   @ViewChild('bottom') paginatorBottom: MatPaginator;
+  @ViewChild('autoscroll') autoscroll: ElementRef;
 
   constructor(private documentService: DocumentService,
               private dialog: MatDialog,
               private toastrService: ToastrService,
-              private dragula: DragulaService) {
+              private dragula: DragulaService,
+              private elemRef: ElementRef) {
   }
 
   ngOnInit() {
     this.getDocuments();
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.dragula.drag("DOCUMENTS").subscribe(
-      ()=>{
+      (obj)=>{
         this.pageSize = this.documents.length;
         this.pagedDocuments = this.documents;
+        let drake = this.dragula.find("DOCUMENTS");
+        autoScroll(
+          window,
+          {
+            margin: 50,
+            scrollWhenOutside: true,
+            autoScroll : function () {
+              console.log(drake.drake.dragging);
+              return drake.drake.dragging;
+            }
+          });
       }
     );
     this.dragula.drop("DOCUMENTS").subscribe(
@@ -60,7 +74,8 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
         this.pageSize = 10;
         this.getDocuments();
       }
-    )
+    );
+
     // const headers = [{name: 'Accept', value: 'application/json'}];
     // this.uploader = new FileUploader({url: API_URL + '/documents/upload', autoUpload: true, headers: headers});
     // this.uploader.onCompleteAll = () => alert('File uploaded');
@@ -279,6 +294,18 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
         }
       )
     }
+  }
+
+  updateTitle(document){
+    this.documentService.getDocument(document.id).subscribe(
+      (doc)=>{
+        document.fileBase64 = doc.fileBase64;
+        // console.log(document);
+        this.documentService.editDocument(document).subscribe(
+          ()=>{}
+        );
+      }
+    )
   }
 
 }

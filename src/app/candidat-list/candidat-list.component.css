@@ -8,7 +8,7 @@ th.mat-sort-header-sorted {
 }
 
 .table-container {
-  overflow: auto;
+  overflow: scroll;
 }
 
 td{

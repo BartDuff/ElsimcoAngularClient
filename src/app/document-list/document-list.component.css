@@ -46,6 +46,10 @@ th {
   padding: 1em!important;
 }
 
+.tabledoc {
+  overflow-y: auto;
+}
+
 @media only screen and (max-width: 768px) {
 
   table {

@@ -46,6 +46,7 @@
     "ngx-bootstrap": "^3.3.0",
     "ngx-gallery": "^5.10.0",
     "ngx-input-file": "^7.0.4",
+    "ngx-perfect-scrollbar": "^6.3.1",
     "ngx-toastr": "^10.0.4",
     "popper.js": "^1.16.1",
     "rxjs": "~6.2.0",

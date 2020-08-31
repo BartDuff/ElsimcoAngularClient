@@ -32,12 +32,12 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
   selectedDocument: DocumentModel;
   selectedFiles;
   filename;
+  scroll: any;
   sending = false;
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
   length: number = 0;
   pageSize: number = 10;
-  scroll:any;
   @ViewChild('top') paginatorTop: MatPaginator;
   @ViewChild('bottom') paginatorBottom: MatPaginator;
   @ViewChild('autoscroll') autoscroll: ElementRef;
@@ -57,13 +57,13 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
         this.pageSize = this.documents.length;
         this.pagedDocuments = this.documents;
         let drake = this.dragula.find("DOCUMENTS");
-        autoScroll(
+        this.scroll = autoScroll(
           window,
           {
-            margin: 50,
+            margin: 30,
+            maxSpeed: 25,
             scrollWhenOutside: true,
             autoScroll : function () {
-              console.log(drake.drake.dragging);
               return drake.drake.dragging;
             }
           });

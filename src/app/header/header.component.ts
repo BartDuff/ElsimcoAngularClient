@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
   currentUserSubscription: Subscription;
   currentUser: UserModel;
   token: any;
+  notifications = ["Une nouvelles actualité a été publiée","Nouvelle demande de congés validée","Fiche de présence validée"];
   @Output() public sidenavToggle = new EventEmitter();
 
   constructor(private authService: AuthenticationService,

@@ -114,7 +114,9 @@ import {DragulaModule} from 'ng2-dragula';
 import { RefuseWithCommentComponent } from './dialog/refuse-with-comment/refuse-with-comment.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import {PerfectScrollbarConfigInterface, PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 const config: InputFileConfig = {};
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
 
 
 @NgModule({
@@ -218,6 +220,7 @@ const config: InputFileConfig = {};
     NgxGalleryModule,
     MatTreeModule,
     MatAutocompleteModule,
+    PerfectScrollbarModule,
     DragulaModule.forRoot(),
     ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production })
   ],
@@ -225,7 +228,11 @@ const config: InputFileConfig = {};
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
-    {provide: DateAdapter, useClass: CustomDateAdapter }
+    {provide: DateAdapter, useClass: CustomDateAdapter },
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    }
   ],
   bootstrap: [AppComponent],
   entryComponents: [ConfirmDialogComponent, EmailDialogComponent, CommentDialogComponent, ConfirmationDialogComponent, CommentFicheDialogComponent, AllowAnticipationDialogComponent, RefuseWithCommentComponent]

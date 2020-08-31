@@ -31,6 +31,10 @@
       <li><a mat-button routerLink="/home" *ngIf="!token">Accueil</a></li>
       <li><a mat-button routerLink="/contact_form" *ngIf="!token">Nous Rejoindre</a></li>
       <li><a mat-button routerLink="/login" *ngIf="!token">S'identifier</a></li>
+      <li><button mat-button [matMenuTriggerFor]="menuNotif" *ngIf="token && currentUser.role =='ADMIN' && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')"><mat-icon style="color: white" matBadge="{{notifications?.length}}" matBadgeOverlap="true">notifications</mat-icon></button></li>
+      <mat-menu #menuNotif="matMenu" xPosition="before" backdropClass="toolbar-menu">
+        <a mat-menu-item *ngFor="let notif of notifications"><span>{{notif}}</span></a>
+      </mat-menu>
       <li><a mat-button routerLink="/news" *ngIf="token">Actualités</a></li>
       <li><a mat-button routerLink="/users/{{ currentUser.id }}" *ngIf="token">Mon Profil</a></li>
       <li>

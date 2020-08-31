@@ -1,6 +1,6 @@
 <td>
-  <span *ngIf="!modifying" (dblclick)="modifying = !modifying">{{ document.originalFileName }}</span>
-  <input *ngIf="modifying" matInput [(ngModel)]="newTitle" (clickOutside)="modifying = !modifying;modifyTitle()" style="width: 100%"></td>
+  <span *ngIf="(currentUser.role=='ADMIN'&&!modifying)||currentUser.role=='USER'" (dblclick)="currentUser.role=='ADMIN'?modifying = !modifying:null">{{ document.originalFileName }}</span>
+  <input *ngIf="currentUser.role=='ADMIN'&&modifying" matInput [(ngModel)]="newTitle" (clickOutside)="modifying = !modifying;modifyTitle()" style="width: 100%"></td>
 <td>{{ document.annee }}</td>
 <td class="hideOnMobile">
   <button type="button"

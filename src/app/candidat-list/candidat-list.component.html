@@ -303,7 +303,8 @@
                      [pageSizeOptions]="[5, 10, 25, 100]"
                      showFirstLastButtons>
       </mat-paginator>
-      <div style="width: 100vw;overflow: scroll" #regularScrollBar>
+      <div style="width: 100vw;overflow: scroll">
+        <perfect-scrollbar>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
             <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
@@ -336,6 +337,7 @@
           <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
 
         </table>
+        </perfect-scrollbar>
       </div>
     </div>
     <mat-card *ngIf="spinner"
@@ -356,6 +358,7 @@
                      showFirstLastButtons>
       </mat-paginator>
       <div style="width: 100vw;overflow: scroll">
+        <perfect-scrollbar>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <ng-container *ngFor="let x of columnsToFilter" [matColumnDef]="x">
             <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
@@ -393,6 +396,7 @@
           <tr mat-row *matRowDef="let row; columns: columnsToFilter;"></tr>
 
         </table>
+        </perfect-scrollbar>
       </div>
     </div>
     <mat-card *ngIf="spinner"

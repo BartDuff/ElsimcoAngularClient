@@ -115,6 +115,7 @@ import { RefuseWithCommentComponent } from './dialog/refuse-with-comment/refuse-
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import {PerfectScrollbarConfigInterface, PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
+import { NotificationsRxComponent } from './notifications-rx/notifications-rx.component';
 const config: InputFileConfig = {};
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
 
@@ -174,6 +175,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
     AnnuaireComponent,
     AdminDashboardComponent,
     RefuseWithCommentComponent,
+    NotificationsRxComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -222,7 +224,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
     MatAutocompleteModule,
     PerfectScrollbarModule,
     DragulaModule.forRoot(),
-    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService, FaqService, ConfigurationService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

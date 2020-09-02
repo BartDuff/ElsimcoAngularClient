@@ -25,6 +25,7 @@
     "@angular/pwa": "^0.8.9",
     "@angular/router": "^6.1.0",
     "@angular/service-worker": "^6.1.0",
+    "@stomp/rx-stomp": "^0.3.5",
     "angular2-cookie-law": "^6.2.0",
     "bootstrap": "4.3.1",
     "classlist.js": "^1.1.20150312",
@@ -51,6 +52,7 @@
     "popper.js": "^1.16.1",
     "rxjs": "~6.2.0",
     "rxjs-compat": "^6.5.5",
+    "sockjs": "^0.3.21",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.8.26"
   },

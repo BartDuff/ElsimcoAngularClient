@@ -7,7 +7,7 @@ import { environment } from './environments/environment';
 if (environment.production) {
   enableProdMode();
 }
-document.write(`<link rel="icon" type="image/x-icon" href="../${environment.base}/assets/images/logo.ico">`);
+document.write(`<link rel="icon" type="image/x-icon" href="../${environment.base}/assets/icons/favicon.ico">`);
 document.write(`<Base href=${environment.base}>`);
 platformBrowserDynamic().bootstrapModule(AppModule).then(()=>{
   if ('serviceWorker' in navigator && environment.production) {

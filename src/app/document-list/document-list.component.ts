@@ -179,7 +179,7 @@ export class DocumentListComponent implements OnInit, AfterViewInit {
             //   window.location.href = reader.result
             // };
             // reader.readAsDataURL(blob);
-            let fileURL = window.URL.createObjectURL(blob,);
+            let fileURL = window.URL.createObjectURL(blob);
             let tab = window.open();
             tab.location.href = fileURL;
           }

@@ -1,12 +1,30 @@
 {
+  "dir": "ltr",
+  "lang": "fr",
   "name": "Elsimco",
   "short_name": "Elsimco",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
-  "scope": "/",
-  "start_url": "http://localhost:4200/",
+  "orientation": "portrait",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "start_url": "https://app.elsimco.com/elsimcojavaweb-0.1.0/",
   "icons": [
+    {
+      "src": "assets/icons/favicon.ico",
+      "sizes": "48x48"
+    },
+    {
+      "src": "assets/icons/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
     {
       "src": "assets/icons/android-chrome-192x192.png",
       "sizes": "192x192",
@@ -16,6 +34,21 @@
       "src": "assets/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "assets/icons/mstile-150x150.png",
+      "sizes": "270x270",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/safari-pinned-tab.svg",
+      "sizes": "4729x4729",
+      "type": "image/svg"
     }
   ]
 }

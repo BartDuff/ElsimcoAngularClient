@@ -116,6 +116,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import {PerfectScrollbarConfigInterface, PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { NotificationsRxComponent } from './notifications-rx/notifications-rx.component';
+import {PushNotificationsModule} from 'ng-push';
 const config: InputFileConfig = {};
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
 
@@ -223,6 +224,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
     MatTreeModule,
     MatAutocompleteModule,
     PerfectScrollbarModule,
+    PushNotificationsModule,
     DragulaModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],

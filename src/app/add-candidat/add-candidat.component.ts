@@ -132,6 +132,8 @@ export class AddCandidatComponent implements OnInit {
               this.contactForm1.controls.prenom.setValue(data.prenom);
               this.contactForm1.controls.email.setValue(data.email);
               this.contactForm1.controls.mobile.setValue(data.mobile);
+            }, error => {
+              this.router.navigate(['login'])
             }
           );
         }
@@ -141,6 +143,10 @@ export class AddCandidatComponent implements OnInit {
 
   get f() {
     return this.contactForm1.controls;
+  }
+
+  c(candidat){
+    console.log(candidat);
   }
 
   sendCV() {
@@ -211,7 +217,6 @@ export class AddCandidatComponent implements OnInit {
     c.fixeDernierSalaireBrut = this.contactForm7.controls.fixeDernierSalaireBrut.value;
     c.varDernierSalaireBrut = this.contactForm7.controls.varDernierSalaireBrut.value;
     c.pretentionSalaireBrut = this.contactForm7.controls.pretentionSalaireBrut.value;
-    console.log(c);
     this.candidatService.addCandidat(c)
       .subscribe(data => {
         this.contactService.deleteContact(this.contact).subscribe(

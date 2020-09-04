@@ -182,6 +182,7 @@ export class CandidatDetailsComponent implements OnInit {
       contrat: [''],
       raisonDispo: [''],
       etatRecherches:[''],
+      preavisNegociable:[''],
       posteSouhaite: [''],
       delai: [''],
       dateDispo: ['']
@@ -258,7 +259,20 @@ export class CandidatDetailsComponent implements OnInit {
   updateModel(candidat: CandidatModel) {
     this.candidatService.editCandidat(candidat).subscribe(
       (data) => {
-
+        // this.candidat = data;
+        // this.candidat.dateDerniersEntretiens = new Date(data.dateDerniersEntretiens);
+        // this.candidat.dateDispo = new Date(data.dateDispo);
+        // this.candidat.dateMAJ = new Date(data.dateMAJ);
+        // this.candidat.dateCreation = new Date(data.dateCreation);
+        // this.candidat.dateNaissance = new Date(data.dateNaissance);
+        // this.candidat.alerteMAJ = new Date(data.alerteMAJ);
+        // this.formulaire8.controls.lieuxMobiliteGeographique.setValue(
+        //   [
+        //     this.candidat.mobiliteParis? "Paris - île-de-France":"",
+        //     this.candidat.mobiliteFrance? "France entière":"",
+        //     this.candidat.mobiliteEurope? "Europe":"",
+        //     this.candidat.mobiliteIntl? "International":""
+        //   ]);
       }
     );
   }

@@ -62,7 +62,7 @@
         <mat-card>
           <mat-card-title>CREATION</mat-card-title>
           <form [formGroup]="formulaire2" (ngSubmit)="onSubmit()">
-            <mat-card-content>
+            <mat-card-content class="tofill">
               <div fxLayout="column" fxLayoutAlign="space-around center">
 
                 <mat-form-field>
@@ -138,7 +138,7 @@
                             [ngModel]="candidat.fileBase64 != null" (ngModelChange)="$event"
                             (change)="updateModel(candidat)" disabled>CV Joint
               </mat-checkbox>
-              <mat-form-field>
+              <mat-form-field class="tofill">
                 <label>
                   <input matInput [matDatepicker]="picker4" formControlName="dateMAJ" placeholder="Mis à jour le : " name="dateMAJ" id="dateMAJ"
                          [(ngModel)]="candidat.dateMAJ" (ngModelChange)="updateModel(candidat)" readonly>
@@ -147,7 +147,7 @@
                 <mat-datepicker #picker4></mat-datepicker>
               </mat-form-field>
 
-              <mat-form-field>
+              <mat-form-field class="tofill">
                 <mat-label>Par :</mat-label>
                 <mat-select formControlName="majPar" [(ngModel)]="candidat.majPar"
                             (selectionChange)="updateModel(candidat)">
@@ -160,14 +160,14 @@
               <br><br>
               <mat-form-field>
                 <label>
-                  <input matInput [matDatepicker]="picker5" formControlName="alerteMAJ" placeholder="Alerte mise à jour : " name="alerteMAJ"
-                         id="alerteMAJ" [(ngModel)]="candidat.alerteMAJ" (ngModelChange)="updateModel(candidat)" readonly>
+                  <input matInput formControlName="alerteMAJ" placeholder="Alerte mise à jour : " name="alerteMAJ"
+                         id="alerteMAJ" [value]="candidat.alerteMAJ | date: 'dd/MM/yyyy'" readonly>
                 </label>
-                <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
-                <mat-datepicker #picker5></mat-datepicker>
+<!--                <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>-->
+<!--                <mat-datepicker #picker5></mat-datepicker>-->
               </mat-form-field>
 
-              <mat-form-field>
+              <mat-form-field class="tofill">
                 <input matInput formControlName="commentairesCV" placeholder="Commentaires : " name="commentairesCV"
                        id="commentairesCV" [(ngModel)]="candidat.commentairesCV" (change)="updateModel(candidat)">
               </mat-form-field>
@@ -265,7 +265,7 @@
             <mat-card-content>
               <div fxLayout="column" fxLayoutAlign="space-around center">
 
-                <mat-form-field>
+                <mat-form-field class="tofill">
                   <mat-label>Expérience :</mat-label>
                   <mat-select formControlName="experience" [(ngModel)]="candidat.experience"
                               (selectionChange)="updateModel(candidat)">
@@ -276,7 +276,7 @@
                   </mat-select>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field class="tofill">
                   <input matInput formControlName="tags" placeholder="Tags : " name="tags" id="tags"
                          [(ngModel)]="candidat.tags" (change)="updateModel(candidat)">
                 </mat-form-field>
@@ -579,7 +579,7 @@
                        [(ngModel)]="candidat.varDernierSalaireBrut" (change)="updateModel(candidat)">
               </mat-form-field>
               <br>
-              <mat-form-field>
+              <mat-form-field class="tofill">
                 <mat-label>Prétentions brut salariales en k€ :</mat-label>
                 <mat-select formControlName="fourchetteSalariale" [(ngModel)]="candidat.fourchetteSalariale"
                             (selectionChange)="updateModel(candidat)">
@@ -1452,8 +1452,39 @@
   <mat-tab label="4 - Documents Joints">
     <p ><span style="text-decoration: underline;font-weight: bold;">CV</span><span> : </span></p>
     <p *ngIf="candidat.fileBase64;else notavailable;">
-      <span>Télécharger le CV : </span><button type="button" (click)="downloadDocument(candidat)" matTooltip="Télécharger le CV"><i class="material-icons">file_download</i></button>
+      <span>Télécharger le CV : </span><button type="button" (click)="downloadCV(candidat)" matTooltip="Télécharger le CV"><i class="material-icons">file_download</i></button>
     </p>
+    <p>
+      <input-file placeholder="Insérer un fichier..." fileLimit=1 [(ngModel)]="selectedFiles" (ngModelChange)="handleFile(candidat)" [ngModelOptions]="{standalone: true}"></input-file>
+    </p>
+    <table class="bordered mat-elevation-z8 tabledoc" style="margin: auto;" *ngIf="docscandidats.length>0" #autoscroll>
+      <thead>
+      <tr>
+        <th>Nom du fichier</th>
+        <th class="hideOnMobile">Télécharger</th>
+        <th>Visualiser</th>
+        <th>Supprimer</th>
+      </tr>
+      </thead>
+      <tbody class="wrapper">
+      <tr *ngFor="let document of docscandidats">
+        <td>{{ document.name }}</td>
+        <td class="hideOnMobile">
+          <button type="button" (click)="downloadDocument(document)"><i class="material-icons">file_download</i></button>
+        </td>
+        <td>
+          <a type="button"
+               *ngIf="document.name.split('.')[document.name.split('.').length-1].toLowerCase() == 'pdf';else noeye" matTooltip="Visualiser le document" (click)="openDocument(document)"><mat-icon>remove_red_eyes</mat-icon></a>
+          <ng-template #noeye>
+            <span matTooltip="Visualisation impossible">-</span>
+          </ng-template>
+        </td>
+        <td>
+          <button type="button" (click)="deleteDocument(document)"><i class="material-icons">delete</i></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
     <ng-template #notavailable>
       <span class="labels">CV non disponible</span>
     </ng-template>

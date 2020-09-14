@@ -81,4 +81,5 @@ export class CandidatModel extends ContactModel {
   delaiDispoFiche: String;
   ficheProcess: String;
   ficheRecrutement: String;
+  docsIds: String = "";
 }

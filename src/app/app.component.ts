@@ -3,6 +3,7 @@ import {UserModel} from './models/user.model';
 import {SwPush, SwUpdate} from '@angular/service-worker';
 import {NotificationService} from './services/notification.service';
 import {PushNotificationsService} from 'ng-push';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
     private swPush: SwPush,
     private _pushNotifications: PushNotificationsService,
     private notificationService: NotificationService,
-    private swUpdate: SwUpdate) {
+    private swUpdate: SwUpdate,
+    private http:HttpClient) {
     // this._pushNotifications.requestPermission();
     // this.subscribeToNotifications();
 
@@ -34,12 +36,20 @@ export class AppComponent implements OnInit {
     }
   }
 
-  subscribeToNotifications() {
-    this.swPush.requestSubscription({
-      serverPublicKey: this.VAPID_PUBLIC_KEY
-    })
-      .then(sub => this.notificationService.addPushSubscriber(sub).subscribe())
-      .catch(err => console.error("Could not subscribe to notifications", err));
+  // subscribeToNotifications() {
+  //   this.swPush.requestSubscription({
+  //     serverPublicKey: this.VAPID_PUBLIC_KEY
+  //   })
+  //     .then(sub => this.notificationService.addPushSubscriber(sub).subscribe())
+  //     .catch(err => console.error("Could not subscribe to notifications", err));
+  // }
+
+  request(){
+    this.notificationService.addPushSubscriber().subscribe(
+      (data)=>{
+        console.log(data);
+      }
+    );
   }
 
   // notify(){ //our function to be called on click

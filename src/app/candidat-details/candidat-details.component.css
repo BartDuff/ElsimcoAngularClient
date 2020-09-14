@@ -36,3 +36,15 @@ h1 {
 .tofill {
   background-color: antiquewhite;
 }
+
+td {
+  padding: 1em!important;
+}
+
+th {
+  padding: 1em!important;
+}
+
+.tabledoc {
+  overflow-y: scroll;
+}

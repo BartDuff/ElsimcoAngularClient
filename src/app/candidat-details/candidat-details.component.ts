@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -8,6 +8,10 @@ import {CandidatService} from '../services/candidat.service';
 import {CandidatModel} from '../models/candidat.model';
 import htmlToImage from 'html-to-image';
 import {ToastrService} from 'ngx-toastr';
+import {InputFileComponent} from 'ngx-input-file';
+import {DocscandidatService} from '../services/docscandidat.service';
+import {FicheModel} from '../models/fiche.model';
+import {DocscandidatModel} from '../models/docscandidat.model';
 
 @Component({
   selector: 'app-candidat-details',
@@ -18,6 +22,11 @@ import {ToastrService} from 'ngx-toastr';
 export class CandidatDetailsComponent implements OnInit {
   clickedColumn = null;
   loading = false;
+  selectedFiles;
+  filename;
+  docscandidats = [];
+  @ViewChild(InputFileComponent)
+  private inputFileComponent: InputFileComponent;
   envBase = environment.base;
   formulaire: FormGroup;
   formulaire2: FormGroup;
@@ -135,6 +144,7 @@ export class CandidatDetailsComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private candidatService: CandidatService,
+              private docscandidatService: DocscandidatService,
               private toastrService: ToastrService) {
   }
 
@@ -234,7 +244,8 @@ export class CandidatDetailsComponent implements OnInit {
           this.candidat.mobiliteEurope? "Europe":"",
           this.candidat.mobiliteIntl? "International":""
             ]
-          )
+          );
+          this.getDocscandidats(data);
         }
       )
     );
@@ -262,7 +273,7 @@ export class CandidatDetailsComponent implements OnInit {
         // this.candidat = data;
         // this.candidat.dateDerniersEntretiens = new Date(data.dateDerniersEntretiens);
         // this.candidat.dateDispo = new Date(data.dateDispo);
-        // this.candidat.dateMAJ = new Date(data.dateMAJ);
+        this.candidat.alerteMAJ = data.alerteMAJ;
         // this.candidat.dateCreation = new Date(data.dateCreation);
         // this.candidat.dateNaissance = new Date(data.dateNaissance);
         // this.candidat.alerteMAJ = new Date(data.alerteMAJ);
@@ -360,7 +371,7 @@ export class CandidatDetailsComponent implements OnInit {
     return new Blob(byteArrays, {type: contentType});
   }
 
-  downloadDocument(candidat){
+  downloadCV(candidat){
     let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
       navigator.userAgent &&
       navigator.userAgent.indexOf('CriOS') == -1 &&
@@ -418,25 +429,175 @@ export class CandidatDetailsComponent implements OnInit {
   //   }
   // }
   //
-  // _handleReaderLoadedIE(readerEvt) {
-  //   console.log("_handleReaderLoadedIE");
-  //
-  //   var bytes = new Uint8Array(readerEvt.target.result);
-  //   var binary = "";
-  //   var length = bytes.byteLength;
-  //   for (var i = 0; i < length; i++)
-  //     binary += String.fromCharCode(bytes[i]);
-  //   this.documentService.uploadDocument(btoa(binary), this.filename).subscribe(
-  //     ()=>{
-  //       this.getDocuments();
-  //     }
-  //   );
-  // }
-  // _handleReaderLoaded(readerEvt) {
-  //   console.log(this.s(this.selectedFiles));
-  //   this.documentService.uploadDocument(btoa(readerEvt.target.result), this.filename).subscribe(
-  //     ()=>{this.getDocuments();}
-  //   )
-  // }
+
+  getDocscandidats(data) {
+    if(data.docsIds){
+      for(let imgid of data.docsIds.split(",")) {
+        this.docscandidatService.getDocsCandidat(imgid).subscribe(
+          (img)=> {
+            this.docscandidats.push(img);
+          });
+      }
+    }
+    // this.docscandidatService.getDocsCandidats().subscribe(r=> {
+    //     this.docscandidats=r;
+    //     this.docscandidats.sort((a,b)=>a.chosenOrder-b.chosenOrder);
+    //   });
+  }
+
+  handleFile(candidat){
+    for(let i=0; i < this.inputFileComponent.files.length;i++) {
+      var file = this.inputFileComponent.files[i];
+      // console.log (file.file.name,i);
+      this.filename=file.file.name;
+      if (file) {
+        var reader = new FileReader();
+
+        if (reader.readAsBinaryString === undefined) {
+          reader.onload = this._handleReaderLoadedIE.bind(this);
+          reader.readAsArrayBuffer(file.file);
+        } else {
+          reader.onload = this._handleReaderLoaded.bind(this);
+          reader.readAsBinaryString(file.file);
+        }
+        this.selectedFiles.splice(i,1);
+        i--
+      }
+    }
+  }
+
+  _handleReaderLoadedIE(readerEvt) {
+    console.log("_handleReaderLoadedIE");
+
+    var bytes = new Uint8Array(readerEvt.target.result);
+    var binary = "";
+    var length = bytes.byteLength;
+    for (var i = 0; i < length; i++)
+      binary += String.fromCharCode(bytes[i]);
+    this.docscandidatService.uploadDocument({fileBase64: (readerEvt.target.result), documentType: this.filename.split('.')[this.filename.split('.').length - 1].toLowerCase(), id: null, name: this.filename, chosenOrder: 1 }).subscribe(
+      (doc)=>{
+        if(this.candidat.docsIds.length>0){
+          this.candidat.docsIds += ",";
+        }
+        this.candidat.docsIds += doc.id;
+        this.candidatService.editCandidat(this.candidat).subscribe(
+          (c)=>{
+            this.getDocscandidats(c);
+          }
+        );
+      }
+    );
+  }
+  _handleReaderLoaded(readerEvt) {
+    this.docscandidatService.uploadDocument({fileBase64: btoa(readerEvt.target.result), documentType: this.filename.split('.')[this.filename.split('.').length - 1].toLowerCase(), id: null, name: this.filename, chosenOrder: 1 }).subscribe(
+      (doc)=>{
+        if(this.candidat.docsIds.length>0){
+          this.candidat.docsIds += ",";
+        }
+        this.candidat.docsIds += doc.id;
+        this.candidatService.editCandidat(this.candidat).subscribe(
+          (c)=>{
+            this.getDocscandidats(c);
+          }
+        );
+      }
+    )
+  }
+
+  deleteDocument(doc){
+    let arr = this.candidat.docsIds.split(',');
+    arr.splice(arr.indexOf(doc.id.toString()),1);
+    this.candidat.docsIds = arr.toString();
+    this.docscandidats.splice(this.docscandidats.indexOf(doc),1);
+    this.docscandidatService.deleteDocsCandidat(doc).subscribe(
+      ()=>{}
+    )
+    // this.candidatService.editCandidat(this.candidat).subscribe(
+    //   ()=>{
+    //     this.docscandidats.splice(this.docscandidats.indexOf(doc),1);
+    //   }
+    // )
+  }
+
+  downloadDocument(docToDownload: DocscandidatModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
+    this.docscandidatService.getDocsCandidat(docToDownload.id).subscribe(
+      (res) => {
+        // let blob = new Blob([res],{type:"application/octet-stream"});
+        // let blob = new Blob([res],{type:"application/octet-stream"});
+        // if(!navigator.userAgent.match('CriOS')) {
+        //   saveAs(res, ficheToDownload.uri);
+        // } else {
+        //   let reader = new FileReader();
+        //   reader.onload = function(e){
+        //     window.location.href = reader.result
+        //   };
+        // }
+        // let blob = this.base64ToBlob(d.fileBase64, 'application/'+ d.originalFileName.split('.'[2]));
+        let blob = this.base64ToBlob(res.fileBase64, 'application/'+ res.name.split('.')[res.name.split('.').length-1]);
+        if(!navigator.userAgent.match('CriOS') || !isSafari) {
+          saveAs(blob, docToDownload.name);
+        } else {
+          // let reader = new FileReader();
+          // reader.onload = function(e){
+          //   window.location.href = reader.result
+          // };
+          // reader.readAsDataURL(blob);
+          let blob = new Blob([res], {type: "application/pdf"});
+          let fileURL = window.URL.createObjectURL(blob,);
+          let tab = window.open();
+          tab.location.href = fileURL;
+        }
+        // if(!navigator.userAgent.match('CriOS')) {
+        //   saveAs(res, ficheToDownload.uri);
+        // } else {
+        //   let reader = new FileReader();
+        //   reader.onload = function(e){
+        //     window.location.href = reader.result
+        //   };
+        //   reader.readAsDataURL(res);
+        // }
+        this.toastrService.success("Téléchargé", "Téléchargé")},
+      (err) => {
+        console.log(err);
+        this.toastrService.error("Erreur", "Erreur de téléchargement");
+      }
+    )
+  }
+
+  openDocument(docsCandidat: DocscandidatModel) {
+    let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+      navigator.userAgent &&
+      navigator.userAgent.indexOf('CriOS') == -1 &&
+      navigator.userAgent.indexOf('FxiOS') == -1;
+    this.docscandidatService.openDocsCandidat(docsCandidat.id).subscribe(
+      (res) => {
+        // let reader = new FileReader();
+        // reader.onload = function (e) {
+        //   window.location.href = reader.result
+        // };
+        // reader.readAsDataURL(blob);
+        // window.open("data:application/" + d.originalFileName.split('.')[2]+ ";base64, "+d.fileBase64, '_blank');
+        let blob = this.base64ToBlob(res.fileBase64, 'application/' + res.name.split('.')[res.name.split('.').length-1]);
+        // let blob = new Blob([res], {type: "application/pdf"});
+        if(navigator.userAgent.match('CriOS') || isSafari) {
+          saveAs(blob, res.name);
+        } else {
+          let fileURL = window.URL.createObjectURL(blob);
+          let tab = window.open();
+          // if(d.originalFileName.split('.')[d.originalFileName.split('.').length-1] == 'pdf'){
+          tab.location.href = fileURL;
+        }
+        // } else {
+        //   // tab.onload = function(){this.document.body.innerHTML+= `<iframe src= "https://view.officeapps.live.com/op/embed.aspx?src=${fileURL}" width="100%" height="800"> </iframe>`};
+        //   let newblob = new Blob([blob], {type:"text/plain;charset=utf-8"});
+        //   let newFileURL = URL.createObjectURL(newblob);
+        //   tab.location.href = newFileURL;
+        // }
+      });
+  }
 
 }

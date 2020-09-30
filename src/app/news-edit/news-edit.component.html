@@ -23,6 +23,7 @@
         <div>(Maximum 40Mo)</div>
         <mat-checkbox formControlName="isAvatar" name="isAvatar" id="isAvatar" [checked]="newsitem.avatar" (change)="newsitem.avatar = $event.checked.valueOf()">Cette image est un avatar</mat-checkbox>
         <mat-checkbox formControlName="isPublic" name="isPublic" id="isPublic" [checked]="newsitem.public" (change)="newsitem.public = $event.checked.valueOf()">Rendre cette publication publique ?</mat-checkbox>
+        <mat-checkbox formControlName="isNoSms" name="isNoSms" id="isNoSms" [checked]="newsitem.noSms" (change)="newsitem.noSms = $event.checked.valueOf()">Ne pas envoyer de notification SMS ?</mat-checkbox>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/news">RETOUR <mat-icon>arrow_back</mat-icon></button>
           <button mat-button [disabled]="!fileValid">Modifier</button>

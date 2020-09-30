@@ -481,7 +481,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     let d = day.toLocaleString('fr-FR', {weekday: 'short'});
     let dateDepart = new Date(this.currentUser.dateDepart);
     if(dateDepart.getFullYear() > 1970){
-    return moment(day).isAfter(moment(this.currentUser.dateDepart));
+    return moment(day).isAfter(moment(this.currentUser.dateDepart).add(1,"day"));
     }
     return d === 'dim.' || d === 'sam.' || FichePresenceComponent.joursFeries(this.dateNow.getFullYear()).includes(moment(day).format('DD/MM/YYYY').toString()) || moment(day).isBefore(moment(this.currentUser.dateArrivee));
   }

@@ -36,6 +36,9 @@ import {HomeComponent} from '../home/home.component';
 import {AdminCongesComponent} from '../admin-conges/admin-conges.component';
 import {AnnuaireComponent} from '../annuaire/annuaire.component';
 import {AdminDashboardComponent} from '../admin-dashboard/admin-dashboard.component';
+import {MessagesListComponent} from '../messages-list/messages-list.component';
+import {MessageAddComponent} from '../message-add/message-add.component';
+import {MessageDetailsComponent} from '../message-details/message-details.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -73,6 +76,9 @@ const routes: Routes = [
   { path: 'add_faq', canActivate: [AuthGuardService], component: FaqAddComponent },
   { path: 'edit_faq/:id', canActivate: [AuthGuardService], component: FaqEditComponent },
   { path: 'admin-dashboard', canActivate: [AuthGuardService], component: AdminDashboardComponent },
+  { path: 'forum', canActivate: [AuthGuardService], component: MessagesListComponent },
+  { path: 'forum/:id', canActivate: [AuthGuardService], component: MessageDetailsComponent },
+  { path: 'add_message', canActivate: [AuthGuardService], component: MessageAddComponent },
   { path: '', redirectTo: 'news', pathMatch: 'full'},
   { path: 'error', redirectTo: 'home', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }];

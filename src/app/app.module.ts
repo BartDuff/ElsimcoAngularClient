@@ -117,6 +117,9 @@ import { environment } from '../environments/environment';
 import {PerfectScrollbarConfigInterface, PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { NotificationsRxComponent } from './notifications-rx/notifications-rx.component';
 import {PushNotificationsModule} from 'ng-push';
+import { MessagesListComponent } from './messages-list/messages-list.component';
+import { MessageAddComponent } from './message-add/message-add.component';
+import { MessageDetailsComponent } from './message-details/message-details.component';
 const config: InputFileConfig = {};
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
 
@@ -177,6 +180,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
     AdminDashboardComponent,
     RefuseWithCommentComponent,
     NotificationsRxComponent,
+    MessagesListComponent,
+    MessageAddComponent,
+    MessageDetailsComponent,
   ],
   imports: [
     AppRoutingModule,

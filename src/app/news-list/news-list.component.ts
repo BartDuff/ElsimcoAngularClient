@@ -107,7 +107,7 @@ export class NewsListComponent implements OnInit, AfterViewInit {
         if (data) {
           this.newsService.deleteSingleNews(newsToDelete).subscribe(
             () => {
-              this.news.splice(this.news.indexOf(newsToDelete), 1);
+              this.pagedNews.splice(this.news.indexOf(newsToDelete), 1);
             }
           );
         }

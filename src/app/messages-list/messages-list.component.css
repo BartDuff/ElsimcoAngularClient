@@ -1,0 +1,28 @@
+.btn-floating {
+  background-color: black;
+  color: white;
+}
+
+.mat-card {
+  width: 90%;
+  margin-bottom: 5%;
+  justify-content: left;
+}
+
+.mat-fab {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
+
+.mat-card:hover{
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 768px) {
+  .mat-card {
+    width: 90vw;
+    margin-bottom: 5%;
+    justify-content: left;
+  }
+}

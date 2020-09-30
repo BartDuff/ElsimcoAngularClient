@@ -58,7 +58,8 @@ export class NewsAddComponent implements OnInit {
       contenu: ['', Validators.required],
       videoLink:[''],
       isPublic: ['', Validators.required],
-      isAvatar:['']
+      isAvatar:[''],
+      isNoSms:['']
     });
 
   }
@@ -84,6 +85,7 @@ export class NewsAddComponent implements OnInit {
     newsitem.imageIds = this.newsitem.imageIds;
     newsitem.avatar = this.newsitem.avatar;
     newsitem.public = this.newsitem.public;
+    newsitem.noSms = this.newsitem.noSms;
       this.newsService.addNews(newsitem)
         .subscribe( (data) => {
           this.loading = false;

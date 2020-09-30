@@ -10,6 +10,12 @@
   "related_applications": [],
   "prefer_related_applications": false,
   "start_url": "https://app.elsimco.com/elsimcojavaweb-0.1.0/",
+  "scope": "https://app.elsimco.com/elsimcojavaweb-0.1.0/",
+  "intent_filters": {
+    "scope_url_scheme": "https",
+    "scope_url_host": "app.elsimco.com",
+    "scope_url_path": "/"
+  },
   "icons": [
     {
       "src": "assets/icons/favicon.ico",
@@ -31,8 +37,8 @@
       "type": "image/png"
     },
     {
-      "src": "assets/icons/android-chrome-512x512.png",
-      "sizes": "512x512",
+      "src": "assets/icons/android-chrome-384x384.png",
+      "sizes": "384x384",
       "type": "image/png"
     },
     {
@@ -46,8 +52,43 @@
       "type": "image/png"
     },
     {
+      "src": "assets/icons/LaunchImage-Portrait@2x~ipad_2048x2732.png",
+      "sizes": "2048x2732",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/LaunchImage-Portrait@2x~ipad_1668x2224.png",
+      "sizes": "1668x2224",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/LaunchImage-Portrait@2x~ipad_1536x2048.png",
+      "sizes": "1536x2048",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/LaunchImage-1125@3x~iphoneX-portrait_1125x2436.png",
+      "sizes": "1125x2436",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/LaunchImage-1242@3x~iphone6s-portrait_1242x2208.png",
+      "sizes": "1242x2208",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/LaunchImage-750@2x~iphone6-portrait_750x1334.png",
+      "sizes": "750x1334",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/LaunchImage-568h@2x~iphone_640x1136.png",
+      "sizes": "640x1136",
+      "type": "image/png"
+    },
+    {
       "src": "assets/icons/safari-pinned-tab.svg",
-      "sizes": "4729x4729",
+      "sizes": "673x673",
       "type": "image/svg"
     }
   ]

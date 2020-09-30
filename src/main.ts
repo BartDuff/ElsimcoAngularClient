@@ -11,6 +11,6 @@ document.write(`<link rel="icon" type="image/x-icon" href="../${environment.base
 document.write(`<Base href=${environment.base}>`);
 platformBrowserDynamic().bootstrapModule(AppModule).then(()=>{
   if ('serviceWorker' in navigator && environment.production) {
-    navigator.serviceWorker.register('/ngsw-worker.js');
+    navigator.serviceWorker.register('ngsw-worker.js');
   }
 }).catch(err => console.error(err));

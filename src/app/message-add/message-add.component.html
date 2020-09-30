@@ -1,0 +1,33 @@
+<mat-card *ngIf="!loading">
+  <mat-card-title>Créer un fil de discussion</mat-card-title>
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field hidden>
+          <input matInput disabled formControlName="id" placeholder="id" name="id"  id="id">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="sujet" placeholder="Sujet" name="sujet"  id="sujet">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="message" placeholder="Veuillez écrire votre message dans ce cadre..."
+                    name="message" id="message"></textarea>
+        </mat-form-field>
+        <mat-card-actions fxFlexAlign="center">
+          <button mat-icon-button routerLink="/forum">RETOUR <mat-icon>arrow_back</mat-icon></button>
+          <button mat-button [disabled]="addForm.invalid">Envoyer</button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="loading"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>

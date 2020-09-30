@@ -56,7 +56,8 @@ export class NewsEditComponent implements OnInit {
       contenu: ['', Validators.required],
       video:[''],
       isPublic: ['', Validators.required],
-      isAvatar:['']
+      isAvatar:[''],
+      isNoSms:['']
     });
     this.route.params.subscribe(
       params => this.newsService.getSingleNews(params['id']).subscribe(
@@ -85,6 +86,7 @@ export class NewsEditComponent implements OnInit {
           this.editForm.controls.titre.setValue(data.titre);
           this.editForm.controls.isPublic.setValue(data.public);
           this.editForm.controls.isAvatar.setValue(data.avatar);
+          this.editForm.controls.isNoSms.setValue(data.noSms);
           console.log(this.selectedFiles);
         }
       )

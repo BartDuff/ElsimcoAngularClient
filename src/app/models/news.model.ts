@@ -9,6 +9,7 @@ export class NewsModel {
   auteur: UserModel;
   likes: UserModel[] = [];
   public: boolean;
+  noSms: boolean;
   // imageJointe: String;
   // imageJointeType: String;
   avatar;

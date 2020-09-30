@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
     if (this.swUpdate.isEnabled) {
       this.swUpdate.available.subscribe(() => {
         if (confirm("Nouvelle version disponible. Charger la nouvelle version?")) {
-          window.location.reload();
+          window.location.reload(true);
         }
       });
     }
@@ -44,13 +44,13 @@ export class AppComponent implements OnInit {
   //     .catch(err => console.error("Could not subscribe to notifications", err));
   // }
 
-  request(){
-    this.notificationService.addPushSubscriber().subscribe(
-      (data)=>{
-        console.log(data);
-      }
-    );
-  }
+  // request(){
+  //   this.notificationService.addPushSubscriber().subscribe(
+  //     (data)=>{
+  //       console.log(data);
+  //     }
+  //   );
+  // }
 
   // notify(){ //our function to be called on click
   //   let options = { //set options

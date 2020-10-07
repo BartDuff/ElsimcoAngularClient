@@ -27,6 +27,11 @@ export class MessageAddComponent implements OnInit {
   currentUser: UserModel;
   message: MessageForumModel;
   loading = false;
+  selected;
+  categories = ["Besoins Elsimco", "Transfert d'expérience", "Afterworks"];
+  catShort = ['Besoins', 'Experiences', 'Afterworks']
+
+
 
   get f() {
     return this.addForm.value;
@@ -38,9 +43,11 @@ export class MessageAddComponent implements OnInit {
     this.addForm = this.formBuilder.group({
       id: [],
       sujet: ['', Validators.required],
-      message: ['', Validators.required]
+      message: ['', Validators.required],
+      categorie: ['', Validators.required]
     });
-
+    this.selected = this.currentUser.role == "ADMIN"?"Besoins":"Afterworks";
+    this.addForm.controls.categorie.setValue(this.selected)
   }
 
   onSubmit() {

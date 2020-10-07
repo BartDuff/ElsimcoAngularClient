@@ -39,6 +39,7 @@ import {AdminDashboardComponent} from '../admin-dashboard/admin-dashboard.compon
 import {MessagesListComponent} from '../messages-list/messages-list.component';
 import {MessageAddComponent} from '../message-add/message-add.component';
 import {MessageDetailsComponent} from '../message-details/message-details.component';
+import {NotificationsListComponent} from '../notifications-list/notifications-list.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -61,6 +62,7 @@ const routes: Routes = [
   { path: 'users/:id', canActivate: [AuthGuardService], component: UserDetailsComponent },
   { path: 'users/:id/fiches', canActivate: [AuthGuardService], component: FicheListComponent },
   { path: 'users/:id/conges', canActivate: [AuthGuardService], component: CongeListComponent },
+  { path: 'users/:id/messagerie', canActivate: [AuthGuardService], component: NotificationsListComponent },
   { path: 'add_users', canActivate: [AuthGuardService], component: UserAddComponent },
   { path: 'edit_user/:id', canActivate: [AuthGuardService], component: UserEditComponent },
   { path: 'documents', canActivate: [AuthGuardService], component: DocumentListComponent },

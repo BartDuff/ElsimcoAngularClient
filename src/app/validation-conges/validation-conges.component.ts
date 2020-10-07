@@ -339,39 +339,40 @@ export class ValidationCongesComponent implements OnInit {
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail(this.getHello()+' ' + user.prenom + ',\n\nVotre demande pour la date de congés suivante a été validée par les Ressources Humaines :\n' + sUserCong, 'Notification de validation de congés', user.email).subscribe(
-                () => {
-                  this.toastrService.success('Congés validés', 'Congés validés');
-                  this.getCongesWithFile();
-                  this.monthArr = [];
-                  for (let c of this.allNonValidatedConges) {
-                    if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
-                      this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
-                    }
-                  }
-                  this.monthArr = this.monthArr.sort((a, b) => {
-                    a = a.split(" ");
-                    b = b.split(" ");
-                    return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
-                  });
-                },
-              // let recipient = user.telPro?user.telPro:user.telephone;
-              // this.notificationService.sendSms(this.getHello()+' ' + user.prenom + ',\n\nVotre demande pour la date de congés suivante a été validée par les Ressources Humaines :\n' + sUserCong, recipient).subscribe(
-              //     () => {
-              //       this.toastrService.success('Congés validés', 'Congés validés');
-              //       this.getCongesWithFile();
-              //       this.monthArr = [];
-              //       for (let c of this.allNonValidatedConges) {
-              //         if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
-              //           this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
-              //         }
+              // this.emailService.sendMail(this.getHello()+' ' + user.prenom + ',\n\nVotre demande pour la date de congés suivante a été validée par les Ressources Humaines :\n' + sUserCong, 'Notification de validation de congés', user.email).subscribe(
+              //   () => {
+              //     this.toastrService.success('Congés validés', 'Congés validés');
+              //     this.getCongesWithFile();
+              //     this.monthArr = [];
+              //     for (let c of this.allNonValidatedConges) {
+              //       if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
+              //         this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
               //       }
-              //       this.monthArr = this.monthArr.sort((a, b) => {
-              //         a = a.split(" ");
-              //         b = b.split(" ");
-              //         return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
-              //       });
-              //     },
+              //     }
+              //     this.monthArr = this.monthArr.sort((a, b) => {
+              //       a = a.split(" ");
+              //       b = b.split(" ");
+              //       return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+              //     });
+              //   },
+              let tempRecipient = user.telPro?user.telPro:user.telephone;
+              let recipient = tempRecipient.charAt(0) == '+'?tempRecipient:"+33"+tempRecipient.substring(1);
+              this.notificationService.sendSmsWithNotif(this.getHello()+' ' + user.prenom + ',\n\nVotre demande pour la date de congés suivante a été validée par les Ressources Humaines :\n' + sUserCong, recipient, user.id, "Notification de validation de congés").subscribe(
+                  () => {
+                    this.toastrService.success('Congés validés', 'Congés validés');
+                    this.getCongesWithFile();
+                    this.monthArr = [];
+                    for (let c of this.allNonValidatedConges) {
+                      if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
+                        this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
+                      }
+                    }
+                    this.monthArr = this.monthArr.sort((a, b) => {
+                      a = a.split(" ");
+                      b = b.split(" ");
+                      return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+                    });
+                  },
                 (err) => console.log(err)
               );
             }
@@ -419,27 +420,7 @@ export class ValidationCongesComponent implements OnInit {
           userCong.push(c);
         }
       }
-      this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été validée par les Ressources Humaines :\n', 'Notification de validation de congés', u.email,userCong).subscribe(
-        () => {
-          this.congesNonValides = [];
-          this.getValidatedConges();
-          for(let cong of arr){
-            this.allNonValidatedConges.splice(this.allNonValidatedConges.indexOf(cong),1);
-          }
-          this.monthArr = [];
-          for (let c of this.allNonValidatedConges) {
-            if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
-              this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
-            }
-          }
-          this.monthArr = this.monthArr.sort((a, b) => {
-            a = a.split(" ");
-            b = b.split(" ");
-            return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
-          });
-        },
-      // let recipient = u.telPro?u.telPro:u.telephone;
-      // this.notificationService.sendSmsWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été validée par les Ressources Humaines :\n', recipient,userCong).subscribe(
+      // this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été validée par les Ressources Humaines :\n', 'Notification de validation de congés', u.email,userCong).subscribe(
       //   () => {
       //     this.congesNonValides = [];
       //     this.getValidatedConges();
@@ -458,22 +439,9 @@ export class ValidationCongesComponent implements OnInit {
       //       return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
       //     });
       //   },
-        (err) => console.log(err)
-      );
-    }
-    this.usersToSend = [];
-    this.usersId = [];
-  }
-
-  sendRejectionEmail(arr, comment) {
-    for (let u of this.usersToSend) {
-      let userCong = [];
-      for (let c of arr) {
-        if (c.user.id == u.id) {
-          userCong.push(c);
-        }
-      }
-      this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée, pour la raison suivante : ' + comment.commentaire +', par les Ressources Humaines :\n', 'Notification de refus de congés', u.email,userCong).subscribe(
+      let tempRecipient = u.telPro?u.telPro:u.telephone;
+      let recipient = tempRecipient.charAt(0) == '+'?tempRecipient:"+33"+tempRecipient.substring(1);
+      this.notificationService.sendSmsWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été validée par les Ressources Humaines :\n', recipient,userCong,u.id,"Notification de validation de congés").subscribe(
         () => {
           this.congesNonValides = [];
           this.getValidatedConges();
@@ -492,26 +460,61 @@ export class ValidationCongesComponent implements OnInit {
             return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
           });
         },
-        // let recipient = u.telPro?u.telPro:u.telephone;
-        // this.notificationService.sendSmsWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée, pour la raison suivante : ' + comment.commentaire +', par les Ressources Humaines :\n', recipient,userCong).subscribe(
-        //   () => {
-        //     this.congesNonValides = [];
-        //     this.getValidatedConges();
-        //     for(let cong of arr){
-        //       this.allNonValidatedConges.splice(this.allNonValidatedConges.indexOf(cong),1);
-        //     }
-        //     this.monthArr = [];
-        //     for (let c of this.allNonValidatedConges) {
-        //       if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
-        //         this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
-        //       }
-        //     }
-        //     this.monthArr = this.monthArr.sort((a, b) => {
-        //       a = a.split(" ");
-        //       b = b.split(" ");
-        //       return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
-        //     });
-        //   },
+        (err) => console.log(err)
+      );
+    }
+    this.usersToSend = [];
+    this.usersId = [];
+  }
+
+  sendRejectionEmail(arr, comment) {
+    for (let u of this.usersToSend) {
+      let userCong = [];
+      for (let c of arr) {
+        if (c.user.id == u.id) {
+          userCong.push(c);
+        }
+      }
+      // this.emailService.sendMailWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée, pour la raison suivante : ' + comment.commentaire +', par les Ressources Humaines :\n', 'Notification de refus de congés', u.email,userCong).subscribe(
+      //   () => {
+      //     this.congesNonValides = [];
+      //     this.getValidatedConges();
+      //     for(let cong of arr){
+      //       this.allNonValidatedConges.splice(this.allNonValidatedConges.indexOf(cong),1);
+      //     }
+      //     this.monthArr = [];
+      //     for (let c of this.allNonValidatedConges) {
+      //       if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
+      //         this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
+      //       }
+      //     }
+      //     this.monthArr = this.monthArr.sort((a, b) => {
+      //       a = a.split(" ");
+      //       b = b.split(" ");
+      //       return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+      //     });
+      //   },
+        let tempRecipient = u.telPro?u.telPro:u.telephone;
+        let recipient = tempRecipient.charAt(0) == '+'?tempRecipient:"+33"+tempRecipient.substring(1);
+        this.notificationService.sendSmsWithRange(this.getHello()+' ' + u.prenom + ',\n\nVotre demande pour les dates de congés suivantes a été refusée, pour la raison suivante : ' + comment.commentaire +', par les Ressources Humaines :\n', recipient,userCong,u.id,"Notification de refus de congés").subscribe(
+          () => {
+            this.congesNonValides = [];
+            this.getValidatedConges();
+            for(let cong of arr){
+              this.allNonValidatedConges.splice(this.allNonValidatedConges.indexOf(cong),1);
+            }
+            this.monthArr = [];
+            for (let c of this.allNonValidatedConges) {
+              if (!c.valideRH && this.monthArr.indexOf(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear()) == -1) {
+                this.monthArr.push(this.nomsDesMois[new Date(c.date).getMonth()] + ' ' + new Date(c.date).getFullYear());
+              }
+            }
+            this.monthArr = this.monthArr.sort((a, b) => {
+              a = a.split(" ");
+              b = b.split(" ");
+              return new Date(a[1], this.nomsDesMois.indexOf(a[0]), 1).valueOf() - new Date(b[1], this.nomsDesMois.indexOf(b[0]), 1).valueOf();
+            });
+          },
         (err) => console.log(err)
       );
     }
@@ -535,21 +538,22 @@ export class ValidationCongesComponent implements OnInit {
               let dem = conge.demiJournee ? '1/2 ' : '';
               let sLine = new Date(conge.date).toLocaleDateString() + ' : ' + dem + conge.typeConge + '\n';
               sUserCong += sLine;
-              this.emailService.sendMail(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines :\n' + sUserCong + '\npour la raison suivante : '+d.commentaire, 'Notification de refus de congés', conge.user.email).subscribe(
-                () => {
-                  this.toastrService.error('Congé refusé', 'Congé refusé');
-                  this.getCongesWithFile();
-                  this.getValidatedConges();
-                  this.getNonValidatedConges();
-                },
-                // let recipient = conge.user.telPro?conge.user.telPro:conge.user.telephone;
-                // this.notificationService.sendSms(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines :\n' + sUserCong + '\npour la raison suivante : '+d.commentaire, recipient).subscribe(
-                //   () => {
-                //     this.toastrService.error('Congé refusé', 'Congé refusé');
-                //     this.getCongesWithFile();
-                //     this.getValidatedConges();
-                //     this.getNonValidatedConges();
-                //   },
+              // this.emailService.sendMail(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines :\n' + sUserCong + '\npour la raison suivante : '+d.commentaire, 'Notification de refus de congés', conge.user.email).subscribe(
+              //   () => {
+              //     this.toastrService.error('Congé refusé', 'Congé refusé');
+              //     this.getCongesWithFile();
+              //     this.getValidatedConges();
+              //     this.getNonValidatedConges();
+              //   },
+              let tempRecipient = conge.user.telPro?conge.user.telPro:conge.user.telephone;
+              let recipient = tempRecipient.charAt(0) == '+'?tempRecipient:"+33"+tempRecipient.substring(1);
+                this.notificationService.sendSmsWithNotif(this.getHello()+' ' + conge.user.prenom + ',\n\nVotre demande pour la date de congés suivante a été refusée par les Ressources Humaines :\n' + sUserCong + '\npour la raison suivante : '+d.commentaire, recipient, conge.user.id,'Notification de refus de congés').subscribe(
+                  () => {
+                    this.toastrService.error('Congé refusé', 'Congé refusé');
+                    this.getCongesWithFile();
+                    this.getValidatedConges();
+                    this.getNonValidatedConges();
+                  },
                 (err) => console.log(err)
               );
             }

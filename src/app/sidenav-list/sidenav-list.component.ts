@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Injectable, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Injectable, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {Subscription} from 'rxjs';
 import {UserModel} from '../models/user.model';
@@ -8,6 +8,7 @@ import {FicheModel} from '../models/fiche.model';
 import {FicheService} from '../services/fiche.service';
 import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
+import {NotificationService} from '../services/notification.service';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -16,15 +17,18 @@ import {CongeService} from '../services/conge.service';
   encapsulation: ViewEncapsulation.None
 })
 
-export class SidenavListComponent implements OnInit {
+export class SidenavListComponent implements OnInit, OnDestroy {
   img = `../../${environment.base}/assets/images/elsimco-black.PNG`;
   currentUserSubscription: Subscription;
   currentUser: UserModel;
   allRHUnvalidConges: CongeModel[];
+  notifications;
+  notificationsSubscription : Subscription;
   token: any;
   allRHUnvalidFiches: FicheModel[];
   @Output() sidenavClose = new EventEmitter();
   constructor(private authService: AuthenticationService,
+              private notificationService: NotificationService,
               private ficheService: FicheService,
               private congeService: CongeService,
               private router: Router) {
@@ -36,6 +40,11 @@ export class SidenavListComponent implements OnInit {
       (user) => {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = localStorage.getItem('token');
+        this.notificationsSubscription = this.notificationService._userNotifications.subscribe(
+          (notifications)=> {
+            this.notifications = notifications;
+          }
+        );
       }
     );
     this.authService.emitCurrentUserSubject();
@@ -89,6 +98,12 @@ export class SidenavListComponent implements OnInit {
         );
       }
     );
+  }
+
+  ngOnDestroy() {
+    if(this.notificationsSubscription != null){
+      this.notificationsSubscription.unsubscribe();
+    }
   }
 
 }

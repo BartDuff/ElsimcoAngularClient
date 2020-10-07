@@ -4,6 +4,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {environment} from '../../environments/environment';
 import { filter } from 'rxjs/operators';
+import {NotificationService} from '../services/notification.service';
+import {NotificationModel} from '../models/notification.model';
 
 
 @Component({
@@ -24,6 +26,7 @@ export class LoginComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
+              private notificationService: NotificationService,
               public authService: AuthenticationService) {
     // redirect to home if already logged in
     if (localStorage.getItem("currentUser")) {
@@ -74,7 +77,13 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.authService.emitCurrentUserSubject();
           this.router.navigate([this.returnUrl]).then(
-            ()=>console.log("Connecté")
+            ()=> {
+              this.notificationService.getMessages(JSON.parse(localStorage.getItem('currentUser'))).subscribe(
+                (notif)=> {
+                  this.notificationService._userNotifications.next(notif.filter((h:NotificationModel) => !h.lu));
+                }
+              )
+            }
           );
       }}, error => {
         console.log(error);

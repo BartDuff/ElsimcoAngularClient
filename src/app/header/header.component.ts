@@ -1,4 +1,4 @@
-import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AuthenticationService} from '../services/authentication.service';
 import {UserModel} from '../models/user.model';
@@ -8,6 +8,8 @@ import {FicheService} from '../services/fiche.service';
 import {FicheModel} from '../models/fiche.model';
 import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
+import {NotificationService} from '../services/notification.service';
+import {NotificationModel} from '../models/notification.model';
 
 @Component({
   selector: 'app-header',
@@ -16,23 +18,26 @@ import {CongeService} from '../services/conge.service';
   encapsulation: ViewEncapsulation.None
 })
 
-export class HeaderComponent implements OnInit, AfterViewChecked {
+export class HeaderComponent implements OnInit, AfterViewChecked, OnDestroy {
   img = `../../${environment.base}/assets/images/elsimco-black.PNG`;
   allRHUnvalidFiches: FicheModel[];
   allRHValidFiches: FicheModel[];
   allRHUnvalidConges: CongeModel[];
   currentUserSubscription: Subscription;
-  currentUser: UserModel;
+  currentUser: UserModel = JSON.parse(localStorage.getItem('currentUser'));
   token: any;
-  notifications = ["Une nouvelles actualité a été publiée","Nouvelle demande de congés validée","Fiche de présence validée"];
+  // notifications = ["Une nouvelles actualité a été publiée","Nouvelle demande de congés validée","Fiche de présence validée"];
+  notificationsSubscription : Subscription;
+  notifications: NotificationModel[];
   @Output() public sidenavToggle = new EventEmitter();
 
   constructor(private authService: AuthenticationService,
+              private notificationService: NotificationService,
               private cdRef: ChangeDetectorRef,
               private ficheService: FicheService,
               private congeService: CongeService,
               private router: Router) {
-    this.currentUser = null;
+    // this.currentUser = null;
   }
 
   ngOnInit() {
@@ -40,6 +45,11 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
       (user) => {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = localStorage.getItem('token');
+        this.notificationsSubscription = this.notificationService._userNotifications.subscribe(
+          (notifications)=> {
+            this.notifications = notifications;
+          }
+        );
       }
     );
     this.authService.emitCurrentUserSubject();
@@ -113,5 +123,11 @@ export class HeaderComponent implements OnInit, AfterViewChecked {
         );
       }
     );
+  }
+
+  ngOnDestroy() {
+    if(this.notificationsSubscription != null){
+      this.notificationsSubscription.unsubscribe();
+    }
   }
 }

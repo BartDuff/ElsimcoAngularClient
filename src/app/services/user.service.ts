@@ -94,4 +94,9 @@ export class UserService {
       'Content-Type'  : 'application/json'});
     return this.http.get(`${API_URL}/users/${user.id}/conges`, { headers: headers});
   }
+
+  editNotification(notification){
+    const headers = new HttpHeaders ({'Content-Type': 'application/json'});
+    return this.http.put(`${API_URL}/emails/smsrange`, notification, {headers: headers});
+  }
 }

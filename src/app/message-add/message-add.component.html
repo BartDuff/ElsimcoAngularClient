@@ -16,6 +16,14 @@
           <textarea matInput formControlName="message" placeholder="Veuillez écrire votre message dans ce cadre..."
                     name="message" id="message"></textarea>
         </mat-form-field>
+
+        <mat-form-field  style="margin-top: 1em!important;">
+          <mat-label>Catégorie :</mat-label>
+          <mat-select formControlName="categorie">
+            <mat-option *ngFor="let category of categories; let i = index" [value]="catShort[i]" [disabled]="currentUser.role == 'USER'">{{category}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/forum">RETOUR <mat-icon>arrow_back</mat-icon></button>
           <button mat-button [disabled]="addForm.invalid">Envoyer</button>

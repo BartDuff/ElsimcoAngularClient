@@ -120,6 +120,7 @@ import {PushNotificationsModule} from 'ng-push';
 import { MessagesListComponent } from './messages-list/messages-list.component';
 import { MessageAddComponent } from './message-add/message-add.component';
 import { MessageDetailsComponent } from './message-details/message-details.component';
+import { NotificationsListComponent } from './notifications-list/notifications-list.component';
 const config: InputFileConfig = {};
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
 
@@ -183,6 +184,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
     MessagesListComponent,
     MessageAddComponent,
     MessageDetailsComponent,
+    NotificationsListComponent,
   ],
   imports: [
     AppRoutingModule,

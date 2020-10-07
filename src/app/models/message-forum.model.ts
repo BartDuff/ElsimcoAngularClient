@@ -7,6 +7,7 @@ export class MessageForumModel {
   message: String;
   auteur: UserModel;
   type: String;
-  originId: number;
+  categorie: String;
+  originId: number = 0;
   datePublication: Date;
 }

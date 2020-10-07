@@ -1,0 +1,38 @@
+<h2 style="align-self: center">Ma Messagerie</h2>
+<div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
+  <div *ngIf="messages?.length == 0">Pas encore de messages reçus</div>
+  <mat-paginator #top style="background-color: transparent" [length]="length"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 (page)="OnPageChange($event, bottom);" *ngIf="messages.length > 0">
+  </mat-paginator>
+  <mat-card style="border-radius: 15px;" *ngFor="let message of pagedMessages">
+    <mat-card-header>
+      <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
+        <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
+      </mat-card-title>
+      <mat-card-subtitle style="text-align: left;font-style: italic!important;">le {{message?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>
+      </mat-card-subtitle>
+
+    </mat-card-header>
+    <mat-card-content>
+      <p [innerHTML]="message?.message" [ngStyle]="{'font-weight':message.lu?'':'bold'}">
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button *ngIf="!message.lu" style="background-color: black!important;color: white!important;" (click)="message.lu = true;updateNotif(message);">Marquer comme lu <mat-icon>check</mat-icon></button>
+    </mat-card-actions>
+  </mat-card>
+  <mat-paginator #bottom style="background-color: transparent" [length]="length"
+                 [pageSize]="pageSize"
+                 showFirstLastButtons
+                 (page)="OnPageChange($event, top);" *ngIf="messages.length > 0">
+  </mat-paginator>
+</div>
+<div style="display: flex; justify-content: center; align-items: center">
+  <mat-progress-spinner
+    *ngIf="loading"
+    color="accent"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>

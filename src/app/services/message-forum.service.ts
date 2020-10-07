@@ -25,6 +25,18 @@ export class MessageForumService {
     return this.http.get<MessageForumModel[]>(`${API_URL}/messagesforum`, { withCredentials : true});
   }
 
+  getBesoins(): Observable<MessageForumModel[]> {
+    return this.http.get<MessageForumModel[]>(`${API_URL}/messagesforum/besoins`, { withCredentials : true});
+  }
+
+  getExperiences(): Observable<MessageForumModel[]> {
+    return this.http.get<MessageForumModel[]>(`${API_URL}/messagesforum/experiences`, { withCredentials : true});
+  }
+
+  getAfterworks(): Observable<MessageForumModel[]> {
+    return this.http.get<MessageForumModel[]>(`${API_URL}/messagesforum/afterworks`, { withCredentials : true});
+  }
+
   addMessage(message: any): Observable<any> {
     return this.http.post(`${API_URL}/messagesforum/`, message);
   }

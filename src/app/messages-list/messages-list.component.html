@@ -1,21 +1,25 @@
 <h2 style="align-self: center">Forum</h2>
-<button mat-fab mat-button (click)="triggerSms()">Envoyer SMS</button>
+<!--<button mat-fab mat-button (click)="triggerSms()">Envoyer SMS</button>-->
 <button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_message"><mat-icon>add</mat-icon></button>
+<mat-tab-group>
+  <mat-tab label="Besoin Elsimco">
 <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
-  <div *ngIf="messages?.length == 0">Pas encore de messages publiés</div>
+  <div *ngIf="besoins?.length == 0">Pas encore de messages publiés</div>
   <mat-paginator #top style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
                  showFirstLastButtons
-                 (page)="OnPageChange($event, bottom);" *ngIf="messages.length > 0">
+                 (page)="OnPageChange($event, bottom);" *ngIf="besoins.length > 0">
   </mat-paginator>
-  <mat-card style="border-radius: 15px;" *ngFor="let message of pagedMessages" [routerLink]="['/forum/', message?.id]">
+  <mat-card style="border-radius: 15px;" *ngFor="let message of pagedbesoins" [routerLink]="['/forum/', message?.id]">
     <mat-card-header>
       <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
         <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
       </mat-card-title>
       <mat-card-subtitle style="text-align: right;font-style: italic!important;">Par {{ message?.auteur.prenom }} {{ message?.auteur.nom }} le {{message?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>
       </mat-card-subtitle>
-
+      <div mat-card-avatar>
+        <img class="img-avatar" [src]=message.auteur.img alt="">
+      </div>
     </mat-card-header>
     <mat-card-content>
       <p [innerHTML]="message?.message">
@@ -26,10 +30,75 @@
   <mat-paginator #bottom style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
                  showFirstLastButtons
-                 (page)="OnPageChange($event, top);" *ngIf="messages.length > 0">
+                 (page)="OnPageChange($event, top);" *ngIf="besoins.length > 0">
   </mat-paginator>
 </div>
-<div style="display: flex; justify-content: center; align-items: center">
+  </mat-tab>
+  <mat-tab label="Transfert d'expérience">
+    <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
+      <div *ngIf="experiences?.length == 0">Pas encore de messages publiés</div>
+      <mat-paginator #top style="background-color: transparent" [length]="length"
+                     [pageSize]="pageSize"
+                     showFirstLastButtons
+                     (page)="OnPageChange($event, bottom);" *ngIf="experiences.length > 0">
+      </mat-paginator>
+      <mat-card style="border-radius: 15px;" *ngFor="let message of pagedexperiences" [routerLink]="['/forum/', message?.id]">
+        <mat-card-header>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
+            <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
+          </mat-card-title>
+          <mat-card-subtitle style="text-align: right;font-style: italic!important;">Par {{ message?.auteur.prenom }} {{ message?.auteur.nom }} le {{message?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>
+          </mat-card-subtitle>
+          <div mat-card-avatar>
+            <img class="img-avatar" [src]=message.auteur.img alt="">
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p [innerHTML]="message?.message">
+          </p>
+        </mat-card-content>
+        <button mat-icon-button [routerLink]="['/edit_message/', message?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button>
+      </mat-card>
+      <mat-paginator #bottom style="background-color: transparent" [length]="length"
+                     [pageSize]="pageSize"
+                     showFirstLastButtons
+                     (page)="OnPageChange($event, top);" *ngIf="experiences.length > 0">
+      </mat-paginator>
+    </div>
+  </mat-tab>
+  <mat-tab label="Afterworks">
+    <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
+      <div *ngIf="afterworks?.length == 0">Pas encore de messages publiés</div>
+      <mat-paginator #top style="background-color: transparent" [length]="length"
+                     [pageSize]="pageSize"
+                     showFirstLastButtons
+                     (page)="OnPageChange($event, bottom);" *ngIf="afterworks.length > 0">
+      </mat-paginator>
+      <mat-card style="border-radius: 15px;" *ngFor="let message of pagedafterworks" [routerLink]="['/forum/', message?.id]">
+        <mat-card-header>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
+            <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
+          </mat-card-title>
+          <mat-card-subtitle style="text-align: right;font-style: italic!important;">Par {{ message?.auteur.prenom }} {{ message?.auteur.nom }} le {{message?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>
+          </mat-card-subtitle>
+          <div mat-card-avatar>
+            <img class="img-avatar" [src]=message.auteur.img alt="">
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p [innerHTML]="message?.message">
+          </p>
+        </mat-card-content>
+        <button mat-icon-button [routerLink]="['/edit_message/', message?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button>
+      </mat-card>
+      <mat-paginator #bottom style="background-color: transparent" [length]="length"
+                     [pageSize]="pageSize"
+                     showFirstLastButtons
+                     (page)="OnPageChange($event, top);" *ngIf="afterworks.length > 0">
+      </mat-paginator>
+    </div>
+  </mat-tab>
+  <div style="display: flex; justify-content: center; align-items: center">
   <mat-progress-spinner
     *ngIf="loading"
     color="accent"

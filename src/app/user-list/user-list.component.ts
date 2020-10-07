@@ -90,7 +90,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
         if (data) {
           this.userService.deleteUser(userToDelete).subscribe(
             () => {
-              this.users.splice(this.users.indexOf(userToDelete), 1);
+              this.pagedUsers.splice(this.users.indexOf(userToDelete), 1);
             }
           );
         }

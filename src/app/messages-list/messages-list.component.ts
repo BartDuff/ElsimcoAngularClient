@@ -9,6 +9,9 @@ import {MessageForumModel} from '../models/message-forum.model';
 import {MessageForumService} from '../services/message-forum.service';
 import {NotificationService} from '../services/notification.service';
 import {ToastrService} from 'ngx-toastr';
+import {environment} from '../../environments/environment';
+import {ImageService} from '../services/image.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-messages-list',
@@ -18,9 +21,17 @@ import {ToastrService} from 'ngx-toastr';
 export class MessagesListComponent implements OnInit {
 
   messages: MessageForumModel[];
+  besoins: MessageForumModel[];
+  experiences: MessageForumModel[];
+  afterworks: MessageForumModel[];
+  pagedbesoins: MessageForumModel[];
+  pagedexperiences: MessageForumModel[];
+  pagedafterworks: MessageForumModel[];
   pagedMessages: MessageForumModel[];
   currentUser: UserModel;
   loading = true;
+  bottom;
+  top;
   length: number = 0;
   pageSize: number = 5;
   @ViewChild('top') paginatorTop: MatPaginator;
@@ -29,13 +40,18 @@ export class MessagesListComponent implements OnInit {
 
   constructor(private messageService: MessageForumService,
               private notificationService: NotificationService,
+              private imageService: ImageService,
+              private sanitizer: DomSanitizer,
               private toastr: ToastrService,
               private userService: UserService,
               private dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.getMessages();
+    // this.getMessages();
+    this.getBesoins();
+    this.getExperiences();
+    this.getAfterworks();
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -63,6 +79,13 @@ export class MessagesListComponent implements OnInit {
     this.messageService.getMessages().subscribe(
       (data) => {
         this.messages = data;
+        for(let message of this.messages){
+          this.imageService.getImage(message.auteur.imageId).subscribe(
+            (image) => {
+              message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
+            }
+          );
+        }
         this.loading=false;
         this.length = this.messages.length;
       },
@@ -73,8 +96,71 @@ export class MessagesListComponent implements OnInit {
     );
   }
 
+  getExperiences() {
+    this.messageService.getExperiences().subscribe(
+      (data) => {
+        this.experiences = data;
+        for(let message of this.experiences){
+          this.imageService.getImage(message.auteur.imageId).subscribe(
+            (image) => {
+              message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
+            }
+          );
+        }
+        this.loading=false;
+        this.length = this.experiences.length;
+      },
+      ()=>{},
+      ()=>{
+        this.pagedexperiences = this.experiences.slice(0,this.pageSize);
+      }
+    );
+  }
+
+  getBesoins() {
+    this.messageService.getBesoins().subscribe(
+      (data) => {
+        this.besoins = data;
+        for(let message of this.besoins){
+          this.imageService.getImage(message.auteur.imageId).subscribe(
+            (image) => {
+              message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
+            }
+          );
+        }
+        this.loading=false;
+        this.length = this.besoins.length;
+      },
+      ()=>{},
+      ()=>{
+        this.pagedbesoins = this.besoins.slice(0,this.pageSize);
+      }
+    );
+  }
+
+  getAfterworks() {
+    this.messageService.getAfterworks().subscribe(
+      (data) => {
+        this.afterworks = data;
+        for(let message of this.afterworks){
+          this.imageService.getImage(message.auteur.imageId).subscribe(
+            (image) => {
+              message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
+            }
+          );
+        }
+        this.loading=false;
+        this.length = this.afterworks.length;
+      },
+      ()=>{},
+      ()=>{
+        this.pagedafterworks = this.afterworks.slice(0,this.pageSize);
+      }
+    );
+  }
+
   triggerSms(){
-    this.notificationService.sendSms("Test : Une nouvelle actualité est disponible sur l'application : https://app.elsimco.com").subscribe(
+    this.notificationService.sendSms("Test : Une nouvelle actualité est disponible sur l'application : https://app.elsimco.com", "").subscribe(
       ()=>{
         this.toastr.success("Envoyé avec succès!");
       }

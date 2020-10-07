@@ -47,8 +47,8 @@ export class UserEditComponent implements OnInit {
   filename;
   dossierFilename;
   fileValid = true;
-  // recipient = "majoline.domingos@elsimco.com";
-  recipient = "florian.bartkowiak@gmail.com";
+  recipient = "majoline.domingos@elsimco.com";
+  // recipient = "florian.bartkowiak@gmail.com";
   keysDict = {
     id: 'Id',
     email: 'Email professionelle',

@@ -1,6 +1,6 @@
 <h2 style="align-self: center">Forum</h2>
 <!--<button mat-fab mat-button (click)="triggerSms()">Envoyer SMS</button>-->
-<button mat-fab routerLink="/add_message"><mat-icon>add</mat-icon></button>
+<button mat-fab routerLink="/add_message" matTooltip="Créer un nouveau fil de discussion"><mat-icon>add</mat-icon></button>
 <mat-tab-group>
   <mat-tab label="Besoin Elsimco">
     <div style="display: flex; justify-content: center; align-items: center">
@@ -17,7 +17,7 @@
                  showFirstLastButtons
                  (page)="OnPageChange($event, bottom);" *ngIf="besoins.length > 0">
   </mat-paginator>
-  <mat-card style="border-radius: 15px;" *ngFor="let message of pagedbesoins" [routerLink]="['/forum/', message?.id]">
+  <mat-card style="border-radius: 15px;" *ngFor="let message of pagedbesoins" [routerLink]="deleteClicked?[]:['/forum/', message?.id]">
     <mat-card-header>
       <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
         <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
@@ -32,6 +32,9 @@
       <p [innerHTML]="createTextLinks_(message?.message)">
       </p>
     </mat-card-content>
+    <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+      <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
+    </mat-card-actions>
   </mat-card>
   <mat-paginator #bottom style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
@@ -48,7 +51,7 @@
                      showFirstLastButtons
                      (page)="OnPageChange($event, bottom);" *ngIf="experiences.length > 0">
       </mat-paginator>
-      <mat-card style="border-radius: 15px;" *ngFor="let message of pagedexperiences" [routerLink]="['/forum/', message?.id]">
+      <mat-card style="border-radius: 15px;" *ngFor="let message of pagedexperiences" [routerLink]="deleteClicked?[]:['/forum/', message?.id]">
         <mat-card-header>
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
             <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
@@ -63,6 +66,9 @@
           <p [innerHTML]="createTextLinks_(message?.message)">
           </p>
         </mat-card-content>
+        <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+          <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
+        </mat-card-actions>
       </mat-card>
       <mat-paginator #bottom style="background-color: transparent" [length]="length"
                      [pageSize]="pageSize"
@@ -79,7 +85,7 @@
                      showFirstLastButtons
                      (page)="OnPageChange($event, bottom);" *ngIf="afterworks.length > 0">
       </mat-paginator>
-      <mat-card style="border-radius: 15px;" *ngFor="let message of pagedafterworks" [routerLink]="['/forum/', message?.id]">
+      <mat-card style="border-radius: 15px;" *ngFor="let message of pagedafterworks" [routerLink]="deleteClicked?[]:['/forum/', message?.id]">
         <mat-card-header>
           <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
             <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
@@ -94,6 +100,9 @@
           <p [innerHTML]="createTextLinks_(message?.message)">
           </p>
         </mat-card-content>
+        <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+          <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
+        </mat-card-actions>
       </mat-card>
       <mat-paginator #bottom style="background-color: transparent" [length]="length"
                      [pageSize]="pageSize"
@@ -128,7 +137,9 @@
           <p [innerHTML]="createTextLinks_(message?.message)">
           </p>
         </mat-card-content>
-        <button type="button" (click)="validateMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Valider"><mat-icon>check_circle</mat-icon></button><button type="button" (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Refuser"><mat-icon>close_circle</mat-icon></button>
+        <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+          <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="validateMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Valider"><mat-icon>check_circle</mat-icon></button><button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Refuser"><mat-icon>close_circle</mat-icon></button>
+        </mat-card-actions>
       </mat-card>
       <mat-paginator #bottom style="background-color: transparent" [length]="length"
                      [pageSize]="pageSize"

@@ -38,6 +38,7 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
   loading = true;
   bottom;
   top;
+  deleteClicked = false;
   length: number = 0;
   pageSize: number = 5;
   @ViewChild('top') paginatorTop: MatPaginator;
@@ -281,6 +282,29 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
                 });
             }
           );
+        }
+      }
+    );
+  }
+
+  deleteOriginMessage(messageToDelete) {
+    this.deleteClicked = true;
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        if (data) {
+          this.messageService.deleteMessage(messageToDelete).subscribe(
+            () => {
+                  this.toastr.error("Fil de discussion supprimé","Suppression")
+                  this.getBesoins();
+                  this.getExperiences()
+                  this.getAfterworks();
+                });
+            } else {
+          this.deleteClicked = false;
         }
       }
     );

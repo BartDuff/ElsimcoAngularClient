@@ -57,11 +57,11 @@
                 <td>{{conge.demiJournee ? 'oui' : 'non'}}</td>
                 <td>{{conge.typeConge}}</td>
                 <td>
-                  <button type="button" *ngIf="!conge.valideRH;else valid"
+                  <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" *ngIf="!conge.valideRH;else valid"
                           (click)="validateCongeRH(conge)" matTooltip="Valider le congé">
                     <mat-icon>check_circle</mat-icon>
                   </button>
-                  <button type="button" *ngIf="!conge.valideRH"
+                  <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" *ngIf="!conge.valideRH"
                           (click)="refuseCongeRH(conge)" matTooltip="Refuser le congé">
                     <mat-icon>close_circle</mat-icon>
                   </button>

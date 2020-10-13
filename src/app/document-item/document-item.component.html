@@ -3,21 +3,21 @@
   <input *ngIf="currentUser.role=='ADMIN'&&modifying" matInput [(ngModel)]="newTitle" (clickOutside)="modifying = !modifying;modifyTitle()" style="width: 100%"></td>
 <td>{{ document.annee }}</td>
 <td class="hideOnMobile">
-  <button type="button"
+  <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect"
           (click)="downloadDocument()"><i class="material-icons">file_download</i></button>
 </td>
 <td>
-  <a type="button"
+  <a style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect"
           (click)="openDocument()" download="$event" *ngIf="document.originalFileName.split('.')[document.originalFileName.split('.').length-1].toLowerCase() == 'pdf';else noeye" matTooltip="Visualiser le document"><mat-icon>remove_red_eyes</mat-icon></a>
   <ng-template #noeye>
     <span matTooltip="Visualisation impossible">-</span>
   </ng-template>
 </td>
 <td>
-  <button type="button"
+  <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect"
           (click)="sendDocumentByEmail()"><i class="material-icons">mail</i></button>
 </td>
 <td *ngIf="currentUser.role=='ADMIN'">
-  <button type="button"
+  <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect"
           (click)="deleteDocument()"><i class="material-icons">delete</i></button>
 </td>

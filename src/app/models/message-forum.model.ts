@@ -9,6 +9,7 @@ export class MessageForumModel {
   type: String;
   categorie: String;
   valideAdmin: boolean;
+  modifying:boolean = false;
   originId: number = 0;
   datePublication: Date;
 }

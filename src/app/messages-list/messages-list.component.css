@@ -21,8 +21,8 @@ mat-card .mat-card-image img {
 }
 
 .mat-card-avatar {
-  width: 150px;
-  height: 150px;
+  width: 70px;
+  height: 70px;
   position: relative;
   overflow: hidden;
   border-radius: 50%;
@@ -45,6 +45,12 @@ mat-card .mat-card-image img {
 
 .mat-card:hover{
   cursor: pointer;
+}
+
+.mat-card-content {
+  text-align: left!important;
+  margin-top: 1em;
+  white-space: pre-wrap;
 }
 
 @media only screen and (min-width: 768px) {

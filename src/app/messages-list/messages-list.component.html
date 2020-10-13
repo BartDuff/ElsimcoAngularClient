@@ -1,8 +1,15 @@
 <h2 style="align-self: center">Forum</h2>
 <!--<button mat-fab mat-button (click)="triggerSms()">Envoyer SMS</button>-->
-<button *ngIf="currentUser.role == 'ADMIN'" mat-fab routerLink="/add_message"><mat-icon>add</mat-icon></button>
+<button mat-fab routerLink="/add_message"><mat-icon>add</mat-icon></button>
 <mat-tab-group>
   <mat-tab label="Besoin Elsimco">
+    <div style="display: flex; justify-content: center; align-items: center">
+      <mat-progress-spinner
+        *ngIf="loading"
+        color="accent"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
 <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
   <div *ngIf="besoins?.length == 0">Pas encore de messages publiés</div>
   <mat-paginator #top style="background-color: transparent" [length]="length"
@@ -22,10 +29,9 @@
       </div>
     </mat-card-header>
     <mat-card-content>
-      <p [innerHTML]="message?.message">
+      <p [innerHTML]="createTextLinks_(message?.message)">
       </p>
     </mat-card-content>
-    <button mat-icon-button [routerLink]="['/edit_message/', message?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button>
   </mat-card>
   <mat-paginator #bottom style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
@@ -54,10 +60,9 @@
           </div>
         </mat-card-header>
         <mat-card-content>
-          <p [innerHTML]="message?.message">
+          <p [innerHTML]="createTextLinks_(message?.message)">
           </p>
         </mat-card-content>
-        <button mat-icon-button [routerLink]="['/edit_message/', message?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button>
       </mat-card>
       <mat-paginator #bottom style="background-color: transparent" [length]="length"
                      [pageSize]="pageSize"
@@ -83,13 +88,12 @@
           </mat-card-subtitle>
           <div mat-card-avatar>
             <img class="img-avatar" [src]=message.auteur.img alt="">
-          </div>K
+          </div>
         </mat-card-header>
         <mat-card-content>
-          <p [innerHTML]="message?.message">
+          <p [innerHTML]="createTextLinks_(message?.message)">
           </p>
         </mat-card-content>
-        <button mat-icon-button [routerLink]="['/edit_message/', message?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button>
       </mat-card>
       <mat-paginator #bottom style="background-color: transparent" [length]="length"
                      [pageSize]="pageSize"
@@ -98,11 +102,39 @@
       </mat-paginator>
     </div>
   </mat-tab>
+  <mat-tab *ngIf="currentUser.role == 'ADMIN'">
+    <ng-template matTabLabel>
+      <span [matBadge]="afterworksToValidate?.length.toString()" matBadgeOverlap="true" [matBadgeHidden]="afterworksToValidate?.length==0">À valider</span>
+    </ng-template>
+    <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
+      <div *ngIf="afterworksToValidate?.length == 0">Pas encore de messages à valider</div>
+      <mat-paginator #top style="background-color: transparent" [length]="length"
+                     [pageSize]="pageSize"
+                     showFirstLastButtons
+                     (page)="OnPageChange($event, bottom);" *ngIf="afterworksToValidate.length > 0">
+      </mat-paginator>
+      <mat-card style="border-radius: 15px;cursor: initial;" *ngFor="let message of pagedAfterworksToValidate">
+        <mat-card-header>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
+            <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
+          </mat-card-title>
+          <mat-card-subtitle style="text-align: right;font-style: italic!important;">Par {{ message?.auteur.prenom }} {{ message?.auteur.nom }} le {{message?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>
+          </mat-card-subtitle>
+          <div mat-card-avatar>
+            <img class="img-avatar" [src]=message.auteur.img alt="">
+          </div>
+        </mat-card-header>
+        <mat-card-content >
+          <p [innerHTML]="createTextLinks_(message?.message)">
+          </p>
+        </mat-card-content>
+        <button type="button" (click)="validateMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Valider"><mat-icon>check_circle</mat-icon></button><button type="button" (click)="deleteMessage(message)" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Refuser"><mat-icon>close_circle</mat-icon></button>
+      </mat-card>
+      <mat-paginator #bottom style="background-color: transparent" [length]="length"
+                     [pageSize]="pageSize"
+                     showFirstLastButtons
+                     (page)="OnPageChange($event, top);" *ngIf="afterworksToValidate.length > 0">
+      </mat-paginator>
+    </div>
+  </mat-tab>
 </mat-tab-group>
-  <div style="display: flex; justify-content: center; align-items: center">
-  <mat-progress-spinner
-    *ngIf="loading"
-    color="accent"
-    mode="indeterminate">
-  </mat-progress-spinner>
-</div>

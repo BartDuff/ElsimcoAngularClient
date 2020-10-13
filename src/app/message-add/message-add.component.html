@@ -1,5 +1,6 @@
 <mat-card *ngIf="!loading">
   <mat-card-title>Créer un fil de discussion</mat-card-title>
+  <p *ngIf="currentUser.role == 'USER'">En tant qu'utilisateur, votre message sera soumis à validation de la part d'un administrateur avant publication</p>
   <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="space-around center">
@@ -19,8 +20,8 @@
 
         <mat-form-field  style="margin-top: 1em!important;">
           <mat-label>Catégorie :</mat-label>
-          <mat-select formControlName="categorie">
-            <mat-option *ngFor="let category of categories; let i = index" [value]="catShort[i]" [disabled]="currentUser.role == 'USER'">{{category}}</mat-option>
+          <mat-select formControlName="categorie" [disabled]="currentUser.role == 'USER'">
+            <mat-option *ngFor="let category of categories; let i = index" [value]="catShort[i]">{{category}}</mat-option>
           </mat-select>
         </mat-form-field>
 

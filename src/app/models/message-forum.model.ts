@@ -8,6 +8,7 @@ export class MessageForumModel {
   auteur: UserModel;
   type: String;
   categorie: String;
+  valideAdmin: boolean;
   originId: number = 0;
   datePublication: Date;
 }

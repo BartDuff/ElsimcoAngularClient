@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {NewsModel} from '../models/news.model';
 import {UserModel} from '../models/user.model';
 import {MatDialog, MatDialogConfig, MatPaginator, PageEvent} from '@angular/material';
@@ -12,18 +12,24 @@ import {ToastrService} from 'ngx-toastr';
 import {environment} from '../../environments/environment';
 import {ImageService} from '../services/image.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
+import {EmailService} from '../services/email.service';
+import {CommentDialogComponent} from '../dialog/comment-dialog/comment-dialog.component';
+import {RefuseWithCommentComponent} from '../dialog/refuse-with-comment/refuse-with-comment.component';
 
 @Component({
   selector: 'app-messages-list',
   templateUrl: './messages-list.component.html',
   styleUrls: ['./messages-list.component.css']
 })
-export class MessagesListComponent implements OnInit {
+export class MessagesListComponent implements OnInit, AfterViewInit{
 
   messages: MessageForumModel[];
   besoins: MessageForumModel[];
   experiences: MessageForumModel[];
   afterworks: MessageForumModel[];
+  afterworksToValidate: MessageForumModel[];
+  pagedAfterworksToValidate: MessageForumModel[];
   pagedbesoins: MessageForumModel[];
   pagedexperiences: MessageForumModel[];
   pagedafterworks: MessageForumModel[];
@@ -44,6 +50,7 @@ export class MessagesListComponent implements OnInit {
               private sanitizer: DomSanitizer,
               private toastr: ToastrService,
               private userService: UserService,
+              private emailService: EmailService,
               private dialog: MatDialog) {
   }
 
@@ -52,11 +59,43 @@ export class MessagesListComponent implements OnInit {
     this.getBesoins();
     this.getExperiences();
     this.getAfterworks();
+    this.getAfterworksToValidate()
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
+  getHello(){
+    let date = new Date();
+    let hour = date.getHours();
+    if (hour >= 5 && hour <= 17) {
+      return "Bonjour";
+    } else {
+      return "Bonsoir";
+    }
+  }
+
+  createTextLinks_(text) {
+    let pattern = /(\d{10})|(\+33\d{9})|(\+33\s\d{1}\s\d{2}\s\d{2}\s\d{2}\s\d{2})|(\d{2}\s\d{2}\s\d{2}\s\d{2}\s\d{2})|(0\s\d{3}\s\d{3}\s\d{3}\s)|(0\s\d{3}\s\d{2}\s\d{2}\s\d{2}\s)|(0\d{3}\s\d{3}\s\d{3}\s)|(0\d{3}\s\d{2}\s\d{2}\s\d{2}\s)/gi;
+    return (text || "")
+      .replace(
+        /([^\S]|^)(((https?\:\/\/)|(www\.))(\S+))/gi,
+        function(match, space, url){
+          let hyperlink = url;
+          if (!hyperlink.match('^https?:\/\/')) {
+            hyperlink = 'http://' + hyperlink;
+          }
+          return space + '<a class="links" href="' + hyperlink + '" target="_blank">' + url + '</a>';
+        }
+      )
+      .replace(
+        pattern,
+        function(match2){
+          return '<a class="showOnMobile links" href="tel:' + match2 + '">' + match2 + '</a>'+'<span class="hideOnMobile">'+match2+'</span>';
+        }
+      );
+  };
+
   ngAfterViewInit(){
-    this.paginatorTop._intl.itemsPerPageLabel = 'Articles par page : ';
+    this.paginatorTop._intl.itemsPerPageLabel = 'Messages par page : ';
     this.paginatorTop._intl.nextPageLabel = 'Page suivante';
     this.paginatorTop._intl.previousPageLabel = 'Page précédente';
     this.paginatorTop._intl.firstPageLabel = 'Première page';
@@ -99,7 +138,7 @@ export class MessagesListComponent implements OnInit {
   getExperiences() {
     this.messageService.getExperiences().subscribe(
       (data) => {
-        this.experiences = data;
+        this.experiences = data.filter((a) => a.type == "origin");
         for(let message of this.experiences){
           this.imageService.getImage(message.auteur.imageId).subscribe(
             (image) => {
@@ -120,7 +159,7 @@ export class MessagesListComponent implements OnInit {
   getBesoins() {
     this.messageService.getBesoins().subscribe(
       (data) => {
-        this.besoins = data;
+        this.besoins = data.filter((a) => a.type == "origin");
         for(let message of this.besoins){
           this.imageService.getImage(message.auteur.imageId).subscribe(
             (image) => {
@@ -141,7 +180,7 @@ export class MessagesListComponent implements OnInit {
   getAfterworks() {
     this.messageService.getAfterworks().subscribe(
       (data) => {
-        this.afterworks = data;
+        this.afterworks = data.filter((a) => a.type == "origin" && a.valideAdmin);
         for(let message of this.afterworks){
           this.imageService.getImage(message.auteur.imageId).subscribe(
             (image) => {
@@ -155,6 +194,27 @@ export class MessagesListComponent implements OnInit {
       ()=>{},
       ()=>{
         this.pagedafterworks = this.afterworks.slice(0,this.pageSize);
+      }
+    );
+  }
+
+  getAfterworksToValidate() {
+    this.messageService.getAfterworks().subscribe(
+      (data) => {
+        this.afterworksToValidate = data.filter((a) => a.type == "origin" && !a.valideAdmin);
+        for(let message of this.afterworksToValidate){
+          this.imageService.getImage(message.auteur.imageId).subscribe(
+            (image) => {
+              message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
+            }
+          );
+        }
+        this.loading=false;
+        this.length = this.afterworksToValidate.length;
+      },
+      ()=>{},
+      ()=>{
+        this.pagedAfterworksToValidate = this.afterworksToValidate.slice(0,this.pageSize);
       }
     );
   }
@@ -177,17 +237,48 @@ export class MessagesListComponent implements OnInit {
     paginator.pageIndex = event.pageIndex;
   }
 
-  deleteMessage(messageToDelete) {
+  validateMessage(message: MessageForumModel){
+    message.valideAdmin = true;
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data)=>{
+        if(data){
+          this.messageService.editMessage(message).subscribe(
+            ()=>{
+              this.emailService.sendMail(this.getHello() + " " + message.auteur.prenom + ",\n\nVotre fil de discussion vient d'être validé par un administrateur, il sera désormais visible de tous dans la rubrique Afterworks du forum.","Fil de discussion validé",message.auteur.email).subscribe(
+                ()=>{
+                  this.toastr.success("Fil de discussion validé","Validation");
+                  this.getAfterworks();
+                  this.getAfterworksToValidate();
+                }
+              )
+            }
+          )
+        }
+      });
+  }
+
+
+  deleteMessage(messageToDelete) {
+    messageToDelete.valideAdmin = false;
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(RefuseWithCommentComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
       (data) => {
         if (data) {
           this.messageService.deleteMessage(messageToDelete).subscribe(
             () => {
-              this.messages.splice(this.messages.indexOf(messageToDelete), 1);
+              this.emailService.sendMail(this.getHello() + " " + messageToDelete.auteur.prenom + ",\n\nVotre fil de discussion vient d'être refusé par un administrateur pour la raison suivante : " + data.commentaire +"\nMerci de prendre note de la raison du refus si vous souhaitez publier un nouveau fil de discussion.","Fil de discussion refusé",messageToDelete.auteur.email).subscribe(
+                ()=>{
+                  this.toastr.error("Fil de discussion refusé","Refus")
+                  this.getAfterworks();
+                  this.getAfterworksToValidate();
+                });
             }
           );
         }

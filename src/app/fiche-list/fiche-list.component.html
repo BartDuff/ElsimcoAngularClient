@@ -18,11 +18,11 @@
       <td>{{fiche.annee}}</td>
       <td><mat-icon *ngIf="fiche.valideRH; else unvalid" matTooltip="Validée">check</mat-icon></td>
       <td class="hideOnMobile">
-        <button type="button"
+        <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect"
                 (click)="downloadDocument(fiche)" matTooltip="Télécharger la fiche"><i class="material-icons">file_download</i></button>
       </td>
       <td>
-        <button type="button"
+        <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect"
                 (click)="openDocument(fiche)" matTooltip="Visualiser la fiche"><i class="material-icons">remove_red_eye</i></button>
       </td>
       <ng-template #unvalid>

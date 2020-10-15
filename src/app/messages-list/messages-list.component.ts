@@ -29,6 +29,9 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
   experiences: MessageForumModel[];
   afterworks: MessageForumModel[];
   afterworksToValidate: MessageForumModel[];
+  answersBesoins: MessageForumModel[] = [];
+  answersExperiences: MessageForumModel[] = [];
+  answersAfterworks: MessageForumModel[] = [];
   pagedAfterworksToValidate: MessageForumModel[];
   pagedbesoins: MessageForumModel[];
   pagedexperiences: MessageForumModel[];
@@ -41,8 +44,14 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
   deleteClicked = false;
   length: number = 0;
   pageSize: number = 5;
-  @ViewChild('top') paginatorTop: MatPaginator;
-  @ViewChild('bottom') paginatorBottom: MatPaginator;
+  @ViewChild('topBesoins') paginatorTopBesoins: MatPaginator;
+  @ViewChild('bottomBesoins') paginatorBottomBesoins: MatPaginator;
+  @ViewChild('topExperience') paginatorTopExperiences: MatPaginator;
+  @ViewChild('bottomExperience') paginatorBottomExperiences: MatPaginator;
+  @ViewChild('topAfterworks') paginatorTopAfterworks: MatPaginator;
+  @ViewChild('bottomAfterworks') paginatorBottomAfterworks: MatPaginator;
+  @ViewChild('topAfterworksToValidate') paginatorTopAfterworksToValidate: MatPaginator;
+  @ViewChild('bottomAfterworksToValidate') paginatorBottomAfterworksToValidate: MatPaginator;
 
 
   constructor(private messageService: MessageForumService,
@@ -60,7 +69,8 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
     this.getBesoins();
     this.getExperiences();
     this.getAfterworks();
-    this.getAfterworksToValidate()
+    this.getAfterworksToValidate();
+    this.getAnswers();
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -72,6 +82,10 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
     } else {
       return "Bonsoir";
     }
+  }
+
+  filter(array: any[], id: number){
+    return array.filter((x)=> x.originId == id)
   }
 
   createTextLinks_(text) {
@@ -96,13 +110,34 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
   };
 
   ngAfterViewInit(){
-    this.paginatorTop._intl.itemsPerPageLabel = 'Messages par page : ';
-    this.paginatorTop._intl.nextPageLabel = 'Page suivante';
-    this.paginatorTop._intl.previousPageLabel = 'Page précédente';
-    this.paginatorTop._intl.firstPageLabel = 'Première page';
-    this.paginatorTop._intl.lastPageLabel = 'Dernière page';
-    this.paginatorTop._intl.getRangeLabel = this.getRangeLabel;
-    this.paginatorBottom = this.paginatorTop;
+    this.paginatorTopBesoins._intl.itemsPerPageLabel = 'Messages par page : ';
+    this.paginatorTopBesoins._intl.nextPageLabel = 'Page suivante';
+    this.paginatorTopBesoins._intl.previousPageLabel = 'Page précédente';
+    this.paginatorTopBesoins._intl.firstPageLabel = 'Première page';
+    this.paginatorTopBesoins._intl.lastPageLabel = 'Dernière page';
+    this.paginatorTopBesoins._intl.getRangeLabel = this.getRangeLabel;
+    this.paginatorBottomBesoins = this.paginatorTopBesoins;
+    this.paginatorTopExperiences._intl.itemsPerPageLabel = 'Messages par page : ';
+    this.paginatorTopExperiences._intl.nextPageLabel = 'Page suivante';
+    this.paginatorTopExperiences._intl.previousPageLabel = 'Page précédente';
+    this.paginatorTopExperiences._intl.firstPageLabel = 'Première page';
+    this.paginatorTopExperiences._intl.lastPageLabel = 'Dernière page';
+    this.paginatorTopExperiences._intl.getRangeLabel = this.getRangeLabel;
+    this.paginatorBottomExperiences = this.paginatorTopExperiences;
+    this.paginatorTopAfterworks._intl.itemsPerPageLabel = 'Messages par page : ';
+    this.paginatorTopAfterworks._intl.nextPageLabel = 'Page suivante';
+    this.paginatorTopAfterworks._intl.previousPageLabel = 'Page précédente';
+    this.paginatorTopAfterworks._intl.firstPageLabel = 'Première page';
+    this.paginatorTopAfterworks._intl.lastPageLabel = 'Dernière page';
+    this.paginatorTopAfterworks._intl.getRangeLabel = this.getRangeLabel;
+    this.paginatorBottomAfterworks = this.paginatorTopAfterworks;
+    this.paginatorTopAfterworksToValidate._intl.itemsPerPageLabel = 'Messages par page : ';
+    this.paginatorTopAfterworksToValidate._intl.nextPageLabel = 'Page suivante';
+    this.paginatorTopAfterworksToValidate._intl.previousPageLabel = 'Page précédente';
+    this.paginatorTopAfterworksToValidate._intl.firstPageLabel = 'Première page';
+    this.paginatorTopAfterworksToValidate._intl.lastPageLabel = 'Dernière page';
+    this.paginatorTopAfterworksToValidate._intl.getRangeLabel = this.getRangeLabel;
+    this.paginatorBottomAfterworksToValidate = this.paginatorTopAfterworksToValidate;
   }
 
   getRangeLabel = (page: number, pageSize: number, length: number) =>  {
@@ -305,6 +340,31 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
                 });
             } else {
           this.deleteClicked = false;
+        }
+      }
+    );
+  }
+
+  getAnswers() {
+    this.messageService.getMessages().subscribe(
+      (data) => {
+        for (let d of data) {
+          if (d.type == "answer") {
+            switch (d.categorie){
+              case "Besoins":
+                console.log
+                this.answersBesoins.push(d);
+                break;
+              case "Experiences":
+                this.answersExperiences.push(d);
+                break;
+              case "Afterworks":
+                this.answersAfterworks.push(d);
+                break;
+              default:
+                break;
+            }
+          }
         }
       }
     );

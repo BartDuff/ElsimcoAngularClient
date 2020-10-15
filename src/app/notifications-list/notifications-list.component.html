@@ -4,7 +4,7 @@
   <mat-paginator #top style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
                  showFirstLastButtons
-                 (page)="OnPageChange($event, bottom);" *ngIf="messages.length > 0">
+                 (page)="OnPageChange($event, paginatorBottom);" *ngIf="messages.length > 0">
   </mat-paginator>
   <mat-card style="border-radius: 15px;" *ngFor="let message of pagedMessages">
     <mat-card-header>
@@ -26,7 +26,7 @@
   <mat-paginator #bottom style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
                  showFirstLastButtons
-                 (page)="OnPageChange($event, top);" *ngIf="messages.length > 0">
+                 (page)="OnPageChange($event, paginatorTop);" *ngIf="messages.length > 0">
   </mat-paginator>
 </div>
 <div style="display: flex; justify-content: center; align-items: center">

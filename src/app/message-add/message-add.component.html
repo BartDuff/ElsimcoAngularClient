@@ -8,11 +8,11 @@
           <input matInput disabled formControlName="id" placeholder="id" name="id"  id="id">
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="addForm.controls.categorie.value !='Afterworks'">
           <input matInput formControlName="sujet" placeholder="Sujet" name="sujet"  id="sujet">
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="addForm.controls.categorie.value !='Afterworks'">
           <mat-label>Message</mat-label>
           <textarea matInput cdkTextareaAutosize formControlName="message" placeholder="Veuillez écrire votre message dans ce cadre..."
                     name="message" id="message"></textarea>
@@ -24,10 +24,43 @@
             <mat-option *ngFor="let category of categories; let i = index" [value]="catShort[i]">{{category}}</mat-option>
           </mat-select>
         </mat-form-field>
+        <mat-form-field *ngIf="addForm.controls.categorie.value =='Afterworks'">
+          <input matInput [(ngModel)]="afterworkMessage.lieu" [ngModelOptions]="{standalone: true}" placeholder="Lieu" name="lieu"  id="lieu">
+        </mat-form-field>
 
+        <mat-form-field *ngIf="addForm.controls.categorie.value =='Afterworks'">
+          <input matInput type="datetime-local" [(ngModel)]="afterworkMessage.date" [ngModelOptions]="{standalone: true}" placeholder="Date" name="date"  id="date">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="addForm.controls.categorie.value =='Afterworks'">
+          <input matInput [(ngModel)]="afterworkMessage.budget" [ngModelOptions]="{standalone: true}" placeholder="Budget alloué par personne" name="budget" id="budget">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="addForm.controls.categorie.value =='Afterworks'">
+          <mat-label>Commentaire</mat-label>
+          <textarea matInput cdkTextareaAutosize [(ngModel)]="afterworkMessage.commentaire" [ngModelOptions]="{standalone: true}" placeholder="Veuillez écrire votre commentaire dans ce cadre..."
+                    name="commentaire" id="commentaire"></textarea>
+        </mat-form-field>
+        <mat-card *ngIf="addForm.controls.categorie.value =='Afterworks'" style="border-radius: 15px;margin-top: 1em;">
+          <mat-card-title>Aperçu</mat-card-title>
+            <mat-card-content>
+              Salut la team Elsimco,<br><br>
+
+              {{organise}} un afterwork qui aura lieu {{afterworkMessage.lieu}} le {{afterworkMessage.date | date: 'dd/MM/yyyy'}} à<br>
+              {{afterworkMessage.date | date: 'HH'}}H{{afterworkMessage.date | date: 'mm'}} pour un budget de {{afterworkMessage.budget}}€/pers.<br><br>
+
+              Si tu souhaites y participer, clique sur « Je participe ! »<br><br>
+
+              {{afterworkMessage.commentaire}}<br><br>
+
+              À bientôt<br><br>
+
+              {{this.currentUser.prenom}}
+            </mat-card-content>
+        </mat-card>
         <mat-card-actions fxFlexAlign="center">
           <button mat-icon-button routerLink="/forum" style="font-size:50%!important;">RETOUR <mat-icon>arrow_back</mat-icon></button>
-          <button mat-button [disabled]="addForm.invalid">Envoyer</button>
+          <button mat-button [disabled]="addForm.controls.categorie.value !='Afterworks'?addForm.invalid:!(afterworkMessage.budget&&afterworkMessage.lieu&&afterworkMessage.date)">Envoyer</button>
         </mat-card-actions>
       </div>
     </mat-card-content>

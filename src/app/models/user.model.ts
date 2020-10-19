@@ -1,6 +1,7 @@
 import {MissionModel} from './mission.model';
 import {NewsModel} from './news.model';
 import {SafeResourceUrl} from '@angular/platform-browser';
+import {MessageForumModel} from './message-forum.model';
 
 export class UserModel {
   id: any;
@@ -37,5 +38,6 @@ export class UserModel {
   statut:String;
   missions: MissionModel[];
   likes: NewsModel[];
+  participating: MessageForumModel[];
   img:SafeResourceUrl;
 }

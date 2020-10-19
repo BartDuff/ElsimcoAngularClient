@@ -15,6 +15,8 @@ import {MatDialog, MatDialogConfig} from '@angular/material';
 import {EmailService} from '../services/email.service';
 import {ConfigurationService} from '../services/configuration.service';
 import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirmation-dialog.component';
+import {AfterworkModel} from '../models/afterwork.model';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-message-add',
@@ -28,7 +30,8 @@ export class MessageAddComponent implements OnInit {
               private toastrService:ToastrService,
               private emailService: EmailService,
               private configurationService: ConfigurationService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private datepipe: DatePipe) { }
 
   @ViewChild(InputFileComponent)
   private inputFileComponent: InputFileComponent;
@@ -38,9 +41,12 @@ export class MessageAddComponent implements OnInit {
   loading = false;
   selected;
   adminRecipient;
+  // adminRecipient = "florian.bartkowiak@gmail.com";
   categories = ["Besoins Elsimco", "Transfert d'expérience", "Afterworks"];
-  catShort = ['Besoins', 'Experiences', 'Afterworks']
-
+  catShort = ['Besoins', 'Experiences', 'Afterworks'];
+  messageType;
+  afterworkMessage:AfterworkModel;
+  organise;
 
 
   get f() {
@@ -63,7 +69,9 @@ export class MessageAddComponent implements OnInit {
 
   ngOnInit() {
     this.message = new MessageForumModel();
+    this.afterworkMessage = new AfterworkModel("","","","", 0,"");
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.organise = this.currentUser.role == "ADMIN"?"Elsimco organise":"J'organise";
     this.configurationService.getSingleConfiguration("1").subscribe(
       (config)=>{
         this.adminRecipient = config.mailRH;
@@ -76,8 +84,25 @@ export class MessageAddComponent implements OnInit {
       categorie: ['', Validators.required]
     });
     this.selected = this.currentUser.role == "ADMIN"?"Besoins":"Afterworks";
-    this.addForm.controls.categorie.setValue(this.selected)
+    this.addForm.controls.categorie.setValue(this.selected);
   }
+
+  // updateAfterworkModel(afterworkMessage){
+  //   this.afterworkMessage = afterworkMessage;
+  //   let organise = this.currentUser.role == "ADMIN"?"Elsimco organise":"J'organise";
+  //   this.messageType = "Salut la team Elsimco,\n" +
+  //     "\n" +
+  //     organise+" un afterwork qui aura lieu "+this.afterworkMessage.lieu+" le "+this.afterworkMessage.date+" à\n" +
+  //     this.afterworkMessage.heure+"H"+this.afterworkMessage.minutes+" pour un budget de "+this.afterworkMessage.budget+"€/pers.\n" +
+  //     "\n" +
+  //     "Si tu souhaites y participer, clique sur « Je participe ! »\n" +
+  //     "\n" +
+  //     this.afterworkMessage.commentaire+
+  //     "\n\n" +
+  //     "À bientôt.\n" +
+  //     "\n" +
+  //     this.currentUser.prenom;
+  // }
 
   onSubmit() {
     const dialogConfig = new MatDialogConfig();
@@ -92,6 +117,21 @@ export class MessageAddComponent implements OnInit {
           message.auteur = this.currentUser;
           message.type = "origin";
           message.valideAdmin = this.currentUser.role == 'ADMIN';
+          if(message.categorie == "Afterworks"){
+              this.messageType = "Salut la team Elsimco,\n" +
+                "\n" +
+                this.organise+" un afterwork qui aura lieu "+this.afterworkMessage.lieu+" le "+this.datepipe.transform(this.afterworkMessage.date,"dd/MM/yyyy")+" à " + this.datepipe.transform(this.afterworkMessage.date,"HH")+"H"+this.datepipe.transform(this.afterworkMessage.date,"mm")+" pour un budget de "+this.afterworkMessage.budget+"€/pers.\n" +
+                "\n" +
+                "Si tu souhaites y participer, clique sur « Je participe ! »\n" +
+                "\n" +
+                this.afterworkMessage.commentaire+
+                "\n\n" +
+                "À bientôt.\n" +
+                "\n" +
+                this.currentUser.prenom;
+              message.message = this.messageType;
+              message.sujet = "Afterwork " + this.datepipe.transform(this.afterworkMessage.date,"dd/MM/yyyy") + " : "+ this.afterworkMessage.lieu;
+          }
           this.messageService.addMessage(message)
             .subscribe((data) => {
                 message.id = data.id;

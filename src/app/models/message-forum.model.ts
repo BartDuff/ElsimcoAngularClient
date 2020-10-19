@@ -12,4 +12,5 @@ export class MessageForumModel {
   modifying:boolean = false;
   originId: number = 0;
   datePublication: Date;
+  participants: UserModel[] = [];
 }

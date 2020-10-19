@@ -1,7 +1,7 @@
 <h2 style="align-self: center">Forum</h2>
 <!--<button mat-fab mat-button (click)="triggerSms()">Envoyer SMS</button>-->
 <button mat-fab routerLink="/add_message" matTooltip="Créer un nouveau fil de discussion"><mat-icon>add</mat-icon></button>
-<mat-tab-group>
+<mat-tab-group [selectedIndex]="selectedTab" (selectedTabChange)="emitSelectedTab($event.index)">
   <mat-tab label="Besoins Elsimco">
     <div style="display: flex; justify-content: center; align-items: center">
       <mat-progress-spinner
@@ -35,7 +35,7 @@
     <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
       <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
     </mat-card-actions>
-    <span style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;text-decoration: underline;font-style: italic"> {{filter(answersBesoins,message.id)?.length>0?filter(answersBesoins,message.id)?.length:'Aucune'}} {{ filter(answersBesoins,message.id)?.length <=1?'réponse':'réponses'}}</span>
+    <span style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;text-decoration: underline;font-style: italic"> {{filterByOriginId(answersBesoins,message.id)?.length>0?filterByOriginId(answersBesoins,message.id)?.length:'Aucune'}} {{ filterByOriginId(answersBesoins,message.id)?.length <=1?'réponse':'réponses'}}</span>
   </mat-card>
   <mat-paginator #bottomBesoins style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
@@ -70,7 +70,7 @@
         <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
           <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
         </mat-card-actions>
-        <span style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;text-decoration: underline;font-style: italic"> {{filter(answersExperiences,message.id)?.length>0?filter(answersExperiences,message.id)?.length:'Aucune'}} {{ filter(answersExperiences,message.id)?.length <=1?'réponse':'réponses'}}</span>
+        <span style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;text-decoration: underline;font-style: italic"> {{filterByOriginId(answersExperiences,message.id)?.length>0?filterByOriginId(answersExperiences,message.id)?.length:'Aucune'}} {{ filterByOriginId(answersExperiences,message.id)?.length <=1?'réponse':'réponses'}}</span>
       </mat-card>
       <mat-paginator #bottomExperience style="background-color: transparent" [length]="length"
                      [pageSize]="pageSize"
@@ -105,7 +105,7 @@
         <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
           <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
         </mat-card-actions>
-        <span style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;text-decoration: underline;font-style: italic"> {{filter(answersAfterworks,message.id)?.length>0?filter(answersAfterworks,message.id)?.length:'Aucune'}} {{ filter(answersAfterworks,message.id)?.length <=1?'réponse':'réponses'}}</span>
+        <span style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;text-decoration: underline;font-style: italic"> {{filterByOriginId(answersAfterworks,message.id)?.length>0?filterByOriginId(answersAfterworks,message.id)?.length:'Aucune'}} {{ filterByOriginId(answersAfterworks,message.id)?.length <=1?'réponse':'réponses'}}</span>
       </mat-card>
       <mat-paginator #bottomAfterworks style="background-color: transparent" [length]="length"
                      [pageSize]="pageSize"
@@ -114,9 +114,30 @@
       </mat-paginator>
     </div>
   </mat-tab>
+  <mat-tab label="Afterworks en attente">
+    <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center;margin-top: 1em;">
+      <div *ngIf="filterByUserId(afterworksToValidate)?.length == 0">Vous n'avez pas encore proposé d'Afterwork soumis à validation</div>
+      <mat-card style="border-radius: 15px;" *ngFor="let message of filterByUserId(afterworksToValidate)">
+        <mat-card-header>
+          <mat-card-title fxLayout.gt-xs="row" fxLayout.xs="column" style="align-items: center;">
+            <div style="font-weight: bold;vertical-align: center">{{message?.sujet}}</div>
+          </mat-card-title>
+          <mat-card-subtitle style="text-align: right;font-style: italic!important;">Par {{ message?.auteur.prenom }} {{ message?.auteur.nom }} le {{message?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>
+          </mat-card-subtitle>
+          <div mat-card-avatar>
+            <img class="img-avatar" [src]=message.auteur.img alt="">
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <p [innerHTML]="createTextLinks_(message?.message)">
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-tab>
   <mat-tab *ngIf="currentUser.role == 'ADMIN'">
     <ng-template matTabLabel>
-      <span [matBadge]="afterworksToValidate?.length.toString()" matBadgeOverlap="true" [matBadgeHidden]="afterworksToValidate?.length==0">À valider</span>
+      <span [matBadge]="afterworksToValidate?.length.toString()" matBadgeOverlap="false" [matBadgeHidden]="afterworksToValidate?.length==0">À valider</span>
     </ng-template>
     <div fxLayout="column" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" style="align-items: center">
       <div *ngIf="afterworksToValidate?.length == 0">Pas encore de messages à valider</div>

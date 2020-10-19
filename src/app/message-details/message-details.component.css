@@ -1,0 +1,102 @@
+.btn-floating {
+  background-color: black;
+  color: white;
+}
+
+.mat-button {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
+
+.mat-card-content {
+  text-align: left!important;
+  margin-top: 1em;
+  white-space: pre-wrap;
+}
+
+.mat-button:disabled {
+  background-color: black;
+  color: gray!important;
+  margin: 1em;
+}
+
+mat-form-field {
+  width: 80%;
+}
+
+textarea {
+  height: 30em;
+}
+
+.mat-card {
+  width: 90%;
+  margin-bottom: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+}
+
+mat-card .mat-card-image img {
+  display: block;
+  border-radius: 2px 2px 0 0;
+  position: relative;
+  left: 0;
+  right: 0;
+  top: -10vw;
+  bottom: 0;
+  width: 100%;
+}
+
+.mat-card-avatar {
+  width: 70px;
+  height: 70px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.img-avatar {
+  display: inline;
+  padding: 0;
+  margin-left: -2%;
+  margin-top: -2%;
+  height: auto;
+  width: 110%;
+}
+
+.answerCard {
+  border-radius: 15px;
+  width: 40%;
+}
+
+.mat-fab {
+  background-color: black;
+  color: white;
+  margin: 1em;
+}
+
+.mat-icon-button {
+  color: black;
+  margin: 1em;
+}
+
+.answerCard {
+  border-radius: 15px;
+  width: 90%;
+}
+
+@media only screen and (min-width: 768px) {
+  .mat-card {
+    width: 90vw;
+    margin-bottom: 1%;
+    justify-content: center;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .answerCard {
+    border-radius: 15px;
+    width: 90%;
+  }
+}

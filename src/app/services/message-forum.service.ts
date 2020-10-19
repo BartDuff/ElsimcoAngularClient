@@ -54,4 +54,22 @@ export class MessageForumService {
     return this.http.delete(`${API_URL}/messagesforum/${idASupprimer}`);
   }
 
+  getParticipantsForAfterwork(messageForumModel: MessageForumModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.get(`${API_URL}/messagesforum/${messageForumModel.id}/participants`, { headers: headers});
+  }
+
+  addParticipationToUser(user: UserModel, messageForumModel: MessageForumModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.post(`${API_URL}/messagesforum/${messageForumModel.id}/participants`, user, { headers: headers});
+  }
+
+  removeParticipationFromUser(user: UserModel, messageForumModel: MessageForumModel): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.delete(`${API_URL}/messagesforum/${messageForumModel.id}/participants/${user.id}`, { headers: headers});
+  }
+
 }

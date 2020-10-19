@@ -16,6 +16,7 @@ import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog/confirm
 import {EmailService} from '../services/email.service';
 import {CommentDialogComponent} from '../dialog/comment-dialog/comment-dialog.component';
 import {RefuseWithCommentComponent} from '../dialog/refuse-with-comment/refuse-with-comment.component';
+import {ForumTabService} from '../services/forum-tab.service';
 
 @Component({
   selector: 'app-messages-list',
@@ -38,6 +39,7 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
   pagedafterworks: MessageForumModel[];
   pagedMessages: MessageForumModel[];
   currentUser: UserModel;
+  selectedTab:number;
   loading = true;
   bottom;
   top;
@@ -61,11 +63,15 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
               private toastr: ToastrService,
               private userService: UserService,
               private emailService: EmailService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private forumTabService: ForumTabService) {
   }
 
   ngOnInit() {
     // this.getMessages();
+    this.forumTabService.previousTab.subscribe(
+      (index)=>this.selectedTab = index
+    )
     this.getBesoins();
     this.getExperiences();
     this.getAfterworks();
@@ -84,8 +90,20 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
     }
   }
 
-  filter(array: any[], id: number){
+  filterByOriginId(array: any[], id: number){
     return array.filter((x)=> x.originId == id)
+  }
+
+  filterByUserId(array: any[]){
+    if(array){
+      return array.filter((x)=> x.auteur.id == this.currentUser.id)
+    } else {
+      return [];
+    }
+  }
+
+  emitSelectedTab(num:number){
+    this.forumTabService.previousTab.next(num);
   }
 
   createTextLinks_(text) {

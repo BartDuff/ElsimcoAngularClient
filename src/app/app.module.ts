@@ -66,7 +66,7 @@ import {
   MatTreeModule, MatAutocompleteModule
 } from '@angular/material';
 import { AddContactComponent } from './add-contact/add-contact.component';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {ToastrModule} from 'ngx-toastr';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { ContactItemComponent } from './contact-item/contact-item.component';
@@ -236,7 +236,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {};
     DragulaModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [ AuthenticationService, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService, FaqService, ConfigurationService,
+  providers: [ AuthenticationService,DatePipe, AuthGuardService, DocumentService, UserService, MissionService, FicheService, PdfService, EmailService, FaqService, ConfigurationService,
      { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },

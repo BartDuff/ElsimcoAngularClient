@@ -1,4 +1,4 @@
-<button mat-icon-button routerLink="/forum" matTooltip="Retour à la liste des discussions" style="font-size:50%!important;">RETOUR <mat-icon>arrow_back</mat-icon></button>
+<button mat-icon-button routerLink="/forum" matTooltip="Retour à la liste des discussions">RETOUR <mat-icon>arrow_back</mat-icon></button>
 <h4 style="display: flex;flex-direction: row;justify-content: center;align-items: center;">{{dictCategorie[message.categorie]}}</h4>
 <mat-card style="border-radius: 15px;">
   <mat-card-header>
@@ -12,15 +12,20 @@
     </div>
   </mat-card-header>
   <mat-card-content>
-    <p *ngIf="!message.modifying" (dblclick)="currentUser.id==message.auteur.id?message.modifying = !message.modifying:null" [innerHTML]="createTextLinks_(message?.message)"></p>
-    <textarea cdkTextareaAutosize *ngIf="currentUser.id==message.auteur.id&& message.modifying" matInput [(ngModel)]="message.message" (clickOutside)="message.modifying = !message.modifying;updateMessage(message)" [ngStyle]="{border : message.modifying? 'solid black 1px':''}"></textarea>
+    <p *ngIf="!message?.modifying" [innerHTML]="createTextLinks_(message?.message)"></p>
+    <textarea cdkTextareaAutosize *ngIf="currentUser.id==message?.auteur.id&& message?.modifying" matInput [(ngModel)]="message.message" [ngStyle]="{border : message.modifying? 'solid black 1px':''}"></textarea>
   </mat-card-content>
+  <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+    <button mat-icon-button (click)="message.modifying = !message.modifying" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&!message?.modifying" matTooltip="Modifier le message"><mat-icon>edit</mat-icon></button>
+    <button mat-icon-button (click)="message.modifying = !message.modifying;updateMessage(message)" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&message?.modifying" matTooltip="Valider les modifications"><mat-icon>check_circle</mat-icon></button>
+    <button mat-icon-button (click)="message.modifying = !message.modifying;" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&message?.modifying" matTooltip="Annuler les modifications"><mat-icon>close_circle</mat-icon></button>
+  </mat-card-actions>
   <mat-card-actions style="display: flex;flex-direction: row;justify-content: center;align-items: center;" *ngIf="message.categorie == 'Afterworks'">
-    <button style="text-transform: none!important;color: black!important"   (click)="(isParticipating)?removeParticipation():confirmParticipation();"
+    <button style="text-transform: none!important;color: black!important;word-wrap: break-word!important;white-space: normal!important;" (click)="(isParticipating)?removeParticipation():confirmParticipation();"
             class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect">
-      <mat-icon>{{(isParticipating)?'close_circle':'check_circle'}}</mat-icon><span> {{(isParticipating)?'Je ne participe plus':'Je participe !'}} </span>
+      <mat-icon>{{(isParticipating)?'close_circle':'check_circle'}}</mat-icon>{{(isParticipating)?'Je ne participe plus':'Je participe !'}}
     </button>
-    <span *ngIf="participants?.length >0"> {{participants?.length}} {{ participants?.length <=1?'personne participe':'personnes participent'}}</span>
+    <span *ngIf="participants?.length >0" style="font-size: x-small!important;"> {{participants?.length}} {{ participants?.length <=1?'personne participe':'personnes participent'}}</span>
   </mat-card-actions>
   <mat-card-actions *ngIf="(currentUser.role == 'ADMIN'||message.auteur.id == currentUser.id) && participants?.length>0 && message.categorie == 'Afterworks'" style="display: flex;flex-direction: column;margin-left: 1em;">
     <h6 mat-subheader>Les utilisateurs suivants participent :</h6>
@@ -31,11 +36,10 @@
 </mat-card>
 <mat-card class="answerCard">
   <mat-card-title>Écrire une réponse</mat-card-title>
-  <form>
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="space-around center">
         <mat-form-field hidden>
-          <input matInput disabled formControlName="id" placeholder="id" name="id"  id="id">
+          <input matInput disabled placeholder="id" name="id"  id="id">
         </mat-form-field>
 
         <mat-form-field>
@@ -48,24 +52,24 @@
         </mat-card-actions>
       </div>
     </mat-card-content>
-  </form>
 </mat-card>
 <mat-card style="border-radius: 15px;" *ngFor="let ans of answers">
   <mat-card-header>
     <mat-card-subtitle style="text-align: right;font-style: italic!important;">Par {{ ans?.auteur.prenom }} {{ ans?.auteur.nom }} le {{ans?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>
     </mat-card-subtitle>
     <div mat-card-avatar>
-      <img class="img-avatar" [src]="ans.auteur.img" alt="">
+      <img class="img-avatar" [src]="ans?.auteur.img" alt="">
     </div>
   </mat-card-header>
   <mat-card-content>
-    <p *ngIf="!ans.modifying" [innerHTML]="createTextLinks_(ans?.message)"></p>
-    <textarea cdkTextareaAutosize *ngIf="currentUser.id==ans.auteur.id&& ans.modifying" matInput [(ngModel)]="ans.message" [ngStyle]="{border : ans.modifying? 'solid black 1px':''}"></textarea>
+    <p *ngIf="!ans?.modifying" [innerHTML]="createTextLinks_(ans?.message)"></p>
+    <textarea cdkTextareaAutosize *ngIf="currentUser.id==ans?.auteur.id&& ans?.modifying" matInput [(ngModel)]="ans.message" [ngStyle]="{border : ans.modifying? 'solid black 1px':''}"></textarea>
   </mat-card-content>
   <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
-    <button mat-icon-button (click)="ans.modifying = !ans.modifying" *ngIf="(currentUser.id == ans.auteur.id || currentUser.role == 'ADMIN')&&!ans.modifying" matTooltip="Modifier le message"><mat-icon>edit</mat-icon></button>
-    <button mat-icon-button (click)="ans.modifying = !ans.modifying;updateMessage(ans)" *ngIf="(currentUser.id == ans.auteur.id || currentUser.role == 'ADMIN')&&ans.modifying" matTooltip="Valider les modifications"><mat-icon>check_circle</mat-icon></button>
-    <button *ngIf="currentUser.id == ans.auteur.id || currentUser.role == 'ADMIN'" style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteMessage(ans);" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
+    <button mat-icon-button (click)="ans.modifying = !ans.modifying" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&!ans?.modifying" matTooltip="Modifier le message"><mat-icon>edit</mat-icon></button>
+    <button mat-icon-button (click)="ans.modifying = !ans.modifying;updateMessage(ans)" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&ans?.modifying" matTooltip="Valider les modifications"><mat-icon>check_circle</mat-icon></button>
+    <button mat-icon-button (click)="ans.modifying = !ans.modifying;" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&ans?.modifying" matTooltip="Annuler les modifications"><mat-icon>close_circle</mat-icon></button>
+    <button *ngIf="currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN'" style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteMessage(ans);" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
   </mat-card-actions>
 </mat-card>
 <div style="display: flex; justify-content: center; align-items: center">
@@ -76,5 +80,5 @@
   </mat-progress-spinner>
 </div>
 <div fxFlexAlign="center">
-  <button mat-icon-button routerLink="/forum" matTooltip="Retour à la liste des discussions" style="font-size:50%!important;">RETOUR <mat-icon>arrow_back</mat-icon></button>
+  <button mat-icon-button routerLink="/forum" matTooltip="Retour à la liste des discussions">RETOUR <mat-icon>arrow_back</mat-icon></button>
 </div>

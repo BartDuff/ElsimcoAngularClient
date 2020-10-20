@@ -43,6 +43,7 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
   loading = true;
   bottom;
   top;
+  unread:number=0;
   deleteClicked = false;
   length: number = 0;
   pageSize: number = 5;
@@ -68,7 +69,6 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit() {
-    // this.getMessages();
     this.forumTabService.previousTab.subscribe(
       (index)=>this.selectedTab = index
     )
@@ -78,6 +78,11 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
     this.getAfterworksToValidate();
     this.getAnswers();
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.messageService.getMessages().subscribe(
+      (messages)=>{
+        this.messageService._forumMessages.next(messages.filter((h:MessageForumModel) => h.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1 && h.type == 'origin' && h.valideAdmin));
+      }
+    )
   }
 
   getHello(){
@@ -199,6 +204,9 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
               message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
             }
           );
+          if(message.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1){
+            this.unread +=1;
+          }
         }
         this.loading=false;
         this.length = this.experiences.length;
@@ -220,6 +228,9 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
               message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
             }
           );
+          if(message.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1){
+            this.unread +=1;
+          }
         }
         this.loading=false;
         this.length = this.besoins.length;
@@ -241,6 +252,9 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
               message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
             }
           );
+          if(message.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1){
+            this.unread +=1;
+          }
         }
         this.loading=false;
         this.length = this.afterworks.length;
@@ -281,13 +295,38 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
     )
   }
 
-  OnPageChange(event: PageEvent, paginator){
+  OnPageChange(event: PageEvent, paginator, type){
     let startIndex = event.pageIndex * event.pageSize;
     let endIndex = startIndex + event.pageSize;
-    if(endIndex > this.length){
-      endIndex = this.length;
+    switch (type){
+      case "Besoins":
+        if(endIndex > this.besoins.length){
+          endIndex = this.besoins.length;
+        }
+        this.pagedbesoins = this.besoins.slice(startIndex, endIndex);
+        break;
+      case "Experiences":
+        if(endIndex > this.experiences.length){
+          endIndex = this.experiences.length;
+        }
+        this.pagedexperiences = this.experiences.slice(startIndex, endIndex);
+        break;
+      case "Afterworks":
+        if(endIndex > this.afterworks.length){
+          endIndex = this.afterworks.length;
+        }
+        this.pagedafterworks = this.afterworks.slice(startIndex, endIndex);
+        break;
+      case "AfterworksToValidate":
+        if(endIndex > this.afterworksToValidate.length){
+          endIndex = this.afterworksToValidate.length;
+        }
+        this.pagedAfterworksToValidate = this.afterworksToValidate.slice(startIndex, endIndex);
+        break;
+      default:
+        this.pagedMessages = this.messages.slice(startIndex, endIndex);
+        break;
     }
-    this.pagedMessages = this.messages.slice(startIndex, endIndex);
     paginator.pageIndex = event.pageIndex;
   }
 
@@ -315,6 +354,17 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
       });
   }
 
+  checkUnread(message: MessageForumModel, array:MessageForumModel[]){
+    let arrayToFilter:MessageForumModel[] = this.filterByOriginId(array,message.id);
+    if(arrayToFilter.length>0){
+      for (let mess of arrayToFilter){
+        if(mess.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1){
+          return true
+        }
+      }
+    }
+    return message.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1;
+  }
 
   deleteMessage(messageToDelete) {
     messageToDelete.valideAdmin = false;
@@ -370,7 +420,6 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
           if (d.type == "answer") {
             switch (d.categorie){
               case "Besoins":
-                console.log
                 this.answersBesoins.push(d);
                 break;
               case "Experiences":

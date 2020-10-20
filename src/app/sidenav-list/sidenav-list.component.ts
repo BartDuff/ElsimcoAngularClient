@@ -9,6 +9,7 @@ import {FicheService} from '../services/fiche.service';
 import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
 import {NotificationService} from '../services/notification.service';
+import {MessageForumService} from '../services/message-forum.service';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -23,12 +24,15 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   currentUser: UserModel;
   allRHUnvalidConges: CongeModel[];
   notifications;
+  messagesForum;
   notificationsSubscription : Subscription;
+  messagesForumSubscription : Subscription;
   token: any;
   allRHUnvalidFiches: FicheModel[];
   @Output() sidenavClose = new EventEmitter();
   constructor(private authService: AuthenticationService,
               private notificationService: NotificationService,
+              private messageForumService: MessageForumService,
               private ficheService: FicheService,
               private congeService: CongeService,
               private router: Router) {
@@ -43,6 +47,11 @@ export class SidenavListComponent implements OnInit, OnDestroy {
         this.notificationsSubscription = this.notificationService._userNotifications.subscribe(
           (notifications)=> {
             this.notifications = notifications;
+          }
+        );
+        this.messagesForumSubscription = this.messageForumService._forumMessages.subscribe(
+          (messages)=> {
+            this.messagesForum = messages;
           }
         );
       }

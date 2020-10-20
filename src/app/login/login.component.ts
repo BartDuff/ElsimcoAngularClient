@@ -6,6 +6,8 @@ import {environment} from '../../environments/environment';
 import { filter } from 'rxjs/operators';
 import {NotificationService} from '../services/notification.service';
 import {NotificationModel} from '../models/notification.model';
+import {MessageForumService} from '../services/message-forum.service';
+import {MessageForumModel} from '../models/message-forum.model';
 
 
 @Component({
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private notificationService: NotificationService,
+              private messageForumService:MessageForumService,
               public authService: AuthenticationService) {
     // redirect to home if already logged in
     if (localStorage.getItem("currentUser")) {
@@ -81,6 +84,11 @@ export class LoginComponent implements OnInit {
               this.notificationService.getMessages(JSON.parse(localStorage.getItem('currentUser'))).subscribe(
                 (notif)=> {
                   this.notificationService._userNotifications.next(notif.filter((h:NotificationModel) => !h.lu));
+                }
+              );
+              this.messageForumService.getMessages().subscribe(
+                (messages)=>{
+                  this.messageForumService._forumMessages.next(messages.filter((h:MessageForumModel) => h.readByUserIds.split(',').indexOf(JSON.parse(localStorage.getItem('currentUser')).id.toString()) == -1 && h.type == 'origin' && h.valideAdmin));
                 }
               )
             }

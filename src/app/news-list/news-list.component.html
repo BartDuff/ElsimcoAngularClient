@@ -5,7 +5,7 @@
   <mat-paginator #top style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
                  showFirstLastButtons
-                 (page)="OnPageChange($event, bottom);">
+                 (page)="OnPageChange($event, bottom);" [hidden]="news?.length == 0">
   </mat-paginator>
   <app-news-item *ngFor="let newsitem of pagedNews"
                  [newsitem]="newsitem"
@@ -16,7 +16,7 @@
   <mat-paginator #bottom style="background-color: transparent" [length]="length"
                  [pageSize]="pageSize"
                  showFirstLastButtons
-                 (page)="OnPageChange($event, top);">
+                 (page)="OnPageChange($event, top);" [hidden]="news?.length == 0">
   </mat-paginator>
 </div>
 <div style="display: flex; justify-content: center; align-items: center">

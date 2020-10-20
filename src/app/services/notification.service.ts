@@ -7,6 +7,7 @@ import {environment} from '../../environments/environment';
 import {SmsModel} from '../models/sms.model';
 import {NotificationModel} from '../models/notification.model';
 import {AuthenticationService} from './authentication.service';
+import {MessageForumModel} from '../models/message-forum.model';
 
 const API_URL = environment.apiUrl;
 
@@ -28,7 +29,6 @@ export class NotificationService {
     if(this.currentUser){
       this.getMessages(this.currentUser).subscribe(
         (n)=> {
-          console.log(this.currentUser);
           this.notifications = n;
           this._userNotifications.next(this.notifications.filter((h:NotificationModel) => !h.lu))
         }

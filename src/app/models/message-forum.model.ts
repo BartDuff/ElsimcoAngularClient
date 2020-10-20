@@ -7,10 +7,11 @@ export class MessageForumModel {
   message: String;
   auteur: UserModel;
   type: String;
-  categorie: String;
+  categorie: string;
   valideAdmin: boolean;
   modifying:boolean = false;
   originId: number = 0;
   datePublication: Date;
   participants: UserModel[] = [];
+  readByUserIds: String = "";
 }

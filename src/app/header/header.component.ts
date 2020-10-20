@@ -10,6 +10,8 @@ import {CongeModel} from '../models/conge.model';
 import {CongeService} from '../services/conge.service';
 import {NotificationService} from '../services/notification.service';
 import {NotificationModel} from '../models/notification.model';
+import {MessageForumModel} from '../models/message-forum.model';
+import {MessageForumService} from '../services/message-forum.service';
 
 @Component({
   selector: 'app-header',
@@ -28,11 +30,14 @@ export class HeaderComponent implements OnInit, AfterViewChecked, OnDestroy {
   token: any;
   // notifications = ["Une nouvelles actualité a été publiée","Nouvelle demande de congés validée","Fiche de présence validée"];
   notificationsSubscription : Subscription;
+  messagesForumSubscription : Subscription;
   notifications: NotificationModel[];
+  messagesForum: MessageForumModel[];
   @Output() public sidenavToggle = new EventEmitter();
 
   constructor(private authService: AuthenticationService,
               private notificationService: NotificationService,
+              private messageForumService:MessageForumService,
               private cdRef: ChangeDetectorRef,
               private ficheService: FicheService,
               private congeService: CongeService,
@@ -48,6 +53,11 @@ export class HeaderComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.notificationsSubscription = this.notificationService._userNotifications.subscribe(
           (notifications)=> {
             this.notifications = notifications;
+          }
+        );
+        this.messagesForumSubscription = this.messageForumService._forumMessages.subscribe(
+          (messages)=> {
+            this.messagesForum = messages;
           }
         );
       }

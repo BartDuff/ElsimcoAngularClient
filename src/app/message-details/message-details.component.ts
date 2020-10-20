@@ -77,6 +77,15 @@ export class MessageDetailsComponent implements OnInit {
       (data) => {
         for (let d of data) {
           if (d.originId == this.message.id && d.type == "answer") {
+            if(d.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1){
+              if(d.readByUserIds.length>0){
+                d.readByUserIds += ",";
+              }
+              d.readByUserIds += this.currentUser.id;
+              this.messageService.editSimpleMessage(d).subscribe(
+                ()=>{}
+              )
+            }
             this.answers.push(d);
           }
           this.imageService.getImage(d.auteur.imageId).subscribe(
@@ -98,6 +107,15 @@ export class MessageDetailsComponent implements OnInit {
       params => this.messageService.getSingleMessage(params['id']).subscribe(
         data => {
           this.message = data;
+          if(data.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1){
+            if(data.readByUserIds.length>0){
+              this.message.readByUserIds += ",";
+            }
+            this.message.readByUserIds += this.currentUser.id;
+            this.messageService.editSimpleMessage(this.message).subscribe(
+              ()=>{}
+            )
+          }
           this.imageService.getImage(data.auteur.imageId).subscribe(
             (image) => {
               this.message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);

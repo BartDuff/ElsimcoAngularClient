@@ -62,12 +62,18 @@
         </mat-menu>
       </li>
 <!--      <li><a mat-button disabled *ngIf="token" style="color: dimgray" matTooltip="Ce lien n'est pas encore accessible">Missions</a></li>-->
-      <li><a mat-button routerLink="/users/{{ currentUser.id}}/messagerie" *ngIf="token"><span [matBadge]="notifications?.length.toString()" matBadgePosition="after" matBadgeSize="medium" matBadgeOverlap="false" [matBadgeHidden]="notifications?.length == 0" style="display: inline-block;">Ma Messagerie</span></a></li>
+      <li><a mat-button routerLink="/users/{{ currentUser.id}}/messagerie" *ngIf="token"><span [matBadge]="notifications?.length.toString()" matBadgePosition="after" matBadgeSize="medium" matBadgeOverlap="false" [matBadgeHidden]="notifications?.length == 0" style="display: inline-block;" class="headerBadge">Ma Messagerie</span></a></li>
       <li><a mat-button routerLink="/annuaire" *ngIf="token">Annuaire</a></li>
-      <li><a mat-button routerLink="/admin-dashboard" *ngIf="token && currentUser.role == 'ADMIN'">Paramètres d'Administration</a></li>
-      <li><a mat-button routerLink="/forum" *ngIf="token && currentUser.role == 'ADMIN'" [matBadge]="messagesForum?.length.toString()" matBadgePosition="after" matBadgeSize="medium" matBadgeOverlap="true" [matBadgeHidden]="messagesForum?.length == 0">Forum</a></li>
+
+      <li><a mat-button routerLink="/forum" *ngIf="token && currentUser.role == 'ADMIN'" [matBadge]="messagesForum?.length.toString()" matBadgePosition="after" matBadgeSize="medium" matBadgeOverlap="false" [matBadgeHidden]="messagesForum?.length == 0" class="headerBadge">Forum</a></li>
       <li><a mat-button routerLink="/documents" *ngIf="token">Espace Téléchargement</a></li>
-      <li><a mat-button routerLink="/users" *ngIf="token && currentUser.role == 'ADMIN'">Utilisateurs</a></li>
+      <li>
+        <button mat-button [matMenuTriggerFor]="menu5" *ngIf="token && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Administration<mat-icon style="color: white">expand_more</mat-icon></button>
+        <mat-menu #menu5="matMenu" yPosition="below" backdropClass="toolbar-menu">
+          <a mat-menu-item routerLink="/users" *ngIf="token && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Utilisateurs</a>
+          <a mat-menu-item routerLink="/admin-dashboard" *ngIf="token && (currentUser.fonction=='RH' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Paramètres d'Administration</a>
+        </mat-menu>
+      </li>
       <li><a mat-button routerLink="/contacts" *ngIf="token && currentUser.role == 'ADMIN' && (currentUser.fonction=='COMMERCIAL' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Candidatures spontanées</a></li>
       <li><a mat-button routerLink="/candidats" *ngIf="token && currentUser.role == 'ADMIN' && (currentUser.fonction=='COMMERCIAL' || currentUser.fonction=='DIRECTION' || currentUser.fonction=='DEVELOPPEUR')">Candidathèque</a></li>
       <li><a mat-button routerLink="/faq" *ngIf="token">FAQ</a></li>

@@ -28,6 +28,7 @@ export class MessageDetailsComponent implements OnInit {
   length: number = 0;
   pageSize: number = 5;
   isParticipating:boolean;
+  tempModification;
   participants:UserModel[] = [];
   dictCategorie = {
     'Besoins':'Besoins Elsimco',
@@ -147,6 +148,20 @@ export class MessageDetailsComponent implements OnInit {
         this.answer.message = "";
         // this.answers = [];
         // this.getMessages();
+      }
+    )
+  }
+
+  updateMessageOrigin(message:MessageForumModel){
+    this.messageService.editMessage(message).subscribe(
+      (data)=>{
+        this.imageService.getImage(data.auteur.imageId).subscribe(
+          (image) => {
+            data.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
+          }
+        );
+        this.message = data;
+        this.toastr.success("Message modifié avec succès","Modification");
       }
     )
   }

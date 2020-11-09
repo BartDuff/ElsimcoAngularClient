@@ -30,6 +30,11 @@ a:hover, a:active {
   background : orange!important;
 }
 
+.mat-badge-medium.mat-badge-above.headerBadge .mat-badge-content{
+  top: unset!important;
+  right: unset!important;
+}
+
 .navigation-items{
   list-style-type: none;
   padding: 0;

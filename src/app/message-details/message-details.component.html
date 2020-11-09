@@ -13,12 +13,12 @@
   </mat-card-header>
   <mat-card-content>
     <p *ngIf="!message?.modifying" [innerHTML]="createTextLinks_(message?.message)"></p>
-    <textarea cdkTextareaAutosize *ngIf="currentUser.id==message?.auteur.id&& message?.modifying" matInput [(ngModel)]="message.message" [ngStyle]="{border : message.modifying? 'solid black 1px':''}"></textarea>
+    <textarea cdkTextareaAutosize *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&& message?.modifying" matInput [(ngModel)]="message.message" [ngStyle]="{border : message.modifying? 'solid black 1px':''}"></textarea>
   </mat-card-content>
   <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
-    <button mat-icon-button (click)="message.modifying = !message.modifying" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&!message?.modifying" matTooltip="Modifier le message"><mat-icon>edit</mat-icon></button>
-    <button mat-icon-button (click)="message.modifying = !message.modifying;updateMessage(message)" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&message?.modifying" matTooltip="Valider les modifications"><mat-icon>check_circle</mat-icon></button>
-    <button mat-icon-button (click)="message.modifying = !message.modifying;" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&message?.modifying" matTooltip="Annuler les modifications"><mat-icon>close_circle</mat-icon></button>
+    <button mat-icon-button (click)="message.modifying = !message.modifying;tempModification = message.message" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&!message?.modifying && message.categorie !='Afterworks'" matTooltip="Modifier le message"><mat-icon>edit</mat-icon></button>
+    <button mat-icon-button (click)="message.modifying = !message.modifying;updateMessageOrigin(message)" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&message?.modifying" matTooltip="Valider les modifications"><mat-icon>check_circle</mat-icon></button>
+    <button mat-icon-button (click)="message.modifying = !message.modifying;message.message = tempModification;" *ngIf="(currentUser.id == message?.auteur.id || currentUser.role == 'ADMIN')&&message?.modifying" matTooltip="Annuler les modifications"><mat-icon>close_circle</mat-icon></button>
   </mat-card-actions>
   <mat-card-actions style="display: flex;flex-direction: row;justify-content: center;align-items: center;" *ngIf="message.categorie == 'Afterworks'">
     <button style="text-transform: none!important;color: black!important;word-wrap: break-word!important;white-space: normal!important;" (click)="(isParticipating)?removeParticipation():confirmParticipation();"
@@ -63,12 +63,12 @@
   </mat-card-header>
   <mat-card-content>
     <p *ngIf="!ans?.modifying" [innerHTML]="createTextLinks_(ans?.message)"></p>
-    <textarea cdkTextareaAutosize *ngIf="currentUser.id==ans?.auteur.id&& ans?.modifying" matInput [(ngModel)]="ans.message" [ngStyle]="{border : ans.modifying? 'solid black 1px':''}"></textarea>
+    <textarea cdkTextareaAutosize *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&& ans?.modifying" matInput [(ngModel)]="ans.message" [ngStyle]="{border : ans.modifying? 'solid black 1px':''}"></textarea>
   </mat-card-content>
   <mat-card-actions style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
-    <button mat-icon-button (click)="ans.modifying = !ans.modifying" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&!ans?.modifying" matTooltip="Modifier le message"><mat-icon>edit</mat-icon></button>
+    <button mat-icon-button (click)="ans.modifying = !ans.modifying;tempModification = ans.message" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&!ans?.modifying" matTooltip="Modifier le message"><mat-icon>edit</mat-icon></button>
     <button mat-icon-button (click)="ans.modifying = !ans.modifying;updateMessage(ans)" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&ans?.modifying" matTooltip="Valider les modifications"><mat-icon>check_circle</mat-icon></button>
-    <button mat-icon-button (click)="ans.modifying = !ans.modifying;" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&ans?.modifying" matTooltip="Annuler les modifications"><mat-icon>close_circle</mat-icon></button>
+    <button mat-icon-button (click)="ans.modifying = !ans.modifying;ans.message = tempModification;" *ngIf="(currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN')&&ans?.modifying" matTooltip="Annuler les modifications"><mat-icon>close_circle</mat-icon></button>
     <button *ngIf="currentUser.id == ans?.auteur.id || currentUser.role == 'ADMIN'" style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteMessage(ans);" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
   </mat-card-actions>
 </mat-card>

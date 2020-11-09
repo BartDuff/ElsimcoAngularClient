@@ -120,9 +120,8 @@ export class MessageAddComponent implements OnInit {
           if(message.categorie == "Afterworks"){
               this.messageType = "Salut la team Elsimco,\n" +
                 "\n" +
-                this.organise+" un afterwork qui aura lieu "+this.afterworkMessage.lieu+" le "+this.datepipe.transform(this.afterworkMessage.date,"dd/MM/yyyy")+" à " + this.datepipe.transform(this.afterworkMessage.date,"HH")+"H"+this.datepipe.transform(this.afterworkMessage.date,"mm")+" pour un budget de "+this.afterworkMessage.budget+"€/pers.\n" +
-                "\n" +
-                "Si tu souhaites y participer, clique sur « Je participe ! »\n" +
+                this.organise+" un afterwork qui se déroulera dans le lieu suivant : "+this.afterworkMessage.lieu+" le "+this.datepipe.transform(this.afterworkMessage.date,"dd/MM/yyyy")+" à " + this.datepipe.transform(this.afterworkMessage.date,"HH")+"H"+this.datepipe.transform(this.afterworkMessage.date,"mm")+" pour un budget de "+this.afterworkMessage.budget+"€/pers.\n" +
+                "Inscris-toi en cliquant sur « Je participe ! »\n" +
                 "\n" +
                 this.afterworkMessage.commentaire+
                 "\n\n" +
@@ -143,7 +142,7 @@ export class MessageAddComponent implements OnInit {
                     if (message.valideAdmin == false) {
                       this.emailService.sendMail(this.getHello() + " " + this.changeCaseFirstLetter(this.adminRecipient.split('.')[0]) + ",\n\nUn nouveau fil de discussion Afterworks vient d'être publié par " + message.auteur.prenom + " " + message.auteur.nom + ".\nIl est désormais en attente de validation dans l'onglet 'À valider'.", "Nouveau fil de discussion en attente de validation", this.adminRecipient).subscribe(
                         () => {
-                          this.toastrService.warning("Votre fil de discussion a bien été envoyé et sera soumis à validation de la part d'un administrateur avant publication", "Publication");
+                          this.toastrService.warning("Votre proposition d'Afterwork est maintenant soumise à validation", "Publication");
                         }
                       )
                     } else {

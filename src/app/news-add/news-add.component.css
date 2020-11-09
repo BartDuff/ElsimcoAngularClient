@@ -20,5 +20,6 @@ textarea {
 
 .mat-icon-button {
   color: black;
-  margin: 6em;
+  margin: 1em;
+  width: fit-content!important;
 }

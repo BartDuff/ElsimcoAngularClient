@@ -24,7 +24,8 @@ import {ForumTabService} from '../services/forum-tab.service';
   styleUrls: ['./messages-list.component.css']
 })
 export class MessagesListComponent implements OnInit, AfterViewInit{
-
+  isParticipating:boolean;
+  participants;
   messages: MessageForumModel[];
   besoins: MessageForumModel[];
   experiences: MessageForumModel[];
@@ -252,6 +253,7 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
               message.auteur.img = image == null ? `/../../${environment.base}/assets/images/profile.png` : this.sanitizer.bypassSecurityTrustResourceUrl('data:image/' + image.imageJointeType + ';base64, ' + image.imageJointe);
             }
           );
+          this.getParticipants(message);
           if(message.readByUserIds.split(',').indexOf(this.currentUser.id.toString()) == -1){
             this.unread +=1;
           }
@@ -401,7 +403,8 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
         if (data) {
           this.messageService.deleteMessage(messageToDelete).subscribe(
             () => {
-                  this.toastr.error("Fil de discussion supprimé","Suppression")
+                  this.toastr.error("Fil de discussion supprimé","Suppression");
+                  this.deleteClicked = false;
                   this.getBesoins();
                   this.getExperiences()
                   this.getAfterworks();
@@ -433,6 +436,37 @@ export class MessagesListComponent implements OnInit, AfterViewInit{
             }
           }
         }
+      }
+    );
+  }
+
+  getParticipants(message) {
+    this.messageService.getParticipantsForAfterwork(message).subscribe(
+      (data)  => {
+        message.participants = data;
+        message.isParticipating = message.participants.find(x => x.id === this.currentUser.id) !== undefined;
+      }
+    )
+  }
+
+  removeParticipation(message){
+    message.isParticipating = false;
+    this.deleteClicked = true;
+    this.messageService.removeParticipationFromUser(JSON.parse(localStorage.getItem('currentUser')), message).subscribe(
+      () => {
+        message.participants.splice(message.participants.indexOf(this.currentUser),1)
+        this.deleteClicked = false;
+      }
+    );
+  }
+
+  confirmParticipation(message){
+    message.isParticipating = true;
+    this.deleteClicked = true;
+    this.messageService.addParticipationToUser(JSON.parse(localStorage.getItem('currentUser')), message).subscribe(
+      () => {
+        message.participants.push(this.currentUser);
+        this.deleteClicked = false;
       }
     );
   }

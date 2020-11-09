@@ -9,6 +9,10 @@
   margin: 1em;
 }
 
+.mat-card-actions {
+  margin-bottom: -2em;
+}
+
 .mat-card-content {
   text-align: left!important;
   margin-top: 1em;

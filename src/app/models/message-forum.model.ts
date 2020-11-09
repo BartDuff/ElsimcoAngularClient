@@ -13,5 +13,6 @@ export class MessageForumModel {
   originId: number = 0;
   datePublication: Date;
   participants: UserModel[] = [];
+  isParticipating: boolean;
   readByUserIds: String = "";
 }

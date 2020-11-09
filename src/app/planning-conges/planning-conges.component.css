@@ -20,4 +20,5 @@ td {
 .mat-icon-button {
   color: black;
   margin: 1em;
+  width: fit-content!important;
 }

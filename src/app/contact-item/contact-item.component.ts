@@ -12,6 +12,7 @@ export class ContactItemComponent implements OnInit {
   @Input() contact;
   @Output() contactAccepted = new EventEmitter<ContactModel>();
   @Output() contactDeleted = new EventEmitter<ContactModel>();
+  @Output() contactDeletedNoMail = new EventEmitter<ContactModel>();
   @Output() contactCV = new EventEmitter<ContactModel>();
 
   constructor(private contactService: ContactService) { }
@@ -22,6 +23,10 @@ export class ContactItemComponent implements OnInit {
 
   deleteContact() {
     this.contactDeleted.emit(this.contact);
+  }
+
+  deleteContactWithoutMail() {
+    this.contactDeletedNoMail.emit(this.contact);
   }
 
   acceptContact() {

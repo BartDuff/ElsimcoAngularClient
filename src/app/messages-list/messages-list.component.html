@@ -103,15 +103,17 @@
           </p>
         </mat-card-content>
         <mat-card-actions style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;">
-          <div>
+          <div style="text-align: left;">
             <span style="display: flex;flex-direction: row;align-items: center;margin-left: 1em;"><mat-icon style="margin-right: 0.3em">group</mat-icon>{{message.participants?.length>0?message.participants?.length:'Aucun'}} {{ message.participants?.length <=1?'participant':'participants'}}</span>
             <span style="display: flex;flex-direction: row;align-items: center;text-decoration: underline;font-style: italic;margin-left: 1em;"> {{filterByOriginId(answersAfterworks,message.id)?.length>0?filterByOriginId(answersAfterworks,message.id)?.length:'Aucune'}} {{ filterByOriginId(answersAfterworks,message.id)?.length <=1?'réponse':'réponses'}}</span>
           </div>
-          <button style="text-transform: none!important;color: black!important;word-wrap: break-word!important;white-space: normal!important;" (click)="(message.isParticipating)?removeParticipation(message):confirmParticipation(message);"
-                  class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect">
-            <mat-icon>{{(message.isParticipating)?'close_circle':'check_circle'}}</mat-icon>{{(message.isParticipating)?'Je ne participe plus':'Je participe !'}}
-          </button>
-          <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
+          <div class="endButtons">
+            <button style="text-transform: none!important;color: black!important;word-wrap: break-word!important;white-space: normal!important;height: fit-content;text-align: right;" (click)="(message.isParticipating)?removeParticipation(message):confirmParticipation(message);"
+                    class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect">
+              <mat-icon>{{(message.isParticipating)?'close_circle':'check_circle'}}</mat-icon>{{(message.isParticipating)?'Je ne participe plus':'Je participe !'}}
+            </button>
+            <button style="text-transform: none!important;color: black!important" class="mdl-button mdl-js-button  mdl-button--accent mdl-js-ripple-effect" (click)="deleteOriginMessage(message);" *ngIf="currentUser.role == 'ADMIN'" matTooltip="Supprimer"><mat-icon>delete</mat-icon></button>
+          </div>
         </mat-card-actions>
       </mat-card>
       <mat-paginator #bottomAfterworks style="background-color: transparent" [length]="afterworks?.length"

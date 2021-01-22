@@ -87,6 +87,23 @@ export class ContactListComponent implements OnInit {
       });
   }
 
+  DeleteContactNoMail(contactToDelete: ContactModel){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        if (data) {
+              this.contacts.splice(this.contacts.indexOf(contactToDelete), 1);
+              this.contactService.deleteContact(contactToDelete).subscribe(
+                () => {
+                  this.toastrService.error('Candidature supprimée', 'Suppression effectuée');
+                });
+            }
+      });
+  }
+
   downloadCV(contactCV: ContactModel) {
     let isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
       navigator.userAgent &&

@@ -16,6 +16,10 @@
   <button type="button" *ngIf="!contact.accepte;else accepte"
           (click)="acceptContact()"><mat-icon>check_circle</mat-icon></button>
 </td>
+<td>
+  <button type="button"
+          (click)="deleteContactWithoutMail()"><mat-icon>delete</mat-icon></button>
+</td>
 <ng-template #accepte>
   OK
 </ng-template>

@@ -27,7 +27,7 @@
 <!--  <a mat-list-item disabled *ngIf="token" (click)="onSidenavClose()" class="nav-caption" matTooltip="Ce lien n'est pas encore accessible"><span class="priority">Missions</span></a>-->
   <a mat-list-item routerLink="/users/{{ currentUser.id}}/messagerie" *ngIf="token" (click)="onSidenavClose()" class="nav-caption"><span [matBadge]="notifications?.length.toString()" matBadgePosition="after" matBadgeSize="medium" matBadgeOverlap="false" [matBadgeHidden]="notifications?.length == 0" style="display: inline-block;">Ma Messagerie</span></a>
   <a mat-list-item routerLink="/annuaire" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Annuaire</a>
-  <a mat-list-item routerLink="/forum" *ngIf="token && currentUser.role == 'ADMIN'" (click)="onSidenavClose()"
+  <a mat-list-item routerLink="/forum" *ngIf="token" (click)="onSidenavClose()"
      class="nav-caption"><span [matBadge]="messagesForum?.length.toString()" matBadgePosition="after" matBadgeSize="medium" matBadgeOverlap="false" [matBadgeHidden]="messagesForum?.length == 0">Forum</span></a>
   <a mat-list-item routerLink="/documents" *ngIf="token" (click)="onSidenavClose()" class="nav-caption">Espace Téléchargement</a>
   <mat-list-item class="nav-caption" *ngIf="token && currentUser.role=='ADMIN'">

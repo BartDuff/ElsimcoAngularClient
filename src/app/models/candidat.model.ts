@@ -35,6 +35,7 @@ export class CandidatModel extends ContactModel {
   contrat: String;
   preavisNegociable: String;
   delai: String;
+  preavisInitial: String;
   raisonDispo: String;
   posteSouhaite: String;
   evolution5ans: String;
@@ -79,6 +80,7 @@ export class CandidatModel extends ContactModel {
   adequationPosteProfil: String;
   mobiliteGeographique: String;
   delaiDispoFiche: String;
+  trigramme: String;
   ficheProcess: String;
   ficheRecrutement: String;
   docsIds: String = "";

@@ -4,9 +4,26 @@
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Rechercher">
   </mat-form-field>
   <div matTooltip="Créer un nouveau candidat">
-    <button mat-fab (click)="addNewCandidate()"><mat-icon>add</mat-icon></button>
+    <button mat-fab (click)="addNewCandidateNoMail()"><mat-icon>add</mat-icon></button>
   </div>
-<!--  <div class="table-container">-->
+  <div>
+    <mat-form-field style="width: 20%;margin-left: 1em;">
+      <mat-label>Civilité :</mat-label>
+      <mat-select #civilite [(value)]="selectedCivilite">
+        <mat-option value="Monsieur">Monsieur</mat-option>
+        <mat-option value="Madame">Madame</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 20%;margin-left: 1em;">
+      <input #email matInput placeholder="Email">
+    </mat-form-field>
+    <mat-form-field style="width: 20%;margin-left: 1em;">
+      <input #nom matInput placeholder="Nom">
+    </mat-form-field>
+    <button mat-button style="background-color: black;margin-left: 1em;" (click)="envoyerDossier(email.value, civilite.value, nom.value)" [disabled]='nom.value == "" || email.value == ""'>Envoyer un Dossier de Candidature</button>
+  </div>
+
+  <!--  <div class="table-container">-->
 <!--  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 center" (clickOutside)="resetRowAndColumnsClick()">-->
 <!--    <ng-container matColumnDef="nom">-->
 <!--      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>-->
@@ -306,9 +323,15 @@
       <div style="width: 100vw;overflow: scroll">
         <perfect-scrollbar>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<!--          <ng-container matColumnDef="secretid">-->
+<!--            <th mat-header-cell *matHeaderCellDef> Action </th>-->
+<!--            <td mat-cell *matCellDef="let element;  let j = index;">-->
+<!--                <mat-icon>delete</mat-icon>-->
+<!--            </td>-->
+<!--          </ng-container>-->
           <ng-container *ngFor="let x of objectKeys(qCandidatExemple)" [matColumnDef]="x">
             <th style="padding:0.5em;" mat-header-cell *matHeaderCellDef>
-              <mat-form-field style="max-width:10em;text-align: center">
+              <mat-form-field style="max-width:10em;text-align: center" *ngIf="x != 'secretid'">
                 <input  [ngStyle]="{ 'background-color' : (candidatFiltre[x]) ? '#fdfa72' : '' }"  matInput [placeholder]="columnsToDisplay[x]" [ngModelOptions]="{standalone: true}"
                         [(ngModel)]="candidatFiltre[x]"  (ngModelChange)="pageable.number=0;getQCandidates()"  >
 
@@ -317,11 +340,12 @@
                         (click)="candidatFiltre[x]='';getQCandidates();" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent mdl-js-ripple-effect ">
                   <i class="material-icons" title="clear filter">clear</i>
                 </button>
-
               </mat-form-field>
+              <div style="max-width:10em;text-align: center" class="mat-form-field" *ngIf="x === 'secretid'">Supprimer</div>
               <!--       {{x}}-->
             </th>
             <td mat-cell *matCellDef="let element">
+              <button mat-icon-button style="color: black" *ngIf="x === 'secretid'" (click)="deleteCandidat(element)"><mat-icon>delete</mat-icon></button>
               <a *ngIf="x === 'id'" [routerLink]="['/candidats/', element.id]" style="color: blue;text-decoration: blue;"><mat-icon>remove_red_eye</mat-icon> {{element[x]}}</a>
               <span *ngIf="x == 'dateDispo' || x == 'dateEnvoi' || x == 'dateNaissance' || x == 'dateCreation' || x =='dateDerniersEntretiens' || x =='dateMAJ' || x =='alerteMAJ' || x == 'dateCandidature'">{{element[x] | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="x != 'id' && x != 'dateDispo' && x != 'dateEnvoi' && x != 'dateNaissance' && x != 'dateCreation' && x !='dateDerniersEntretiens' && x !='dateMAJ' && x !='alerteMAJ' && x !='dateCandidature'">
@@ -330,12 +354,8 @@
               </span>
             </td>
           </ng-container>
-          <td>
-            <mat-icon>remove_red_eye</mat-icon>
-          </td>
-          <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple)"></tr>
+          <tr mat-header-row *matHeaderRowDef="objectKeys(qCandidatExemple);"></tr>
           <tr mat-row *matRowDef="let row; columns: objectKeys(qCandidatExemple);"></tr>
-
         </table>
         </perfect-scrollbar>
       </div>

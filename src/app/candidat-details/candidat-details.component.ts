@@ -48,7 +48,8 @@ export class CandidatDetailsComponent implements OnInit {
     'Nouvelle-Aquitaine',
     'Occitanie',
     'Pays de la Loire',
-    'Provence-Alpes-Côte d\'Azur'];
+    'Provence-Alpes-Côte d\'Azur',
+    'Non concerné'];
 
   columnsToDisplay = {
     'id':'Id',
@@ -116,6 +117,8 @@ export class CandidatDetailsComponent implements OnInit {
     'enPoste': 'En Poste?',
     'dateDispo': 'Date de disponibilité',
     'delai': 'Délai disponibilité',
+    'preavisInitial':'Préavis initial',
+    'trigramme':'Trigramme',
     'raisonDispo': 'Raison de l\'écoute',
     'preavisNegociable': 'Préavis négociable',
     'contrat': 'Contrat',
@@ -190,6 +193,7 @@ export class CandidatDetailsComponent implements OnInit {
     this.formulaire5 = this.formBuilder.group({
       enPoste: [''],
       contrat: [''],
+      preavisInitial: [''],
       raisonDispo: [''],
       etatRecherches:[''],
       preavisNegociable:[''],

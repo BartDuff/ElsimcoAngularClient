@@ -41,7 +41,7 @@ export class AddContactComponent implements OnInit {
       email: ['', [Validators.email, Validators.required]],
       mobile: ['',[Validators.required, Validators.pattern('(\\+\\d+(\\s|-))?0\\d(\\s|-)?(\\d{2}(\\s|-)?){4}')]],
       posteRecherche: ['', Validators.required],
-      fileBase64: ['']
+      fileBase64: ['',Validators.required]
     });
   }
 
@@ -59,7 +59,7 @@ export class AddContactComponent implements OnInit {
     // }, 1000);
     this.loading = true;
     let c:ContactModel = new ContactModel();
-    c.nom = this.contactForm.controls.nom.value;
+    c.nom = this.contactForm.controls.nom.value.toUpperCase();
     c.prenom = this.contactForm.controls.prenom.value;
     c.civilite = this.contactForm.controls.civilite.value;
     c.email = this.contactForm.controls.email.value;
@@ -74,6 +74,7 @@ export class AddContactComponent implements OnInit {
     c.fileBase64 = this.fileEncoded;
     c.fileName = this.fileName;
     c.fileType = this.fileType;
+    c.spontane = true;
     this.contactService.addContact(c)
       .subscribe(data => {
         this.loading = false;

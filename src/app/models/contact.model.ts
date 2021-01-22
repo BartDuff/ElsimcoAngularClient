@@ -15,4 +15,5 @@ export class ContactModel {
   fileType: String;
   fileName: String;
   accepte: boolean;
+  spontane:boolean;
 }

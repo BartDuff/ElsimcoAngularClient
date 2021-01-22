@@ -29,6 +29,10 @@ td{
   color: white;
 }
 
+.mat-button:disabled {
+  color: grey;
+}
+
 .mat-fab {
   background-color: black;
   color: white;

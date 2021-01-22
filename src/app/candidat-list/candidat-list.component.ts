@@ -5,7 +5,7 @@ import {saveAs} from 'file-saver';
 
 import {ToastrService} from 'ngx-toastr';
 import {CandidatModel} from '../models/candidat.model';
-import {MatPaginator, MatSort, MatTableDataSource, PageEvent} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource, PageEvent} from '@angular/material';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 import {Diplome} from '../models/diplome.model';
@@ -13,6 +13,7 @@ import {hasProperties} from 'codelyzer/util/astQuery';
 import {HttpHeaders} from '@angular/common/http';
 import {ContactService} from '../services/contact.service';
 import {Router} from '@angular/router';
+import {ConfirmDialogComponent} from '../dialog/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-candidat-list',
@@ -20,8 +21,10 @@ import {Router} from '@angular/router';
   styleUrls: ['./candidat-list.component.css']
 })
 export class CandidatListComponent implements OnInit, AfterViewInit {
+  deleteRow = true;
   clickedRow = null;
   clickedColumn = null;
+  selectedCivilite = "Monsieur";
   qCandidats;
   spinner = false;
   pageable = {size:3,number:0};
@@ -35,7 +38,7 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
   candidats: CandidatModel[];
   public ngUnsubscribe: Subject<void> = new Subject<void>();
   dataSource = new MatTableDataSource();
-  columnsToIgnore = ['secretid', 'fileBase64', 'accepte', 'ficheProcess','ficheRecrutement','ficheProcessRecrutement'];
+  columnsToIgnore = ['fileBase64', 'accepte', 'ficheProcess','ficheRecrutement','ficheProcessRecrutement','docsIds'];
   possibleValues = {
     'domaine1': ["Autres","Chimie","Cosmétique / Parfum","Cuir / Maro","Galva / TS","Horlogerie","Joaillerie / Bijoux","Lunetterie","Mécanique","Packaging","Pièces métalliques","Plasturgie","Textile maro","Textile PAP"],
     'domaine2': ["Autres","Chimie","Cosmétique / Parfum","Cuir / Maro","Galva / TS","Horlogerie","Joaillerie / Bijoux","Lunetterie","Mécanique","Packaging","Pièces métalliques","Plasturgie","Textile maro","Textile PAP"],
@@ -67,7 +70,8 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
       'Nouvelle-Aquitaine',
       'Occitanie',
       'Pays de la Loire',
-      'Provence-Alpes-Côte d\'Azur'],
+      'Provence-Alpes-Côte d\'Azur',
+      'Non concerné'],
     'region2': ['Auvergne-Rhône-Alpes',
       'Bourgogne-Franche-Comté',
       'Bretagne',
@@ -79,7 +83,8 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
       'Nouvelle-Aquitaine',
       'Occitanie',
       'Pays de la Loire',
-      'Provence-Alpes-Côte d\'Azur'],
+      'Provence-Alpes-Côte d\'Azur',
+      'Non concerné'],
     'fourchetteSalariale': ["moins de 30k","31 / 35k","36 / 40","41 / 45k","46 / 50k","Plus de 50k"],
     'anglais': ['','Débutant / Scolaire','Intermédiaire','Courant','Bilingue'],
     'italien': ['','Débutant / Scolaire','Intermédiaire','Courant','Bilingue'],
@@ -89,8 +94,8 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
   };
 
   columnsToDisplay = {
-    'id':'Id',
     'secretid':'Id Secret',
+    'id':'Id',
     'nom':'Nom',
     'prenom': 'Prénom',
     'dateNaissance': 'Date de Naissance',
@@ -101,6 +106,7 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
     'telDomicile': 'Téléphone domicile',
     'civilite':'Civilité',
     'posteRecherche': 'Poste Recherché',
+    'spontane':'Candidature Spontanée',
     'accepte':'Conditions Acceptées',
     'permisB':'Permis B',
     'voiture':'Voiture',
@@ -155,6 +161,7 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
     'enPoste': 'En Poste?',
     'dateDispo': 'Date de disponibilité',
     'delai': 'Délai disponibilité',
+    'preavisInitial':'Préavis Initial',
     'raisonDispo': 'Raison de l\'écoute',
     'preavisNegociable': 'Préavis négociable',
     'contrat': 'Contrat',
@@ -176,7 +183,8 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
     'mobiliteGeographique':'Mobilité géographique',
     'delaiDispoFiche':'Délai de disponibilité sur la Fiche',
     'faitA': 'Fait à:',
-    'echangesEffectues': 'Echanges éffectués'};
+    'echangesEffectues': 'Echanges éffectués',
+    'trigramme':'Trigramme'};
   columnsToFilter = [
     'id',
     'nom',
@@ -222,7 +230,8 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
               private contactService: ContactService,
               private router: Router,
               private toastrService: ToastrService,
-              private cdRef:ChangeDetectorRef,) {
+              private cdRef:ChangeDetectorRef,
+              private dialog: MatDialog) {
   }
 
   @ViewChild('paginator1') paginator1: MatPaginator;
@@ -363,6 +372,25 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
       });
   }
 
+  deleteCandidat(candidat){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      (data) => {
+        if (data) {
+          const index = this.dataSource.data.indexOf(candidat);
+          this.dataSource.data.splice(index, 1);
+          this.dataSource._updateChangeSubscription();
+          this.candidatService.deleteCandidat(candidat).subscribe(
+            () => {
+              this.toastrService.error('Candidat supprimé', 'Suppression effectuée');
+            });
+        }
+      });
+  }
+
   // cellClicked(row, column) {
   //   let clicked = this.clickedColumn === this.columnsToDisplay.indexOf(column) && this.clickedRow === row.id;
   //   return clicked;
@@ -397,15 +425,37 @@ export class CandidatListComponent implements OnInit, AfterViewInit {
     return new Blob(byteArrays, {type: contentType});
   }
 
-  addNewCandidate(){
+  addNewCandidateNoMail(){
     let candidat = new CandidatModel();
     candidat.diplome = new Diplome();
     candidat.diplome.annee = 0;
     candidat.dateDispo = new Date();
     candidat.contrat= "CDD";
-    this.candidatService.addCandidat(candidat).subscribe(
+    this.candidatService.addCandidatNoMail(candidat).subscribe(
       (c)=>{
         this.getQCandidates();
+        this.toastrService.success("Candidat créé avec succès","Création");
+      }
+    )
+  }
+
+  envoyerDossier(email, civilite, nom){
+    let contact = new ContactModel();
+    contact.accepte = true;
+    contact.email = email;
+    contact.civilite = civilite;
+    contact.nom = nom.toUpperCase();
+    contact.spontane = false;
+    this.contactService.addContactManual(contact).subscribe(
+      (data) => {
+        this.contactService.sendAcceptanceMail(contact.email, data).subscribe(
+          ()=>{
+            this.toastrService.success('Dossier de Candidature envoyé', 'Envoi');
+          },
+          ()=>{
+            this.toastrService.error('Échec de l\'envoi', 'Échec');
+          }
+        );
       }
     )
   }

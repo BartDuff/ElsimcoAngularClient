@@ -35,5 +35,5 @@
       <mat-chip *ngFor="let user of likes" color="primary">{{user.prenom}} {{user.nom}}</mat-chip>
     </mat-chip-list>
   </mat-card-actions>
-  <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publié le {{newsitem?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>par {{ newsitem?.auteur.prenom }} {{ newsitem?.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteNews()" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button></mat-card-subtitle>
+  <mat-card-subtitle style="text-align: right;font-style: italic!important;">Publiée le {{newsitem?.datePublication | date: 'dd/MM/yyyy à HH:mm'}}<br>par {{ newsitem?.auteur.prenom }} {{ newsitem?.auteur.nom }} <button mat-icon-button [routerLink]="['/edit_news/', newsitem?.id]" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>edit</mat-icon></button><button mat-icon-button (click)="deleteNews()" *ngIf="currentUser.role == 'ADMIN'"><mat-icon>delete</mat-icon></button></mat-card-subtitle>
 </mat-card>

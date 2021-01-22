@@ -214,6 +214,19 @@
                 </mat-form-field>
 
                 <mat-form-field>
+                  <mat-label>Préavis initial :</mat-label>
+                  <mat-select formControlName="preavisInitial" [(ngModel)]="candidat.preavisInitial"
+                              (selectionChange)="updateModel(candidat)">
+                    <mat-option value="2 semaines">2 semaines</mat-option>
+                    <mat-option value="1 mois">1 mois</mat-option>
+                    <mat-option value="2 mois">2 mois</mat-option>
+                    <mat-option value="3 mois">3 mois</mat-option>
+                    <mat-option value="Plus de 3 mois">Plus de 3 mois</mat-option>
+                    <mat-option value="">Non concerné</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
                   <mat-label>Préavis négociable ?</mat-label>
                   <mat-select formControlName="preavisNegociable" [(ngModel)]="candidat.preavisNegociable"
                               (selectionChange)="updateModel(candidat)">
@@ -584,7 +597,7 @@
                 <mat-select formControlName="fourchetteSalariale" [(ngModel)]="candidat.fourchetteSalariale"
                             (selectionChange)="updateModel(candidat)">
                   <mat-option value="moins de 30k">moins de 30k</mat-option>
-                  <mat-option value="31 / 35k">31 / 35k</mat-option>
+                  <mat-option value="30 / 35k">30 / 35k</mat-option>
                   <mat-option value="36 / 40">36 / 40k</mat-option>
                   <mat-option value="41 / 45k">41 / 45k</mat-option>
                   <mat-option value="46 / 50k">46 / 50k</mat-option>
@@ -1275,20 +1288,21 @@
     <div style="display: flex;flex-direction: row;align-content: center;justify-content: center;">
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="labels">
-          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'">{{columnsToDisplay[c]?columnsToDisplay[c]+" : ":""}} </span>
-          <span *ngIf="c =='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement'"></span>
+          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !== 'spontane' && c !== 'docsIds'">{{columnsToDisplay[c]?columnsToDisplay[c]+" : ":""}} </span>
+          <span *ngIf="c =='fileBase64' && c == 'ficheProcess' && c == 'ficheRecrutement' && c == 'spontane' && c == 'docsIds'"></span>
         </div>
       </div>
       <div style="display: flex;flex-direction: column;align-items: baseline;">
         <div *ngFor="let c of objectKeys(candidat)" class="answers" style="display: flex;flex-direction: column;font-weight: bold;">
-          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !=='diplome' && c !=='dateNaissance' && c !=='dateCreation' && c !=='dateDispo' && c !=='dateMAJ' && c !=='alerteMAJ' && c !=='dateCandidature' && c !=='dateEnvoi' && c !=='dateDerniersEntretiens' && c !=='references'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}}</span>
+          <span *ngIf="c !=='fileBase64' && c !== 'ficheProcess' && c !== 'ficheRecrutement' && c !== 'spontane' && c !== 'docsIds' && c !=='diplome' && c !=='dateNaissance' && c !=='dateCreation' && c !=='dateDispo' && c !=='dateMAJ' && c !=='alerteMAJ' && c !=='dateCandidature' && c !=='dateEnvoi' && c !=='dateDerniersEntretiens' && c !=='references'">{{candidat[c] == null || candidat[c] ==""?"-":candidat[c] == true?"Oui":candidat[c] == false?"Non":candidat[c]}}</span>
           <span *ngIf="c =='dateNaissance' || c =='dateCreation' || c =='dateMAJ' || c =='alerteMAJ' || c =='dateCandidature' || c == 'dateDerniersEntretiens' || c == 'dateDispo' || c =='dateEnvoi'">{{!candidat[c]?'-':candidat[c] | date: 'dd/MM/yyyy'}}</span>
           <span *ngIf="c =='diplome'">Année : {{candidat[c].annee}} | Intitulé : {{candidat[c].intitule}} | Obtenu : {{candidat[c].obtenu == true?"Oui":"Non"}}</span>
             <span *ngIf="c =='references'" style="display: inline-flex">
                 {{candidat[c][0]?.nomEntreprise?candidat[c][0].nomEntreprise: '-'}} {{candidat[c][0]?.nomResponsable?candidat[c][0]?.nomResponsable: '-'}} {{candidat[c][0]?.fonction?candidat[c][0].fonction: '-'}} {{candidat[c][0]?.telephone?candidat[c][0].telephone: '-'}} {{candidat[c][0]?.adresseMail?candidat[c][0].adresseMail: '-'}}
                 {{candidat[c][1]?.nomEntreprise?candidat[c][1].nomEntreprise: '-'}} {{candidat[c][1]?.nomResponsable?candidat[c][1]?.nomResponsable: '-'}} {{candidat[c][1]?.fonction?candidat[c][1].fonction: '-'}} {{candidat[c][1]?.telephone?candidat[c][1].telephone: '-'}} {{candidat[c][1]?.adresseMail?candidat[c][1].adresseMail: '-'}}
           </span>
-          <span *ngIf="c =='fileBase64' && c == 'ficheProcess' && c == 'ficheRecrutement'"></span>
+          <span *ngIf="c =='fileBase64' && c == 'ficheProcess' && c == 'ficheRecrutement' && c == 'spontane' && c == 'docsIds'"></span>
+<!--          {{c}}-->
         </div>
       </div>
     </div>
@@ -1300,7 +1314,7 @@
         <table>
           <tr>
             <th>Fiche Information Candidat</th>
-            <th>ASN</th>
+            <th><input matInput [(ngModel)]="candidat.trigramme" (change)="updateModel(candidat)"></th>
           </tr>
           <tr>
             <td>Prénom du candidat :</td>
@@ -1396,7 +1410,7 @@
         <table>
           <tr>
             <th>Fiche Information Candidat</th>
-            <th>ASN</th>
+            <th><input matInput [(ngModel)]="candidat.trigramme" (change)="updateModel(candidat)"></th>
           </tr>
           <tr>
             <td>Prénom, Nom :</td>

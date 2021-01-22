@@ -83,7 +83,9 @@ export class AddCandidatComponent implements OnInit {
     this.contactForm4 = this.formBuilder.group({
       mobiliteParis: ['', Validators.required],
       mobiliteFrance: ['', Validators.required],
-      regionsFrance:[''],
+      region1:[''],
+      region2:[''],
+      // regionsFrance:[''],
       mobiliteEurope: ['', Validators.required],
       mobiliteIntl: ['', Validators.required]
     });
@@ -105,15 +107,17 @@ export class AddCandidatComponent implements OnInit {
       contrat: [''],
       preavisNegociable: [''],
       delai: [''],
+      preavisInitial:[''],
       raisonDispo: ['', Validators.required],
       posteSouhaite: ['', Validators.required],
-      evolution5ans: ['', Validators.required],
-      dateDispo: ['', Validators.required]
+      evolution5ans: [''],
+      dateDispo: ['']
     });
     this.contactForm7 = this.formBuilder.group({
-      fixeDernierSalaireBrut: ['', [Validators.required, Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')]],
-      varDernierSalaireBrut: ['', Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')],
-      pretentionSalaireBrut: ['', Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')],
+      fixeDernierSalaireBrut: ['', [Validators.required, Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{1,2})?\\s*$')]],
+      varDernierSalaireBrut: ['', Validators.pattern('^\\s*(?=.*[0-9])\\d*(?:\\.\\d{1,2})?\\s*$')],
+      // pretentionSalaireBrut: ['', Validators.pattern('^\\s*(?=.*[1-9])\\d*(?:\\.\\d{1,2})?\\s*$')],
+      pretentionSalaireBrut: ['']
     });
     this.contactForm8 = this.formBuilder.group({
       acceptTerms: ['', Validators.required],
@@ -161,7 +165,7 @@ export class AddCandidatComponent implements OnInit {
     this.loading = true;
     let c:CandidatModel = this.contactForm8.value;
     c.civilite = this.contactForm1.controls.civilite.value;
-    c.nom = this.contactForm1.controls.nom.value;
+    c.nom = this.contactForm1.controls.nom.value.toUpperCase();
     c.prenom = this.contactForm1.controls.prenom.value;
     c.dateNaissance = this.contactForm1.controls.dateNaissance.value;
     c.nationalite = this.contactForm1.controls.nationalite.value;
@@ -204,12 +208,15 @@ export class AddCandidatComponent implements OnInit {
     c.autorisationControle = this.contactForm5.controls.autorisationControle.value;
     c.mobiliteParis = this.contactForm4.controls.mobiliteParis.value;
     c.mobiliteFrance = this.contactForm4.controls.mobiliteFrance.value;
+    c.region1 = this.contactForm4.controls.region1.value;
+    c.region2 = this.contactForm4.controls.region2.value;
     c.mobiliteEurope = this.contactForm4.controls.mobiliteEurope.value;
     c.mobiliteIntl = this.contactForm4.controls.mobiliteIntl.value;
     c.enPoste = this.contactForm6.controls.enPoste.value;
     c.contrat = this.contactForm6.controls.contrat.value;
     c.preavisNegociable = this.contactForm6.controls.preavisNegociable.value;
     c.delai = this.contactForm6.controls.delai.value;
+    c.preavisInitial = this.contactForm6.controls.preavisInitial.value;
     c.raisonDispo = this.contactForm6.controls.raisonDispo.value;
     c.posteSouhaite = this.contactForm6.controls.posteSouhaite.value;
     c.evolution5ans = this.contactForm6.controls.evolution5ans.value;

@@ -11,6 +11,7 @@
     <th>Date de candidature</th>
     <th>CV:</th>
     <th colspan="2">Refuser/Accepter?</th>
+    <th>Supprimer</th>
   </tr>
   </thead>
   <tbody>
@@ -18,6 +19,7 @@
       [contact]="contact"
       (contactAccepted)="AcceptContact($event)"
       (contactDeleted)="RefuseContact($event)"
+      (contactDeletedNoMail)="DeleteContactNoMail($event)"
       (contactCV)="downloadCV($event)">
   </tr>
   </tbody>

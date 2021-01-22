@@ -44,6 +44,12 @@ export class CandidatService {
     return this.http.post(`${API_URL}/candidats`, newCandidat, { headers: headers});
   }
 
+  addCandidatNoMail(newCandidat: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type'  : 'application/json'});
+    return this.http.post(`${API_URL}/candidats/nomail`, newCandidat, { headers: headers});
+  }
+
   editCandidat(updateCandidat: CandidatModel): Observable<CandidatModel> {
     return this.http.put<CandidatModel>(`${API_URL}/candidats/${updateCandidat.id}`, updateCandidat);
   }

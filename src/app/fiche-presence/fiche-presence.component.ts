@@ -838,7 +838,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
                   }
                 }
               } else {
-                if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+                if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
                   let dem = c.demiJournee ? '1/2 ' : '';
                   let typeDem = c.typeDemiJournee? ' ' + c.typeDemiJournee: '';
                   fiche.commentaires[dem + c.typeConge + typeDem + ' ' + c.date] = c.commentaires;
@@ -846,7 +846,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
               }
             }
             for (let c of this.daysOffSavedObjArr) {
-              if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+              if (c.commentaires != undefined && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
                 let dem = c.demiJournee ? '1/2 ' : '';
                 let typeDem = c.typeDemiJournee? ' ' + c.typeDemiJournee : '';
                 let typeDemiJournee2 = !c.typeDemiJournee?'':c.typeDemiJournee == 'Matin'?' Après-midi':' Matin';
@@ -920,7 +920,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   countRTT() {
     let count = 0;
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -931,7 +931,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'RTT' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'RTT' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -940,7 +940,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'RTT' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {
@@ -955,7 +955,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   countConges(form: NgForm) {
     let count = 0;
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'Congés Payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'Congés Payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -966,7 +966,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'Congés Payés' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'Congés Payés' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -975,7 +975,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'Congés Payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'Congés Payés' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {
@@ -1003,7 +1003,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   countAbsences(form: NgForm) {
     let count = 0;
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'Absence Exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'Absence Exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -1014,7 +1014,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'Absence Exceptionnelle' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'Absence Exceptionnelle' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -1023,7 +1023,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'Absence Exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'Absence Exceptionnelle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {
@@ -1051,14 +1051,14 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
   countSansSolde(form: NgForm) {
     let count = 0;
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
           count++;
         }
       }
-      if (c.typeConge2 == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge2 == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -1082,7 +1082,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'Congés Sans Solde' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'Congés Sans Solde' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -1091,7 +1091,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'Congés Sans Solde' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {
@@ -1120,14 +1120,14 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     //   }
     // }
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
           count++;
         }
       }
-      if (c.typeConge2 == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge2 == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -1138,7 +1138,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'Arrêt Maladie' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'Arrêt Maladie' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -1147,7 +1147,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'Arrêt Maladie' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {
@@ -1175,14 +1175,14 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     //   }
     // }
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
           count++;
         }
       }
-      if (c.typeConge2 == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge2 == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -1193,7 +1193,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'Formation' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'Formation' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -1202,7 +1202,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'Formation' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {
@@ -1231,14 +1231,14 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     //   }
     // }
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
           count++;
         }
       }
-      if (c.typeConge2 == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge2 == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -1249,7 +1249,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'Intercontrat' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'Intercontrat' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -1263,7 +1263,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'Intercontrat' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {
@@ -1297,14 +1297,14 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     //   }
     // }
     for (let c of this.daysOffSavedObjArr) {
-      if (c.typeConge == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
           count++;
         }
       }
-      if (c.typeConge2 == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+      if (c.typeConge2 == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
         if (c.demiJournee) {
           count = count + 0.5;
         } else {
@@ -1315,7 +1315,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
     for (let c of this.daysOff) {
       if (this.isArray(c)) {
         for (let co of c) {
-          if (co.typeConge == 'Activité Partielle' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+          if (co.typeConge == 'Activité Partielle' && new Date(Number(co.date.split('/')[2]), Number(co.date.split('/')[1]) - 1, Number(co.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear()) {
             if (co.demiJournee) {
               count = count + 0.5;
             } else {
@@ -1329,7 +1329,7 @@ export class FichePresenceComponent implements OnInit, AfterViewChecked {
           }
         }
       } else {
-        if (c.typeConge == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth()) {
+        if (c.typeConge == 'Activité Partielle' && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getMonth() == this.dateNow.getMonth() && new Date(Number(c.date.split('/')[2]), Number(c.date.split('/')[1]) - 1, Number(c.date.split('/')[0])).getFullYear() == this.dateNow.getFullYear())  {
           if (c.demiJournee) {
             count = count + 0.5;
           } else {

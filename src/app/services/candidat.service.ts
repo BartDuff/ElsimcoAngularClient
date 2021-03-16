@@ -26,15 +26,24 @@ export class CandidatService {
     return this.http.get<CandidatModel[]>(`${API_URL}/candidats`);
   }
 
+  // getQCandidats(q, pageable, size): any {
+  //   let s = "";
+  //   for(let k of Object.keys(q))
+  //     if(q[k])
+  //       s+=(s.length > 0?'&':'')+k+"="+q[k];
+  //
+  //   s+=(s.length > 0?'&':'')+"page="+(pageable.number);
+  //   s+=(s.length > 0?'&':'')+"size="+size;
+  //   return this.http.get<CandidatModel[]>(`${API_URL}/candidats?${s}`);
+  // }
+
   getQCandidats(q, pageable, size): any {
     let s = "";
-    for(let k of Object.keys(q))
-      if(q[k])
-        s+=(s.length > 0?'&':'')+k+"="+q[k];
-
-    s+=(s.length > 0?'&':'')+"page="+(pageable.number);
-    s+=(s.length > 0?'&':'')+"size="+size;
-
+    if(q['tags']){
+      s+=(s.length > 0?'tags&':'')+"page="+(pageable.number);
+      s+=(s.length > 0?'&':'')+"size="+size;
+    }
+      // s+=(s.length > 0?'&':'')+'tags'+"="+q['tags'];
     return this.http.get<CandidatModel[]>(`${API_URL}/candidats?${s}`);
   }
 

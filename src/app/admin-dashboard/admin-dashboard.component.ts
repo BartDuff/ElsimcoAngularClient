@@ -32,6 +32,7 @@ export class AdminDashboardComponent implements OnInit {
         this.configurationForm.controls.incrementCP.setValue(data.incrementCP);
         this.configurationForm.controls.mailRH.setValue(data.mailRH);
         this.configurationForm.controls.mailCommercial.setValue(data.mailCommercial);
+        this.configurationForm.controls.id.setValue(data.id);
       }
     )
 
@@ -47,10 +48,13 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   onSubmit(){
+    let oldConfig = this.configuration;
     this.configuration = this.configurationForm.value;
+    this.configuration.contactsFaq = oldConfig.contactsFaq;
+    this.configuration.categoriesFaq = oldConfig.categoriesFaq;
     this.configurationService.editConfiguration(this.configuration).subscribe(
-      ()=>{
-        this.ngOnInit();
+      (data)=>{
+        this.configuration = data;
       }
     );
   }

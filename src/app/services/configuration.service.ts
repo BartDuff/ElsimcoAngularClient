@@ -26,8 +26,8 @@ export class ConfigurationService {
     return this.http.post(`${API_URL}/configuration`, newConfig, { headers: headers});
   }
 
-  editConfiguration(updateConfig: ConfigurationModel): Observable<FaqModel> {
-    return this.http.put<FaqModel>(`${API_URL}/configuration/${updateConfig.id}`, updateConfig);
+  editConfiguration(updateConfig: any): Observable<any> {
+    return this.http.put<ConfigurationModel>(`${API_URL}/configuration/${updateConfig.id}`, updateConfig);
   }
 
   getSingleConfiguration(idRecherche: String): Observable<ConfigurationModel> {
